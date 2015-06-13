@@ -41,7 +41,7 @@ text-decoration: none;
 #header {
 	width: 980px;
 	margin: 0px auto;
-	background-color: #FFAAAA;
+	background-color: #fff;
 }
 
 #logo {
@@ -89,12 +89,12 @@ padding-left: 5px;
 #messages {
 	float: right;
 	padding-right: 5px;
+	line-height: 30px;
 }
 
 #newmsg {
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: bold;
-	line-height: 30px;
 }
 
 .header {
@@ -108,10 +108,12 @@ padding-left: 5px;
 
 #welcome {
 	float: left;
+	width: 300px;
 }
 
 #stats {
-	
+	float: right;
+	width: 350px;
 }
 /*CSS Menu*/
 #cssmenu {

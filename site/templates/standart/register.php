@@ -62,6 +62,11 @@ $(function(){
 </div>
 
 <div class="row">
+<label for="sehir">Doğum Yeriniz:</label>
+<?php echo $reg->selectSehir('dogumyeri');?> * Doğduğunuz şehri seçin.
+</div>
+
+<div class="row">
 <label for="password">Parolanız:</label>
 <input name="password" id="password" type="password" class="inputbox" alt="password" placeholder="Parolanızı yazın" size="15" required /> * Siteye girişte kullanacağınız parolanızı yazınız.
 </div>

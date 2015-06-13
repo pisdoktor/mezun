@@ -39,7 +39,7 @@ function loadSiteModule() {
 	switch($option) {
 	default:
 	UserPanel();
-	loadDuyuru();
+	//loadDuyuru();
 	loadStats();
 	break;
 	
@@ -93,8 +93,10 @@ function UserPanel() {
 	$lastvisit = ($my->lastvisit == '0000-00-00 00:00:00') ? 'İlk Defa Giriş Yaptınız' : mosFormatDate($my->lastvisit, '%d-%m-%Y %H:%M:%S');
 	
 	echo '<div id="welcome" class="clearfix">';
-	echo '<span><center><strong>Hoşgeldiniz '.$my->name.'</strong></center></span><br />';
-	echo '<span><strong><u>Son Giriş Zamanı:</u></strong><br />'. $lastvisit.'</span>';
+	echo '<span><center><h3>Hoşgeldiniz '.$my->name.'</h3></center></span><br />';
+	echo '<span><strong><u>Çalıştığınız Kurum:</u></strong><br />'. $my->work.'</span><br />';
+	echo '<span><strong><u>Bulunduğunuz Şehir:</u></strong><br />'. $my->sehir.'</span><br />';
+	echo '<span><strong><u>Siteye Son Gelişiniz:</u></strong><br />'. $lastvisit.'</span>';
 	echo '</div>';
 }
 
@@ -107,9 +109,14 @@ function loadStats() {
 	$tactivated = $dbase->loadResult();
 	
 	//aynı ildeki üye sayısı
-	$query = "SELECT COUNT(*) FROM #__users WHERE sehir=".$dbase->Quote($my->sehir);
+	$query = "SELECT COUNT(*) FROM #__users WHERE sehir=".$dbase->Quote($my->sehirid);
 	$dbase->setQuery($query);
 	$aynisehir = $dbase->loadResult();
+	
+	//sizinle aynı şehirde doğan hemşeriniz üyeler
+	$query = "SELECT COUNT(*) FROM #__users WHERE dogumyeri=".$dbase->Quote($my->sehirid);
+	$dbase->setQuery($query);
+	$aynidogum = $dbase->loadResult();
 	
 	//aynı branştaki üye sayısı
 	$query = "SELECT COUNT(*) FROM #__users WHERE brans=".$dbase->Quote($my->brans);
@@ -128,11 +135,56 @@ function loadStats() {
 	?>
 	<div id="stats" class="clearfix">
 	<h3>Site İstatistikleri:</h3>
-	<div>Toplam Üye Sayısı: <?php echo $tactivated;?></div>
-	<div>Sizinle Aynı Şehirdeki Üye Sayısı: <?php echo $aynisehir-1;?> Kişi</div>
-	<div>Sizinle Aynı Branştaki Üye Sayısı: <?php echo $aynibrans-1;?> Kişi</div>
-	<div>Sizinle Aynı Yıl Okula Başlayanlar: <?php echo $ayniyilbaslama-1;?> Kişi</div>
-	<div>Sizinle Aynı Yıl Okulu Bitirenler: <?php echo $ayniyilbitirme-1;?> Kişi</div>
+	<table width="100%">
+	<tr>
+	<td>
+	Toplam Üye Sayısı:
+	</td>
+	<td>
+	<?php echo $tactivated;?> Kişi
+	</td>
+	</tr>
+	<tr>
+	<td>
+	Sizinle Aynı Şehirdeki Üye Sayısı:
+	</td>
+	<td>
+	<?php echo $aynisehir-1;?> Kişi
+	</td>
+	</tr>
+	<tr>
+	<td>
+	Sizinle Aynı Şehirde Doğan Üyeler:
+	</td>
+	<td>
+	<?php echo $aynidogum-1;?> Kişi
+	</td>
+	</tr>
+	<tr>
+	<td>
+	Sizinle Aynı Branştaki Üye Sayısı:
+	</td>
+	<td>
+	<?php echo $aynibrans-1;?> Kişi
+	</td>
+	</tr>
+	<tr>
+	<td>
+	Sizinle Aynı Yıl Okula Başlayanlar:
+	</td>
+	<td>
+	<?php echo $ayniyilbaslama-1;?> Kişi
+	</td>
+	</tr>
+	<tr>
+	<td>
+	Sizinle Aynı Yıl Okulu Bitirenler:
+	</td>
+	<td>
+	<?php echo $ayniyilbitirme-1;?> Kişi
+	</td>
+	</tr>
+	</table>
 	</div>
 	<?php
 }
