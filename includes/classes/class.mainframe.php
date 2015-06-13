@@ -600,7 +600,7 @@ class mainFrame {
 		$user->access_type  = $this->_session->access_type;
 				
 		if ($user->id) {
-			$query = "SELECT u.id, u.name, u.email, u.lastvisit"
+			$query = "SELECT u.id, u.name, u.email, u.sehir, u.brans, u.byili, u.myili, u.lastvisit"
 			. "\n FROM #__users AS u"
 			. "\n WHERE u.id = " . (int) $user->id
 			;
@@ -610,6 +610,10 @@ class mainFrame {
 			$user->name         = $my->name;
 			$user->email        = $my->email;
 			$user->lastvisit    = $my->lastvisit;
+			$user->sehir        = $my->sehir;
+			$user->brans        = $my->brans;
+			$user->byili        = $my->byili;
+			$user->myili        = $my->myili;
 		}
 
 		return $user;
