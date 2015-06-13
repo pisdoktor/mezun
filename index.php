@@ -12,6 +12,7 @@ $option = strval(strtolower(mosGetParam($_REQUEST, 'option')));
 $bolum = strval(strtolower(mosGetParam($_REQUEST, 'bolum')));
 $task = strval(strtolower(mosGetParam($_REQUEST, 'task')));
 $return = strval( mosGetParam( $_REQUEST, 'return', NULL ) );
+$code = strval(mosGetParam($_REQUEST, 'code'));
 
 $mosmsg = mosGetParam($_REQUEST, 'mosmsg');
 
@@ -39,21 +40,117 @@ switch($option) {
 	case 'reguser':
 	registerUser();
 	break;
+	
+	case 'forgot':
+	resendPassword();
+	break;
+	
+	case 'activate':
+	activeUser($code);
+	break;
+}
+
+function activeUser($code) {
+	global $dbase;
+	
+	$query = "SELECT id FROM #__users WHERE activation=".$dbase->Quote($code);
+	$dbase->setQuery($query);
+	
+	$exist = $dbase->loadResult();
+	
+	if ($exist) {
+		$row = new Users($dbase);
+		$row->activateUser($exist);
+		mosRedirect('index.php', 'Kullanıcı başarıyla aktive edildi. Artık giriş yapabilirsiniz!');
+	} else {
+		mosRedirect('index.php', 'Kullanıcı yok yada daha önce aktive edilmiş!');
+	}
+}
+
+function resendPassword() {
+	global $dbase;
+	
+	$mail = mosGetParam($_REQUEST, 'email');
+	
+	$query = "SELECT id FROM #__users WHERE email=".$dbase->Quote($mail);
+	$dbase->setQuery($query);
+	
+	$exist = $dbase->loadResult();
+	
+	if ($exist) {		
+		$user = new Users($dbase);
+		$user->load($exist);
+		
+		$passwd = mosMakePassword(8);
+		$salt = mosMakePassword(16);
+		$crypt = md5($passwd.$salt);
+		
+		$password = $crypt.':'.$salt;
+		
+	   $query    = 'UPDATE #__users SET password = '.$dbase->Quote($password)
+	   . ' WHERE id = '.(int)$user->id;
+	   $dbase->setQuery($query);
+	   $dbase->query();
+	   
+	   $body = "İsteğiniz üzerine parolanız sıfırlandı.\n\n";
+	   $body.= "----------------------------------------\n";
+	   $body.= "Yeni Parolanız: ".$passwd."\n";
+	   $body.= "----------------------------------------\n";
+	   $body.= "Site: ".SITEURL."\n";
+	   $body.= "Lütfen siteye giriş yaparak parolanızı tekrar değiştiriniz.\n";
+	   
+	   mosMail(MAILFROM, MAILFROMNAME, $mail, 'Yeni Parola', $body);
+	   mosRedirect('index.php', 'Yeni parola verdiğiniz e-posta adresine gönderildi!'.$passwd);
+	} else {
+		mosRedirect('index.php', 'Verilen e-postaya ait bir kullanıcı yok!');
+	}
 }
 
 function registerUser() {
 	global $dbase;
 	
-	$new = new Users($dbase);
+	$row = new Users($dbase);
 	
-	
-	
-	if ( $return ) {
-		mosRedirect( $return );
-	} else {
-		mosRedirect( 'index.php' );
+	if ( !$row->bind( $_POST ) ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
 	}
 	
+	if (!$row->check()) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	
+	$salt = mosMakePassword(16);
+	$crypt = md5($row->password.$salt);
+		
+	$row->password = $crypt.':'.$salt;
+	
+	$row->registerDate = date('Y-m-d H:i:s');
+	$row->activated = 0;
+	$row->activation = $row->createCode();
+	
+	
+	if (!$row->store()) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	$alink = '<a href="'.SITEURL.'/index.php?option=active&code='.$row->activation.'">Aktive Et</a>';
+	
+	$body = "Üyelik talebiniz başarıyla kaydedildi.\n\n";
+	$body.= "----------------------------------------\n";
+	$body.= "Aktivasyon Linki: ".$alink."\n";
+	$body.= "Aktivasyon Kodu: ".$row->activation."\n";
+	$body.= "----------------------------------------\n";
+	$body.= "Site: ".SITEURL."\n";
+	$body.= "Siteye giriş yapmak için yukarıdaki aktivasyon linkine tıklayınız.\n";
+	   
+	mosMail(MAILFROM, MAILFROMNAME, $row->email, 'Yeni Üyelik', $body, 1);
+		
+	mosRedirect( 'index.php', 'Kayıt talebiniz kaydedildi. E-posta adresinize aktivasyon linki gönderildi. Lütfen önce aktivasyonu gerçekleştiriniz!' );
+
 }
 
 function Login() {

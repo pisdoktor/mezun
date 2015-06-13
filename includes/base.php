@@ -861,7 +861,7 @@ function doGzip() {
 * @return password
 */
 function mosMakePassword($length=8) {
-	$salt 		= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	$salt 		= "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
 	$makepass	= '';
 	mt_srand(10000000*(double)microtime());
 	for ($i = 0; $i < $length; $i++)

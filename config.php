@@ -29,8 +29,8 @@ define('SESSION_TYPE', 0);
 
 define('MAILER', 'sendmail'); //sendmail or smtp
 define('SENDMAIL', '/usr/sbin/sendmail');
-define('MAILFROM', '');
-define('MAILFROMNAME', '');
+define('MAILFROM', 'Mezun Sistemi');
+define('MAILFROMNAME', 'mezun@mezunsistemi.com');
 define('smtpauth', '');
 define('smtpuser', '');
 define('smtppass', '');

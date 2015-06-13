@@ -61,7 +61,7 @@ class Users extends DBTable {
 	
 	function selectBrans() {
 		
-		$query = "SELECT * FROM #__branslar";
+		$query = "SELECT * FROM #__branslar ORDER BY name ASC";
 		$this->_db->setQuery($query);
 		
 		$lists = $this->_db->loadObjectList();
@@ -86,7 +86,7 @@ class Users extends DBTable {
 	
 	function selectSehir($arr) {
 		
-		$query = "SELECT * FROM #__sehirler";
+		$query = "SELECT * FROM #__sehirler ORDER BY id ASC";
 		$this->_db->setQuery($query);
 		
 		$lists = $this->_db->loadObjectList();
@@ -208,9 +208,10 @@ class Users extends DBTable {
 		}
 		
 		$query = "UPDATE $this->_tbl"
-		. "\n SET activated=1 "
+		. "\n SET activated=1, activation=''"
 		. "\n WHERE $this->_tbl_key = " . (int) $this->$k
 		;
-		$this->_db->setQuery($query);		
+		$this->_db->setQuery($query);
+		$this->_db->query();		
 	}
 }

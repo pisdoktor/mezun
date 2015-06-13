@@ -22,12 +22,35 @@ if (!$my->id) {
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj"><span>Mesajlarım</span></a></li>
 <li><a href="index.php?option=site&bolum=arama"><span>Üye Arama</span></a></li>
+<?php 
+if ($my->id == 1) {
+?>
+<li><a href="index.php?option=admin"><span>Yönetim Paneli</span></a></li>
+<?php    
+}
+?>
 <li><a href="index.php?option=logout"><span>Çıkış Yap</span></a></li>	
 </ul>
 </div>
 <div id="messages"><?php echo $msg->newMsg();?></div>
 <?php
 }
+}
+
+function convertAdmin() {
+	global $mainframe, $dbase, $my;
+	
+	if ($my->id == 1) {
+	$session = new Session($dbase);
+	$session->load($mainframe->_session->session);
+
+	$session->access_type = 'admin';
+	$session->update();
+	
+	mosRedirect('index.php', 'Kullanıcı Panelinden başarıyla geçiş yapıldı');
+	} else {
+		mosNotAuth();
+	}    
 }
 
 function loadSiteModule() {
@@ -49,6 +72,10 @@ function loadSiteModule() {
 	} else {
 		mosRedirect('index.php');
 	}
+	break;
+	
+	case 'admin':
+	convertAdmin();
 	break;
 	}
 	
@@ -114,7 +141,7 @@ function loadStats() {
 	$aynisehir = $dbase->loadResult();
 	
 	//sizinle aynı şehirde doğan hemşeriniz üyeler
-	$query = "SELECT COUNT(*) FROM #__users WHERE dogumyeri=".$dbase->Quote($my->sehirid);
+	$query = "SELECT COUNT(*) FROM #__users WHERE dogumyeri=".$dbase->Quote($my->dogumyeriid);
 	$dbase->setQuery($query);
 	$aynidogum = $dbase->loadResult();
 	
@@ -145,8 +172,10 @@ function loadStats() {
 	</td>
 	</tr>
 	<tr>
+	<th colspan="2">Sizinle Aynı</th></tr>
+	<tr>
 	<td>
-	Sizinle Aynı Şehirdeki Üye Sayısı:
+	Şehirde Yaşayan Üye Sayısı:
 	</td>
 	<td>
 	<?php echo $aynisehir-1;?> Kişi
@@ -154,7 +183,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Sizinle Aynı Şehirde Doğan Üyeler:
+	Şehirde Doğan Üyeler:
 	</td>
 	<td>
 	<?php echo $aynidogum-1;?> Kişi
@@ -162,7 +191,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Sizinle Aynı Branştaki Üye Sayısı:
+	Branştaki Üye Sayısı:
 	</td>
 	<td>
 	<?php echo $aynibrans-1;?> Kişi
@@ -170,7 +199,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Sizinle Aynı Yıl Okula Başlayanlar:
+	Yıl Okula Başlayanlar:
 	</td>
 	<td>
 	<?php echo $ayniyilbaslama-1;?> Kişi
@@ -178,7 +207,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Sizinle Aynı Yıl Okulu Bitirenler:
+	Yıl Okulu Bitirenler:
 	</td>
 	<td>
 	<?php echo $ayniyilbitirme-1;?> Kişi

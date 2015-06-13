@@ -600,9 +600,10 @@ class mainFrame {
 		$user->access_type  = $this->_session->access_type;
 				
 		if ($user->id) {
-			$query = "SELECT u.id, u.name, u.email, s.name AS sehir, u.sehir as sehirid, u.brans, u.byili, u.myili, u.work, u.lastvisit"
+			$query = "SELECT u.id, u.name, u.email, s.name AS sehir, ss.name as dogumyeri, u.sehir as sehirid, u.dogumyeri as dogumyeriid, u.brans, u.byili, u.myili, u.work, u.lastvisit"
 			. "\n FROM #__users AS u"
 			. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
+			. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
 			. "\n WHERE u.id = " . (int) $user->id
 			;
 			$this->_db->setQuery( $query );
@@ -613,6 +614,8 @@ class mainFrame {
 			$user->lastvisit    = $my->lastvisit;
 			$user->sehir        = $my->sehir;
 			$user->sehirid      = $my->sehirid;
+			$user->dogumyeri    = $my->dogumyeri;
+			$user->dogumyeriid  = $my->dogumyeriid;
 			$user->brans        = $my->brans;
 			$user->byili        = $my->byili;
 			$user->myili        = $my->myili;

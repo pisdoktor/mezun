@@ -40,7 +40,7 @@ $(function(){
 
 <div id="register-form">
 <h3>ÜYE KAYIT FORMU</h3>
-<form action="index.php" method="post" name="login" id="loginForm">
+<form action="index.php" method="post" name="login" id="adminForm">
 <div class="row">
 <label for="name">Adınız ve Soyadınız:</label>
 <input name="name" id="name" type="text" class="inputbox" alt="name" placeholder="Adınızı ve soyadınızı yazın" size="15" required /> * Lütfen adınızı ve soyadınızı doğru yazınız.
@@ -118,7 +118,7 @@ $(function(){
 </div>
 <br />
 <div align="center">
-<input type="button" name="save" class="button" value="KAYIT OL!" />
+<input type="submit" name="button" value="KAYIT OL!" class="button" />
 </div>
 <input type="hidden" name="option" value="reguser" />
 </form>

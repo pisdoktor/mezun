@@ -192,27 +192,47 @@ $(document).ready(function() {
 	});
 });
 
-/*TC Kimlik Sorgulama*/
-function sorgula(){
-	$('#sonuc').html('');
-	
-	var tcTemiz = $('#adminForm input[name="gonderilentc"]').val().trim();
-	
-	$.ajax({
-		type: 'POST',
-		url: '', 
-		data: {'TCKimlikNo' : tcTemiz},
-		
-		beforeSend : function(msg){
-			$('#sonuc').html('Sorgulanıyor...');
-		},
-		
-		success: function(msg){
-			$('#sonuc').hide();
-			//sorgu sonucunda gelen veriler forma eklenecek 
-		}
+//şifremi unuttum penceresi
+$(document).ready(function() {
+	$("#forgotpass").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
 	});
-}
+ 
+	$( "#forgot" ).click(function() {
+	  $( "#forgotpass" ).dialog( "open" );
+	});
+});
+
+//hesap aktivasyon penceresi
+$(document).ready(function() {
+	$("#activation").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#activ" ).click(function() {
+	  $( "#activation" ).dialog( "open" );
+	});
+});
 
 /*datepicker türkçe dil desteği*/
 jQuery(function($){

@@ -9,6 +9,9 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <?php showHead();?>
 </head>
 <body>
+<script type="text/javascript">
+
+</script>
 <?php
 $validate = spoofValue(1);
 ?>
@@ -66,6 +69,13 @@ Bu siteye kayıt olarak;
 </div> 
 
 <div class="row">
+<a href="#" id="forgot">ŞİFREMİ UNUTTUM!</a>
+</div> 
+<div class="row">
+<a href="#" id="activ">HESAP AKTİVASYONU</a>
+</div> 
+
+<div class="row">
 <input type="submit" name="button" class="button" value="GİRİŞ YAP" />
 </div>  
 
@@ -87,6 +97,34 @@ $("#loginForm").validate();
 
 
 </div><!-- content -->
+
+<div id="forgotpass">
+<form action="index.php" method="post" name="forgot" id="forgotForm">
+* Şifrenizi sıfırlamak için lütfen kayıtlı e-posta adresinizi yazın.
+<div class="row">
+<label for="email">E-posta Adresiniz:</label><input type="text" name="email" id="email" class="inputbox" /> 
+</div>
+<div class="row">
+<input type="submit" name="button" class="button" value="PAROLA SIFIRLA" />
+</div> 
+
+<input type="hidden" name="option" value="forgot" />
+</form>
+</div>
+
+<div id="activation">
+<form action="index.php" method="post" name="forgot" id="forgotForm">
+* E-posta adresinize gönderilen aktivasyon kodunu giriniz.
+<div class="row">
+<label for="code">Aktivasyon Kodu:</label><input type="text" name="code" id="code" class="inputbox" /> 
+</div>
+<div class="row">
+<input type="submit" name="button" class="button" value="AKTİVE ET!" />
+</div> 
+
+<input type="hidden" name="option" value="activate" />
+</form>
+</div>
 
 <?php include(ABSPATH.'/includes/footer.php');?>
 
