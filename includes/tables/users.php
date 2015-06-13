@@ -34,6 +34,8 @@ class Users extends DBTable {
 	
 	var $cinsiyet   = null;
 	
+	var $image  = null;
+	
 	var $nowvisit = null;
 	
 	var $lastvisit= null;
@@ -51,8 +53,39 @@ class Users extends DBTable {
 		$this->DBTable( '#__users', 'id', $database );
 	}
 	
-	function createCode() {
-		return mosMakePassword(12);
+	function uploadImage() {
+		
+		$dest = ABSPATH.'/images/';
+		$maxsize = '2048';
+		$allow = array('png', 'gif', 'jpg', 'jpeg');
+		
+		$ext = pathinfo($this->image);
+		$uzanti = strtolower($ext['extension']);
+		
+		if (!in_array($uzanti, $allow)) {
+			$this->_error = addslashes( $this->image['name'].' için dosya türü uygun değil');
+			return false;
+		}
+		
+		if ($this->image['size'] > $maxsize*1024) {
+			 $this->_error = addslashes($this->image['name'].' için dosya boyutu istenilenden büyük!');
+			 return false;
+		}
+						
+		$imagename = $this->id.$this->username.$this->createCode(6).'.'.$uzanti;
+		
+		$targetfile= $dest.$imagename;
+		
+		if (move_uploaded_file($this->image['tmp_name'], $targetfile)) {
+		return true;
+		} else {
+		return false;	
+		}
+		
+	}
+	
+	function createCode($len=12) {
+		return mosMakePassword($len);
 	}
 	
 	function userCinsiyet() {

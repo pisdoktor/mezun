@@ -172,10 +172,10 @@ function loadStats() {
 	</td>
 	</tr>
 	<tr>
-	<th colspan="2">Sizinle Aynı</th></tr>
+	<th colspan="2" align="left">Sizinle</th></tr>
 	<tr>
 	<td>
-	Şehirde Yaşayan Üye Sayısı:
+	Aynı Şehirde Yaşayan Üye Sayısı:
 	</td>
 	<td>
 	<?php echo $aynisehir-1;?> Kişi
@@ -183,7 +183,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Şehirde Doğan Üyeler:
+	Aynı Şehirde Doğan Üyeler:
 	</td>
 	<td>
 	<?php echo $aynidogum-1;?> Kişi
@@ -191,7 +191,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Branştaki Üye Sayısı:
+	Aynı Branştaki Üye Sayısı:
 	</td>
 	<td>
 	<?php echo $aynibrans-1;?> Kişi
@@ -199,7 +199,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Yıl Okula Başlayanlar:
+	Aynı Yıl Okula Başlayanlar:
 	</td>
 	<td>
 	<?php echo $ayniyilbaslama-1;?> Kişi
@@ -207,7 +207,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Yıl Okulu Bitirenler:
+	Aynı Yıl Okulu Bitirenler:
 	</td>
 	<td>
 	<?php echo $ayniyilbitirme-1;?> Kişi
