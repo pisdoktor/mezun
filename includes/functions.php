@@ -5,6 +5,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 function siteMenu() {
 	global $my, $dbase;
 	$msg = new Mesajlar($dbase);
+	$istek = new Istekler($dbase);
+	$online = new Session($dbase);
 	?>
 <div id="cssmenu">
 <ul>
@@ -23,18 +25,18 @@ if (!$my->id) {
 <ul>
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
 <li><a href="index.php?option=site&bolum=arkadas"><span>Arkadaşlarım</span></a></li>
-<li><a href="index.php?option=site&bolum=online"><span>Online Üyeler</span></a></li>
+<li><a href="index.php?option=site&bolum=online"><span>Online Üyeler <?php $online->totalOnline();?></span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>İstekler</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler</span></a></li>
+<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler <?php $istek->totalWaiting();?></span></a></li>
 <li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>Mesajlarım</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu</span></a></li>
+<li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu <?php $msg->totalUnread();?></span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj&task=outbox"><span>Giden Kutusu</span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj&task=new"><span>Yeni Mesaj</span></a></li>
 </ul>
@@ -82,7 +84,6 @@ function loadSiteModule() {
 	UserPanel();
 	//loadDuyuru();
 	loadStats();
-	loadIstek();
 	break;
 	
 	case 'site':
@@ -142,7 +143,8 @@ function UserPanel() {
 	echo '<span><center><h3>Hoşgeldiniz '.$my->name.'</h3></center></span><br />';
 	echo '<span><strong><u>Çalıştığınız Kurum:</u></strong><br />'. $my->work.'</span><br />';
 	echo '<span><strong><u>Bulunduğunuz Şehir:</u></strong><br />'. $my->sehir.'</span><br />';
-	echo '<span><strong><u>Siteye Son Gelişiniz:</u></strong><br />'. $lastvisit.'</span>';
+	echo '<span><strong><u>Siteye Son Gelişiniz:</u></strong><br />'. $lastvisit.'</span><br />';
+	echo loadIstek();
 	echo '</div>';
 }
 
@@ -258,7 +260,7 @@ function loadIstek() {
 	
 	$link = $total ? '<a href="index.php?option=site&bolum=istek&task=inbox">'.$total.'</a>' : $total;
 	?>
-	<div id="gelenistekler">Toplam <?php echo $link;?> arkadaşlık isteğiniz var</div>
+	<div id="gelenistekler"><h3>Gelen Arkadaşlık İstekleri</h3><span>Toplam <?php echo $link;?> arkadaşlık isteğiniz var</span></div>
 	<?php
 	
 }

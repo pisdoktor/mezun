@@ -105,8 +105,5 @@ $t = 1 - $t;
 <input type="hidden" name="boxchecked" value="0" />
 </form>
 		<?php
-		echo $inbox;
-		echo $outbox;
-		echo $new;
 	}
 }

@@ -87,7 +87,7 @@ for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
 $image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
-$msglink = '<a href="index.php?option=site&bolum=mesaj&task=new&aid='.$row->id.'">Mesaj Gönder</a>';
+$link = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
 ?>
 <div class="search-user user-row<?php echo $t;?>">
 
@@ -106,7 +106,7 @@ $msglink = '<a href="index.php?option=site&bolum=mesaj&task=new&aid='.$row->id.'
 <div><?php echo $row->myili;?></div>
 <div><?php echo $row->lastvisit;?></div>
 <div><?php echo $row->registerDate;?></div>
-<div><?php echo $msglink;?></div>
+<div><?php echo $link;?></div>
 
 </div>
 <?php

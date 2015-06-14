@@ -217,11 +217,11 @@ initGzip();
 
 //ziyaretçi
 if (!$my->id) {
-	if ($option == '') {
-		include_once(ABSPATH. '/site/templates/'.SITETEMPLATE.'/login.php');    
-	} else {
+	if ($option == 'register') {
 		$reg = new Users($dbase);
 		include_once(ABSPATH. '/site/templates/'.SITETEMPLATE.'/register.php');    
+	} else {
+		include_once(ABSPATH. '/site/templates/'.SITETEMPLATE.'/login.php');    
 	}
 }
 //kayıtlı kullanıcı

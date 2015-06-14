@@ -21,6 +21,23 @@ class Session extends DBTable {
 	function Session( &$db ) {
 		$this->DBTable( '#__sessions', 'session', $db );
 	}
+	
+	/**
+	* soner ekledi
+	* toplam online üye
+	*/
+	function totalOnline() {
+		global $my;
+		$query = "SELECT COUNT(*) FROM #__sessions"
+		. "\n WHERE username!=''"
+		//. "\n AND userid NOT IN (".$this->_db->Quote($my->id).")"
+		;
+		$this->_db->setQuery($query);
+		
+		if ($this->_db->loadResult()) {
+			echo "(".$this->_db->loadResult().")";
+		}
+	}
 
 	/**
 	 * @param string Key search for

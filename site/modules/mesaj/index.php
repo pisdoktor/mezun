@@ -54,6 +54,14 @@ function showMessage($id) {
 	$row = new Mesajlar($dbase);
 	$row->load($id);
 	
+	$row->baslik = base64_decode($row->baslik);
+	$row->text = base64_decode($row->text);
+	
+	if ($row->aid == $my->id) {
+	$dbase->setQuery("UPDATE #__mesajlar SET okunma=1 WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	}
+	
 	Message::showMsg($row, $my);
 }
 

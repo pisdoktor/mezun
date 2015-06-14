@@ -30,6 +30,16 @@ class Mesajlar extends DBTable {
 		return mosMakePassword(255);
 	}
 	
+	function totalUnread() {
+		global $my;
+		$query = "SELECT COUNT(*) FROM #__mesajlar WHERE aid=".$this->_db->Quote($my->id)." AND okunma=0";
+		$this->_db->setQuery($query);
+		
+		if ($this->_db->loadResult()) {
+			echo "(".$this->_db->loadResult().")";
+		} 
+	}
+	
 	function newMsg() {
 		global $my;
 		
