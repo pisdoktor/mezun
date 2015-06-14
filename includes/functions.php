@@ -19,13 +19,31 @@ if (!$my->id) {
 <?php        
 } else {
 ?>
+<li class="has-sub"><a href="#"><span>Menüm</span></a>
+<ul>
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
-<li><a href="index.php?option=site&bolum=mesaj"><span>Mesajlarım</span></a></li>
+<li><a href="index.php?option=site&bolum=arkadas"><span>Arkadaşlarım</span></a></li>
+<li><a href="index.php?option=site&bolum=online"><span>Online Üyeler</span></a></li>
+</ul>
+</li>
+<li class="has-sub"><a href="#"><span>İstekler</span></a>
+<ul>
+<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler</span></a></li>
+<li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
+</ul>
+</li>
+<li class="has-sub"><a href="#"><span>Mesajlarım</span></a>
+<ul>
+<li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu</span></a></li>
+<li><a href="index.php?option=site&bolum=mesaj&task=outbox"><span>Giden Kutusu</span></a></li>
+<li><a href="index.php?option=site&bolum=mesaj&task=new"><span>Yeni Mesaj</span></a></li>
+</ul>
+</li>
 <li><a href="index.php?option=site&bolum=arama"><span>Üye Arama</span></a></li>
 <?php 
 if ($my->id == 1) {
 ?>
-<li><a href="index.php?option=admin"><span>Yönetim Paneli</span></a></li>
+<li><a href="index.php?option=admin"><span>Yönetim</span></a></li>
 <?php    
 }
 ?>
@@ -64,6 +82,7 @@ function loadSiteModule() {
 	UserPanel();
 	//loadDuyuru();
 	loadStats();
+	loadIstek();
 	break;
 	
 	case 'site':
@@ -216,4 +235,19 @@ function loadStats() {
 	</table>
 	</div>
 	<?php
+}
+
+function loadIstek() {
+	global $dbase, $my;
+	
+	$query = "SELECT COUNT(*) FROM #__istekler WHERE durum=0 AND aid=".$my->id;
+	$dbase->setQuery($query);
+	
+	$total = $dbase->loadResult();
+	
+	$link = $total ? '<a href="index.php?option=site&bolum=istek&task=inbox">'.$total.'</a>' : $total;
+	?>
+	<div id="gelenistekler">Toplam <?php echo $link;?> arkadaşlık isteğiniz var</div>
+	<?php
+	
 }

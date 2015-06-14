@@ -191,7 +191,7 @@ padding-left: 5px;
 }
 #cssmenu > ul > li.has-sub::after {
   right: 10px;
-  top: 20px;
+  top: 15px;
   border: 5px solid transparent;
   border-top-color: #7a8189;
 }
@@ -250,7 +250,7 @@ padding-left: 5px;
 }
 #cssmenu > ul > li:hover > ul {
   left: auto;
-  top: 44px;
+  top: 30px;
   opacity: 1;
 }
 #cssmenu.align-right > ul > li:hover > ul {

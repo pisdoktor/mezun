@@ -276,6 +276,27 @@ $(document).ready(function() {
 	});
 });
 
+//mesaj gönderme penceresi
+$(document).ready(function() {
+	$("#sendmessage").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#sendamsg" ).click(function() {
+	  $( "#sendmessage" ).dialog( "open" );
+	});
+});
+
 /*datepicker türkçe dil desteği*/
 jQuery(function($){
 	$.datepicker.regional['tr'] = {

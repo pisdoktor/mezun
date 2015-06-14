@@ -61,8 +61,12 @@ function sendMessage() {
 	global $dbase, $my;
 	
 	$row = new Mesajlar( $dbase );
+	$istek = new Istekler($dbase);
 	
 	$row->id = $row->createID();
+	
+	$row->gid = $my->id;
+	$row->aid = intval(mosGetParam($_REQUEST, 'aid'));
 	
 	if ( !$row->bind( $_POST ) ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
@@ -71,6 +75,10 @@ function sendMessage() {
 	
 	if ($row->aid == $my->id) {
 		mosRedirect('index.php?option=site&bolum=mesaj', 'Kendinize mesaj gönderemezsiniz');
+	}
+	
+	if (!$istek->checkDurum($my->id, $row->aid, 1)) {
+		mosRedirect('index.php?option=site&bolum=mesaj', 'Arkadaşlığınız olmayan birisine mesaj gönderemezsiniz');
 	}
 	
 	$row->baslik = base64_encode($row->baslik);

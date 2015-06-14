@@ -3,14 +3,16 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Profile {
-	static function getProfile($row, $edit) {
+	static function getProfile($row, $edit, $msg) {
 		
 		$image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
 		$cinsiyet = $row->cinsiyet ? 'Erkek' : 'Bayan';
 		$editlink = $edit ? '<a href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
 		$passlink = $edit ? '<a href="#" id="changepass">Parola Değiştir</a>' : '';
 		$editimage = $edit ? '<a href="#" id="changeimg">Resmi Değiştir</a>' : '';
-		$msglink = $edit ? '' : '<a href="#" id="sendamsg">Mesaj Gönder</a>';
+		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';
+		
+		$msglink = $edit ? '' : $msglink;
 		?>
 		<div id="profile" class="clearfix">
 		
@@ -109,7 +111,7 @@ class Profile {
 		</td>
 		</tr>
 		<tr>
-		<td colspan="2"><?php echo $editlink;?> | <?php echo $passlink;?></td>
+		<td colspan="2"><?php echo $editlink;?>  <?php echo $passlink;?> <?php echo $msglink;?></td>
 		</tr>
 		</table>
 		</div>
@@ -142,6 +144,20 @@ class Profile {
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="profil" />
 		<input type="hidden" name="task" value="changepass" />
+		</form>
+		</div>
+		<!-- Parola Değiştirme -->
+		
+		<!-- Mesaj Gönderme-->
+		<div id="sendmessage">
+		<form action="index.php" method="post">
+		<input type="text" name="baslik" class="inputbox">
+		<textarea cols="50" rows="5" name="text" class="textbox"></textarea>
+		<input type="submit" value="Mesajı Gönder" class="button">
+		<input type="hidden" name="option" value="site" />
+		<input type="hidden" name="bolum" value="mesaj" />
+		<input type="hidden" name="task" value="send" />
+		<input type="hidden" name="aid" value="<?php echo $row->id;?>" />
 		</form>
 		</div>
 		<!-- Parola Değiştirme -->

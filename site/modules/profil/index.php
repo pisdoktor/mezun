@@ -116,6 +116,18 @@ function getProfile($id) {
 		$user->load($my->id);
 	} else {
 		$user->load($id);
+		
+		if (!$user->activated) {
+		mosNotAuth();
+		exit();
+	}
+	}
+	
+	$istek = new Istekler($dbase);
+	if (($my->id != $user->id) && $istek->checkDurum($my->id, $user->id, 1)) {
+		$msg = true;
+	} else {
+		$msg = false;
 	}
 	
 	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri FROM #__users AS u"
@@ -136,5 +148,5 @@ function getProfile($id) {
 		exit();
 	}
 		
-	Profile::getProfile($row, $edit);
+	Profile::getProfile($row, $edit, $msg);
 }

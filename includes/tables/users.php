@@ -53,8 +53,7 @@ class Users extends DBTable {
 	*/
 	function Users( &$database ) {
 		$this->DBTable( '#__users', 'id', $database );
-	}
-	
+	}	
 	
 	function createCode($len=12) {
 		return mosMakePassword($len);
