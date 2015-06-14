@@ -84,8 +84,8 @@ class Users extends DBTable {
 		$u = array();
 		$u[] = mosHTML::makeOption('', 'Bir Ünvan Seçin');
 		$u[] = mosHTML::makeOption('Dr');
-		$u[] = mosHTML::makeOption('Uzm.Dr');
 		$u[] = mosHTML::makeOption('Asist.Dr');
+		$u[] = mosHTML::makeOption('Uzm.Dr');
 		$u[] = mosHTML::makeOption('Yrd.Doç.Dr');
 		$u[] = mosHTML::makeOption('Doç.Dr');
 		$u[] = mosHTML::makeOption('Prof.Dr');
@@ -95,7 +95,7 @@ class Users extends DBTable {
 	
 	function selectYil($arr) {
 		
-		$start = '1981';
+		$start = '1970';
 		$end = date('Y');
 		
 		return mosHTML::integerSelectList($start, $end, '1', $arr, 'class="inputbox" size="1"', $this->myili);

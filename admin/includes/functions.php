@@ -3,8 +3,6 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );  
 
 function adminMenu() {
-	global $my, $dbase;
-	$msg = new Mesajlar($dbase);
 	?>
 <div id="cssmenu">
 <ul>
@@ -19,12 +17,10 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=ayarlar"><span>Yapılandırma</span></a></li>
 </ul>
 </li>
-<li><a href="index.php?option=admin&bolum=mesaj"><span>Mesajlarım</span></a></li>
 <li><a href="index.php?option=site"><span>Siteye Geçiş Yap</span></a></li>
 <li><a href="index.php?option=logout"><span>Çıkış Yap</span></a></li>    
 </ul>
 </div>
-<div id="messages"><?php echo $msg->newMsg();?></div>
 <?php
 }
 
@@ -87,7 +83,7 @@ function AdminPanelMenu() {
 	echo quickiconButton('index.php?option=admin&bolum=user', 'kullanici.png', 'Kullanıcı Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=brans', 'group.png', 'Branş Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=db', 'veri.png', 'Veritabanı Yönetimi');
-	echo quickiconButton('index.php?option=admin&bolum=mesaj', 'mesaj.png', 'Mesaj Yönetimi');
+	//echo quickiconButton('index.php?option=admin&bolum=mesaj', 'mesaj.png', 'Mesaj Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=ayarlar', 'config.png', 'Yapılandırma');
 	echo quickiconButton('index.php?option=site', 'change.png', 'Siteye Geçiş Yap');
 }

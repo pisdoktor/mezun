@@ -17,7 +17,7 @@ class Version {
 	
 	var $RELTIME     = '13:00';
 	
-	var $COPYRIGHT   = "Copyright (C) 2015 Soner Ekici. Tüm hakları saklıdır.";
+	var $COPYRIGHT   = "Copyright © 2015 Soner Ekici. Tüm hakları saklıdır.";
 	
 	var $URL         = 'Coded by <a href="http://www.sonerekici.com" target="_blank">Soner Ekici</a>';
 

@@ -7,6 +7,8 @@ $footer = new Version();
 <div align="center" class="footer">
 <div>
 <?php echo $footer->getShortVersion();?>
+<br />
+<?php echo $footer->getCopy();?>
 </div>
 <div>
 <a href="#" id="opener">Hakkında</a>
