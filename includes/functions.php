@@ -149,6 +149,7 @@ function UserPanel() {
 function loadStats() {
 	global $my, $dbase;
 	
+	$link = array();
 	//aktive edilmiş toplam üye sayısı
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1";
 	$dbase->setQuery($query);
@@ -159,25 +160,35 @@ function loadStats() {
 	$dbase->setQuery($query);
 	$aynisehir = $dbase->loadResult();
 	
+	$link['aynisehir'] = $aynisehir-1 ? '<a href="index.php?option=site&bolum=arama&task=search&sehir='.$my->sehirid.'">'.($aynisehir-1).'</a>' : '0';
+	
 	//sizinle aynı şehirde doğan hemşeriniz üyeler
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND dogumyeri=".$dbase->Quote($my->dogumyeriid);
 	$dbase->setQuery($query);
 	$aynidogum = $dbase->loadResult();
+	
+	$link['aynidogum'] = $aynidogum-1 ? '<a href="index.php?option=site&bolum=arama&task=search&dogumyeri='.$my->dogumyeriid.'">'.($aynidogum-1).'</a>' : '0';
 	
 	//aynı branştaki üye sayısı
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND brans=".$dbase->Quote($my->brans);
 	$dbase->setQuery($query);
 	$aynibrans = $dbase->loadResult();
 	
+	$link['aynibrans'] = $aynibrans-1 ? '<a href="index.php?option=site&bolum=arama&task=search&brans='.$my->brans.'">'.($aynibrans-1).'</a>' : '0';
+	
 	//aynı yıl okula başlayanlar
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND byili=".$dbase->Quote($my->byili);
 	$dbase->setQuery($query);
 	$ayniyilbaslama = $dbase->loadResult();
 	
+	$link['ayniyilbaslama'] = $ayniyilbaslama-1 ? '<a href="index.php?option=site&bolum=arama&task=search&byili='.$my->byili.'">'.($ayniyilbaslama-1).'</a>' : '0';
+	
 	//aynı yıl okulu bitirenler
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND myili=".$dbase->Quote($my->myili);
 	$dbase->setQuery($query);
 	$ayniyilbitirme = $dbase->loadResult();
+	
+	$link['ayniyilbitirme'] = $ayniyilbitirme-1 ? '<a href="index.php?option=site&bolum=arama&task=search&myili='.$my->myili.'">'.($ayniyilbitirme-1).'</a>' : '0';
 	?>
 	<div id="stats" class="clearfix">
 	<h3>Site İstatistikleri:</h3>
@@ -197,7 +208,7 @@ function loadStats() {
 	Aynı Şehirde Yaşayan Üye Sayısı:
 	</td>
 	<td>
-	<?php echo $aynisehir-1;?> Kişi
+	<?php echo $link['aynisehir'];?> Kişi
 	</td>
 	</tr>
 	<tr>
@@ -205,7 +216,7 @@ function loadStats() {
 	Aynı Şehirde Doğan Üye Sayısı:
 	</td>
 	<td>
-	<?php echo $aynidogum-1;?> Kişi
+	<?php echo $link['aynidogum'];?> Kişi
 	</td>
 	</tr>
 	<tr>
@@ -213,7 +224,7 @@ function loadStats() {
 	Aynı Branştaki Üye Sayısı:
 	</td>
 	<td>
-	<?php echo $aynibrans-1;?> Kişi
+	<?php echo $link['aynibrans'];?> Kişi
 	</td>
 	</tr>
 	<tr>
@@ -221,7 +232,7 @@ function loadStats() {
 	Aynı Yıl Okula Başlayanlar:
 	</td>
 	<td>
-	<?php echo $ayniyilbaslama-1;?> Kişi
+	<?php echo $link['ayniyilbaslama'];?> Kişi
 	</td>
 	</tr>
 	<tr>
@@ -229,7 +240,7 @@ function loadStats() {
 	Aynı Yıl Okulu Bitirenler:
 	</td>
 	<td>
-	<?php echo $ayniyilbitirme-1;?> Kişi
+	<?php echo $link['ayniyilbitirme'];?> Kişi
 	</td>
 	</tr>
 	</table>
