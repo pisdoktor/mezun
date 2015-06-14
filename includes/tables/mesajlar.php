@@ -18,8 +18,16 @@ class Mesajlar extends DBTable {
 	
 	var $okunma = null;
 	
+	var $gsilinme = null;
+	
+	var $asilinme = null;
+	
 	function Mesajlar( &$db ) {
 		$this->DBTable( '#__mesajlar', 'id', $db );
+	}
+	
+	function createID() {
+		return mosMakePassword(255);
 	}
 	
 	function newMsg() {

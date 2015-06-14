@@ -4,6 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $id = intval(mosGetParam($_REQUEST, 'id')); 
 
+
 include(dirname(__FILE__). '/html.php');
 
 switch($task) {
@@ -39,6 +40,63 @@ switch($task) {
 	case 'savepass':
 	savePass();
 	break;
+	
+	case 'saveimage':
+	saveImage();
+	break;
+}
+
+function changePass() {
+	global $dbase, $my;
+	
+	$password = mosGetParam($_POST, 'password');
+	$password2 = mosGetParam($_POST, 'password2');
+}
+
+function saveImage() {
+	global $dbase, $my;
+	
+	$row = new Users($dbase);
+	$row->load($my->id);
+	
+	//eğer varsa önce eski resmi silelim
+	if ($row->image) {
+		@unlink(ABSPATH.'/images/'.$row->image);
+	}
+	
+	//şimdi yeni resmi yükleyelim
+	$image = mosGetParam($_FILES, 'image');
+		
+	$dest = ABSPATH.'/images/';
+	$maxsize = '2048';
+	$allow = array('png', 'gif', 'jpg', 'jpeg');
+		
+	$uzanti = pathinfo($image['name']);
+	$uzanti = strtolower($uzanti["extension"]);
+		
+	if (!in_array($uzanti, $allow)) {
+		$error = addslashes( $image['name'].' için dosya türü uygun değil');
+	}
+		
+	if ($image['size'] > $maxsize*1024) {
+		$error = addslashes($image['name'].' için dosya boyutu istenilenden büyük!');
+	}
+						
+	$imagename = $row->id.$row->username.$row->createCode(6).'.'.$uzanti;
+	$targetfile= $dest.$imagename;
+		
+	if (move_uploaded_file($image['tmp_name'], $targetfile)) {
+		$error = 'Resminiz başarıyla yüklendi';
+	} else {
+		$error = addslashes( $image['name'].' yüklenemedi!');    
+	}
+	
+	$query = "UPDATE #__users SET image=".$dbase->Quote($imagename)
+	. "\n WHERE id=".$dbase->Quote($row->id);
+	$dbase->setQuery($query);
+	$dbase->query();
+	
+	mosRedirect('index.php?option=site&bolum=profil', $error);
 }
 
 function editProfile() {

@@ -463,3 +463,18 @@ padding-left: 5px;
 	border-color: #fff;
   }
 }
+
+#profile {
+	
+}
+
+#profile-photo {
+	float: left;
+	width: 200px;
+	height: 200px;
+}
+
+#basic-info {
+	float: right;
+	width: 750px;
+}

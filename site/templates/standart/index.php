@@ -24,6 +24,11 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 </div>
 
 <div id="content" class="clearfix">
+<?php
+	if ($mosmsg) {
+	echo '<div id="message" title="Uyarı">'.$mosmsg.'</div>';
+	}
+?>
 <?php loadSiteModule();?>
 </div><!-- content -->
 

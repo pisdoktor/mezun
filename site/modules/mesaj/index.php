@@ -2,8 +2,10 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$id = intval(mosGetParam($_REQUEST, 'id'));
+$id = mosGetParam($_REQUEST, 'id');
 $cid = mosGetParam($_REQUEST, 'id'); 
+$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
+$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -46,22 +48,80 @@ switch($task) {
 	break;
 }
 
+function showMessage($id) {
+	global $dbase, $my;
+	
+	$row = new Mesajlar($dbase);
+	$row->load($id);
+	
+	Message::showMsg($row, $my);
+}
+
+function sendMessage() {
+	global $dbase, $my;
+	
+	$row = new Mesajlar( $dbase );
+	
+	$row->id = $row->createID();
+	
+	if ( !$row->bind( $_POST ) ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	if ($row->aid == $my->id) {
+		mosRedirect('index.php?option=site&bolum=mesaj', 'Kendinize mesaj gönderemezsiniz');
+	}
+	
+	$row->baslik = base64_encode($row->baslik);
+	$row->text = base64_encode($row->text);
+	$row->tarih = date('Y-m-d H:i:s');
+	$row->okunma = 0;
+	$row->gsilinme = 0;
+	$row->asilinme = 0;
+	
+	if (!$row->check()) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	if (!$row->store()) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	mosRedirect('index.php?option=site&bolum=mesaj', 'Mesajınız başarıyla gönderildi');
+}
+
 function createMessage() {
 	global $dbase, $my;
 	
-	Message::createMsg();
+	Message::createMsg($my);
 }
 
 function inBox($type) {
-	global $dbase, $my;
+	global $dbase, $my, $limit, $limitstart;
 	
-	$where = $type ? ' WHERE gid='.$dbase->Quote($my->id) : ' WHERE aid='.$dbase->Quote($my->id);
-	$query = "SELECT * FROM #__mesajlar"
+	$where = $type ? ' WHERE m.gid='.$dbase->Quote($my->id) : ' WHERE m.aid='.$dbase->Quote($my->id);
+	$where2 = $type ? 'AND m.gsilinme=0' : 'AND m.asilinme=0';
+	
+	$query = "SELECT COUNT(*) FROM #__mesajlar AS m"
 	.$where
-	. "\n ORDER BY okunma ASC, tarih DESC";
+	.$where2
+	. "\n ORDER BY m.okunma ASC, m.tarih DESC";
 	$dbase->setQuery($query);
+	$total = $dbase->loadResult();
+	
+	$pageNav = new pageNav( $total, $limitstart, $limit);
+	
+	$query = "SELECT m.*, u.name as gonderen FROM #__mesajlar AS m"
+	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"
+	.$where
+	.$where2
+	. "\n ORDER BY m.okunma ASC, m.tarih DESC";
+	$dbase->setQuery($query, $limitstart, $limit);
 	
 	$rows = $dbase->loadObjectList();
 	
-	Message::inBox($rows);
+	Message::inBox($rows, $pageNav);
 }

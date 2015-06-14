@@ -53,6 +53,10 @@ switch($option) {
 function activeUser($code) {
 	global $dbase;
 	
+	$code = htmlspecialchars($code);
+	$code = stripslashes($code);
+	$code = trim($code);
+	
 	$query = "SELECT id FROM #__users WHERE activation=".$dbase->Quote($code);
 	$dbase->setQuery($query);
 	
@@ -71,6 +75,10 @@ function resendPassword() {
 	global $dbase;
 	
 	$mail = mosGetParam($_REQUEST, 'email');
+	
+	$mail = htmlspecialchars($mail);
+	$mail = stripslashes($mail);
+	$mail = trim($mail);
 	
 	$query = "SELECT id FROM #__users WHERE email=".$dbase->Quote($mail);
 	$dbase->setQuery($query);

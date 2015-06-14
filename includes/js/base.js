@@ -234,6 +234,48 @@ $(document).ready(function() {
 	});
 });
 
+//profil resmi yükleme penceresi
+$(document).ready(function() {
+	$("#imagechange").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#changeimg" ).click(function() {
+	  $( "#imagechange" ).dialog( "open" );
+	});
+});
+
+//parola değiştirme penceresi
+$(document).ready(function() {
+	$("#passchange").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#changepass" ).click(function() {
+	  $( "#passchange" ).dialog( "open" );
+	});
+});
+
 /*datepicker türkçe dil desteği*/
 jQuery(function($){
 	$.datepicker.regional['tr'] = {
