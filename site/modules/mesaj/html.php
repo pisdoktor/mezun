@@ -69,6 +69,7 @@ for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
 $row->baslik = base64_decode($row->baslik);
+$row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
 $checked = mosHTML::idBox( $i, $row->id );
 ?>
 <div id="detail<?php echo $row->id;?>">
