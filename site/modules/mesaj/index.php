@@ -112,7 +112,29 @@ function sendMessage() {
 function createMessage() {
 	global $dbase, $my;
 	
-	Message::createMsg($my);
+	$query = "SELECT u.id, u.name FROM #__istekler AS i"
+	. "\n LEFT JOIN #__users AS u ON u.id=i.aid"
+	. "\n WHERE i.gid=".$dbase->Quote($my->id)." AND durum=1"
+	;
+	$dbase->setQuery($query);
+	$rows1 = $dbase->loadObjectList();
+	
+	$query = "SELECT u.id, u.name FROM #__istekler AS i"
+	. "\n LEFT JOIN #__users AS u ON u.id=i.gid"
+	. "\n WHERE i.aid=".$dbase->Quote($my->id)." AND durum=1"
+	;
+	$dbase->setQuery($query);
+	$rows2 = $dbase->loadObjectList();
+	
+	$rows = array_merge($rows1, $rows2);
+	
+	foreach ($rows as $row) {
+		$user[] = mosHTML::makeOption($row->id, $row->name);
+	}
+	
+	$userlist = mosHTML::selectList($user, 'aid', 'size="8"', 'value', 'text');
+	
+	Message::createMsg($my, $userlist);
 }
 
 function inBox($type) {
@@ -130,8 +152,9 @@ function inBox($type) {
 	
 	$pageNav = new pageNav( $total, $limitstart, $limit);
 	
-	$query = "SELECT m.*, u.name as gonderen FROM #__mesajlar AS m"
+	$query = "SELECT m.*, u.name as gonderen, uu.name as giden FROM #__mesajlar AS m"
 	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"
+	. "\n LEFT JOIN #__users AS uu ON uu.id=m.aid"
 	.$where
 	.$where2
 	. "\n ORDER BY m.okunma ASC, m.tarih DESC";
@@ -139,5 +162,5 @@ function inBox($type) {
 	
 	$rows = $dbase->loadObjectList();
 	
-	Message::inBox($rows, $pageNav);
+	Message::inBox($rows, $pageNav, $type);
 }

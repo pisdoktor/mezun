@@ -4,14 +4,24 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Message {
 	
-	static function createMsg($my) {
+	static function createMsg($my, $userlist) {
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<input type="text" name="baslik" class="inputbox">
-		<textarea cols="50" rows="5" name="text"></textarea>
+		<table width="100%">
+		<tr>
+		<td valign="top" width="50%">
+		<h3>Mesaj İçeriği:</h3>
+		<div><input type="text" name="baslik" class="inputbox" placeholder="Mesajınızın başlığı"></div>
+		<div><textarea cols="50" rows="5" name="text" class="textbox"  placeholder="Mesajınızın içeriği"></textarea></div>
+		</td>
+		<td valign="top" align="left"  width="50%">
+		<h3>Mesajın Gideceği Kişi:</h3>
+		<div><?php echo $userlist;?></div>
+		<div><input type="submit" name="submit" value="Gönder" value="button"></div>
+		</td>
+		</tr>
+		</table>
 		
-		<input type="text" name="aid" class="inputbox">
-		<input type="submit" name="submit" value="Gönder" value="button">
 		<input type="hidden" name="option" value="site">
 		<input type="hidden" name="bolum" value="mesaj">
 		<input type="hidden" name="task" value="send">
@@ -20,7 +30,7 @@ class Message {
 		<?php
 	}
 	
-	static function inBox($rows, $pageNav) {
+	static function inBox($rows, $pageNav, $type) {
 		$inbox = '<a href="index.php?option=site&bolum=mesaj&task=inbox">Gelen Kutusu</a>';
 		$outbox = '<a href="index.php?option=site&bolum=mesaj&task=outbox">Giden Kutusu</a>';
 		$new = '<a href="index.php?option=site&bolum=mesaj&task=new">Yeni Mesaj</a>';
@@ -38,7 +48,7 @@ SIRA
 Başlık
 </th>
 <th width="20%">
-Gönderen
+<?php echo $type ? 'Giden' : 'Gönderen';?>
 </th>
 <th width="15%">
 Gönderim Zamanı
@@ -83,7 +93,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 </td>
 <td width="20%">
 <center>
-<?php echo $row->gonderen;?>
+<?php echo $type ? $row->giden : $row->gonderen;?>
 </center>
 </td>
 <td width="15%">
