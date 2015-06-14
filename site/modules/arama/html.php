@@ -38,6 +38,11 @@ class Search {
 </div>
 
 <div class="row">
+<label for="work">Ünvanı:</label>
+<?php echo $reg->selectUnvan();?>
+</div>
+
+<div class="row">
 <label for="sehir">Yaşadığı Şehir:</label>
 <?php echo $reg->selectSehir('sehir');?>
 </div>

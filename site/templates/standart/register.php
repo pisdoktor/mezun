@@ -103,6 +103,11 @@ $(function(){
 </div>
 
 <div class="row">
+<label for="work">Ünvanınız:</label>
+<?php echo $reg->selectUnvan();?> * Ünvanınızı seçiniz.
+</div>
+
+<div class="row">
 <label for="sehir">Yaşadığınız Şehir:</label>
 <?php echo $reg->selectSehir('sehir');?> * Şuanda bulunduğunuz ili seçin.
 </div>

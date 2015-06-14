@@ -18,6 +18,8 @@ class Users extends DBTable {
 	
 	var $brans  = null;
 	
+	var $unvan = null;
+	
 	var $byili  = null;
 	
 	var $myili = null;
@@ -70,13 +72,26 @@ class Users extends DBTable {
 		$lists = $this->_db->loadObjectList();
 		
 		$b = array();
-		$b[] = mosHTML::makeOption('0', 'Branşınızı Seçin');
+		$b[] = mosHTML::makeOption('0', 'Bir Branş Seçin');
 		foreach ($lists as $list) {
 			$b[] = mosHTML::makeOption($list->id, $list->name);
 		}
 		
 		return mosHTML::selectList($b, 'brans', 'class="inputbox" size="1"', 'value', 'text', $this->brans);
 	   
+	}
+	
+	function selectUnvan() {
+		$u = array();
+		$u[] = mosHTML::makeOption('', 'Bir Ünvan Seçin');
+		$u[] = mosHTML::makeOption('Dr.');
+		$u[] = mosHTML::makeOption('Uzm.Dr.');
+		$u[] = mosHTML::makeOption('Asistan Dr.');
+		$u[] = mosHTML::makeOption('Yrd. Doç. Dr.');
+		$u[] = mosHTML::makeOption('Doç. Dr.');
+		$u[] = mosHTML::makeOption('Prof. Dr.');
+		
+		return mosHTML::selectList($u, 'unvan', 'class="inputbox" size="1"', 'value', 'text', $this->unvan);
 	}
 	
 	function selectYil($arr) {
