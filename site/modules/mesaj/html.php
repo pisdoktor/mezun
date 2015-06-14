@@ -48,12 +48,8 @@ Gönderim Zamanı
 <?php
 	if (!$rows) {
 		?>
-		<table>
-		<tr>
-		<td colspan="5" align="center">
 		<div align="center">Henüz mesajınız yok!</div>
-		</td></tr>
-		</table>
+		<div align="center">Ama siz birilerine mesaj atabilirsiniz.</div>
 		<?php
 	}
 ?>

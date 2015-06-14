@@ -52,22 +52,21 @@ $image = intval(mosGetParam($_REQUEST, 'image'));
 $search_type = intval(mosGetParam($_REQUEST, 'search_type'));
 $limit = intval(mosGetParam($_REQUEST, 'limit', 10));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
-$requri = $_SERVER['QUERY_STRING'];
 
 
 	
 	$where = array();
 	
 	if ($name) {
-		$where[] = "u.name LIKE %".$dbase->Quote($name)."%";
+		$where[] = "u.name LIKE '%" . $dbase->getEscaped( trim( $name  ) ) . "%'";
 	}
 	
 	if ($username) {
-		$where[] = "u.username LIKE %".$dbase->Quote($username)."%";
+		$where[] = "u.username LIKE '%" . $dbase->getEscaped( trim( $username ) ) . "%'";
 	}
 	
 	if ($work) {
-		$where[] = "u.work LIKE %".$dbase->Quote($work)."%";
+		$where[] = "u.work LIKE '%" . $dbase->getEscaped( trim( $work ) ) . "%'";
 	}
 	
 	if ($brans) {
@@ -115,7 +114,7 @@ $requri = $_SERVER['QUERY_STRING'];
 	
 	$pageNav = new pageNav($total, $limitstart, $limit);
 	
-	$query = "SELECT u.*, s.name AS sehir, ss.name as dogumyeri, b.name as brans FROM #__users AS u"
+	$query = "SELECT u.*, s.name AS sehiradi, ss.name as dogumyeriadi, b.name as bransadi FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
 	. "\n LEFT JOIN #__branslar AS b ON b.id=u.brans"
@@ -126,5 +125,5 @@ $requri = $_SERVER['QUERY_STRING'];
 	$dbase->setQuery($query, $limitstart, $limit);
 	$rows = $dbase->loadObjectList();
 	
-	Search::Results($rows, $pageNav, $requri);
+	Search::Results($rows, $pageNav);
 }

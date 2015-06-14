@@ -5,7 +5,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Search {
 	static function Form($list, $reg) {
 		?>
-		<form action="index.php" method="get" name="login" id="adminForm">
+		<form action="index.php?option=site&bolum=arama&task=search" method="post" name="login" id="adminForm">
 		<h3>ÜYE ARAMA FORMU</h3>
 <div class="row">
 <label for="name">Adı Soyadı:</label>
@@ -66,33 +66,64 @@ class Search {
 <label for="myili">Arama Seçeneği:</label>
 <?php echo $list['type'];?>
 </div>
-<input type="hidden" name="option" value="site">
-<input type="hidden" name="bolum" value="arama">
-<input type="hidden" name="task" value="search">
-<input type="hidden" name="limit" value="10">
-<input type="hidden" name="limitstart" value="0">
-
 <input type="submit" name="submit" value="ARAMAYI BAŞLAT!" class="button">
 </form>
 <?php
 	}
 	
-	static function Results($rows, $pageNav, $requri) {
-		?>
-		<form action="index.php" method="post" name="adminForm">
+	static function Results($rows, $pageNav) {
+if (!$rows) {
+	?>
+	<div align="center">Arama seçeneklerinize göre bir üye bulunamadı!</div>
+	<div align="center">İsterseniz <a href="index.php?option=site&bolum=arama">tekrar arama</a> yapabilirsiniz.</div>
+	<?php
+	
+} else {
+?>
+	<div class="search-results">
+	<?php
+$t = 0;
+for($i=0; $i<count($rows);$i++) {
+$row = $rows[$i];
+
+$image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
+$msglink = '<a href="index.php?option=site&bolum=mesaj&task=new&aid='.$row->id.'">Mesaj Gönder</a>';
+?>
+<div class="search-user user-row<?php echo $t;?>">
+<div><?php echo $row->unvan;?> <?php echo $row->name;?></div>
+<div><?php echo $row->username;?></div>
+<div><img src="<?php echo $image;?>" alt="<?php echo $row->name;?>" title="<?php echo $row->name;?>" width="200" height="200" />
+<div><?php echo $row->work;?></div>
+<div><?php echo $row->sehiradi;?></div>
+<div><?php echo $row->dogumyeriadi;?></div>
+<div><?php echo $row->bransadi;?></div>
+<div><?php echo $row->byili;?></div>
+<div><?php echo $row->myili;?></div>
+<div><?php echo $row->lastvisit;?></div>
+<div><?php echo $row->registerDate;?></div>
+<div><?php echo $msglink;?></div>
+</div>
+
+
+</div>
+<?php
+$t = 1 - $t;
+}
+?>	
+	</div>
 		
-		</form>
-		<div align="center">
+<div align="center">
 <div class="pagenav_counter">
 <?php echo $pageNav->writePagesCounter();?>
 </div>
 <div class="pagenav_links">
 <?php 
-$link = 'index.php?'.$requri;
+$link = 'index.php?option=site&bolum=arama&task=search';
 echo $pageNav->writeLimitPageLink($link);
 ?>
 </div>
 </div>
-		<?php		
+<?php
+}		
 	}
 }

@@ -87,9 +87,6 @@ Bu siteye kayıt olarak;
 <input type="hidden" name="force_session" value="1" />
 <input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
-<script>
-$("#loginForm").validate();
-</script>
 </div> 
 
 
