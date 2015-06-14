@@ -79,6 +79,7 @@ class Users extends DBTable {
 		if (move_uploaded_file($this->image['tmp_name'], $targetfile)) {
 		return true;
 		} else {
+			$this->_error = addslashes( $this->image['name'].' yüklenemedi!');
 		return false;	
 		}
 		

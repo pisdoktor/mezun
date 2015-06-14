@@ -38,6 +38,41 @@ switch($task) {
 	case 'delete':
 	delKullanici($cid);
 	break;
+	
+	case 'block':
+	blockUser($cid, 0);
+	break;
+	
+	case 'unblock':
+	blockUser($cid, 1);
+	break;
+}
+
+function blockUser($cid, $what) {
+	global $dbase;
+	
+	$total = count( $cid );
+	$islem = $what ? 'Blok kaldırmak' : 'Bloklamak';
+	$islem2 = $what ? 'aktive edildi' : 'pasif edildi';
+	
+	if ( $total < 1) {
+		echo "<script> alert($islem.' için listeden bir kullanıcı seçin'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	mosArrayToInts( $cid );
+	$cids = 'id=' . implode( ' OR id=', $cid );
+	$query = "UPDATE #__users"
+	. "\n SET activated=".$dbase->Quote($what)
+	. "\n WHERE ( $cids )"
+	;
+	$dbase->setQuery( $query );
+	if ( !$dbase->query() ) {
+		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	mosRedirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) '.$islem2 );
 }
 
 function delKullanici(&$cid) {
@@ -45,7 +80,7 @@ function delKullanici(&$cid) {
 
 	$total = count( $cid );
 	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir duyuru seçin'); window.history.go(-1);</script>\n";
+		echo "<script> alert('Silmek için listeden bir kullanıcı seçin'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -60,7 +95,7 @@ function delKullanici(&$cid) {
 		exit();
 	}
 	
-	mosRedirect( 'index.php?option=yonetim&bolum=kullanici', 'Seçili kullanıcı(lar) silindi' );
+	mosRedirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) silindi' );
 }
 
 function saveKullanici() {

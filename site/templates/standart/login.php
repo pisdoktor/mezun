@@ -65,7 +65,7 @@ Bu siteye kayıt olarak;
 </div>
 
 <div class="row">
-<input type="checkbox" name="remember" value="1" /> Beni hatırla
+<input type="checkbox" name="remember" value="yes" /> Beni hatırla
 </div> 
 
 <div class="row">

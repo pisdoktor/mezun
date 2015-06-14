@@ -187,6 +187,8 @@ Kullanıcı Adı: <input type="text" name="search" value="<?php echo htmlspecial
 <input type="button" name="button" value="Yeni Kullanıcı Ekle" onclick="javascript:submitbutton('add');" class="button" />
 <input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="button" /> 
 <input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" /> 
+<input type="button" name="button" value="Seçileni Blokla" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı pasif etmek istediğinize emin misiniz?')){ submitbutton('block');}" class="button" /> 
+<input type="button" name="button" value="Seçilenin Blok Kaldır" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı aktif etmek istediğinize emin misiniz?')){ submitbutton('unblock');}" class="button" />
 </div>
 
 <table width="100%" border="0" class="veritable">
@@ -212,6 +214,9 @@ Bulunduğu Şehir
 <th width="10%">
 Branş
 </th>
+<th width="10%">
+Üyelik Durumu
+</th>
 </tr>
 </table>
 <?php
@@ -220,6 +225,8 @@ for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
 $checked = mosHTML::idBox( $i, $row->id );
+
+$blok = $row->activated ? 'Aktif' : 'Pasif';
 ?>
 <div id="detail<?php echo $row->id;?>">
 <table width="100%" border="0" class="veriitem<?php echo $t;?>">
@@ -261,6 +268,11 @@ $checked = mosHTML::idBox( $i, $row->id );
 <?php echo $row->brans;?>
 </center>
 </td>
+<td width="10%">
+<center>
+<?php echo $blok;?>
+</center>
+</td>
 </tr>
 </table>
 </div>
@@ -276,7 +288,9 @@ $t = 1 - $t;
 <div align="right">
 <input type="button" name="button" value="Yeni Kullanıcı Ekle" onclick="javascript:submitbutton('add');" class="button" />
 <input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" />
+<input type="button" name="button" value="Seçileni Blokla" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı pasif etmek istediğinize emin misiniz?')){ submitbutton('block');}" class="button" /> 
+<input type="button" name="button" value="Seçilenin Blok Kaldır" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı aktif etmek istediğinize emin misiniz?')){ submitbutton('unblock');}" class="button" /> 
 </div>
 </form>
 

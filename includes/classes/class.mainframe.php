@@ -419,7 +419,7 @@ class mainFrame {
 		$valid_remember = false;
 
 		// if no username and password passed from function, then function is being called from login module/component
-		if (!$username || !$passwd || !$sicilno) {
+		if (!$username || !$passwd) {
 			$username   = stripslashes( strval( mosGetParam( $_POST, 'username', '' ) ) );
 			$passwd     = stripslashes( strval( mosGetParam( $_POST, 'passwd', '' ) ) );
 
@@ -461,7 +461,7 @@ class mainFrame {
 				}
 			} else {
 			// query used for login via login module
-				$query = "SELECT u.id, u.name, u.username, u.password"
+				$query = "SELECT u.id, u.name, u.username, u.password, u.activated"
 				. "\n FROM #__users AS u"
 				. "\n WHERE u.username = ". $this->_db->Quote( $username )
 				;
@@ -499,6 +499,11 @@ class mainFrame {
 							$this->logout();
 							mosRedirect('index.php');
 						}
+						exit();
+					}
+					//aktive edilmemiş hesap : soner ekledi
+					if ($row->activated == 0) {
+						mosRedirect('index.php', 'Hesabınız henüz aktive edilmemiş');
 						exit();
 					}
 				}

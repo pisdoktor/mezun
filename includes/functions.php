@@ -183,7 +183,7 @@ function loadStats() {
 	</tr>
 	<tr>
 	<td>
-	Aynı Şehirde Doğan Üyeler:
+	Aynı Şehirde Doğan Üye Sayısı:
 	</td>
 	<td>
 	<?php echo $aynidogum-1;?> Kişi
