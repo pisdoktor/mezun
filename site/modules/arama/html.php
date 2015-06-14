@@ -90,9 +90,14 @@ $image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage
 $msglink = '<a href="index.php?option=site&bolum=mesaj&task=new&aid='.$row->id.'">Mesaj Gönder</a>';
 ?>
 <div class="search-user user-row<?php echo $t;?>">
+
+<div>
+<img src="<?php echo $image;?>" alt="<?php echo $row->name;?>" title="<?php echo $row->name;?>" width="200" height="200" />
+</div>
+
 <div><?php echo $row->unvan;?> <?php echo $row->name;?></div>
 <div><?php echo $row->username;?></div>
-<div><img src="<?php echo $image;?>" alt="<?php echo $row->name;?>" title="<?php echo $row->name;?>" width="200" height="200" />
+
 <div><?php echo $row->work;?></div>
 <div><?php echo $row->sehiradi;?></div>
 <div><?php echo $row->dogumyeriadi;?></div>
@@ -102,8 +107,6 @@ $msglink = '<a href="index.php?option=site&bolum=mesaj&task=new&aid='.$row->id.'
 <div><?php echo $row->lastvisit;?></div>
 <div><?php echo $row->registerDate;?></div>
 <div><?php echo $msglink;?></div>
-</div>
-
 
 </div>
 <?php

@@ -84,12 +84,12 @@ class Users extends DBTable {
 	function selectUnvan() {
 		$u = array();
 		$u[] = mosHTML::makeOption('', 'Bir Ünvan Seçin');
-		$u[] = mosHTML::makeOption('Dr.');
-		$u[] = mosHTML::makeOption('Uzm.Dr.');
-		$u[] = mosHTML::makeOption('Asistan Dr.');
-		$u[] = mosHTML::makeOption('Yrd. Doç. Dr.');
-		$u[] = mosHTML::makeOption('Doç. Dr.');
-		$u[] = mosHTML::makeOption('Prof. Dr.');
+		$u[] = mosHTML::makeOption('Dr');
+		$u[] = mosHTML::makeOption('Uzm.Dr');
+		$u[] = mosHTML::makeOption('Asist.Dr');
+		$u[] = mosHTML::makeOption('Yrd.Doç.Dr');
+		$u[] = mosHTML::makeOption('Doç.Dr');
+		$u[] = mosHTML::makeOption('Prof.Dr');
 		
 		return mosHTML::selectList($u, 'unvan', 'class="inputbox" size="1"', 'value', 'text', $this->unvan);
 	}
