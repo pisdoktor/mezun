@@ -2,20 +2,6 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$name = mosGetParam($_REQUEST, 'name');
-$username = mosGetParam($_REQUEST, 'username');
-$work = mosGetParam($_REQUEST, 'work');
-$brans = intval(mosGetParam($_REQUEST, 'brans'));
-$byili = intval(mosGetParam($_REQUEST, 'byili'));
-$myili = intval(mosGetParam($_REQUEST, 'myili'));
-$sehir = intval(mosGetParam($_REQUEST, 'sehir'));
-$dogumyeri = intval(mosGetParam($_REQUEST, 'dogumyeri'));
-$cinsiyet = intval(mosGetParam($_REQUEST, 'cinsiyet'));
-$image = intval(mosGetParam($_REQUEST, 'image'));
-$search_type = intval(mosGetParam($_REQUEST, 'search_type'));
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
-
 include(dirname(__FILE__). '/html.php');
 
 switch($task) {
@@ -29,18 +15,35 @@ switch($task) {
 }
 
 function searchForm() {
+	global $dbase, $my;
+	
+	$user = new Users($dbase);
 	
 	$type = array();
 	$type[] = mosHTML::makeOption('0', 'Tam eşleşme');
 	$type[] = mosHTML::makeOption('1', 'Herhangi bir eşleşme');
 	
-	$list['type'] = mosHTML::selectList($type, 'serach_type', 'class="inputbox" size="1"', 'value', 'text');
+	$list['type'] = mosHTML::selectList($type, 'search_type', 'class="inputbox" size="1"', 'value', 'text');
 	
-	Search::Form($list);
+	Search::Form($list, $user);
 }
 
 function searchResults() {
 	global $dbase, $my;
+	
+$name = mosGetParam($_REQUEST, 'name');
+$username = mosGetParam($_REQUEST, 'username');
+$work = mosGetParam($_REQUEST, 'work');
+$brans = intval(mosGetParam($_REQUEST, 'brans'));
+$byili = intval(mosGetParam($_REQUEST, 'byili'));
+$myili = intval(mosGetParam($_REQUEST, 'myili'));
+$sehir = intval(mosGetParam($_REQUEST, 'sehir'));
+$dogumyeri = intval(mosGetParam($_REQUEST, 'dogumyeri'));
+$cinsiyet = intval(mosGetParam($_REQUEST, 'cinsiyet'));
+$image = intval(mosGetParam($_REQUEST, 'image'));
+$search_type = intval(mosGetParam($_REQUEST, 'search_type'));
+$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
+$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
 	
 	$where = array();
 	
@@ -103,6 +106,9 @@ function searchResults() {
 	. "\n LEFT JOIN #__branslar AS b ON b.id=u.brans"
 	. ( count( $where ) ? "\n WHERE " . implode( ' '.$stype.' ', $where ) : "" ) 
 	;
+	
+	$dbase->setQuery($query, $limitstart, $limit);
+	$rows = $dbase->loadObjectList();
 	
 	Search::Results($rows, $pageNav);
 }

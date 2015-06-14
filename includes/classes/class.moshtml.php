@@ -129,6 +129,8 @@ class mosHTML {
 		$inc     = intval( $inc );
 		$arr     = array();
 
+		$arr[] = mosHTML::makeOption('', 'Bir Seçim Yapın');
+		
 		for ($i=$start; $i <= $end; $i+=$inc) {
 			$fi = $format ? sprintf( "$format", $i ) : "$i";
 			$arr[] = mosHTML::makeOption( $fi, $fi );
