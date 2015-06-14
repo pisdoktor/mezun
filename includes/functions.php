@@ -136,27 +136,27 @@ function loadStats() {
 	$tactivated = $dbase->loadResult();
 	
 	//aynı ildeki üye sayısı
-	$query = "SELECT COUNT(*) FROM #__users WHERE sehir=".$dbase->Quote($my->sehirid);
+	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND sehir=".$dbase->Quote($my->sehirid);
 	$dbase->setQuery($query);
 	$aynisehir = $dbase->loadResult();
 	
 	//sizinle aynı şehirde doğan hemşeriniz üyeler
-	$query = "SELECT COUNT(*) FROM #__users WHERE dogumyeri=".$dbase->Quote($my->dogumyeriid);
+	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND dogumyeri=".$dbase->Quote($my->dogumyeriid);
 	$dbase->setQuery($query);
 	$aynidogum = $dbase->loadResult();
 	
 	//aynı branştaki üye sayısı
-	$query = "SELECT COUNT(*) FROM #__users WHERE brans=".$dbase->Quote($my->brans);
+	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND brans=".$dbase->Quote($my->brans);
 	$dbase->setQuery($query);
 	$aynibrans = $dbase->loadResult();
 	
 	//aynı yıl okula başlayanlar
-	$query = "SELECT COUNT(*) FROM #__users WHERE byili=".$dbase->Quote($my->byili);
+	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND byili=".$dbase->Quote($my->byili);
 	$dbase->setQuery($query);
 	$ayniyilbaslama = $dbase->loadResult();
 	
 	//aynı yıl okulu bitirenler
-	$query = "SELECT COUNT(*) FROM #__users WHERE myili=".$dbase->Quote($my->myili);
+	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND myili=".$dbase->Quote($my->myili);
 	$dbase->setQuery($query);
 	$ayniyilbitirme = $dbase->loadResult();
 	?>

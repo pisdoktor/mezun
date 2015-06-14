@@ -20,10 +20,17 @@ function searchForm() {
 	$user = new Users($dbase);
 	
 	$type = array();
-	$type[] = mosHTML::makeOption('0', 'Tam eşleşme');
-	$type[] = mosHTML::makeOption('1', 'Herhangi bir eşleşme');
+	$type[] = mosHTML::makeOption('0', 'Herhangi bir eşleşme');
+	$type[] = mosHTML::makeOption('1', 'Tam eşleşme');
 	
 	$list['type'] = mosHTML::selectList($type, 'search_type', 'class="inputbox" size="1"', 'value', 'text');
+	
+	$cins = array();
+	$cins[] = mosHTML::makeOption('', 'Cinsiyet Seçin');
+	$cins[] = mosHTML::makeOption('1', 'Erkek');
+	$cins[] = mosHTML::makeOption('2', 'Bayan');
+	
+	$list['cinsiyet'] = mosHTML::selectList($cins, 'cinsiyet', 'class="inputbox" size="1"', 'value', 'text');
 	
 	Search::Form($list, $user);
 }
@@ -44,6 +51,9 @@ $image = intval(mosGetParam($_REQUEST, 'image'));
 $search_type = intval(mosGetParam($_REQUEST, 'search_type'));
 $limit = intval(mosGetParam($_REQUEST, 'limit', 10));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$requri = $_SERVER['QUERY_STRING'];
+
+
 	
 	$where = array();
 	
@@ -84,31 +94,32 @@ $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
 	}
 	
 	if ($image) {
-	   $where[] = "u.image NOT NULL";
+	   $where[] = "u.image!=''";
 	}
 	
-	$stype = $search_type ? 'OR':'AND'; 
+	$where2 = $where ? " AND (u.activated=1 AND u.id NOT IN (".$my->id."))" : " WHERE (u.activated=1 AND u.id NOT IN (".$my->id."))";
 	
-	$query = "SELECT COUNT(u.*) FROM #__users AS u"
-	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
-	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
-	. "\n LEFT JOIN #__branslar AS b ON b.id=u.brans"
-	. ( count( $where ) ? "\n WHERE " . implode( ' '.$stype.' ', $where ) : "" ) 
+	$stype = $search_type ? 'AND':'OR'; 
+	
+	$query = "SELECT COUNT(*) FROM #__users AS u"
+	. ( count( $where ) ? "\n WHERE (" . implode( ' '.$stype.' ', $where ).")" : "" )
+	.$where2 
 	;
-	
+	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
 	$pageNav = new pageNav($total, $limitstart, $limit);
 	
-	$query = "SELECT u.*, s.name AS sehir, ss.name as dogumyeri FROM #__users AS u"
+	$query = "SELECT u.*, s.name AS sehir, ss.name as dogumyeri, b.name as brans FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
 	. "\n LEFT JOIN #__branslar AS b ON b.id=u.brans"
-	. ( count( $where ) ? "\n WHERE " . implode( ' '.$stype.' ', $where ) : "" ) 
+	. ( count( $where ) ? "\n WHERE (" . implode( ' '.$stype.' ', $where ).")" : "" ) 
+	.$where2
 	;
 	
 	$dbase->setQuery($query, $limitstart, $limit);
 	$rows = $dbase->loadObjectList();
 	
-	Search::Results($rows, $pageNav);
+	Search::Results($rows, $pageNav, $requri);
 }
