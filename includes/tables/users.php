@@ -98,7 +98,7 @@ class Users extends DBTable {
 		$start = '1970';
 		$end = date('Y');
 		
-		return mosHTML::integerSelectList($start, $end, '1', $arr, 'class="inputbox" size="1"', $this->myili);
+		return mosHTML::integerSelectList($start, $end, '1', $arr, 'class="inputbox" size="1"', $this->$arr);
 	}
 	
 	function selectSehir($arr) {

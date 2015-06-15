@@ -13,11 +13,12 @@ class Message {
 		<h3>Mesaj İçeriği:</h3>
 		<div><input type="text" name="baslik" class="inputbox" placeholder="Mesajınızın başlığı"></div>
 		<div><textarea cols="50" rows="5" name="text" class="textbox"  placeholder="Mesajınızın içeriği"></textarea></div>
+		<div><input type="submit" name="submit" value="Gönder" value="button"></div>
 		</td>
 		<td valign="top" align="left"  width="50%">
 		<h3>Mesajın Gideceği Kişi:</h3>
 		<div><?php echo $userlist;?></div>
-		<div><input type="submit" name="submit" value="Gönder" value="button"></div>
+		
 		</td>
 		</tr>
 		</table>

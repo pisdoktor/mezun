@@ -102,6 +102,32 @@ function saveImage() {
 function editProfile() {
 	global $dbase, $my;
 	
+	$row = new Users($dbase);
+	$row->load($my->id);
+	
+	Profile::editProfile($row);
+	
+}
+
+function saveProfile() {
+	global $dbase, $my;
+	
+	$row = new Users( $dbase );
+	
+	
+	if ( !$row->bind( $_POST ) ) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	$row->id = $my->id;
+	
+	if (!$row->store()) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	mosRedirect('index.php?option=site&bolum=profil&task=my', 'Değşiklikler başarıyla kaydedildi');
 }
 
 function getProfile($id) {
@@ -130,6 +156,12 @@ function getProfile($id) {
 		$msg = false;
 	}
 	
+	if ($istek->checkDurum($my->id, $user->id, 0)) {
+		$istem = true;
+	} else {
+		$istem = false;
+	}
+	
 	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
@@ -148,5 +180,5 @@ function getProfile($id) {
 		exit();
 	}
 		
-	Profile::getProfile($row, $edit, $msg);
+	Profile::getProfile($row, $edit, $msg, $istem);
 }

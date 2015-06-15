@@ -42,8 +42,10 @@ Bu siteye kayıt olarak;
 <ul>
 <li>Sizinle aynı dönem okumuş olan arkadaşlarınıza ulaşabilirsiniz,</li>
 <li>Sizinle aynı bölümde okumuş diğer meslektaşlarınıza ulaşabilirsiniz,</li>
-<li>İstediğiniz üye ile mesajlaşabilirsiniz,</li>
+<li>Sizinle aynı şehirde çalışmakta olan meslektaşlarınıza ulaşabilirsiniz,</li>
+<li>Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilirsiniz,</li>
 <li>Arkadaşlarınızın size ulaşmasını sağlayabilirsiniz,</li>
+<li>Arkadaşlarınızla iletişim kurabilir, mesajlaşabilirsiniz,</li>
 </ul>
 
 <h3>Hemen şimdi <a href="index.php?option=register">Kayıt Ol!</a></h3>

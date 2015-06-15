@@ -3,14 +3,87 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Profile {
-	static function getProfile($row, $edit, $msg) {
+	static function editProfile($row) {
+		?>
+<form action="index.php" method="post" name="login" id="adminForm">
+<h3>PROFİL DÜZENLEME</h3>
+<div class="row">
+<label for="name">Adınız ve Soyadınız:</label>
+<input name="name" id="name" type="text" class="inputbox" alt="name" value="<?php echo $row->name;?>" size="15" required />
+</div>
+
+<div class="row">
+<label for="dogumtarihi">Doğum Tarihiniz:</label>
+<input name="dogumtarihi" id="dogumtarihi" type="text" class="inputbox form-control bfh-phone" alt="dogumtarihi" value="<?php echo $row->dogumtarihi;?>" size="15" data-format="dd-dd-dddd" />
+</div>
+
+<div class="row">
+<label for="sehir">Doğum Yeriniz:</label>
+<?php echo $row->selectSehir('dogumyeri');?>
+</div>
+
+<div class="row">
+<label for="email">E-posta Adresiniz:</label>
+<input name="email" id="email" type="text" class="inputbox" alt="email" value="<?php echo $row->email;?>" size="15" required />
+</div>
+
+<div class="row">
+<label for="phone">Telefon Numaranız:</label>
+<input name="phone" id="phone" type="text" class="inputbox form-control bfh-phone" alt="phone" value="<?php echo $row->phone;?>" size="15" data-format="0 (ddd) ddd dd dd" />
+</div>
+
+<div class="row">
+<label for="okulno">Okul Numaranız:</label>
+<input name="okulno" id="okulno" type="text" class="inputbox" alt="okulno" value="<?php echo $row->okulno;?>" size="15" />
+</div>
+
+<div class="row">
+<label for="work">Şuanda Çalıştığınız Kurum:</label>
+<input name="work" id="work" type="text" class="inputbox" alt="work" value="<?php echo $row->work;?>" size="15" required />
+</div>
+
+<div class="row">
+<label for="work">Branşınız:</label>
+<?php echo $row->selectBrans();?>
+</div>
+
+<div class="row">
+<label for="work">Ünvanınız:</label>
+<?php echo $row->selectUnvan();?>
+</div>
+
+<div class="row">
+<label for="sehir">Yaşadığınız Şehir:</label>
+<?php echo $row->selectSehir('sehir');?>
+</div>
+
+<div class="row">
+<label for="byili">Okula Başlangıç Yılınız:</label>
+<?php echo $row->selectYil('byili');?>
+</div>
+
+<div class="row">
+<label for="myili">Okulu Bitiriş Yılınız:</label>
+<?php echo $row->selectYil('myili');?>
+</div>
+<br />
+<div align="center">
+<input type="submit" name="button" value="KAYDET!" class="button" />
+</div>
+<input type="hidden" name="option" value="site" />
+<input type="hidden" name="bolum" value="profil" />
+<input type="hidden" name="task" value="save" />
+</form>
+		<?php
+	}
+	static function getProfile($row, $edit, $msg, $istem) {
 		
 		$image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
 		$cinsiyet = $row->cinsiyet ? 'Erkek' : 'Bayan';
 		$editlink = $edit ? '<a href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
 		$passlink = $edit ? '<a href="#" id="changepass">Parola Değiştir</a>' : '';
 		$editimage = $edit ? '<a href="#" id="changeimg">Resmi Değiştir</a>' : '';
-		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';
+		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : $istem ? 'Arkadaşlık isteği beklemede' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';
 		
 		$msglink = $edit ? '' : $msglink;
 		?>
@@ -119,7 +192,7 @@ class Profile {
 		</div>
 		
 		<!-- Profil Resmi Değiştirme -->
-		<div id="imagechange">
+		<div id="imagechange" style="display: none;">
 		* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.<br />
 		* Resminizin boyutu 2 Mb geçemez!
 		<form action="index.php" method="post" enctype="multipart/form-data">
@@ -133,13 +206,14 @@ class Profile {
 		<!-- Profil Resmi Değiştirme -->
 		
 		<!-- Parola Değiştirme -->
-		<div id="passchange">
+		<div id="passchange" style="display: none;">
 		<form action="index.php" method="post">
 		<label for="password">Yeni Parola:</label>
-		<input type="password" name="password" id="password" class="inputboc" />
+		<input type="password" name="password" id="password" class="inputbox" />
 		<br />
 		<label for="password2">Yeni Parola Tekrar:</label>
 		<input type="password" name="password2" id="password2" class="inputbox" />
+		<br />
 		<input type="submit" value="Parolayı Değiştir" class="button">
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="profil" />
@@ -149,10 +223,10 @@ class Profile {
 		<!-- Parola Değiştirme -->
 		
 		<!-- Mesaj Gönderme-->
-		<div id="sendmessage">
+		<div id="sendmessage" style="display: none;">
 		<form action="index.php" method="post">
-		<input type="text" name="baslik" class="inputbox">
-		<textarea cols="50" rows="5" name="text" class="textbox"></textarea>
+		<input type="text" name="baslik" class="inputbox" placeholder="Mesajınızın başlığı">
+		<textarea cols="50" rows="5" name="text" class="textbox" placeholder="Mesajınızın içeriği"></textarea>
 		<input type="submit" value="Mesajı Gönder" class="button">
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="mesaj" />
@@ -160,7 +234,7 @@ class Profile {
 		<input type="hidden" name="aid" value="<?php echo $row->id;?>" />
 		</form>
 		</div>
-		<!-- Parola Değiştirme -->
+		<!-- Mesaj Gönderme -->
 		<?php
 	}
 }

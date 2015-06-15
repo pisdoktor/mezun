@@ -112,14 +112,14 @@ function sendMessage() {
 function createMessage() {
 	global $dbase, $my;
 	
-	$query = "SELECT u.id, u.name FROM #__istekler AS i"
+	$query = "SELECT u.id, u.name, u.username FROM #__istekler AS i"
 	. "\n LEFT JOIN #__users AS u ON u.id=i.aid"
 	. "\n WHERE i.gid=".$dbase->Quote($my->id)." AND durum=1"
 	;
 	$dbase->setQuery($query);
 	$rows1 = $dbase->loadObjectList();
 	
-	$query = "SELECT u.id, u.name FROM #__istekler AS i"
+	$query = "SELECT u.id, u.name, u.username FROM #__istekler AS i"
 	. "\n LEFT JOIN #__users AS u ON u.id=i.gid"
 	. "\n WHERE i.aid=".$dbase->Quote($my->id)." AND durum=1"
 	;
@@ -129,10 +129,10 @@ function createMessage() {
 	$rows = array_merge($rows1, $rows2);
 	
 	foreach ($rows as $row) {
-		$user[] = mosHTML::makeOption($row->id, $row->name);
+		$user[] = mosHTML::makeOption($row->id, $row->name.' ('.$row->username.')');
 	}
 	
-	$userlist = mosHTML::selectList($user, 'aid', 'size="8"', 'value', 'text');
+	$userlist = mosHTML::selectList($user, 'aid', 'size="10"', 'value', 'text');
 	
 	Message::createMsg($my, $userlist);
 }
