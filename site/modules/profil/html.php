@@ -86,7 +86,10 @@ class Profile {
 		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : $istem ? 'Arkadaşlık isteği beklemede' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';
 		
 		$msglink = $edit ? '' : $msglink;
+		
+		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
+		<h3><?php echo $head;?></h3>
 		<div id="profile" class="clearfix">
 		
 		<div id="profile-photo">

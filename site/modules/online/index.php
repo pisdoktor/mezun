@@ -25,6 +25,7 @@ function getOnline() {
 
 function showOnlineUsers($rows) {
 	?>
+	<h3>ONLINE OLAN ÜYELER</h3>
 	<table width="100%">
 	<tr>
 	<th>Üye Adı</th>

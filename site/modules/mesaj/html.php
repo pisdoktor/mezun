@@ -6,6 +6,7 @@ class Message {
 	
 	static function createMsg($my, $userlist) {
 		?>
+		<h3>MESAJ KUTUSU: YENİ MESAJ</h3>
 		<form action="index.php" method="post" name="adminForm">
 		<table width="100%">
 		<tr>
@@ -35,9 +36,11 @@ class Message {
 		$inbox = '<a href="index.php?option=site&bolum=mesaj&task=inbox">Gelen Kutusu</a>';
 		$outbox = '<a href="index.php?option=site&bolum=mesaj&task=outbox">Giden Kutusu</a>';
 		$new = '<a href="index.php?option=site&bolum=mesaj&task=new">Yeni Mesaj</a>';
+		$head = $type ? 'MESAJ KUTUSU: GİDEN' : 'MESAJ KUTUSU: GELEN';
 		?>
-		<form action="index.php" method="post" name="adminForm">
-		<table width="100%" border="0" class="veritable">
+	<h3><?php echo $head;?></h3>	
+	<form action="index.php" method="post" name="adminForm">
+	<table width="100%" border="0" class="veritable">
 <tr>
 <th width="5%">
 SIRA
@@ -45,11 +48,11 @@ SIRA
 <th width="1%">
 <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
 </th>
+<th width="20%">
+<?php echo $type ? 'Gönderilen' : 'Gönderen';?>
+</th>
 <th width="60%">
 Başlık
-</th>
-<th width="20%">
-<?php echo $type ? 'Giden' : 'Gönderen';?>
 </th>
 <th width="15%">
 Gönderim Zamanı
@@ -86,16 +89,16 @@ $checked = mosHTML::idBox( $i, $row->id );
 <?php echo $checked;?>
 </center>
 </td>
+<td width="20%">
+<center>
+<?php echo $type ? $row->giden : $row->gonderen;?>
+</center>
+</td>
 <td width="60%">
 <center>
 <a href="index.php?option=site&bolum=mesaj&task=show&id=<?php echo $row->id;?>">
 <?php echo $row->baslik;?>
 </a>
-</center>
-</td>
-<td width="20%">
-<center>
-<?php echo $type ? $row->giden : $row->gonderen;?>
 </center>
 </td>
 <td width="15%">
