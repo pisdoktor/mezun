@@ -193,10 +193,11 @@ class Profile {
 		
 		<!-- Profil Resmi Değiştirme -->
 		<div id="imagechange" style="display: none;">
-		* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.<br />
-		* Resminizin boyutu 2 Mb geçemez!
+		<div>* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>
+		<div>* Resminizin boyutu 2 Mb geçemez!</div>
 		<form action="index.php" method="post" enctype="multipart/form-data">
 		<input type="file" name="image" id="image" />
+		<br />
 		<input type="submit" value="Profil Resmi Yap" class="button">
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="profil" />
