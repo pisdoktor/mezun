@@ -7,11 +7,12 @@ istenilen herhangi bir fakültenin mezuniyet sistemi haline getirilebilmektedir.
 
 Mezun Sistemindeki asıl amaçlarımız;
 
-	Sizinle aynı dönem okumuş olan arkadaşlarınıza ulaşabilmeniz,
-	Sizinle aynı bölümde okumuş diğer meslektaşlarınıza ulaşabilmeniz,
-	İstediğiniz arkadaşınız ile mesajlaşabilmeniz,
-	Arkadaşlık isteği gönderme ve alma,
-	Arkadaşlarınızın size ulaşmasını sağlayabilmesi,
+<li>Sizinle aynı dönem okumuş olan arkadaşlarınıza ulaşabilirsiniz,</li>
+<li>Sizinle aynı bölümde okumuş diğer meslektaşlarınıza ulaşabilirsiniz,</li>
+<li>Sizinle aynı şehirde çalışmakta olan meslektaşlarınıza ulaşabilirsiniz,</li>
+<li>Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilirsiniz,</li>
+<li>Arkadaşlarınızın size ulaşmasını sağlayabilirsiniz,</li>
+<li>Arkadaşlarınızla iletişim kurabilir, mesajlaşabilirsiniz,</li>
 
 olarak sıralanabilir.
 
