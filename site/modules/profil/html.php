@@ -89,7 +89,7 @@ class Profile {
 		
 		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
-		<h3><?php echo $head;?></h3>
+		<h3><?php echo $head;?></h3> <?php echo $editlink;?> <?php echo $passlink;?> <?php echo $msglink;?>
 		<div id="profile" class="clearfix">
 		
 		<div id="profile-photo">
@@ -185,9 +185,6 @@ class Profile {
 		<td>
 		<?php echo $row->myili;?>
 		</td>
-		</tr>
-		<tr>
-		<td colspan="2"><?php echo $editlink;?>  <?php echo $passlink;?> <?php echo $msglink;?></td>
 		</tr>
 		</table>
 		</div>

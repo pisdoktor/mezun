@@ -46,7 +46,9 @@ class Message {
 SIRA
 </th>
 <th width="1%">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
+<?php $check= $type ? '' : '<input type="checkbox" name="toggle" value="" onclick="checkAll('.count( $rows ).')" />';
+echo $check;
+?>
 </th>
 <th width="20%">
 <?php echo $type ? 'Gönderilen' : 'Gönderen';?>
@@ -74,9 +76,11 @@ $row = $rows[$i];
 
 $row->baslik = base64_decode($row->baslik);
 $row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
-$checked = mosHTML::idBox( $i, $row->id );
+$row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->gonderen.'</strong>';
+$row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';
+$checked = $type ? '' : mosHTML::idBox( $i, $row->id );
 ?>
-<div id="detail<?php echo $row->id;?>">
+<div id="<?php echo $row->id;?>">
 <table width="100%" border="0" class="veriitem<?php echo $t;?>">
 <tr>
 <td width="5%">
