@@ -33,9 +33,6 @@ class Message {
 	}
 	
 	static function inBox($rows, $pageNav, $type) {
-		$inbox = '<a href="index.php?option=site&bolum=mesaj&task=inbox">Gelen Kutusu</a>';
-		$outbox = '<a href="index.php?option=site&bolum=mesaj&task=outbox">Giden Kutusu</a>';
-		$new = '<a href="index.php?option=site&bolum=mesaj&task=new">Yeni Mesaj</a>';
 		$head = $type ? 'MESAJ KUTUSU: GİDEN' : 'MESAJ KUTUSU: GELEN';
 		?>
 	<h3><?php echo $head;?></h3>	
@@ -46,9 +43,7 @@ class Message {
 SIRA
 </th>
 <th width="1%">
-<?php $check= $type ? '' : '<input type="checkbox" name="toggle" value="" onclick="checkAll('.count( $rows ).')" />';
-echo $check;
-?>
+<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows );?>)"/>
 </th>
 <th width="20%">
 <?php echo $type ? 'Gönderilen' : 'Gönderen';?>
@@ -78,7 +73,7 @@ $row->baslik = base64_decode($row->baslik);
 $row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
 $row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->gonderen.'</strong>';
 $row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';
-$checked = $type ? '' : mosHTML::idBox( $i, $row->id );
+$checked = mosHTML::idBox( $i, $row->id );
 ?>
 <div id="<?php echo $row->id;?>">
 <table width="100%" border="0" class="veriitem<?php echo $t;?>">
@@ -121,6 +116,7 @@ $t = 1 - $t;
 <input type="hidden" name="option" value="site" />
 <input type="hidden" name="bolum" value="mesaj" />
 <input type="hidden" name="task" value="" />
+<input type="hidden" name="type" value="<?php echo $type;?>" />
 <input type="hidden" name="boxchecked" value="0" />
 </form>
 		<?php

@@ -105,37 +105,37 @@ class Profile {
 	<td colspan="2"></td>
   </tr>
   <tr>
-	<td>Ad, Soyad</td>
+	<td><strong>Adı, Soyadı:</strong></td>
 	<td><?php echo $row->name;?></td>
-	<td>Siteye Kayıt Tarihi</td>
+	<td><strong>Siteye Kayıt Tarihi:</strong></td>
 	<td><?php echo $row->registerDate;?></td>
   </tr>
   <tr>
-	<td>Kullanıcı Adı</td>
+	<td><strong>Kullanıcı Adı:</strong></td>
 	<td><?php echo $row->username;?></td>
-	<td>Siteye Son Girişi</td>
+	<td><strong>Siteye Son Gelişi:</strong></td>
 	<td><?php echo $row->lastvisit;?></td>
   </tr>
   <tr>
-	<td>Cinsiyet</td>
+	<td><strong>Cinsiyet:</strong></td>
 	<td><?php echo $cinsiyet;?></td>
-	<td>Fakülteye Girişi</td>
+	<td><strong>Fakülteye Giriş Yılı:</strong></td>
 	<td><?php echo $row->byili;?></td>
   </tr>
   <tr>
-	<td>Doğum Tarihi</td>
+	<td><strong>Doğum Tarihi:</strong></td>
 	<td><?php echo $row->dogumtarihi;?></td>
-	<td>Mezuniyet Tarihi</td>
+	<td><strong>Mezuniyet Tarihi:</strong></td>
 	<td><?php echo $row->myili;?></td>
   </tr>
   <tr>
-	<td>Doğum Yeri</td>
+	<td><strong>Doğum Yeri:</strong></td>
 	<td><?php echo $row->dogumyeri;?></td>
-	<td>Yaşadığı Şehir</td>
+	<td><strong>Yaşadığı Şehir:</strong></td>
 	<td><?php echo $row->sehiradi;?></td>
   </tr>
   <tr>
-	<td>Şuanda Çalıştığı Kurum</td>
+	<td><strong>Şuanda Çalıştığı Kurum:</strong></td>
 	<td><?php echo $row->work;?></td>
 	<td></td>
 	<td></td>

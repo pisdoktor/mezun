@@ -80,5 +80,5 @@ function inBox($type) {
 	$dbase->setQuery($query, $limitstart, $limit);
 	$rows = $dbase->loadObjectList();
 	
-	Istek::inBox($rows, $pageNav);
+	Istek::inBox($rows, $pageNav, $type);
 }
