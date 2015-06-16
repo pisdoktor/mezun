@@ -238,7 +238,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$("#imagechange").dialog({
 	  autoOpen: false,
-	  minWidth: 500,
+	  minWidth: 350,
 	  minHeight: 200,
 	  show: {
 		effect: "blind",
@@ -259,7 +259,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$("#passchange").dialog({
 	  autoOpen: false,
-	  minWidth: 500,
+	  minWidth: 350,
 	  minHeight: 200,
 	  show: {
 		effect: "blind",

@@ -44,6 +44,28 @@ switch($task) {
 	case 'saveimage':
 	saveImage();
 	break;
+	
+	case 'deleteimage':
+	deleteImage();
+	break;
+}
+
+function deleteImage() {
+	global $dbase, $my;
+	
+	$query = "SELECT image FROM #__users WHERE id=".$dbase->Quote($my->id);
+	$dbase->setQuery($query);
+	
+	$image = $dbase->loadResult();
+	
+	if ($image && @unlink(ABSPATH.'/images/'.$image)) {
+			$dbase->setQuery("UPDATE #__users SET image='' WHERE id=".$dbase->Quote($my->id));
+			$dbase->query();
+	} else {
+		mosErrorAlert('Resim yok');
+	}
+	
+	mosRedirect('index.php?option=site&bolum=profil&task=my');
 }
 
 function changePass() {
@@ -56,6 +78,12 @@ function changePass() {
 function saveImage() {
 	global $dbase, $my;
 	
+	$image = mosGetParam($_FILES, 'image');
+	
+	if (!$image['name']) {
+		mosRedirect('index.php?option=site&bolum=profil&task=my', 'Resim seçmemişsiniz');
+	}
+	
 	$row = new Users($dbase);
 	$row->load($my->id);
 	
@@ -65,7 +93,7 @@ function saveImage() {
 	}
 	
 	//şimdi yeni resmi yükleyelim
-	$image = mosGetParam($_FILES, 'image');
+	
 		
 	$dest = ABSPATH.'/images/';
 	$maxsize = '2048';
@@ -149,18 +177,26 @@ function getProfile($id) {
 	}
 	}
 	
-	$istek = new Istekler($dbase);
-	if (($my->id != $user->id) && $istek->checkDurum($my->id, $user->id, 1)) {
-		$msg = true;
+	if (($my->id == $user->id)) {
+		$msg = false;
+		$istem = false;
 	} else {
+		
+		$istek = new Istekler($dbase);
+	if ($istek->checkDurum($my->id, $user->id, 1) == true) {
+		$istem = false;
+		$msg = true;
+	} else if ($istek->checkDurum($my->id, $user->id, 0) == true) {
+		$istem = false;
+		$msg = false;
+	} else if (($istek->checkDurum($my->id, $user->id, 1) == false) && ($istek->checkDurum($my->id, $user->id, 0) == false)) {
+		$istem = true;
 		$msg = false;
 	}
 	
-	if ($istek->checkDurum($my->id, $user->id, 0)) {
-		$istem = true;
-	} else {
-		$istem = false;
 	}
+	
+	
 	
 	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"

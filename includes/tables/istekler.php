@@ -32,13 +32,13 @@ class Istekler extends DBTable {
 		$where[] = "(gid=".$gid." AND aid=".$aid.")";
 		$where[] = "(gid=".$aid." AND aid=".$gid.")";
 		
-		$query = "SELECT COUNT(*) FROM #__istekler"
+		$query = "SELECT id FROM #__istekler"
 		. "\n WHERE (" . implode( ' OR ', $where ).")"
 		. "\n AND durum=".$durum;
 		;
 		$this->_db->setQuery($query);
 		
-		if ($this->_db->loadResult()) {
+		if ($this->_db->loadResult() > 0) {
 			return true;
 		} else {
 			return false;

@@ -83,111 +83,65 @@ class Profile {
 		$editlink = $edit ? '<a href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
 		$passlink = $edit ? '<a href="#" id="changepass">Parola Değiştir</a>' : '';
 		$editimage = $edit ? '<a href="#" id="changeimg">Resmi Değiştir</a>' : '';
-		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : $istem ? 'Arkadaşlık isteği beklemede' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';
+		$deleteimage = ($edit && $row->image) ? '<a href="index.php?option=site&bolum=profil&task=deleteimage">Resmi Sil</a>' : ''; 
+		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : '';
+		$istemlink = !$istem ? '' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';		
 		
-		$msglink = $edit ? '' : $msglink;
 		
 		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
-		<h3><?php echo $head;?></h3> <?php echo $editlink;?> <?php echo $passlink;?> <?php echo $msglink;?>
+		<h3><?php echo $head;?></h3>  
 		<div id="profile" class="clearfix">
 		
 		<div id="profile-photo">
 		<img src="<?php echo $image;?>" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
-		<div align="center"><?php echo $editimage;?></div>
+		<div align="center"><?php echo $editimage;?> <?php echo $deleteimage;?></div>
 		</div>
 		
 		<div id="basic-info">
 		<table width="100%">
-		<tr>
-		<td>
-		Adı:
-		</td>
-		<td>
-		<?php echo $row->name;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Kullanıcı Adı:
-		</td>
-		<td>
-		<?php echo $row->username;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Cinsiyet:
-		</td>
-		<td>
-		<?php echo $cinsiyet;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Doğum Tarihi:
-		</td>
-		<td>
-		<?php echo $row->dogumtarihi;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Doğum Yeri:
-		</td>
-		<td>
-		<?php echo $row->dogumyeri;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Yaşadığı Şehir:
-		</td>
-		<td>
-		<?php echo $row->sehiradi;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Siteye Kayıt Tarihi:
-		</td>
-		<td>
-		<?php echo $row->registerDate;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Siteye Son Giriş Tarihi:
-		</td>
-		<td>
-		<?php echo $row->lastvisit;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Şuanda Çalıştığı Kurum:
-		</td>
-		<td>
-		<?php echo $row->work;?>
-		</td>
-		</tr>
-		<tr>
-		<td>Fakülteye Giriş Yılı:
-		</td>
-		<td>
-		<?php echo $row->byili;?>
-		</td>
-		</tr>
-		<tr>
-		<td>
-		Mezuniyet Yılı:
-		</td>
-		<td>
-		<?php echo $row->myili;?>
-		</td>
-		</tr>
-		</table>
-		</div>
+  <tr>
+	<td colspan="2"><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></td>
+	<td colspan="2"></td>
+  </tr>
+  <tr>
+	<td>Ad, Soyad</td>
+	<td><?php echo $row->name;?></td>
+	<td>Siteye Kayıt Tarihi</td>
+	<td><?php echo $row->registerDate;?></td>
+  </tr>
+  <tr>
+	<td>Kullanıcı Adı</td>
+	<td><?php echo $row->username;?></td>
+	<td>Siteye Son Girişi</td>
+	<td><?php echo $row->lastvisit;?></td>
+  </tr>
+  <tr>
+	<td>Cinsiyet</td>
+	<td><?php echo $cinsiyet;?></td>
+	<td>Fakülteye Girişi</td>
+	<td><?php echo $row->byili;?></td>
+  </tr>
+  <tr>
+	<td>Doğum Tarihi</td>
+	<td><?php echo $row->dogumtarihi;?></td>
+	<td>Mezuniyet Tarihi</td>
+	<td><?php echo $row->myili;?></td>
+  </tr>
+  <tr>
+	<td>Doğum Yeri</td>
+	<td><?php echo $row->dogumyeri;?></td>
+	<td>Yaşadığı Şehir</td>
+	<td><?php echo $row->sehiradi;?></td>
+  </tr>
+  <tr>
+	<td>Şuanda Çalıştığı Kurum</td>
+	<td><?php echo $row->work;?></td>
+	<td></td>
+	<td></td>
+  </tr>
+</table>
+	</div>
 		
 		</div>
 		
