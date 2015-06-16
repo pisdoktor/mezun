@@ -55,7 +55,7 @@ function changeDurum($cid, $status) {
 
 	mosArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "UPDATE #__istek SET durum=".$dbase->Quote($status)
+	$query = "UPDATE #__istekler SET durum=".$dbase->Quote($status)
 	. "\n WHERE ( $cids )"
 	;
 	$dbase->setQuery( $query );
@@ -86,7 +86,7 @@ function deleteDurum($cid) {
 
 	mosArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__istek"
+	$query = "DELETE FROM #__istekler"
 	. "\n WHERE ( $cids )"
 	;
 	$dbase->setQuery( $query );

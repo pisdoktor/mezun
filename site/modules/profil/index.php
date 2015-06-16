@@ -169,6 +169,7 @@ function saveProfile() {
 /**
 * Profil gösterimi
 * @param mixed $id gösterim yapılacak kullanıcının id si
+* Mesaj ve arkadaşlık isteği gönderimi konusunda daha iyi bir kodlama yapılmalı!
 */
 function getProfile($id) {
 	global $dbase, $my;

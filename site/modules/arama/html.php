@@ -88,27 +88,61 @@ $row = $rows[$i];
 
 $image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
 $link = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
+$cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 ?>
-<div class="search-user user-row<?php echo $t;?>">
-
-<div>
-<img src="<?php echo $image;?>" alt="<?php echo $row->name;?>" title="<?php echo $row->name;?>" width="200" height="200" />
+<div id="profile" class="clearfix">
+		
+<div id="profile-photo">
+<img src="<?php echo $image;?>" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
 </div>
-
-<div><?php echo $row->unvan;?> <?php echo $row->name;?></div>
-<div><?php echo $row->username;?></div>
-
-<div><?php echo $row->work;?></div>
-<div><?php echo $row->sehiradi;?></div>
-<div><?php echo $row->dogumyeriadi;?></div>
-<div><?php echo $row->bransadi;?></div>
-<div><?php echo $row->byili;?></div>
-<div><?php echo $row->myili;?></div>
-<div><?php echo $row->lastvisit;?></div>
-<div><?php echo $row->registerDate;?></div>
-<div><?php echo $link;?></div>
-
-</div>
+		
+<div id="basic-info">
+<table width="100%">
+  <tr>
+	<td colspan="2"><?php echo $link;?></td>
+	<td colspan="2"></td>
+  </tr>
+  <tr>
+	<td><strong>Adı, Soyadı:</strong></td>
+	<td><?php echo $row->name;?></td>
+	<td><strong>Siteye Kayıt Tarihi:</strong></td>
+	<td><?php echo $row->registerDate;?></td>
+  </tr>
+  <tr>
+	<td><strong>Kullanıcı Adı:</strong></td>
+	<td><?php echo $row->username;?></td>
+	<td><strong>Siteye Son Gelişi:</strong></td>
+	<td><?php echo $row->lastvisit;?></td>
+  </tr>
+  <tr>
+	<td><strong>Cinsiyet:</strong></td>
+	<td><?php echo $cinsiyet;?></td>
+	<td><strong>Fakülteye Giriş Yılı:</strong></td>
+	<td><?php echo $row->byili;?></td>
+  </tr>
+  <tr>
+	<td><strong>Doğum Tarihi:</strong></td>
+	<td><?php echo $row->dogumtarihi;?></td>
+	<td><strong>Mezuniyet Tarihi:</strong></td>
+	<td><?php echo $row->myili;?></td>
+  </tr>
+  <tr>
+	<td><strong>Doğum Yeri:</strong></td>
+	<td><?php echo $row->dogumyeriadi;?></td>
+	<td><strong>Yaşadığı Şehir:</strong></td>
+	<td><?php echo $row->sehiradi;?></td>
+  </tr>
+  <tr>
+	<td><strong>Şuanda Çalıştığı Kurum:</strong></td>
+	<td><?php echo $row->work;?></td>
+	<td></td>
+	<td></td>
+  </tr>
+</table>
+	</div>
+		
+		</div>
+		<br />
 <?php
 $t = 1 - $t;
 }
