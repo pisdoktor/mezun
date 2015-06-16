@@ -44,32 +44,4 @@ class Istekler extends DBTable {
 			return false;
 		}
 	}
-	
-	function changeDurum($oid, $type) {
-		$k = $this->_tbl_key;
-		if ($oid) {
-			$this->$k = intval( $oid );
-		}
-		
-		$this->load($this->$k);
-			
-		switch($type) {
-			case 'onay':
-			$this->set('durum', 1);
-			break;
-			
-			case 'red':
-			$this->set('durum', -1);
-			break;
-		}		
-		$ret = $this->_db->updateObject($this->_tbl, $this, $this->_tbl_key, $updateNulls);
-		
-		if( !$ret ) {
-			$this->_error = strtolower(get_class( $this ))."::kayıt başarısız <br />" . $this->_db->getErrorMsg();
-			return false;
-		} else {
-			return true;
-		}
-		
-	}
 }

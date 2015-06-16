@@ -4,6 +4,9 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $limit = intval(mosGetParam($_REQUEST, 'limit', 10));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$cid = mosGetParam($_REQUEST, 'cid');
+$id = intval(mosGetParam($_REQUEST, 'id'));
+$type = intval(mosGetParam($_REQUEST, 'type'));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -17,13 +20,77 @@ switch($task) {
 	inBox(1);
 	break;
 	
-	case 'durum':
-	changeDurum($id);
+	case 'delete':
+	deleteDurum($cid);
+	break;
+	
+	case 'onayla':
+	changeDurum($cid, 1);
+	break;
+	
+	case  'red':
+	changeDurum($cid, -1);
 	break;
 	
 	case 'send':
 	sendIstek($id);
 	break;
+}
+
+function changeDurum($cid, $status) {
+	global $dbase, $my;
+	
+	if ($type) {
+		return false;
+	}
+	$total = count( $cid );
+	if ( $total < 1) {
+		echo "<script> alert('Silmek için listeden bir istek seçin'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	mosArrayToInts( $cid );
+	$cids = 'id=' . implode( ' OR id=', $cid );
+	$query = "UPDATE #__istek SET durum=".$dbase->Quote($status)
+	. "\n WHERE ( $cids )"
+	;
+	$dbase->setQuery( $query );
+	if ( !$dbase->query() ) {
+		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	mosRedirect('index.php?option=site&bolum=istek&task=inbox');
+	
+}
+
+function deleteDurum($cid) {
+	global $dbase, $my;
+	
+	//giden istek silme işlemi 
+	if ($type) {
+		$total = count( $cid );
+	if ( $total < 1) {
+		echo "<script> alert('Silmek için listeden bir istek seçin'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	mosArrayToInts( $cid );
+	$cids = 'id=' . implode( ' OR id=', $cid );
+	$query = "DELETE FROM #__istek"
+	. "\n WHERE ( $cids )"
+	;
+	$dbase->setQuery( $query );
+	if ( !$dbase->query() ) {
+		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	//gelen istek silme işlemi varsa reddet 
+	} else {
+		return false;
+	}
+	
+	mosRedirect('index.php?option=site&bolum=istek&task=outbox');
 }
 
 function sendIstek($id) {

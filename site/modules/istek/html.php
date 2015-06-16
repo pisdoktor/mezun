@@ -74,6 +74,7 @@ $t = 1 - $t;
 <input type="hidden" name="option" value="site" />
 <input type="hidden" name="bolum" value="istek" />
 <input type="hidden" name="task" value="" />
+<input type="hidden" name="type" value="<?php echo $type;?>" />
 <input type="hidden" name="boxchecked" value="0" />
 </form>
 		<?php
