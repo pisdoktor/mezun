@@ -49,7 +49,9 @@ switch($task) {
 	deleteImage();
 	break;
 }
-
+/**
+* Profil resmi silme fonksiyonu
+*/
 function deleteImage() {
 	global $dbase, $my;
 	
@@ -67,14 +69,19 @@ function deleteImage() {
 	
 	mosRedirect('index.php?option=site&bolum=profil&task=my');
 }
-
+/**
+* Profil parolası değiştirme fonksiyonu
+* Düzenleme yapılacak henüz işlevsel değil
+*/
 function changePass() {
 	global $dbase, $my;
 	
 	$password = mosGetParam($_POST, 'password');
 	$password2 = mosGetParam($_POST, 'password2');
 }
-
+/**
+* Profil resmi ekleme/değiştirme fonksiyonu
+*/
 function saveImage() {
 	global $dbase, $my;
 	
@@ -93,8 +100,6 @@ function saveImage() {
 	}
 	
 	//şimdi yeni resmi yükleyelim
-	
-		
 	$dest = ABSPATH.'/images/';
 	$maxsize = '2048';
 	$allow = array('png', 'gif', 'jpg', 'jpeg');
@@ -126,7 +131,9 @@ function saveImage() {
 	
 	mosRedirect('index.php?option=site&bolum=profil', $error);
 }
-
+/**
+* Profil güncellemesi için açılacak sayfa
+*/
 function editProfile() {
 	global $dbase, $my;
 	
@@ -136,7 +143,9 @@ function editProfile() {
 	Profile::editProfile($row);
 	
 }
-
+/**
+* Profil güncelleme fonksiyonu
+*/
 function saveProfile() {
 	global $dbase, $my;
 	
@@ -157,7 +166,10 @@ function saveProfile() {
 	
 	mosRedirect('index.php?option=site&bolum=profil&task=my', 'Değşiklikler başarıyla kaydedildi');
 }
-
+/**
+* Profil gösterimi
+* @param mixed $id gösterim yapılacak kullanıcının id si
+*/
 function getProfile($id) {
 	global $dbase, $my;
 	
@@ -193,11 +205,7 @@ function getProfile($id) {
 		$istem = true;
 		$msg = false;
 	}
-	
 	}
-	
-	
-	
 	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"

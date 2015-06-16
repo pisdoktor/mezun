@@ -16,6 +16,9 @@ switch($task) {
 	break;
 }
 
+/**
+* Arkadaş listesi gösterimi
+*/
 function getArkadasList() {
 	
 }

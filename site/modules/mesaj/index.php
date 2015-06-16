@@ -6,6 +6,7 @@ $id = mosGetParam($_REQUEST, 'id');
 $cid = mosGetParam($_REQUEST, 'id'); 
 $limit = intval(mosGetParam($_REQUEST, 'limit', 10));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$type = intval(mosGetParam($_REQUEST, 'type'));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -47,7 +48,10 @@ switch($task) {
 	changeMessage($cid, 1);
 	break;
 }
-
+/**
+* Mesaj gösterim fonksiyonu
+* @param mixed $id gönderim yapılacak kullanıcının id değeri
+*/
 function showMessage($id) {
 	global $dbase, $my;
 	
@@ -64,7 +68,10 @@ function showMessage($id) {
 	
 	Message::showMsg($row, $my);
 }
-
+/**
+* Mesaj gönderim fonksiyonu
+* Arkadaşlık durumuna göre mesaj gönderiyor
+*/
 function sendMessage() {
 	global $dbase, $my;
 	
@@ -108,7 +115,10 @@ function sendMessage() {
 	
 	mosRedirect('index.php?option=site&bolum=mesaj', 'Mesajınız başarıyla gönderildi');
 }
-
+/**
+* Mesaj oluşturma
+* Sadece arkadaş listesindeki üyelere
+*/
 function createMessage() {
 	global $dbase, $my;
 	
@@ -136,7 +146,10 @@ function createMessage() {
 	
 	Message::createMsg($my, $userlist);
 }
-
+/**
+* Mesaj kutusu gösterimi
+* @param mixed $type 0 ise gelen 1 ise giden kutusu
+*/
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
 	

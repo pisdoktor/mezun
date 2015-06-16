@@ -8,6 +8,10 @@ switch($task) {
 	break;
 }
 
+/**
+* Online üyeleri veritabanından alalım
+* Sayfaya bakan kullanıcının kendisi görmesi engellenmeli!
+*/
 function getOnline() {
 	global $dbase, $my;
 	
@@ -23,6 +27,11 @@ function getOnline() {
 	showOnlineUsers($rows);
 }
 
+/**
+* Online üyeleri gösteren fonksiyon
+* @param mixed $rows online üyelerin bilgilerini içerir
+* Bazı ufak düzenlemeler yapılacak!
+*/
 function showOnlineUsers($rows) {
 	?>
 	<h3>ONLINE OLAN ÜYELER</h3>

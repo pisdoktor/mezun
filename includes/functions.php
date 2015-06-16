@@ -2,6 +2,9 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );  
 
+/**
+* Site menüsü
+*/
 function siteMenu() {
 	global $my, $dbase;
 	$msg = new Mesajlar($dbase);
@@ -56,7 +59,9 @@ if ($my->id == 1) {
 <?php
 }
 }
-
+/**
+* Admin için siteden yönetim paneline geçiş için fonksiyon
+*/
 function convertAdmin() {
 	global $mainframe, $dbase, $my;
 	
@@ -72,7 +77,9 @@ function convertAdmin() {
 		mosNotAuth();
 	}    
 }
-
+/**
+* Site modüllerini yükleyen fonksiyon
+*/
 function loadSiteModule() {
 	global $option, $bolum, $task;
 	global $id, $cid;
@@ -100,7 +107,9 @@ function loadSiteModule() {
 	}
 	
 }
-
+/**
+* Duyuruları getiren fonksiyon
+*/
 function loadDuyuru() {
 	global $dbase, $my;
 	
@@ -133,7 +142,9 @@ $t = 1;
 <?php
 	
 }
-
+/**
+* Kullanıcı paneli: kullanıcı hakkında kısa bilgi
+*/
 function UserPanel() {
 	global $my;
 	
@@ -147,7 +158,9 @@ function UserPanel() {
 	echo loadIstek();
 	echo '</div>';
 }
-
+/**
+* Site istatistiklerini gösteren fonksiyon
+*/
 function loadStats() {
 	global $my, $dbase;
 	
@@ -249,7 +262,9 @@ function loadStats() {
 	</div>
 	<?php
 }
-
+/**
+* Gelen arkadaşlık isteklerini gösteren fonksiyon
+*/
 function loadIstek() {
 	global $dbase, $my;
 	

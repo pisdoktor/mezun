@@ -13,7 +13,9 @@ switch($task) {
 	searchResults();
 	break;
 }
-
+/**
+* Arama seçeneklerini gösteren fonksiyon
+*/
 function searchForm() {
 	global $dbase, $my;
 	
@@ -35,6 +37,9 @@ function searchForm() {
 	Search::Form($list, $user);
 }
 
+/**
+* Arama sonuçlarının gösterimi
+*/
 function searchResults() {
 	global $dbase, $my;
 	

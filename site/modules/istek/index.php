@@ -36,7 +36,11 @@ switch($task) {
 	sendIstek($id);
 	break;
 }
-
+/**
+* Gelen istekleri değerlendirme fonksiyon
+* @param mixed $cid gelen isteklerin id değeri
+* @param mixed $status gelen isteğe ne yapılacağı 1: onayla -1: reddet
+*/
 function changeDurum($cid, $status) {
 	global $dbase, $my;
 	
@@ -64,6 +68,11 @@ function changeDurum($cid, $status) {
 	
 }
 
+/**
+* Gönderilmiş bir isteği silme fonksiyonu
+* 
+* @param mixed $cid gönderilmiş isteklerin id değeri
+*/
 function deleteDurum($cid) {
 	global $dbase, $my;
 	
@@ -93,6 +102,11 @@ function deleteDurum($cid) {
 	mosRedirect('index.php?option=site&bolum=istek&task=outbox');
 }
 
+/**
+* İstek gönderim fonksiyonu
+* 
+* @param mixed $id istek gönderilecek kullanıcının id si
+*/
 function sendIstek($id) {
 	global $dbase, $my;
 	
@@ -127,6 +141,10 @@ function sendIstek($id) {
 	}
 }
 
+/**
+* İstekler Kutusu
+* @param mixed $type 1: giden istekler kutusu 0: gelen istekler kutusu
+*/
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
 	
