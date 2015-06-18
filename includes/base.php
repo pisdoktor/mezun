@@ -291,7 +291,7 @@ function mosErrorAlert( $text, $action='window.history.go(-1);', $mode=1 ) {
 	exit;
 }
 
-function mosTreeRecurse( $id, $indent, $list, &$children, $maxlevel=9999, $level=0, $type=1 ) {
+function treeRecurse( $id, $indent, $list, &$children, $maxlevel=9999, $level=0, $type=1 ) {
 
 	if (@$children[$id] && $level <= $maxlevel) {
 		foreach ($children[$id] as $v) {
@@ -315,7 +315,7 @@ function mosTreeRecurse( $id, $indent, $list, &$children, $maxlevel=9999, $level
 			$list[$id]->treename = "$indent$txt";
 			$list[$id]->children = count( @$children[$id] );
 
-			$list = mosTreeRecurse( $id, $indent . $spacer, $list, $children, $maxlevel, $level+1, $type );
+			$list = treeRecurse( $id, $indent . $spacer, $list, $children, $maxlevel, $level+1, $type );
 		}
 	}
 	return $list;

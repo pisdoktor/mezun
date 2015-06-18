@@ -526,3 +526,46 @@ input[type="checkbox"] {
 .row {
 	padding: 5px;
 }
+
+/**
+* Forum CSS
+*/
+.bordercolor
+{
+	background-color: #dadada;
+}
+
+.titlebg, tr.titlebg th, tr.titlebg td, .titlebg a:link, .titlebg a:visited, .titlebg2, tr.titlebg2 th, tr.titlebg2 td, .titlebg2 a:link, .titlebg2 a:visited
+{
+	color: white;
+	font-style: normal;
+	background-color: #6B8EAE;
+}
+
+.titlebg a:hover, .titlebg2 a:hover
+{
+	color: #dfdfdf;
+}
+
+.catbg, .catbg2, .catbg3
+{
+	font-weight: bold;
+	background-color: #cacaca;
+	color: #000000;
+}
+
+.windowbg
+{
+	color: #000000;
+	background-color: #E1E1E1;
+}
+.windowbg2
+{
+	color: #000000;
+	background-color: #F0F0F0;
+}
+
+.smalltext
+{
+	font-size: x-small;
+}

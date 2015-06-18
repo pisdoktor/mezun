@@ -15,6 +15,7 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=db"><span>Veritabanı Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=duyuru"><span>Duyuru Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=ayarlar"><span>Yapılandırma</span></a></li>
+<li><a href="index.php?option=admin&bolum=forum"><span>Forum Yönetimi</span></a></li>
 </ul>
 </li>
 <li><a href="index.php?option=site"><span>Siteye Geçiş Yap</span></a></li>
@@ -83,7 +84,7 @@ function AdminPanelMenu() {
 	echo quickiconButton('index.php?option=admin&bolum=user', 'kullanici.png', 'Kullanıcı Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=brans', 'group.png', 'Branş Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=db', 'veri.png', 'Veritabanı Yönetimi');
-	//echo quickiconButton('index.php?option=admin&bolum=mesaj', 'mesaj.png', 'Mesaj Yönetimi');
+	echo quickiconButton('index.php?option=admin&bolum=forum', 'mesaj.png', 'Forum Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=ayarlar', 'config.png', 'Yapılandırma');
 	echo quickiconButton('index.php?option=site', 'change.png', 'Siteye Geçiş Yap');
 }

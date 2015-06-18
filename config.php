@@ -40,3 +40,10 @@ define('GZIPCOMP', 0);
 define('STATS', 1);
 define('FILEPERMS', '');
 define('DIRPERMS', '');
+
+/**
+* Forum Seçenekleri
+*/
+define('countChildPosts', 1);
+define('hotTopicPosts', 20);
+define('hotTopicVeryPosts', 50);

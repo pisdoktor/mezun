@@ -45,6 +45,7 @@ if (!$my->id) {
 </ul>
 </li>
 <li><a href="index.php?option=site&bolum=arama"><span>Üye Arama</span></a></li>
+<li><a href="index.php?option=site&bolum=forum"><span>Forum</span></a></li>
 <?php 
 if ($my->id == 1) {
 ?>

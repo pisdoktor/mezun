@@ -1,4 +1,6 @@
 <?php
+// no direct access
+defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 /**
  *  @class: InputFilter (PHP4 & PHP5, with comments)
  * @project: PHP Input Filter
