@@ -3,7 +3,6 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $id = intval(mosGetParam($_REQUEST, 'id'));
-$msgid = intval(mosGetParam($_REQUEST, 'msgid'));
 $limit = intval(mosGetParam($_REQUEST, 'limit', 10));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
 
@@ -11,7 +10,7 @@ include(dirname(__FILE__). '/html.php');
 
 switch($task) {
 	default:
-	BoardIndex();
+	ForumIndex();
 	break;
 	
 	case 'board':
@@ -19,7 +18,7 @@ switch($task) {
 	break;
 	
 	case 'topic':
-	Topic($id, $msgid);
+	Topic($id);
 	break;
 	
 	case 'message':
@@ -33,6 +32,52 @@ switch($task) {
 	case 'newmessage':
 	createNewMessage();
 	break;
+}
+
+function createNewMessage() {
+	global $dbase, $my;
+	
+	$msgOptions = new stdClass();
+	$content = $_POST;
+	
+	$msgOptions->ID_MSG = null;
+	$msgOptions->ID_TOPIC = $content['ID_TOPIC'];
+	$msgOptions->ID_BOARD = $content['ID_BOARD'];
+	$msgOptions->posterTime = time();
+	$msgOptions->ID_MEMBER = $my->id;
+	$msgOptions->ID_MSG_MODIFIED = null;
+	$msgOptions->posterIP = $_SERVER['REMOTE_ADDR'];
+	$msgOptions->subject = $content['subject'];
+	$msgOptions->body = $content['body'];
+	
+	$query = "INSERT INTO #__forum_messages (ID_TOPIC, ID_BOARD, posterTime, ID_MEMBER, posterIP, subject, body) VALUES (".$dbase->Quote($msgOptions->ID_TOPIC).", ".$dbase->Quote($msgOptions->ID_BOARD).",".$dbase->Quote($msgOptions->posterTime).",".$dbase->Quote($msgOptions->ID_MEMBER).",".$dbase->Quote($msgOptions->posterIP).",".$dbase->Quote($msgOptions->subject).",".$dbase->Quote($msgOptions->body).")";
+	$dbase->setQuery($query);
+	$dbase->query();
+	$msgOptions->ID_MSG = $dbase->insertid();
+	
+	if (isset($msgOptions->ID_MSG)) {
+	//Updateler
+	$dbase->setQuery("UPDATE #__forum_messages 
+	ID_MSG_MODIFIED = ".$dbase->Quote($msgOptions->ID_MSG)." WHERE ID_MSG=".$dbase->Quote($msgOptions->ID_MSG)."");
+	$dbase->query();
+	
+	//topic sayacı
+	$dbase->setQuery("UPDATE #__forum_topics SET ID_LAST_MSG = ".$dbase->Quote($msgOptions->ID_MSG).", numReplies = numReplies + 1 WHERE ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC)."");
+	$dbase->query();
+	
+	//board sayacı
+	$dbase->setQuery("UPDATE #__forum_boards SET ID_LAST_MSG = ".$dbase->Quote($msgOptions->ID_MSG).", ID_MSG_UPDATED = ".$dbase->Quote($msgOptions->ID_MSG).", numPosts = numPosts + 1 WHERE ID_BOARD = ".$dbase->Quote($msgOptions->ID_BOARD)."");
+	$dbase->query();
+	}
+	
+	//logları güncelle
+	$dbase->setQuery("UPDATE #__forum_log_boards SET ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_BOARD = ".$dbase->Quote($msgOptions->ID_BOARD).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
+	$dbase->query();
+	
+	$dbase->setQuery("UPDATE #__forum_log_topics SET ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC).", ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
+	$dbase->query();
+	
+	mosRedirect('index.php?option=site&bolum=forum&task=topic&id='.$msgOptions->ID_TOPIC);
 }
 
 function createNewTopic() {
@@ -114,21 +159,46 @@ function Topic($id) {
 	
 	$topics = new BoardTopics($dbase);
 	
-	$context['messages'] = $topics->TopicIndex($id);
+	$rows = $topics->TopicIndex($id, $limitstart, $limit);
 	$topic_info = $topics->TopicInfo($id);
-	
+
 	$total = $topic_info->numReplies;
 	
 	$pageNav = new pageNav($total, $limitstart, $limit);
 	
+	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages");
+		$maxMsg = $dbase->loadResult();
+		if (!$maxMsg) {
+		  $maxMsg = 1;
+		}
+		
+		/**
+		* Topic kaydı yapalım 
+		*/
+		$query = "REPLACE INTO #__forum_log_topics "
+		. "\n (ID_MSG, ID_MEMBER, ID_TOPIC) "
+		. "\n VALUES (".$dbase->Quote($maxMsg).", ".$my->id.", ".$dbase->Quote($id).")";
+		$dbase->setQuery($query);
+		$dbase->query();
+		
+		//Okunmayı arttıralım
+		if (empty($_COOKIE['last_read_topic']) || $_COOKIE['last_read_topic'] != $id) {
+		$dbase->setQuery("UPDATE #__forum_topics SET numViews = numViews + 1 WHERE ID_TOPIC = ".$id." LIMIT 1");
+		$dbase->query();
+
+		setcookie('last_read_topic', $id);
+	}
+	
+	ForumHTML::TopicSeen($rows, $pageNav, $topic_info);
+	
 }
 
-function BoardIndex() {
+function ForumIndex() {
 	global $dbase;
 	
 	$categories = new BoardCategories($dbase);
 	
-	$context['categories'] = $categories->BoardIndex();
+	$context['categories'] = $categories->ForumIndex();
 	
 	ForumHTML::BoardIndex($context);
 }

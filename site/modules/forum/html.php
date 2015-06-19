@@ -4,6 +4,36 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
+	static function TopicSeen($rows, $pageNav, $topic_info) {
+		?>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">
+		<?php
+		
+		
+		
+		?>
+		<tr>
+		<td style="padding: 0 0 1px 0;"></td>
+		</tr>
+</table>
+<a name="lastPost"></a>
+<div>
+<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
+</div>
+				
+				<a href="#" class="newmsg">Yeni Başlık</a>
+		<div id="newmessagewindow">
+		<form action="index.php?option=site&bolum=forum&task=newmessage" method="post">
+		<input type="text" name="subject" value="Cvp:<?php echo $topic_info->subject;?>" placeholder="Mesajınızın başlığı" class="inputbox" required ><br />
+		<textarea cols="50" rows="5" name="body" placeholder="Mesajınızın içeriği" class="textbox" required></textarea><br />
+		<input type="submit" value="MESAJI GÖNDER" class="button">
+		<input type="hidden" name="ID_BOARD" value="<?php echo $topic_info->ID_BOARD;?>">
+		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
+		</form>
+		</div>
+<?php	
+	}
+	
 	static function BoardSeen($context, $pageNav, $board_info) {
 		if (isset($context['boards'])) {
 		?>
@@ -161,8 +191,8 @@ class ForumHTML {
 				<a href="#" class="newtopic">Yeni Başlık</a>
 		<div id="newtopicwindow">
 		<form action="index.php?option=site&bolum=forum&task=newtopic" method="post">
-		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="inputbox"><br />
-		<textarea cols="50" rows="5" name="body" placeholder="Mesajınızın içeriği" class="textbox"></textarea><br />
+		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="inputbox" required ><br />
+		<textarea cols="50" rows="5" name="body" placeholder="Mesajınızın içeriği" class="textbox" required></textarea><br />
 		<input type="submit" value="MESAJI GÖNDER" class="button">
 		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
 		</form>

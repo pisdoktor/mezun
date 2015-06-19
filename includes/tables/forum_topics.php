@@ -25,15 +25,23 @@ class BoardTopics extends DBTable {
 	}
 	
 	function TopicInfo($id) {
-		global $dbase;
+		global $dbase, $my;
 		
-		$dbase->setQUery("SELECT * FROM #__forum_topics WHERE ID_TOPIC=".$id);
+		$dbase->setQuery("SELECT t.ID_TOPIC, t.ID_BOARD, t.numReplies, t.numViews, t.locked, ms.subject, t.isSticky, t.ID_FIRST_MSG, t.ID_LAST_MSG, IFNULL(lt.ID_MSG, -1) + 1 AS new_from
+	FROM (#__forum_topics AS t, #__forum_messages AS ms)
+	LEFT JOIN #__forum_log_topics AS lt ON (lt.ID_TOPIC = ".$id." AND lt.ID_MEMBER = ".$my->id.")
+	WHERE t.ID_TOPIC = ".$id." AND ms.ID_MSG = t.ID_FIRST_MSG LIMIT 1");
 		$dbase->loadObject($topic_info);
 		
 		return $topic_info;
 	}
 	
-	function TopicIndex($id) {
-		global $dbase;
+	function TopicIndex($id, $limitstart, $limit) {
+		global $dbase, $my;
+		
+		$dbase->setQuery("SELECT * FROM #__forum_messages WHERE ID_TOPIC=".$dbase->Quote($id), $limitstart, $limit);
+		$rows = $dbase->loadObjectList();
+		
+		return $rows;
 	}
 }

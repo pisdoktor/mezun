@@ -58,7 +58,7 @@ class Boards extends DBTable {
 		. "\n LEFT JOIN #__forum_log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = ".$my->id.")"
 		. "\n LEFT JOIN #__forum_log_mark_read AS lmr ON (lmr.ID_BOARD = ".$id." AND lmr.ID_MEMBER = ".$my->id.")"
 		. "\n WHERE t.ID_BOARD = ".$id." AND ml.ID_MSG = t.ID_LAST_MSG AND mf.ID_MSG = t.ID_FIRST_MSG "
-		. "\n ORDER BY t.isSticky DESC";
+		. "\n ORDER BY t.isSticky DESC, ml.posterTime DESC";
 		
 		$dbase->setQuery($query, $limitstart, $limit);
 		$result = $dbase->query();
@@ -127,7 +127,11 @@ class Boards extends DBTable {
 				'views' => $row['numViews']
 			);
 		}
-		return $context['topics'];
+		if (isset($context['topics'])) {
+			return $context['topics']; 
+		} else {
+			return false;
+		} 
 		mysql_free_result($result);
 		
 	}

@@ -17,7 +17,7 @@ class BoardCategories extends DBTable {
 	/**
 	* Forum ana sayfası için sorgu
 	*/
-	function BoardIndex() {
+	function ForumIndex() {
 		global $my, $dbase;
 		
 		$most_recent_topic = array(
@@ -155,13 +155,13 @@ $this_last_post = array(
 'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] : '',
 'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
 			),
-'start' => '&msg=' . $row_board['new_from'],
+'start' => '',
 'topic' => $row_board['ID_TOPIC']
 );
 
 		// Provide the href and link.
 if ($row_board['subject'] != '') {
-$this_last_post['href'] = 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '&msgid=' . $row_board['new_from'] . (empty($row_board['isRead']) ? '#new' : '');
+$this_last_post['href'] = 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'];
 $this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
 } else {
 $this_last_post['href'] = '';
@@ -182,7 +182,7 @@ $this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['new
 elseif ($row_board['posterName'] == '')
 $this_category[$row_board['ID_BOARD']]['new'] = false;
 
-		// Determine a global most recent topic.
+// Determine a global most recent topic.
 if (!empty($row_board['posterTime']) && Forum::forum_time($row_board['posterTime']) > $most_recent_topic['timestamp'])
 $most_recent_topic = array(
 'timestamp' => Forum::forum_time($row_board['posterTime']),
