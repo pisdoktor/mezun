@@ -23,4 +23,17 @@ class BoardTopics extends DBTable {
 	function BoardTopics(&$db) {
 		$this->DBTable( '#__forum_topics', 'ID_TOPIC', $db );
 	}
+	
+	function TopicInfo($id) {
+		global $dbase;
+		
+		$dbase->setQUery("SELECT * FROM #__forum_topics WHERE ID_TOPIC=".$id);
+		$dbase->loadObject($topic_info);
+		
+		return $topic_info;
+	}
+	
+	function TopicIndex($id) {
+		global $dbase;
+	}
 }

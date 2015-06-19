@@ -92,4 +92,18 @@ static function forum_time($timestamp = null) {
 	return $timestamp + (OFFSET * 3600);
 }
 
+// Get all parent boards (requires first parent as parameter)
+static function getBoardParents($id_parent) {
+	global $dbase;
+
+	$boards = array();
+
+	// Loop while the parent is non-zero.
+	while ($id_parent != 0)	{
+	$dbase->setQuery("SELECT ID_PARENT FROM #__forum_boards WHERE ID_BOARD = $id_parent");
+	$id_parent = $dbase->loadResult();
+	$boards[] = $dbase->loadResult();
+	}
+	return $boards;
+}
 }

@@ -46,154 +46,154 @@ class BoardCategories extends DBTable {
 	$context['categories'] = array();
 	while ($row_board = mysql_fetch_assoc($result_boards)) {
 		// Haven't set this category yet.
-		if (empty($context['categories'][$row_board['ID_CAT']])) {
-			$context['categories'][$row_board['ID_CAT']] = array(
-				'id' => $row_board['ID_CAT'],
-				'name' => $row_board['catName'],
-				'href' => 'index.php?option=site&bolum=forum#' . $row_board['ID_CAT'],
-				'boards' => array(),
-				'new' => false
-			);
-			$context['categories'][$row_board['ID_CAT']]['link'] = '<a name="' . $row_board['ID_CAT'] . '" href="' . $context['categories'][$row_board['ID_CAT']]['href'] . '">' . $row_board['catName'] . '</a>';
-		}
+if (empty($context['categories'][$row_board['ID_CAT']])) {
+	$context['categories'][$row_board['ID_CAT']] = array(
+	'id' => $row_board['ID_CAT'],
+	'name' => $row_board['catName'],
+	'href' => 'index.php?option=site&bolum=forum#' . $row_board['ID_CAT'],
+	'boards' => array(),
+	'new' => false
+	);
+	$context['categories'][$row_board['ID_CAT']]['link'] = '<a name="' . $row_board['ID_CAT'] . '" href="' . $context['categories'][$row_board['ID_CAT']]['href'] . '">' . $row_board['catName'] . '</a>';
+}
 
-		// Let's save some typing.  Climbing the array might be slower, anyhow.
-		$this_category = &$context['categories'][$row_board['ID_CAT']]['boards'];
+// Let's save some typing.  Climbing the array might be slower, anyhow.
+$this_category = &$context['categories'][$row_board['ID_CAT']]['boards'];
 
 		// This is a parent board.
-		if (empty($row_board['ID_PARENT'])) {
+if (empty($row_board['ID_PARENT'])) {
 			// Is this a new board, or just another moderator?
-			if (!isset($this_category[$row_board['ID_BOARD']])) {
+if (!isset($this_category[$row_board['ID_BOARD']])) {
 				// Not a child.
-				$isChild = false;
+$isChild = false;
 
-				$this_category[$row_board['ID_BOARD']] = array(
-					'new' => empty($row_board['isRead']),
-					'id' => $row_board['ID_BOARD'],
-					'name' => $row_board['boardName'],
-					'aciklama' => $row_board['aciklama'],
-					'children' => array(),
-					'link_children' => array(),
-					'children_new' => false,
-					'topics' => $row_board['numTopics'],
-					'posts' => $row_board['numPosts'],
-					'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'],
-					'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['boardName'] . '</a>'
-				);
-			}
-		}
+$this_category[$row_board['ID_BOARD']] = array(
+'new' => empty($row_board['isRead']),
+'id' => $row_board['ID_BOARD'],
+'name' => $row_board['boardName'],
+'aciklama' => $row_board['aciklama'],
+'children' => array(),
+'link_children' => array(),
+'children_new' => false,
+'topics' => $row_board['numTopics'],
+'posts' => $row_board['numPosts'],
+'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'],
+'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['boardName'] . '</a>'
+);
+}
+}
 		// Found a child board.... make sure we've found its parent and the child hasn't been set already.
-		elseif (isset($this_category[$row_board['ID_PARENT']]['children']) && !isset($this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']])) {
+elseif (isset($this_category[$row_board['ID_PARENT']]['children']) && !isset($this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']])) {
 			// A valid child!
-			$isChild = true;
+$isChild = true;
 
-			$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']] = array(
-				'id' => $row_board['ID_BOARD'],
-				'name' => $row_board['boardName'],
-				'aciklama' => $row_board['aciklama'],
-				'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
-				'topics' => $row_board['numTopics'],
-				'posts' => $row_board['numPosts'],
-				'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'],
-				'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['boardName'] . '</a>'
-			);
+$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']] = array(
+'id' => $row_board['ID_BOARD'],
+'name' => $row_board['boardName'],
+'aciklama' => $row_board['aciklama'],
+'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
+'topics' => $row_board['numTopics'],
+'posts' => $row_board['numPosts'],
+'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'],
+'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['boardName'] . '</a>'
+);
 
-			// Counting child board posts is... slow :/.
-			if (!empty(countChildPosts)) {
-				$this_category[$row_board['ID_PARENT']]['posts'] += $row_board['numPosts'];
-				$this_category[$row_board['ID_PARENT']]['topics'] += $row_board['numTopics'];
-			}
+// Counting child board posts is... slow :/.
+if (!empty(countChildPosts)) {
+$this_category[$row_board['ID_PARENT']]['posts'] += $row_board['numPosts'];
+$this_category[$row_board['ID_PARENT']]['topics'] += $row_board['numTopics'];
+}
 
 			// Does this board contain new boards?
-			$this_category[$row_board['ID_PARENT']]['children_new'] |= empty($row_board['isRead']);
+$this_category[$row_board['ID_PARENT']]['children_new'] |= empty($row_board['isRead']);
 
 			// This is easier to use in many cases for the theme....
-			$this_category[$row_board['ID_PARENT']]['link_children'][] = &$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['link'];
-		}
+$this_category[$row_board['ID_PARENT']]['link_children'][] = &$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['link'];
+}
 		// Child of a child... just add it on...
-		elseif (!empty(countChildPosts)) {
-			if (!isset($parent_map))
-				$parent_map = array();
+elseif (!empty(countChildPosts)) {
+if (!isset($parent_map))
+$parent_map = array();
 
-			if (!isset($parent_map[$row_board['ID_PARENT']]))
-				foreach ($this_category as $id => $board) {
-					if (!isset($board['children'][$row_board['ID_PARENT']]))
-						continue;
+if (!isset($parent_map[$row_board['ID_PARENT']]))
+foreach ($this_category as $id => $board) {
+if (!isset($board['children'][$row_board['ID_PARENT']]))
+continue;
 
-					$parent_map[$row_board['ID_PARENT']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['ID_PARENT']]);
-					$parent_map[$row_board['ID_BOARD']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['ID_PARENT']]);
+$parent_map[$row_board['ID_PARENT']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['ID_PARENT']]);
+$parent_map[$row_board['ID_BOARD']] = array(&$this_category[$id], &$this_category[$id]['children'][$row_board['ID_PARENT']]);
 
-					break;
-				}
+break;
+}
 
-			if (isset($parent_map[$row_board['ID_PARENT']])) {
-				$parent_map[$row_board['ID_PARENT']][0]['posts'] += $row_board['numPosts'];
-				$parent_map[$row_board['ID_PARENT']][0]['topics'] += $row_board['numTopics'];
-				$parent_map[$row_board['ID_PARENT']][1]['posts'] += $row_board['numPosts'];
-				$parent_map[$row_board['ID_PARENT']][1]['topics'] += $row_board['numTopics'];
+if (isset($parent_map[$row_board['ID_PARENT']])) {
+$parent_map[$row_board['ID_PARENT']][0]['posts'] += $row_board['numPosts'];
+$parent_map[$row_board['ID_PARENT']][0]['topics'] += $row_board['numTopics'];
+$parent_map[$row_board['ID_PARENT']][1]['posts'] += $row_board['numPosts'];
+$parent_map[$row_board['ID_PARENT']][1]['topics'] += $row_board['numTopics'];
 
-				continue;
-			}
+continue;
+}
 
-			continue;
-		}
+continue;
+}
 		// Found a child of a child - skip.
-		else
-			continue;
+else
+continue;
 
 		// Prepare the subject, and make sure it's not too long.
-		$row_board['short_subject'] = Forum::shorten_subject($row_board['subject'], 30);
-		$this_last_post = array(
-			'id' => $row_board['ID_MSG'],
-			'time' => $row_board['posterTime'] > 0 ? Forum::timeformat($row_board['posterTime']) : 'N/A',
-			'timestamp' => Forum::forum_time($row_board['posterTime']),
-			'subject' => $row_board['short_subject'],
-			'member' => array(
-				'id' => $row_board['ID_MEMBER'],
-				'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : 'N/A',
-				'name' => $row_board['realName'],
-				'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] : '',
-				'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
+$row_board['short_subject'] = Forum::shorten_subject($row_board['subject'], 30);
+$this_last_post = array(
+'id' => $row_board['ID_MSG'],
+'time' => $row_board['posterTime'] > 0 ? Forum::timeformat($row_board['posterTime']) : 'N/A',
+'timestamp' => Forum::forum_time($row_board['posterTime']),
+'subject' => $row_board['short_subject'],
+'member' => array(
+'id' => $row_board['ID_MEMBER'],
+'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : 'N/A',
+'name' => $row_board['realName'],
+'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] : '',
+'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
 			),
-			'start' => '&msg=' . $row_board['new_from'],
-			'topic' => $row_board['ID_TOPIC']
-		);
+'start' => '&msg=' . $row_board['new_from'],
+'topic' => $row_board['ID_TOPIC']
+);
 
 		// Provide the href and link.
-		if ($row_board['subject'] != '') {
-			$this_last_post['href'] = 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '&msgid=' . $row_board['new_from'] . (empty($row_board['isRead']) ? '#new' : '');
-			$this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
-		} else {
-			$this_last_post['href'] = '';
-			$this_last_post['link'] = 'N/A';
-		}
+if ($row_board['subject'] != '') {
+$this_last_post['href'] = 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '&msgid=' . $row_board['new_from'] . (empty($row_board['isRead']) ? '#new' : '');
+$this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
+} else {
+$this_last_post['href'] = '';
+$this_last_post['link'] = 'N/A';
+}
 
 		// Set the last post in the parent board.
-		if (empty($row_board['ID_PARENT']) || ($isChild && !empty($row_board['posterTime']) && $this_category[$row_board['ID_PARENT']]['last_post']['timestamp'] < Forum::forum_time($row_board['posterTime'])))
-			$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'] = $this_last_post;
+if (empty($row_board['ID_PARENT']) || ($isChild && !empty($row_board['posterTime']) && $this_category[$row_board['ID_PARENT']]['last_post']['timestamp'] < Forum::forum_time($row_board['posterTime'])))
+$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'] = $this_last_post;
 		// Just in the child...?
-		if ($isChild) {
-			$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['last_post'] = $this_last_post;
+if ($isChild) {
+$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['last_post'] = $this_last_post;
 
 			// If there are no posts in this board, it really can't be new...
-			$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['new'] &= $row_board['posterName'] != '';
-		}
+$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['new'] &= $row_board['posterName'] != '';
+}
 		// No last post for this board?  It's not new then, is it..?
-		elseif ($row_board['posterName'] == '')
-			$this_category[$row_board['ID_BOARD']]['new'] = false;
+elseif ($row_board['posterName'] == '')
+$this_category[$row_board['ID_BOARD']]['new'] = false;
 
 		// Determine a global most recent topic.
-		if (!empty($row_board['posterTime']) && Forum::forum_time($row_board['posterTime']) > $most_recent_topic['timestamp'])
-			$most_recent_topic = array(
-				'timestamp' => Forum::forum_time($row_board['posterTime']),
-				'ref' => &$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'],
-			);
-	}
-	mysql_free_result($result_boards);
+if (!empty($row_board['posterTime']) && Forum::forum_time($row_board['posterTime']) > $most_recent_topic['timestamp'])
+$most_recent_topic = array(
+'timestamp' => Forum::forum_time($row_board['posterTime']),
+'ref' => &$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'],
+);
+}
+mysql_free_result($result_boards);
 	
-	return $context['categories'];
+return $context['categories'];
 			
-	}
+}
 	/**
 	* Bir board içerisine girince varsa alt kategorilerin sorgusu
 	* 
@@ -201,7 +201,11 @@ class BoardCategories extends DBTable {
 	*/
 	function Board($id) {
 		global $dbase, $my;
-		
+		/**
+		* Alt forumları alalım
+		* 
+		* @var mixed
+		*/
 		$query = "SELECT b.ID_BOARD, b.name, b.aciklama, b.numTopics, b.numPosts, "
 		. "\n mem.username AS posterName, m.posterTime, m.subject, m.ID_MSG, m.ID_TOPIC, "
 		. "\n mem.name AS realName, "
@@ -224,7 +228,7 @@ class BoardCategories extends DBTable {
 				$theboards[] = $row_board['ID_BOARD'];
 
 				// Make sure the subject isn't too long.
-				$short_subject = Forum::shorten_subject($row_board['subject'], 24);
+				$short_subject = Forum::shorten_subject($row_board['subject'], 30);
 
 				$context['boards'][$row_board['ID_BOARD']] = array(
 					'id' => $row_board['ID_BOARD'],

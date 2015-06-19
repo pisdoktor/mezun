@@ -37,6 +37,90 @@ switch($task) {
 
 function createNewTopic() {
 	global $dbase, $my;
+	
+	$msgOptions = new stdClass();
+	$topicOptions = new stdClass();
+	$content = $_POST;
+	
+	$msgOptions->ID_MSG = null;
+	$msgOptions->ID_TOPIC = null;
+	$msgOptions->ID_BOARD = $content['ID_BOARD'];
+	$msgOptions->posterTime = time();
+	$msgOptions->ID_MEMBER = $my->id;
+	$msgOptions->ID_MSG_MODIFIED = null;
+	$msgOptions->posterIP = $_SERVER['REMOTE_ADDR'];
+	$msgOptions->subject = $content['subject'];
+	$msgOptions->body = $content['body'];
+	
+	$topicOptions->ID_TOPIC = null;
+	$topicOptions->isSticky = '0';
+	$topicOptions->ID_BOARD = $content['ID_BOARD'];
+	$topicOptions->ID_FIRST_MSG = $my->id;
+	$topicOptions->ID_LAST_MSG = $my->id;
+	$topicOptions->numReplies = null;
+	$topicOptions->numViews = null;
+	$topicOptions->locked = '0';
+	
+	$new_topic = empty($topicOptions->ID_TOPIC);
+	//mesajı sokalım
+	$query = "INSERT INTO #__forum_messages "
+	. "\n (ID_BOARD, posterTime, ID_MEMBER, posterIP, subject, body) "
+	. "\n VALUES(".$dbase->Quote($msgOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->posterTime).", ".$dbase->Quote($msgOptions->ID_MEMBER).", ".$dbase->Quote($msgOptions->posterIP).", ".$dbase->Quote($msgOptions->subject).", ".$dbase->Quote($msgOptions->body).")";
+	$dbase->setQuery($query);
+	$dbase->query();
+	$msgOptions->ID_MSG = $dbase->insertid();
+	
+	if (empty($msgOptions->ID_MSG)) {
+		return false;
+	}
+	//başlığı sokalım
+	$query = "INSERT INTO #__forum_topics "
+	. "\n (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews) "
+	. "\n VALUES (".$dbase->Quote($topicOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($topicOptions->locked).", ".$dbase->Quote($topicOptions->isSticky).", ".$dbase->Quote($topicOptions->numViews).")"
+	;
+	$dbase->setQuery($query);
+	$dbase->query();		
+	$topicOptions->ID_TOPIC = $dbase->insertid();
+	
+	//başlık oluşturulamazsa eklenen mesajı da silelim
+	if (empty($topicOptions->ID_TOPIC)) {
+	// We should delete the post that did work, though...
+	$dbase->setQuery("DELETE FROM #__forum_messages WHERE ID_MSG = ".$msgOptions->ID_MSG." LIMIT 1");
+	$dbase->query();
+	return false;
+	}
+	
+	//mesajı düzeltelim
+	$dbase->setQuery("UPDATE #__forum_messages SET ID_TOPIC = ".$topicOptions->ID_TOPIC.", ID_MSG_MODIFIED = ".$msgOptions->ID_MSG." WHERE ID_MSG = ".$msgOptions->ID_MSG." LIMIT 1");
+	$dbase->query();
+	
+	//board sayaçlarını düzeltelim
+	$dbase->setQuery("UPDATE #__forum_boards
+		SET numPosts = numPosts + 1, numTopics = numTopics + 1, ID_LAST_MSG = ".$msgOptions->ID_MSG.", ID_MSG_UPDATED = ".$msgOptions->ID_MSG."
+		WHERE ID_BOARD = ".$topicOptions->ID_BOARD." LIMIT 1");
+		$dbase->query();
+		
+		//log alalım
+		$dbase->setQuery("REPLACE INTO #__forum_log_topics 
+		(ID_TOPIC, ID_MEMBER, ID_MSG) 
+		VALUES ($topicOptions->ID_TOPIC, $my->id, $msgOptions->ID_MSG + 1)");
+		$dbase->query();
+	
+	mosRedirect('index.php?option=site&bolum=forum&task=topic&id='.$topicOptions->ID_TOPIC);
+}
+
+function Topic($id) {
+	global $dbase, $limit, $limitstart, $my;
+	
+	$topics = new BoardTopics($dbase);
+	
+	$context['messages'] = $topics->TopicIndex($id);
+	$topic_info = $topics->TopicInfo($id);
+	
+	$total = $topic_info->numReplies;
+	
+	$pageNav = new pageNav($total, $limitstart, $limit);
+	
 }
 
 function BoardIndex() {
@@ -50,16 +134,36 @@ function BoardIndex() {
 }
 
 function Board($id) {
-	global $dbase, $limit, $limitstart;
+	global $dbase, $limit, $limitstart, $my;
 	
 	$boards = new BoardCategories($dbase);
 	$topics = new Boards($dbase);
 	
 	$context['boards'] = $boards->Board($id);
 	$context['topics'] = $topics->BoardTopics($id, $limitstart, $limit);
+	$board_info = $topics->BoardInfo($id);
 	
-	$total = count($context['topics']);
+	$total = $board_info->numTopics;
 	$pageNav = new pageNav($total, $limitstart, $limit);
 	
-	ForumHTML::BoardSeen($context, $pageNav, $id);
+	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages");
+	$maxMsg = $dbase->loadResult();
+	if (!$maxMsg) {
+		$maxMsg = 1;
+	}
+	
+	$dbase->setQuery("REPLACE INTO #__forum_log_boards "
+	. "\n (ID_MSG, ID_MEMBER, ID_BOARD) VALUES (".$dbase->Quote($maxMsg).", ".$dbase->Quote($my->id).", ".$dbase->Quote($id).")");
+	$dbase->query();
+	
+	if (!empty($board_info->parent_boards)) {
+	$dbase->setQuery("UPDATE #__forum_log_boards "
+	. "\n SET ID_MSG = ".$maxMsg
+	. "\n WHERE ID_MEMBER = ".$my->id
+	. "\n AND ID_BOARD IN (" . implode(', ', array_keys($board_info->parent_boards)) . ")"
+	. "\n LIMIT " . count($board_info->parent_boards));
+	$dbase->query();
+	}
+		
+	ForumHTML::BoardSeen($context, $pageNav, $board_info);
 }

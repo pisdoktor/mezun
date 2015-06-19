@@ -30,6 +30,16 @@ class Boards extends DBTable {
 		$this->DBTable( '#__forum_boards', 'ID_BOARD', $db );
 	}
 	
+	function BoardInfo($oid) {
+		global $dbase;
+		$dbase->setQuery("SELECT * FROM #__forum_boards WHERE ID_BOARD=".$oid);
+		$dbase->loadObject($board_info);
+		
+		$board_info->parent_boards = Forum::getBoardParents($board_info->ID_BOARD);
+	
+		return $board_info;
+	}
+	
 	function BoardTopics($id, $limitstart, $limit) {
 		global $dbase, $my;
 		
@@ -48,9 +58,9 @@ class Boards extends DBTable {
 		. "\n LEFT JOIN #__forum_log_topics AS lt ON (lt.ID_TOPIC = t.ID_TOPIC AND lt.ID_MEMBER = ".$my->id.")"
 		. "\n LEFT JOIN #__forum_log_mark_read AS lmr ON (lmr.ID_BOARD = ".$id." AND lmr.ID_MEMBER = ".$my->id.")"
 		. "\n WHERE t.ID_BOARD = ".$id." AND ml.ID_MSG = t.ID_LAST_MSG AND mf.ID_MSG = t.ID_FIRST_MSG "
-		. "\n ORDER BY t.isSticky DESC LIMIT ".$limitstart.", ".$limit;
+		. "\n ORDER BY t.isSticky DESC";
 		
-		$dbase->setQuery($query);
+		$dbase->setQuery($query, $limitstart, $limit);
 		$result = $dbase->query();
 		
 		while ($row = mysql_fetch_assoc($result)) {
@@ -68,7 +78,6 @@ class Boards extends DBTable {
 				$row['lastSubject'] = $row['firstSubject'];
 				$row['lastBody'] = $row['firstBody'];
 			}
-
 			// 'Print' the topic info.
 			$context['topics'][$row['ID_TOPIC']] = array(
 				'id' => $row['ID_TOPIC'],
@@ -117,9 +126,8 @@ class Boards extends DBTable {
 				'replies' => $row['numReplies'],
 				'views' => $row['numViews']
 			);
-			
-			return $context['topics'];
 		}
+		return $context['topics'];
 		mysql_free_result($result);
 		
 	}

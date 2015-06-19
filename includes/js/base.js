@@ -255,6 +255,27 @@ $(document).ready(function() {
 	});
 });
 
+//forum yeni mesaj penceresi
+$(document).ready(function() {
+	$("#newtopicwindow").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( ".newtopic" ).click(function() {
+	  $( "#newtopicwindow" ).dialog( "open" );
+	});
+});
+
 //parola değiştirme penceresi
 $(document).ready(function() {
 	$("#passchange").dialog({
