@@ -35,6 +35,22 @@ switch($task) {
 	Boards();
 	break;
 	
+	case 'editboard':
+	editBoard($id);
+	break;
+	
+	case 'addboard':
+	editBoard(0);
+	break;
+	
+	case 'saveboard':
+	saveBoard();
+	break;
+	
+	case 'cancelboard':
+	cancelBoard();
+	break;
+	
 	case 'topics':
 	Topics();
 	break;
@@ -47,6 +63,20 @@ switch($task) {
 	reCountBoards();
 	break;
 }
+function saveBoard() {
+	global $dbase;
+	
+	$row = new Boards($dbase);
+	$row->bind($_POST);
+	$row->store();
+	
+	mosRedirect('index.php?option=admin&bolum=forum&task=boards');
+}
+/**
+* Kategori seçimine göre board kısıtlaması yapılacak
+* 
+* @param mixed $id
+*/
 function editBoard($id) {
 	global $dbase;
 	
@@ -59,13 +89,23 @@ function editBoard($id) {
 	
 	$cat[] = mosHTML::makeOption('', 'Kategori Seçin');
 	foreach ($cats as $cats) {
-		$cat[] = mosHTML::makeOption($row->ID_CAT, $row->name);
+		$cat[] = mosHTML::makeOption($cats->ID_CAT, $cats->name);
 	}
 	
 	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', 'class="inputbox" size="1"', 'value', 'text', $row->ID_CAT);
 	
+	//board
+	$dbase->setQuery("SELECT * FROM #__forum_boards");
+	$boards = $dbase->loadObjectList();
 	
+	$b[] = mosHTML::makeOption('0', 'ANA');
+	foreach($boards as $board) {
+		$b[] = mosHTML::makeOption($board->ID_BOARD, $board->name);
+	}
 	
+	$lists['parent'] = mosHTML::selectList($b, 'ID_PARENT', 'class="inputbox" size="1"', 'value', 'text', $row->ID_PARENT);
+	
+	ForumHTML::editBoard($row, $lists);
 }
 
 function saveCategory() {

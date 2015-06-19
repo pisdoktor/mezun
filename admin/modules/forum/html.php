@@ -4,6 +4,53 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
+	static function editBoard($row, $lists) {
+			?>
+		<div id="module_header">Forum Board <?php echo $row->ID_BOARD ? 'Düzenle' : 'Ekle';?></div>
+		<div id="module">
+<form action="index.php" method="post" name="adminForm">
+
+<table width="100%">
+  <tr>
+	<td width="30%">
+	<strong>Board Adı:</strong>
+	</td>
+	<td width="70%">
+	<input type="text" name="name" class="inputbox" value="<?php echo $row->name;?>" />
+	</td>
+  </tr>
+   <tr>
+	<td width="30%">
+	<strong>Board Kategorisi:</strong>
+	</td>
+	<td width="70%">
+	<?php echo $lists['cat'];?>
+	</td>
+  </tr>
+   <tr>
+	<td width="30%">
+	<strong>Board Ana Kategorisi:</strong>
+	</td>
+	<td width="70%">
+	<?php echo $lists['parent'];?>
+	</td>
+  </tr>
+</table>
+<input type="hidden" name="option" value="admin" />
+<input type="hidden" name="bolum" value="forum" />
+<input type="hidden" name="task" value="" />
+<input type="hidden" name="ID_BOARD" value="<?php echo $row->ID_BOARD;?>" />
+</form>
+</div>
+<br />
+<div align="right">
+<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('saveboard');" class="button"  />
+<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancelboard');" class="button" />
+</div>
+<?php
+		
+	}
+	
 	static function Boards($list, $pageNav) {
 		
 		?>
