@@ -19,6 +19,14 @@ class ForumHTML {
 	<input type="text" name="name" class="inputbox" value="<?php echo $row->name;?>" />
 	</td>
   </tr>
+  <tr>
+	<td width="30%">
+	<strong>Board Açıklaması:</strong>
+	</td>
+	<td width="70%">
+	<input type="text" name="aciklama" class="inputbox" value="<?php echo $row->aciklama;?>" />
+	</td>
+  </tr>
    <tr>
 	<td width="30%">
 	<strong>Board Kategorisi:</strong>

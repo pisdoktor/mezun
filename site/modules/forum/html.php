@@ -6,7 +6,9 @@ class ForumHTML {
 	
 	static function TopicSeen($context, $pageNav, $topic_info) {
 		?>
+		<?php if (!$topic_info->locked) {?>
 		<a href="#" class="newmsg">Yeni Mesaj</a>
+		<?php } ?>
 		<div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
