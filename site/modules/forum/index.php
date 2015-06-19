@@ -159,7 +159,7 @@ function Topic($id) {
 	
 	$topics = new BoardTopics($dbase);
 	
-	$rows = $topics->TopicIndex($id, $limitstart, $limit);
+	$context['messages'] = $topics->TopicIndex($id, $limitstart, $limit);
 	$topic_info = $topics->TopicInfo($id);
 
 	$total = $topic_info->numReplies;
@@ -189,7 +189,7 @@ function Topic($id) {
 		setcookie('last_read_topic', $id);
 	}
 	
-	ForumHTML::TopicSeen($rows, $pageNav, $topic_info);
+	ForumHTML::TopicSeen($context, $pageNav, $topic_info);
 	
 }
 
@@ -209,7 +209,7 @@ function Board($id) {
 	$boards = new BoardCategories($dbase);
 	$topics = new Boards($dbase);
 	
-	$context['boards'] = $boards->Board($id);
+	$context['boards'] = $boards->Board($id, $limitstart, $limit);
 	$context['topics'] = $topics->BoardTopics($id, $limitstart, $limit);
 	$board_info = $topics->BoardInfo($id);
 	

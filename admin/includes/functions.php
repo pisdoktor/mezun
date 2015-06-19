@@ -15,7 +15,15 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=db"><span>Veritabanı Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=duyuru"><span>Duyuru Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=ayarlar"><span>Yapılandırma</span></a></li>
-<li><a href="index.php?option=admin&bolum=forum"><span>Forum Yönetimi</span></a></li>
+<li class="has-sub"><a href="#"><span>Forum Yönetimi</span></a>
+<ul>
+<li><a href="index.php?option=admin&bolum=forum&task=categories"><span>Kategori Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=forum&task=boards"><span>Forum Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=forum&task=topics"><span>Başlık Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=forum&task=messages"><span>Mesaj Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=forum&task=recount"><span>Tekrar Say</span></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="index.php?option=site"><span>Siteye Geçiş Yap</span></a></li>

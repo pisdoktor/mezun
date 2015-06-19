@@ -110,8 +110,9 @@ class Boards extends DBTable {
 					'timestamp' => Forum::forum_time($row['lastPosterTime']),
 					'subject' => $row['lastSubject'],
 					'preview' => $row['lastBody'],
-					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '' : '&msgid=' . $row['ID_LAST_MSG']) . '#new',
-					'link' => '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] == 0 ? '' : '&msgid=' . $row['ID_LAST_MSG']) . '#new">' . $row['lastSubject'] . '</a>'
+					//son mesaja link verebilmeyi yapalım
+					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new',
+					'link' => '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&msgid=' . $row['ID_LAST_MSG'] : '') . '#new">' . $row['lastSubject'] . '</a>'
 				),
 				'is_sticky' => !empty($row['isSticky']),
 				'is_locked' => !empty($row['locked']),
@@ -124,7 +125,8 @@ class Boards extends DBTable {
 				'newtime' => $row['new_from'],
 				'new_href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '&msgid=' . $row['new_from'] . '#new',
 				'replies' => $row['numReplies'],
-				'views' => $row['numViews']
+				'views' => $row['numViews'],
+				'pages' => ($row['numReplies'] > $limit ? 'Sayfalar:'.Forum::constructPageIndex('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC'], $row['numReplies'], $limitstart, $limit) : '')
 			);
 		}
 		if (isset($context['topics'])) {

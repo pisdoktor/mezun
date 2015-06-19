@@ -554,12 +554,12 @@ input[type="checkbox"] {
 	color: #000000;
 }
 
-.windowbg
+.windowbg, windowbg0
 {
 	color: #000000;
 	background-color: #E1E1E1;
 }
-.windowbg2
+.windowbg2, windowbg1
 {
 	color: #000000;
 	background-color: #F0F0F0;

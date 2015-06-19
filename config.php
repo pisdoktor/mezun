@@ -47,3 +47,8 @@ define('DIRPERMS', '');
 define('countChildPosts', 1);
 define('hotTopicPosts', 20);
 define('hotTopicVeryPosts', 50);
+define('todayMod', 2); //1 bugün ; 2 bugün dün 
+define('time_format', '%d %B %Y, %H:%M:%S');
+define('compactTopicPagesEnable', 1); // okla ileri gitme seçeneği
+define('compactTopicPagesContiguous', 5); // ... koymak için gerekli sayfa sayısı
+

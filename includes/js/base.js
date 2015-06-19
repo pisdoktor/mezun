@@ -276,6 +276,27 @@ $(document).ready(function() {
 	});
 });
 
+//forum yeni mesaj penceresi
+$(document).ready(function() {
+	$("#newmessagewindow").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( ".newmsg" ).click(function() {
+	  $( "#newmessagewindow" ).dialog( "open" );
+	});
+});
+
 //parola değiştirme penceresi
 $(document).ready(function() {
 	$("#passchange").dialog({

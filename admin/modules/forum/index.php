@@ -7,33 +7,115 @@ $id = intval(mosGetParam($_REQUEST, 'id'));
 $limit = intval(mosGetParam($_REQUEST, 'limit', 30));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
 
+include(dirname(__FILE__). '/html.php');
+
 switch($task) {
 	default:
-	getBoardList();
+	case 'categories':
+	Categories();
 	break;
 	
-	case 'newboard':
-	editBoard($id);
+	case 'editcat':
+	editCategory($id);
 	break;
 	
-	case 'editboard':
-	editBoard($id);
+	case 'addcat':
+	editCategory(0);
 	break;
 	
-	case 'deleteboard':
-	deleteBoard($cid);
+	case 'savecat':
+	saveCategory();
 	break;
 	
-	case 'saveboard':
-	saveBoard();
+	case 'cancelcat':
+	cancelCategory();
+	break;
+	
+	case 'boards':
+	Boards();
+	break;
+	
+	case 'topics':
+	Topics();
+	break;
+	
+	case 'messages':
+	Messages();
+	break;
+	
+	case 'recount':
+	reCountBoards();
 	break;
 }
+function editBoard($id) {
+	global $dbase;
+	
+	$row = new Boards($dbase);
+	$row->load($id);
+	
+	//cat
+	$dbase->setQuery("SELECT * FROM #__forum_categories");
+	$cats = $dbase->loadObjectList();
+	
+	$cat[] = mosHTML::makeOption('', 'Kategori Seçin');
+	foreach ($cats as $cats) {
+		$cat[] = mosHTML::makeOption($row->ID_CAT, $row->name);
+	}
+	
+	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', 'class="inputbox" size="1"', 'value', 'text', $row->ID_CAT);
+	
+	
+	
+}
 
-function getBoardList() {
+function saveCategory() {
+	global $dbase;
+	
+	$row = new BoardCategories($dbase);
+	$row->bind($_POST);
+	$row->store();
+	
+	mosRedirect('index.php?option=admin&bolum=forum&task=categories');
+}
+
+function editCategory($id) {
+	global $dbase;
+	
+	$row = new BoardCategories($dbase);
+	$row->load($id);
+	
+	ForumHTML::editCategory($row);
+}
+
+function Categories() {
 	global $dbase, $limit, $limitstart;
 	
-	$query = "SELECT * FROM #__forum";
+	$dbase->setQuery("SELECT COUNT(*) FROM #__forum_categories");
+	$total = $dbase->loadResult();
+	
+	$pageNav = new pageNav($total, $limitstart, $limit);
+	
+	$dbase->setQuery("SELECT * FROM #__forum_categories", $limitstart, $limit);
+	$rows = $dbase->loadObjectList();
+
+	ForumHTML::Categories($rows, $pageNav);
+}
+
+function Boards() {
+	global $dbase, $limit, $limitstart;
+	
+	$query = "SELECT COUNT(b.ID_BOARD) FROM #__forum_boards AS b"
+	. "\n LEFT JOIN #__forum_categories AS c ON c.ID_CAT=b.ID_CAT"
+	;
 	$dbase->setQuery($query);
+	$total = $dbase->loadResult();
+	
+	$pageNav = new pageNav($total, $limitstart, $limit);
+	
+	$query = "SELECT b.ID_PARENT as parent, ID_BOARD AS id, b.*, c.name as catname FROM #__forum_boards AS b"
+	. "\n LEFT JOIN #__forum_categories AS c ON c.ID_CAT=b.ID_CAT"
+	. "\n ORDER BY b.boardOrder DESC";
+	$dbase->setQuery($query, $limitstart, $limit);
 	
 	$rows = $dbase->loadObjectList();
 	
@@ -49,12 +131,5 @@ function getBoardList() {
 	// second pass - get an indent list of the items
 	$list = treeRecurse( 0, '', array(), $children);
 	
-	var_dump($list);
-	
-	$total = count( $list );
-
-	$pageNav = new PageNav( $total, $limitstart, $limit  );
-
-	// slice out elements based on limits
-	$list = array_slice( $list, $limitstart, $limit );
+	ForumHTML::Boards($list, $pageNav);
 }

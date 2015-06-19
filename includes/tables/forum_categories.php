@@ -199,7 +199,7 @@ return $context['categories'];
 	* 
 	* @param mixed $id : board id değeri
 	*/
-	function Board($id) {
+	function Board($id, $limitstart, $limit) {
 		global $dbase, $my;
 		/**
 		* Alt forumları alalım
@@ -246,8 +246,9 @@ return $context['categories'];
 						),
 						'start' => 'new',
 						'topic' => $row_board['ID_TOPIC'],
-						'href' => $row_board['subject'] != '' ? 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '.new' . (empty($row_board['isRead']) ? 'boardseen' : '') . '#new' : '',
-						'link' => $row_board['subject'] != '' ? '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '.new' . (empty($row_board['isRead']) ? ';boardseen' : '') . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : 'N/A'
+						'href' => $row_board['subject'] != '' ? 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '#new' : '',
+						
+						'link' => $row_board['subject'] != '' ? '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : ''
 					),
 					'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
 					'name' => $row_board['name'],
@@ -312,7 +313,7 @@ return $context['categories'];
 					),
 					'start' => 'new',
 					'topic' => $row['ID_TOPIC'],
-					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '.new' . (empty($row['isRead']) ? ';boardseen' : '') . '#new'
+					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '#new'
 				);
 				$context['boards'][$row['ID_PARENT']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['ID_PARENT']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : 'N/A';
 			}

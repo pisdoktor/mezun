@@ -5,10 +5,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Forum {
 // Format a time to make it look purdy.
 static function timeformat($logTime, $show_today = true) {
-	
-	$time_format = '%d %B %Y, %H:%M:%S';
-	$todayMod = 2;
-	
+		
 	$txt['days'] = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 $txt['days_short'] = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
 // Months must start with 1 => 'January'. (or translated, of course.)
@@ -24,7 +21,7 @@ $txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul
 		$time = 0;
 
 	// Today and Yesterday?
-	if ($todayMod >= 1 && $show_today === true) {
+	if (todayMod >= 1 && $show_today === true) {
 		// Get the current time.
 		$nowtime = Forum::forum_time();
 
@@ -32,8 +29,8 @@ $txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul
 		$now = @getdate($nowtime);
 
 		// Try to make something of a time format string...
-		$s = strpos($time_format, '%S') === false ? '' : ':%S';
-		if (strpos($time_format, '%H') === false && strpos($time_format, '%T') === false) {
+		$s = strpos(time_format, '%S') === false ? '' : ':%S';
+		if (strpos(time_format, '%H') === false && strpos(time_format, '%T') === false) {
 			$today_fmt = '%I:%M' . $s . ' %p';
 		} else {
 			$today_fmt = '%H:%M' . $s;
@@ -45,12 +42,12 @@ $txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul
 		}
 
 		// Day-of-year is one less and same year, or it's the first of the year and that's the last of the year...
-		if ($todayMod == '2' && (($then['yday'] == $now['yday'] - 1 && $then['year'] == $now['year']) || ($now['yday'] == 0 && $then['year'] == $now['year'] - 1) && $then['mon'] == 12 && $then['mday'] == 31)) {
+		if (todayMod == '2' && (($then['yday'] == $now['yday'] - 1 && $then['year'] == $now['year']) || ($now['yday'] == 0 && $then['year'] == $now['year'] - 1) && $then['mon'] == 12 && $then['mday'] == 31)) {
 			return '<b>Dün</b> ' . Forum::timeformat($logTime, $today_fmt);
 		}
 	}
 
-	$str = !is_bool($show_today) ? $show_today : $time_format;
+	$str = !is_bool($show_today) ? $show_today : time_format;
 
 	if (setlocale(LC_TIME, 'tr_TR')) {
 		foreach (array('%a', '%A', '%b', '%B') as $token)
@@ -105,5 +102,86 @@ static function getBoardParents($id_parent) {
 	$boards[] = $dbase->loadResult();
 	}
 	return $boards;
+}
+
+static function constructPageIndex($base_url, $total, $limitstart, $limit=10, $flexible_start = false) {
+	// Save whether $limitstart was less than 0 or not.
+	$limitstart_invalid = $limitstart < 0;
+
+	// Make sure $limitstart is a proper variable - not less than 0.
+	if ($limitstart_invalid)
+		$limitstart = 0;
+	// Not greater than the upper bound.
+	elseif ($limitstart >= $total)
+		$limitstart = max(0, (int) $total - (((int) $total % (int) $limit) == 0 ? $limit : ((int) $total % (int) $limit)));
+	// And it has to be a multiple of $limit!
+	else
+		$limitstart = max(0, (int) $limitstart - ((int) $limitstart % (int) $limit));
+
+	$base_link = '<a class="navPages" href="' . ($flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . '&limitstart=%d&limit='.$limit) . '">%s</a> ';
+
+	// Compact pages is off or on?
+	if (empty(compactTopicPagesEnable)) {
+		// Show the left arrow.
+		$pageindex = $limitstart == 0 ? ' ' : sprintf($base_link, $limitstart - $limit, '&#171;');
+
+		// Show all the pages.
+		$display_page = 1;
+		for ($counter = 0; $counter < $total; $counter += $limit)
+			$pageindex .= $limitstart == $counter && !$limitstart_invalid ? '<b>' . $display_page++ . '</b> ' : sprintf($base_link, $counter, $display_page++);
+
+		// Show the right arrow.
+		$display_page = ($limitstart + $limit) > $total ? $total : ($limitstart + $limit);
+		if ($limitstart != $counter - $total && !$limitstart_invalid)
+			$pageindex .= $display_page > $counter - $limit ? ' ' : sprintf($base_link, $display_page, '&#187;');
+	}
+	else
+	{
+		// If they didn't enter an odd value, pretend they did.
+		$PageContiguous = (int) (compactTopicPagesContiguous - (compactTopicPagesContiguous % 2)) / 2;
+
+		// Show the first page. (>1< ... 6 7 [8] 9 10 ... 15)
+		if ($limitstart > $limit * $PageContiguous)
+			$pageindex = sprintf($base_link, 0, '1');
+		else
+			$pageindex = '';
+
+		// Show the ... after the first page.  (1 >...< 6 7 [8] 9 10 ... 15)
+		if ($limitstart > $limit * ($PageContiguous + 1))
+			$pageindex .= '<b> ... </b>';
+
+		// Show the pages before the current one. (1 ... >6 7< [8] 9 10 ... 15)
+		for ($nCont = $PageContiguous; $nCont >= 1; $nCont--)
+			if ($limitstart >= $limit * $nCont)
+			{
+				$tmpStart = $limitstart - $limit * $nCont;
+				$pageindex.= sprintf($base_link, $tmpStart, $tmpStart / $limit + 1);
+			}
+
+		// Show the current page. (1 ... 6 7 >[8]< 9 10 ... 15)
+		if (!$limitstart_invalid)
+			$pageindex .= '[<b>' . ($limitstart / $limit + 1) . '</b>] ';
+		else
+			$pageindex .= sprintf($base_link, $limitstart, $limitstart / $limit + 1);
+
+		// Show the pages after the current one... (1 ... 6 7 [8] >9 10< ... 15)
+		$tmpMaxPages = (int) (($total - 1) / $limit) * $limit;
+		for ($nCont = 1; $nCont <= $PageContiguous; $nCont++)
+			if ($limitstart + $limit * $nCont <= $tmpMaxPages)
+			{
+				$tmpStart = $limitstart + $limit * $nCont;
+				$pageindex .= sprintf($base_link, $tmpStart, $tmpStart / $limit + 1);
+			}
+
+		// Show the '...' part near the end. (1 ... 6 7 [8] 9 10 >...< 15)
+		if ($limitstart + $limit * ($PageContiguous + 1) < $tmpMaxPages)
+			$pageindex .= '<b> ... </b>';
+
+		// Show the last number in the list. (1 ... 6 7 [8] 9 10 ... >15<)
+		if ($limitstart + $limit * $PageContiguous < $tmpMaxPages)
+			$pageindex .= sprintf($base_link, $tmpMaxPages, $tmpMaxPages / $limit + 1);
+	}
+
+	return $pageindex;
 }
 }

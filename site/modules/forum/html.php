@@ -4,19 +4,51 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
-	static function TopicSeen($rows, $pageNav, $topic_info) {
+	static function TopicSeen($context, $pageNav, $topic_info) {
 		?>
+		<a href="#" class="newmsg">Yeni Mesaj</a>
+		<div>
+<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
+</div>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">
-		<?php
-		
-		
-		
-		?>
-		<tr>
-		<td style="padding: 0 0 1px 0;"></td>
+		<tr class="titlebg">
+		<th width="30%">
+		Gönderen
+		</th>
+		<th width="70%" align="left">
+		Başlık: <?php echo $topic_info->subject;?>
+		</th>
 		</tr>
-</table>
-<a name="lastPost"></a>
+		</table>
+		<?php
+		$t = 0;
+		foreach ($context['messages'] as $row) {
+			?>
+			<table width="100%">
+			<tr class="windowbg<?php echo $t;?>">
+			<td width="30%" valign="top">
+			<div align="center">
+			<?php echo $row['member']['imagelink'];?>
+			<br />
+			<?php echo $row['member']['link'];?>
+			<br />
+			<?php echo $row['member']['cinsiyet'];?>
+			<br />
+			<?php echo $row['member']['sehir'];?>
+			<br />
+			M. Yılı: <?php echo $row['member']['mezuniyet'];?>
+			</div>
+			</td>
+			<td width="70%" valign="top">
+			<?php echo $row['body'];?>
+			</td>
+			</tr>
+			</table>
+			<?php
+			$t = 1- $t;
+		}
+		?>
+
 <div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
@@ -158,6 +190,9 @@ class ForumHTML {
 			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle">
 			<?php
 			echo $topic['is_sticky'] ? '<b>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</b>' : '';
+			
+			echo  '<br /><small>'.$topic['pages'].'</small>';
+			
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new']) {
 			echo '<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="'.SITEURL.'/images/yeni.png" alt="Yeni Mesaj Var" /></a>';
