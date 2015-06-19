@@ -36,6 +36,7 @@ class BoardCategories extends DBTable {
 		. "\n LEFT JOIN #__forum_messages AS m ON m.ID_MSG = b.ID_LAST_MSG "
 		. "\n LEFT JOIN #__users AS mem ON mem.id = m.ID_MEMBER "
 		. "\n LEFT JOIN #__forum_log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = ".$my->id.")"
+		. "\n ORDER BY c.catOrder ASC"
 		;
 	
 		$dbase->setQuery($query);

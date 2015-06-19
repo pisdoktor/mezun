@@ -46,6 +46,7 @@ Bu siteye kayıt olarak;
 <li>Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilirsiniz,</li>
 <li>Arkadaşlarınızın size ulaşmasını sağlayabilirsiniz,</li>
 <li>Arkadaşlarınızla iletişim kurabilir, mesajlaşabilirsiniz,</li>
+<li>Forumda paylaşımda bulunabilir, arkadaşlarınızın paylaşımlarına cevap verebilirsiniz</li>
 </ul>
 
 <h3>Hemen şimdi <a href="index.php?option=register">Kayıt Ol!</a></h3>

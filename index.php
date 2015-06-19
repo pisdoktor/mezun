@@ -100,7 +100,7 @@ function resendPassword() {
 	   $dbase->setQuery($query);
 	   $dbase->query();
 	   
-	   $body = "İsteğiniz üzerine parolanız sıfırlandı.\n\n";
+	   $body = "İsteğiniz üzerine parolanız sıfırlandı.\n";
 	   $body.= "----------------------------------------\n";
 	   $body.= "Yeni Parolanız: ".$passwd."\n";
 	   $body.= "----------------------------------------\n";
@@ -147,7 +147,7 @@ function registerUser() {
 	
 	$alink = '<a href="'.SITEURL.'/index.php?option=active&code='.$row->activation.'">Aktive Et</a>';
 	
-	$body = "Üyelik talebiniz başarıyla kaydedildi.\n\n";
+	$body = "Üyelik talebiniz başarıyla kaydedildi.\n";
 	$body.= "----------------------------------------\n";
 	$body.= "Aktivasyon Linki: ".$alink."\n";
 	$body.= "Aktivasyon Kodu: ".$row->activation."\n";
