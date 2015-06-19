@@ -98,13 +98,13 @@ function createNewTopic() {
 	$msgOptions->body = $content['body'];
 	
 	$topicOptions->ID_TOPIC = null;
-	$topicOptions->isSticky = '0';
+	$topicOptions->isSticky = $content['isSticky'];
 	$topicOptions->ID_BOARD = $content['ID_BOARD'];
 	$topicOptions->ID_FIRST_MSG = $my->id;
 	$topicOptions->ID_LAST_MSG = $my->id;
 	$topicOptions->numReplies = null;
 	$topicOptions->numViews = null;
-	$topicOptions->locked = '0';
+	$topicOptions->locked = $content['locked'];
 	
 	$new_topic = empty($topicOptions->ID_TOPIC);
 	//mesajı sokalım

@@ -20,8 +20,8 @@ class ForumHTML {
 <div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
-				
-				<a href="#" class="newmsg">Yeni Başlık</a>
+				<?php if (!$topic_info->locked) {?>
+				<a href="#" class="newmsg">Yeni Mesaj</a>
 		<div id="newmessagewindow">
 		<form action="index.php?option=site&bolum=forum&task=newmessage" method="post">
 		<input type="text" name="subject" value="Cvp:<?php echo $topic_info->subject;?>" placeholder="Mesajınızın başlığı" class="inputbox" required ><br />
@@ -31,10 +31,12 @@ class ForumHTML {
 		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
 		</form>
 		</div>
+		<?php } ?>
 <?php	
 	}
 	
 	static function BoardSeen($context, $pageNav, $board_info) {
+		global $my;
 		if (isset($context['boards'])) {
 		?>
 		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
@@ -188,11 +190,18 @@ class ForumHTML {
 				?>
 				<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 				
-				<a href="#" class="newtopic">Yeni Başlık</a>
+		<a href="#" class="newtopic">Yeni Başlık</a>
 		<div id="newtopicwindow">
 		<form action="index.php?option=site&bolum=forum&task=newtopic" method="post">
 		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="inputbox" required ><br />
 		<textarea cols="50" rows="5" name="body" placeholder="Mesajınızın içeriği" class="textbox" required></textarea><br />
+		<?php if ($my->id == 1) {
+		 ?>
+		 <label for="locked">Kilitli</label><input id="locked" type="checkbox" name="locked" value="1" class="checkbox" />
+		 <label for="sticky">Yapışkan</label><input id="sticky" type="checkbox" name="isSticky" value="1" class="checkbox" />
+		 <?php   
+		}
+		?>
 		<input type="submit" value="MESAJI GÖNDER" class="button">
 		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
 		</form>
