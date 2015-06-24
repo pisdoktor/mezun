@@ -13,6 +13,7 @@ Mezun Sistemindeki asıl amaçlarımız;
 <li>Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilme,</li>
 <li>Arkadaşlarınızın size ulaşmasını sağlayabilme,</li>
 <li>Arkadaşlarınızla iletişim kurabilme, mesajlaşabilme,</li>
+<li>Forumda paylaşımda bulunabilme, arkadaşlarınızın paylaşımlarına cevap verebilme</li>
 </ul>
 olarak sıralanabilir.
 
