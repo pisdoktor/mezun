@@ -5,98 +5,114 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Arkadas {
 	static function getList($rows, $pageNav) {
 		?>
-		<h3>ARKADAŞLARIM</h3>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h4>ARKADAŞLARIM</h4></div>
+		<div class="panel-body">
 		<?php
 		if (!$rows) {
 	?>
-	<div align="center">Hiç arkadaşınız Yok!</div>
-	<div align="center">İsterseniz <a href="index.php?option=site&bolum=arama">üye arama</a> bölümünden arkadaşlarına ulaşabilirsiniz.</div>
+	<div align="center">
+	<div class="row">
+	Hiç arkadaşınız yok!
+	</div>
+	<div class="row">
+	İsterseniz <a href="index.php?option=site&bolum=arama">üye arama</a> bölümünden arkadaşlarına ulaşabilirsiniz.
+	</div>
+	</div>
 	<?php
 	
-} else {
-?>
-	<div class="search-results">
-	<?php
-$t = 0;
+}
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
-$link = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
+$image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
+$link = '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
 $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 ?>
-<div id="profile" class="clearfix">
-		
-<div id="profile-photo">
-<img src="<?php echo $image;?>" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+<div class="row">
+
+<div class="col-sm-3">
+<img src="<?php echo $image;?>" class="img-circle" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="150" height="150" />
 </div>
-		
-<div id="basic-info">
-<table width="100%">
-  <tr>
-	<td colspan="2"><?php echo $link;?></td>
-	<td colspan="2"></td>
-  </tr>
-  <tr>
-	<td><strong>Adı, Soyadı:</strong></td>
-	<td><?php echo $row->name;?></td>
-	<td><strong>Siteye Kayıt Tarihi:</strong></td>
-	<td><?php echo $row->registerDate;?></td>
-  </tr>
-  <tr>
-	<td><strong>Kullanıcı Adı:</strong></td>
-	<td><?php echo $row->username;?></td>
-	<td><strong>Siteye Son Gelişi:</strong></td>
-	<td><?php echo $row->lastvisit;?></td>
-  </tr>
-  <tr>
-	<td><strong>Cinsiyet:</strong></td>
-	<td><?php echo $cinsiyet;?></td>
-	<td><strong>Fakülteye Giriş Yılı:</strong></td>
-	<td><?php echo $row->byili;?></td>
-  </tr>
-  <tr>
-	<td><strong>Doğum Tarihi:</strong></td>
-	<td><?php echo $row->dogumtarihi;?></td>
-	<td><strong>Mezuniyet Tarihi:</strong></td>
-	<td><?php echo $row->myili;?></td>
-  </tr>
-  <tr>
-	<td><strong>Doğum Yeri:</strong></td>
-	<td><?php echo $row->dogumyeriadi;?></td>
-	<td><strong>Yaşadığı Şehir:</strong></td>
-	<td><?php echo $row->sehiradi;?></td>
-  </tr>
-  <tr>
-	<td><strong>Şuanda Çalıştığı Kurum:</strong></td>
-	<td><?php echo $row->work;?></td>
-	<td></td>
-	<td></td>
-  </tr>
-</table>
-	</div>
-		
-		</div>
-		<br />
+
+<div class="col-sm-7">
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-4"><strong>Adı, Soyadı:</strong></div>
+<div class="col-sm-8"><?php echo $row->name;?></div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-4"><strong>Siteye Son Geliş Tarihi:</strong></div>
+<div class="col-sm-8"><?php echo mosFormatDate($row->lastvisit);?></div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-4"><strong>Şuanda Çalıştığı Kurum:</strong></div>
+<div class="col-sm-8"><?php echo $row->work;?></div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-4"><strong>Ünvanı:</strong></div>
+<div class="col-sm-8"><?php echo $row->unvan;?></div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-4"><strong>Branşı:</strong></div>
+<div class="col-sm-8"><?php echo $row->bransadi;?></div>
+</div>
+</div>
+
+</div>
+
+<div class="col-sm-2">
+<?php echo $link;?>
+</div>
+
+</div>
+<br />		
 <?php
-$t = 1 - $t;
 }
 ?>    
 	</div>
+	</div>
 		
 <div align="center">
-<div class="pagenav_counter">
+
+<div class="row">
+<div class="col-sm-12">
 <?php echo $pageNav->writePagesCounter();?>
 </div>
-<div class="pagenav_links">
+</div>
+
+<div class="row">
+<div class="col-sm-12">
 <?php 
 $link = 'index.php?option=site&bolum=arkadas';
-echo $pageNav->writeLimitPageLink($link);
+echo $pageNav->writePagesLinks($link);
 ?>
 </div>
 </div>
-<?php
-}        
-	}
-	
+
+<div class="row">
+<div class="col-sm-1">
+<?php 
+$link = 'index.php?option=site&bolum=arkadas';
+echo $pageNav->writeLimitBox($link);
+?>
+</div>
+</div>
+
+</div>
+<?php        
+}
 }

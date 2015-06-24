@@ -77,7 +77,7 @@ function createNewMessage() {
 	$dbase->setQuery("UPDATE #__forum_log_topics SET ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC).", ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
 	$dbase->query();
 	
-	mosRedirect('index.php?option=site&bolum=forum&task=topic&id='.$msgOptions->ID_TOPIC);
+	mosRedirect('index.php?option=site&bolum=forum&task=topic&id='.$msgOptions->ID_TOPIC.'#new');
 }
 
 function createNewTopic() {
@@ -158,9 +158,18 @@ function Topic($id) {
 	global $dbase, $limit, $limitstart, $my;
 	
 	$topics = new BoardTopics($dbase);
+	$controlid = $topics->load($id);
 	
-	$context['messages'] = $topics->TopicIndex($id, $limitstart, $limit);
+	if (!$controlid) {
+		mosNotAuth();
+		exit;
+	}
+	$board = new Boards($dbase);
+		
+	$context['topic'] = $topics->TopicIndex($id, $limitstart, $limit);
 	$topic_info = $topics->TopicInfo($id);
+	$board_info = $board->BoardInfo($topic_info->ID_BOARD);
+
 
 	$total = $topic_info->numReplies;
 	
@@ -181,6 +190,20 @@ function Topic($id) {
 		$dbase->setQuery($query);
 		$dbase->query();
 		
+		//board kaydı yapalım
+		$dbase->setQuery("REPLACE INTO #__forum_log_boards "
+	. "\n (ID_MSG, ID_MEMBER, ID_BOARD) VALUES (".$dbase->Quote($maxMsg).", ".$dbase->Quote($my->id).", ".$dbase->Quote($topic_info->ID_BOARD).")");
+	$dbase->query();
+	
+	if (!empty($board_info->parent_boards)) {
+	$dbase->setQuery("UPDATE #__forum_log_boards "
+	. "\n SET ID_MSG = ".$maxMsg
+	. "\n WHERE ID_MEMBER = ".$my->id
+	. "\n AND ID_BOARD IN (" . implode(', ', array_keys($board_info->parent_boards)) . ")"
+	. "\n LIMIT " . count($board_info->parent_boards));
+	$dbase->query();
+	}
+		
 		//Okunmayı arttıralım
 		if (empty($_COOKIE['last_read_topic']) || $_COOKIE['last_read_topic'] != $id) {
 		$dbase->setQuery("UPDATE #__forum_topics SET numViews = numViews + 1 WHERE ID_TOPIC = ".$id." LIMIT 1");
@@ -189,7 +212,7 @@ function Topic($id) {
 		setcookie('last_read_topic', $id);
 	}
 	
-	ForumHTML::TopicSeen($context, $pageNav, $topic_info);
+	ForumHTML::TopicSeen($context, $pageNav, $topic_info, $board_info);
 	
 }
 

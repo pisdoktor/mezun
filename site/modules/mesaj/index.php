@@ -37,7 +37,7 @@ switch($task) {
 	break;
 	
 	case 'delete':
-	deleteMessage($cid);
+	deleteMessage($cid, $type);
 	break;
 	
 	case 'unread':
@@ -47,6 +47,18 @@ switch($task) {
 	case 'read':
 	changeMessage($cid, 1);
 	break;
+}
+/**
+* Mesaj silme
+*/
+function deleteMessage($cid, $type) {
+	
+}
+/**
+* Mesaj durumu değiştirme
+*/
+function changeMessage($cid, $status) {
+	global $dbase, $my;
 }
 /**
 * Mesaj gösterim fonksiyonu
@@ -142,7 +154,7 @@ function createMessage() {
 		$user[] = mosHTML::makeOption($row->id, $row->name.' ('.$row->username.')');
 	}
 	
-	$userlist = mosHTML::selectList($user, 'aid', 'size="10"', 'value', 'text');
+	$userlist = mosHTML::selectList($user, 'aid', 'id="aid" required size="10"', 'value', 'text');
 	
 	Message::createMsg($my, $userlist);
 }

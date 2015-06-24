@@ -60,7 +60,7 @@ function deleteImage() {
 	
 	$image = $dbase->loadResult();
 	
-	if ($image && @unlink(ABSPATH.'/images/'.$image)) {
+	if ($image && @unlink(ABSPATH.'/images/profil/'.$image)) {
 			$dbase->setQuery("UPDATE #__users SET image='' WHERE id=".$dbase->Quote($my->id));
 			$dbase->query();
 	} else {
@@ -71,13 +71,30 @@ function deleteImage() {
 }
 /**
 * Profil parolası değiştirme fonksiyonu
-* Düzenleme yapılacak henüz işlevsel değil
 */
 function changePass() {
 	global $dbase, $my;
 	
 	$password = mosGetParam($_POST, 'password');
 	$password2 = mosGetParam($_POST, 'password2');
+	
+	if ($password == $password2) {
+		
+		$row = new Users($dbase);
+		$salt = mosMakePassword(16);
+		$crypt = md5($password.$salt);
+		
+		$password = $crypt.':'.$salt;
+		
+		$query = "UPDATE #__users SET password=".$dbase->Quote($password)." WHERE id=".$dbase->Quote($my->id);
+		$dbase->setQuery($query);
+		$dbase->query();
+			
+		mosRedirect('index.php?option=site&bolum=profil&task=my', 'Parolanız değiştirildi');
+		
+	} else {
+		mosRedirect('index.php?option=site&bolum=profil&task=my', 'Parolalar uyuşmuyor!');
+	}
 }
 /**
 * Profil resmi ekleme/değiştirme fonksiyonu
@@ -96,11 +113,11 @@ function saveImage() {
 	
 	//eğer varsa önce eski resmi silelim
 	if ($row->image) {
-		@unlink(ABSPATH.'/images/'.$row->image);
+		@unlink(ABSPATH.'/images/profil/'.$row->image);
 	}
 	
 	//şimdi yeni resmi yükleyelim
-	$dest = ABSPATH.'/images/';
+	$dest = ABSPATH.'/images/profil/';
 	$maxsize = '2048';
 	$allow = array('png', 'gif', 'jpg', 'jpeg');
 		
@@ -207,9 +224,17 @@ function getProfile($id) {
 		$msg = false;
 	}
 	}
-	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri FROM #__users AS u"
+	
+	if ($my->id == $user->id || $istek->checkDurum($my->id, $user->id, 1)) {
+		$show = true;
+	} else {
+		$show = false;
+	}
+	
+	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri, b.name AS brans FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
+	. "\n LEFT JOIN #__branslar AS b ON b.id=u.brans"
 	. "\n WHERE u.id=".$dbase->Quote($user->id);
 	$dbase->setQuery($query);
 	
@@ -225,5 +250,5 @@ function getProfile($id) {
 		exit();
 	}
 		
-	Profile::getProfile($row, $edit, $msg, $istem);
+	Profile::getProfile($row, $edit, $msg, $istem, $show);
 }

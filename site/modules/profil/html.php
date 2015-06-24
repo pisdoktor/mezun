@@ -5,70 +5,110 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Profile {
 	static function editProfile($row) {
 		?>
-<form action="index.php" method="post" name="login" id="adminForm">
-<h3>PROFİL DÜZENLEME</h3>
+<form action="index.php" method="post" id="adminForm" role="form">
+<div class="panel panel-warning">
+		<div class="panel-heading"><h4>PROFİL DÜZENLE</h4></div>
+		<div class="panel-body">
+		
+		<div class="form-group">
+		<div class="row">
+		<label class="control-label col-sm-4" for="name">Adınız ve Soyadınız:</label>
+		<div class="col-sm-6">
+		<input name="name" id="name" type="text" class="form-control" value="<?php echo $row->name;?>" required />
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
 <div class="row">
-<label for="name">Adınız ve Soyadınız:</label>
-<input name="name" id="name" type="text" class="inputbox" alt="name" value="<?php echo $row->name;?>" size="15" required />
+<label class="control-label col-sm-4" for="email">E-posta Adresiniz:</label>
+<div class="col-sm-4">
+<input name="email" id="email" type="text" class="form-control" value="<?php echo $row->email;?>" required />
+</div>
+</div>
 </div>
 
+<div class="form-group">
 <div class="row">
-<label for="dogumtarihi">Doğum Tarihiniz:</label>
-<input name="dogumtarihi" id="dogumtarihi" type="text" class="inputbox form-control bfh-phone" alt="dogumtarihi" value="<?php echo $row->dogumtarihi;?>" size="15" data-format="dd-dd-dddd" />
+<label class="control-label col-sm-4" for="work">Şuanda Çalıştığınız Kurum:</label>
+<div class="col-sm-6">
+<input name="work" id="work" type="text" class="form-control" value="<?php echo $row->work;?>" required />
+</div>
+</div>
 </div>
 
+<div class="form-group">
 <div class="row">
-<label for="sehir">Doğum Yeriniz:</label>
-<?php echo $row->selectSehir('dogumyeri');?>
-</div>
-
-<div class="row">
-<label for="email">E-posta Adresiniz:</label>
-<input name="email" id="email" type="text" class="inputbox" alt="email" value="<?php echo $row->email;?>" size="15" required />
-</div>
-
-<div class="row">
-<label for="phone">Telefon Numaranız:</label>
-<input name="phone" id="phone" type="text" class="inputbox form-control bfh-phone" alt="phone" value="<?php echo $row->phone;?>" size="15" data-format="0 (ddd) ddd dd dd" />
-</div>
-
-<div class="row">
-<label for="okulno">Okul Numaranız:</label>
-<input name="okulno" id="okulno" type="text" class="inputbox" alt="okulno" value="<?php echo $row->okulno;?>" size="15" />
-</div>
-
-<div class="row">
-<label for="work">Şuanda Çalıştığınız Kurum:</label>
-<input name="work" id="work" type="text" class="inputbox" alt="work" value="<?php echo $row->work;?>" size="15" required />
-</div>
-
-<div class="row">
-<label for="work">Branşınız:</label>
+<label class="control-label col-sm-4" for="work">Branşınız:</label>
+<div class="col-sm-4">
 <?php echo $row->selectBrans();?>
 </div>
+</div>
+</div>
 
+
+<div class="form-group">
 <div class="row">
-<label for="work">Ünvanınız:</label>
+<label class="control-label col-sm-4" for="work">Ünvanınız:</label>
+<div class="col-sm-4">
 <?php echo $row->selectUnvan();?>
 </div>
+</div>
+</div>
 
+<div class="form-group">
 <div class="row">
-<label for="sehir">Yaşadığınız Şehir:</label>
+<label class="control-label col-sm-4" for="sehir">Yaşadığınız Şehir:</label>
+<div class="col-sm-3">
 <?php echo $row->selectSehir('sehir');?>
 </div>
+</div>
+</div>
 
+<div class="form-group">
 <div class="row">
-<label for="byili">Okula Başlangıç Yılınız:</label>
+<label class="control-label col-sm-4" for="phone">Telefon Numaranız:</label>
+<div class="col-sm-3">
+<input name="phone" id="phone" type="text" class="form-control bfh-phone" value="<?php echo $row->phone;?>" data-format="d (ddd) ddd dd dd" required />
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="okulno">Okul Numaranız:</label>
+<div class="col-sm-4">
+<input name="okulno" id="okulno" type="text" class="form-control" value="<?php echo $row->okulno;?>" />
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="byili">Okula Başlangıç Yılınız:</label>
+<div class="col-sm-3">
 <?php echo $row->selectYil('byili');?>
 </div>
+</div>
+</div>
 
+<div class="form-group">
 <div class="row">
-<label for="myili">Okulu Bitiriş Yılınız:</label>
+<label class="control-label col-sm-4" for="myili">Okulu Bitiriş Yılınız:</label>
+<div class="col-sm-3">
 <?php echo $row->selectYil('myili');?>
 </div>
-<br />
-<div align="center">
-<input type="submit" name="button" value="KAYDET!" class="button" />
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-12">
+<button type="submit" class="btn btn-primary" />PROFİLİMİ GÜNCELLE!</button>
+</div>
+</div>
+</div>
+</div>
 </div>
 <input type="hidden" name="option" value="site" />
 <input type="hidden" name="bolum" value="profil" />
@@ -76,83 +116,158 @@ class Profile {
 </form>
 		<?php
 	}
-	static function getProfile($row, $edit, $msg, $istem) {
+	static function getProfile($row, $edit, $msg, $istem, $show) {
 		
-		$image = $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png';
+		$image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
 		$cinsiyet = $row->cinsiyet ? 'Erkek' : 'Bayan';
-		$editlink = $edit ? '<a href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
-		$passlink = $edit ? '<a href="#" id="changepass">Parola Değiştir</a>' : '';
-		$editimage = $edit ? '<a href="#" id="changeimg">Resmi Değiştir</a>' : '';
-		$deleteimage = ($edit && $row->image) ? '<a href="index.php?option=site&bolum=profil&task=deleteimage">Resmi Sil</a>' : ''; 
-		$msglink = $msg ? '<a href="#" id="sendamsg">Mesaj Gönder</a>' : '';
-		$istemlink = !$istem ? '' : '<a href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';		
+		$editlink = $edit ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
+		$passlink = $edit ? '<a class="btn btn-default" href="#" id="changepass">Parola Değiştir</a>' : '';
+		$editimage = $edit ? '<a class="btn btn-default" href="#" id="changeimg">Resmi Değiştir</a>' : '';
+		$deleteimage = ($edit && $row->image) ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=deleteimage">Resmi Sil</a>' : ''; 
+		$msglink = $msg ? '<a class="btn btn-default" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
+		$istemlink = !$istem ? '' : '<a class="btn btn-default" href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';		
 		
 		
 		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
-		<h3><?php echo $head;?></h3>  
-		<div id="profile" class="clearfix">
+		<div class="panel panel-warning">
+		<div class="panel-heading"><h4><?php echo $head;?></h4><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></div>
+		<div class="panel-body"> 
 		
-		<div id="profile-photo">
-		<img src="<?php echo $image;?>" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+		<div class="row">
+		<div class="col-sm-3">
+		<div>
+		<img src="<?php echo $image;?>" class="img-circle" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+		</div>
 		<div align="center"><?php echo $editimage;?> <?php echo $deleteimage;?></div>
 		</div>
 		
-		<div id="basic-info">
-		<table width="100%">
-  <tr>
-	<td colspan="2"><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></td>
-	<td colspan="2"></td>
-  </tr>
-  <tr>
-	<td><strong>Adı, Soyadı:</strong></td>
-	<td><?php echo $row->name;?></td>
-	<td><strong>Siteye Kayıt Tarihi:</strong></td>
-	<td><?php echo $row->registerDate;?></td>
-  </tr>
-  <tr>
-	<td><strong>Kullanıcı Adı:</strong></td>
-	<td><?php echo $row->username;?></td>
-	<td><strong>Siteye Son Gelişi:</strong></td>
-	<td><?php echo $row->lastvisit;?></td>
-  </tr>
-  <tr>
-	<td><strong>Cinsiyet:</strong></td>
-	<td><?php echo $cinsiyet;?></td>
-	<td><strong>Fakülteye Giriş Yılı:</strong></td>
-	<td><?php echo $row->byili;?></td>
-  </tr>
-  <tr>
-	<td><strong>Doğum Tarihi:</strong></td>
-	<td><?php echo $row->dogumtarihi;?></td>
-	<td><strong>Mezuniyet Tarihi:</strong></td>
-	<td><?php echo $row->myili;?></td>
-  </tr>
-  <tr>
-	<td><strong>Doğum Yeri:</strong></td>
-	<td><?php echo $row->dogumyeri;?></td>
-	<td><strong>Yaşadığı Şehir:</strong></td>
-	<td><?php echo $row->sehiradi;?></td>
-  </tr>
-  <tr>
-	<td><strong>Şuanda Çalıştığı Kurum:</strong></td>
-	<td><?php echo $row->work;?></td>
-	<td></td>
-	<td></td>
-  </tr>
-</table>
-	</div>
+		<div class="col-sm-9">
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Adı, Soyadı:</strong></div>
+		<div class="col-sm-8"><?php echo $row->name;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Kullanıcı Adı:</strong></div>
+		<div class="col-sm-8"><?php echo $row->username;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Cinsiyet:</strong></div>
+		<div class="col-sm-8"><?php echo $cinsiyet;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Doğum Tarihi:</strong></div>
+		<div class="col-sm-8"><?php echo $row->dogumtarihi;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Doğum Yeri:</strong></div>
+		<div class="col-sm-8"><?php echo $row->dogumyeri;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Yaşadığı Şehir:</strong></div>
+		<div class="col-sm-8"><?php echo $row->sehiradi;?></div>
+		</div>
+		</div>
+		
+		<?php if ($show) {?>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Telefon Numarası:</strong></div>
+		<div class="col-sm-8"><?php echo $row->phone;?></div>
+		</div>
+		</div>
+		<?php } ?>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Siteye Kayıt Tarihi:</strong></div>
+		<div class="col-sm-8"><?php echo mosFormatDate($row->registerDate);?></div>
+		</div>
+		</div>
+		
+		<?php if ($show) {?>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Siteye Son Geliş Tarihi:</strong></div>
+		<div class="col-sm-8"><?php echo mosFormatDate($row->lastvisit);?></div>
+		</div>
+		</div>
+		<?php } ?>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Fakülteye Giriş Yılı:</strong></div>
+		<div class="col-sm-8"><?php echo $row->byili;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Mezuniyet Yılı:</strong></div>
+		<div class="col-sm-8"><?php echo $row->myili;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Okul Numarası:</strong></div>
+		<div class="col-sm-8"><?php echo $row->okulno;?></div>
+		</div>
+		</div>
+		
+		<?php if ($show) {?>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Şuanda Çalıştığı Kurum:</strong></div>
+		<div class="col-sm-8"><?php echo $row->work;?></div>
+		</div>
+		</div>
+		<?php } ?>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Branşı:</strong></div>
+		<div class="col-sm-8"><?php echo $row->brans;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-4"><strong>Ünvanı:</strong></div>
+		<div class="col-sm-8"><?php echo $row->unvan;?></div>
+		</div>
+		</div>
 		
 		</div>
 		
+		</div>
+		</div>
+		</div>
+		
+		
 		<!-- Profil Resmi Değiştirme -->
-		<div id="imagechange" style="display: none;">
+		<div id="imagechange" style="display: none;" title="Profil Resmi Değiştir">
 		<div>* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>
 		<div>* Resminizin boyutu 2 Mb geçemez!</div>
-		<form action="index.php" method="post" enctype="multipart/form-data">
+		<form action="index.php" method="post" enctype="multipart/form-data" role="form">
 		<input type="file" name="image" id="image" />
 		<br />
-		<input type="submit" value="Profil Resmi Yap" class="button">
+		<button type="submit" class="btn btn-primary">Profil Resmi Yap</button>
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="profil" />
 		<input type="hidden" name="task" value="saveimage" />
@@ -161,15 +276,15 @@ class Profile {
 		<!-- Profil Resmi Değiştirme -->
 		
 		<!-- Parola Değiştirme -->
-		<div id="passchange" style="display: none;">
-		<form action="index.php" method="post">
+		<div id="passchange" style="display: none;" title="Parola Değiştir">
+		<form action="index.php" method="post" role="form">
 		<label for="password">Yeni Parola:</label>
-		<input type="password" name="password" id="password" class="inputbox" />
+		<input type="password" name="password" id="password" class="form-control" required />
 		<br />
 		<label for="password2">Yeni Parola Tekrar:</label>
-		<input type="password" name="password2" id="password2" class="inputbox" />
+		<input type="password" name="password2" id="password2" class="form-control" required />
 		<br />
-		<input type="submit" value="Parolayı Değiştir" class="button">
+		<button type="submit" class="btn btn-primary">Parolayı Değiştir</button>
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="profil" />
 		<input type="hidden" name="task" value="changepass" />
@@ -178,11 +293,11 @@ class Profile {
 		<!-- Parola Değiştirme -->
 		
 		<!-- Mesaj Gönderme-->
-		<div id="sendmessage" style="display: none;">
-		<form action="index.php" method="post">
-		<input type="text" name="baslik" class="inputbox" placeholder="Mesajınızın başlığı">
-		<textarea cols="50" rows="5" name="text" class="textbox" placeholder="Mesajınızın içeriği"></textarea>
-		<input type="submit" value="Mesajı Gönder" class="button">
+		<div id="sendmessage" style="display: none;" title="Mesaj Gönder">
+		<form action="index.php" method="post" role="form">
+		<input type="text" name="baslik" class="form-control" placeholder="Mesajınızın başlığı" required>
+		<textarea rows="5" name="text" class="form-control" placeholder="Mesajınızın içeriği" required></textarea>
+		<button type="submit" class="btn btn-primary">Mesajı Gönder</button>
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="mesaj" />
 		<input type="hidden" name="task" value="send" />

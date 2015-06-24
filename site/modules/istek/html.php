@@ -7,8 +7,19 @@ class Istek {
 	static function inBox($rows, $pageNav, $type) {
 		$head = $type ? 'ARKADAŞLIK İSTEKLERİ: GİDEN' : 'ARKADAŞLIK İSTEKLERİ: GELEN';
 		?>
-	<h3><?php echo $head;?></h3>    
-	<form action="index.php" method="post" name="adminForm">
+	<div class="panel panel-default">
+		<div class="panel-heading"><h4><?php echo $head;?></h4></div>
+		<div class="panel-body">
+	<form action="index.php" method="post" name="adminForm" role="form">
+	
+	<div class="form-group">
+	<div class="btn-group">
+	<?php echo $type == 0 ? formButton("Kabul Et", 'onayla', 1) : '';?>
+	<?php echo $type == 0 ? formButton("Red Et", 'delete', 2) : '';?>
+	<?php echo $type == 1 ? formButton("İptal Et", 'delete', 2) : '';?>
+	</div>  
+	</div>
+	
 	<table width="100%" border="0" class="veritable">
 <tr>
 <th width="5%">
@@ -77,6 +88,8 @@ $t = 1 - $t;
 <input type="hidden" name="type" value="<?php echo $type;?>" />
 <input type="hidden" name="boxchecked" value="0" />
 </form>
+</div>
+</div>
 		<?php
 		
 	}

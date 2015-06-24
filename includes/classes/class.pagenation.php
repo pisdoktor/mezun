@@ -29,7 +29,7 @@ class pageNav {
 
 		// build the html select list
 		$link = $link ."&amp;limit=' + this.options[selectedIndex].value + '&amp;limitstart=". $this->limitstart;
-		return mosHTML::selectList( $limits, 'limit', 'class="inputbox" size="1" onchange="document.location.href=\''. $link .'\';"', 'value', 'text', $this->limit );
+		return mosHTML::selectList( $limits, 'limit', 'onchange="document.location.href=\''. $link .'\';"', 'value', 'text', $this->limit );
 	}
 	/**
 	* Writes the html limit # input box
@@ -80,7 +80,7 @@ class pageNav {
 	* @param string The basic link to include in the href
 	*/
 	function writePagesLinks( $link ) {
-		$txt = '';
+		$txt = '<ul class="pagination">';
 
 		$displayed_pages = 10;
 		$total_pages = $this->limit ? ceil( $this->total / $this->limit ) : 0;
@@ -98,31 +98,34 @@ class pageNav {
 		
 		if ($this_page > 1) {
 			$page = ($this_page - 2) * $this->limit;
-			$txt .= '<a href="'. $link .'&amp;limitstart=0" class="pagenav" title="Başa Dön">'.$pnSpace.'Başa Dön</a> ';
-			$txt .= '<a href="'. $link .'&amp;limitstart='.$page.'" class="pagenav" title="Önceki">'.$pnSpace.'Önceki</a> ';
+			$txt .= '<li><a href="'. $link .'&amp;limitstart=0" class="pagenav" title="Başa Dön">'.$pnSpace.'Başa Dön</a></li> ';
+			$txt .= '<li><a href="'. $link .'&amp;limitstart='.$page.'" class="pagenav" title="Önceki">'.$pnSpace.'Önceki</a></li> ';
 		} else {
-			$txt .= '<span class="pagenav">'. $pnSpace .'Başa Dön</span> ';
-			$txt .= '<span class="pagenav">'. $pnSpace .'Önceki</span> ';
+			$txt .= '<li><span class="pagenav">'. $pnSpace .'Başa Dön</span></li> ';
+			$txt .= '<li><span class="pagenav">'. $pnSpace .'Önceki</span></li> ';
 		}
 
 		for ($i=$start_loop; $i <= $stop_loop; $i++) {
 			$page = ($i - 1) * $this->limit;
 			if ($i == $this_page) {
-				$txt .= '<span class="pagenav">'. $i .'</span> ';
+				$txt .= '<li class="active"><span class="pagenav">'. $i .'</span></li> ';
 			} else {
-				$txt .= '<a href="'. $link .'&amp;limitstart='. $page .'" class="pagenav"><strong>'. $i .'</strong></a> ';
+				$txt .= '<li><a href="'. $link .'&amp;limitstart='. $page .'" class="pagenav"><strong>'. $i .'</strong></a></li> ';
 			}
 		}
 
 		if ($this_page < $total_pages) {
 			$page = $this_page * $this->limit;
 			$end_page = ($total_pages-1) * $this->limit;
-			$txt .= '<a href="'. $link .'&amp;limitstart='. $page .'" class="pagenav" title="Sonraki">'. $pnSpace .'Sonraki</a> ';
-			$txt .= '<a href="'. $link .'&amp;limitstart='. $end_page .'" class="pagenav" title="Sona Git">'. $pnSpace .'Sona Git</a>';
+			$txt .= '<li><a href="'. $link .'&amp;limitstart='. $page .'" class="pagenav" title="Sonraki">'. $pnSpace .'Sonraki</a></li> ';
+			$txt .= '<li><a href="'. $link .'&amp;limitstart='. $end_page .'" class="pagenav" title="Sona Git">'. $pnSpace .'Sona Git</a></li>';
 		} else {
-			$txt .= '<span class="pagenav">'. $pnSpace .'Sonraki</span> ';
-			$txt .= '<span class="pagenav">'. $pnSpace .'Sona Git</span>';
+			$txt .= '<li><span class="pagenav">'. $pnSpace .'Sonraki</span></li> ';
+			$txt .= '<li><span class="pagenav">'. $pnSpace .'Sona Git</span></li>';
 		}
+		
+		$txt.= '</ul>';
+		
 		return $txt;
 	}
 	

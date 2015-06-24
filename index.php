@@ -80,6 +80,14 @@ function resendPassword() {
 	$mail = stripslashes($mail);
 	$mail = trim($mail);
 	
+	if (!$mail) {
+		mosRedirect('index.php', 'E-posta adresi girmemişsiniz!');
+	}
+	
+	if (preg_match("/[\w\.\-]+@\w+[\w\.\-]*?\.\w{1,4}/", $mail) == false) {
+		mosRedirect('index.php', 'Geçerli bir e-posta adresi girmelisiniz!');
+	}
+	
 	$query = "SELECT id FROM #__users WHERE email=".$dbase->Quote($mail);
 	$dbase->setQuery($query);
 	
@@ -108,7 +116,7 @@ function resendPassword() {
 	   $body.= "Lütfen siteye giriş yaparak parolanızı tekrar değiştiriniz.\n";
 	   
 	   mosMail(MAILFROM, MAILFROMNAME, $mail, 'Yeni Parola', $body);
-	   mosRedirect('index.php', 'Yeni parola verdiğiniz e-posta adresine gönderildi!'.$passwd);
+	   mosRedirect('index.php', 'Yeni parola verdiğiniz e-posta adresine gönderildi!');
 	} else {
 		mosRedirect('index.php', 'Verilen e-postaya ait bir kullanıcı yok!');
 	}

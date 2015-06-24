@@ -4,32 +4,40 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
-	static function TopicSeen($context, $pageNav, $topic_info) {
+	static function TopicSeen($context, $pageNav, $topic_info, $board_info) {
 		?>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small><?php echo $topic_info->subject;?></small></div>
+		<div class="panel-body">
+		
 		<?php if (!$topic_info->locked) {?>
-		<a href="#" class="newmsg">Yeni Mesaj</a>
+		<a href="#" class="newmsg btn btn-warning">Yeni Mesaj</a>
 		<?php } ?>
 		<div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
-		<table cellpadding="0" cellspacing="0" border="0" width="100%" class="bordercolor">
+		<table width="100%" class="bordercolor">
 		<tr class="titlebg">
-		<th width="30%">
+		<th width="15%">
 		Gönderen
 		</th>
-		<th width="70%" align="left">
+		<th width="85%" align="left">
 		Başlık: <?php echo $topic_info->subject;?>
 		</th>
 		</tr>
 		</table>
 		<?php
-		$t = 0;
-		foreach ($context['messages'] as $row) {
+		$t = 0;		
+		foreach ($context['topic']['messages'] as $row) {
+			if ($row['id'] == $context['topic']['lastMsg']) {
+				echo '<a href="#new"></a>';
+			}
 			?>
 			<table width="100%">
 			<tr class="windowbg<?php echo $t;?>">
-			<td width="30%" valign="top">
-			<div align="center">
+			<td width="15%" valign="top" height="100%">
+			
+			<div align="center" class="msg-profil">
 			<?php echo $row['member']['imagelink'];?>
 			<br />
 			<?php echo $row['member']['link'];?>
@@ -40,9 +48,18 @@ class ForumHTML {
 			<br />
 			M. Yılı: <?php echo $row['member']['mezuniyet'];?>
 			</div>
+			
 			</td>
-			<td width="70%" valign="top">
+			<td valign="top" width="85%" height="100%">
+			<div class="msg-info">
+			<small><?php echo $row['subject'];?></small><br />
+			<small>Gönderim Tarihi: <?php echo $row['time'];?></small>
+			</div>
+			
+			<div class="msg-body">
 			<?php echo $row['body'];?>
+			</div>
+			
 			</td>
 			</tr>
 			</table>
@@ -54,23 +71,32 @@ class ForumHTML {
 <div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
-				<?php if (!$topic_info->locked) {?>
-				<a href="#" class="newmsg">Yeni Mesaj</a>
-		<div id="newmessagewindow">
-		<form action="index.php?option=site&bolum=forum&task=newmessage" method="post">
-		<input type="text" name="subject" value="Cvp:<?php echo $topic_info->subject;?>" placeholder="Mesajınızın başlığı" class="inputbox" required ><br />
-		<textarea cols="50" rows="5" name="body" placeholder="Mesajınızın içeriği" class="textbox" required></textarea><br />
-		<input type="submit" value="MESAJI GÖNDER" class="button">
+		<?php if (!$topic_info->locked) {?>
+		<a href="#" class="newmsg btn btn-warning">Yeni Mesaj</a>
+		<div id="newmessagewindow" title="Başlığa Mesaj Gönder">
+		<form action="index.php?option=site&bolum=forum&task=newmessage" method="post" role="form">
+		<input type="text" name="subject" value="Cvp:<?php echo $topic_info->subject;?>" placeholder="Mesajınızın başlığı" class="form-control" required ><br />
+		<textarea rows="5" name="body" placeholder="Mesajınızın içeriği" class="form-control" required></textarea><br />
+		<button type="submit" class="btn btn-default">MESAJI GÖNDER</button>
 		<input type="hidden" name="ID_BOARD" value="<?php echo $topic_info->ID_BOARD;?>">
 		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
 		</form>
 		</div>
 		<?php } ?>
+		</div></div>
 <?php	
 	}
 	
 	static function BoardSeen($context, $pageNav, $board_info) {
 		global $my;
+		
+		
+		?>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small><?php echo $board_info->aciklama;?></small></div>
+		<div class="panel-body">
+		
+		<?php
 		if (isset($context['boards'])) {
 		?>
 		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
@@ -85,13 +111,13 @@ class ForumHTML {
 			<?php
 			// If the board is new, show a strong indicator.
 			if ($board['new'])
-				echo '<img src="'.SITEURL.'/images/on.png" alt="Yeni Mesaj Var" title="Yeni Mesaj Var" />';
+				echo '<img src="'.SITEURL.'/images/forum/on.png" alt="Yeni Mesaj Var" title="Yeni Mesaj Var" />';
 			// This board doesn't have new posts, but its children do.
 			elseif ($board['children_new'])
-				echo '<img src="'.SITEURL.'/images/on2.png" alt="Yeni Mesaj Var" title="Yeni Mesaj Var" />';
+				echo '<img src="'.SITEURL.'/images/forum/on2.png" alt="Yeni Mesaj Var" title="Yeni Mesaj Var" />';
 			// No new posts at all! The agony!!
 			else
-				echo '<img src="'.SITEURL.'/images/off.png" alt="Yeni Mesaj Yok" title="Yeni Mesaj Yok" />';
+				echo '<img src="'.SITEURL.'/images/forum/off.png" alt="Yeni Mesaj Yok" title="Yeni Mesaj Yok" />';
 				?>
 				</td>
 				
@@ -116,7 +142,7 @@ class ForumHTML {
 			<?php
 			if (!empty($board['last_post']['id']))
 				echo '
-					<b>Son Mesaj</b> Gönderen ', $board['last_post']['member']['link'] , '<br />
+					<b>Son Mesaj</b><br /> Gönderen ', $board['last_post']['member']['link'] , '<br />
 					İçerik ', $board['last_post']['link'], '<br />
 					Zaman ', $board['last_post']['time'];
 					?>
@@ -150,14 +176,9 @@ class ForumHTML {
 		<?php
 		}
 		?>
-		<table width="100%" cellpadding="6" cellspacing="1" border="0" class="tborder" style="padding: 0; margin-bottom: 2ex;">
-			<tr>
-				<td class="titlebg2" width="100%" height="24" style="border-top: 0;">
-					<small><?php echo $board_info->aciklama;?></small>
-				</td>
-			</tr>
-		</table>
-		<a href="#" class="newtopic">Yeni Başlık</a>
+		<br />
+		<a href="#" class="newtopic btn btn-warning">Yeni Başlık</a>
+		<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 					<tr>
 		<?php
@@ -172,7 +193,7 @@ class ForumHTML {
 			<?php
 		} else {
 			?>
-			<td class="catbg3" width="100%" colspan="7"><b>Henüz bir başlık açılmamış</b></td>
+			<td class="catbg2" width="100%" colspan="7"><b>Henüz bir başlık açılmamış</b></td>
 			<?php
 		}
 			?>
@@ -180,12 +201,12 @@ class ForumHTML {
 			<?php
 		if (!empty($context['topics'])) {			
 		foreach ($context['topics'] as $topic) {
-			$image_locked = $topic['is_locked'] ? '<img src="'.SITEURL.'/images/locked_topic.png" alt="Başlık Kilitli" title="Başlık Kilitli" />' : '<img src="'.SITEURL.'/images/unlocked_topic.png" alt="Başlık Kilitli Değil" title="Başlık Kilitli Değil" />';
-			$image_sticky = $topic['is_sticky'] ? '<img src="'.SITEURL.'/images/sticky.png" alt="Başlık Yapışkan" title="Başlık Yapışkan" />' : ''; 
+			$image_locked = $topic['is_locked'] ? '<img src="'.SITEURL.'/images/forum/locked_topic.png" alt="Başlık Kilitli" title="Başlık Kilitli" />' : '<img src="'.SITEURL.'/images/forum/unlocked_topic.png" alt="Başlık Kilitli Değil" title="Başlık Kilitli Değil" />';
+			$image_sticky = $topic['is_sticky'] ? '<img src="'.SITEURL.'/images/forum/sticky.png" alt="Başlık Yapışkan" title="Başlık Yapışkan" />' : ''; 
 			?>
 			<tr>
 			
-			<td class="windowbg2" valign="middle" align="center" width="9%">
+			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" align="center" width="9%">
 			<?php echo $image_locked;?> <?php echo $image_sticky;?>
 			</td>
 		
@@ -197,11 +218,11 @@ class ForumHTML {
 			
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new']) {
-			echo '<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="'.SITEURL.'/images/yeni.png" alt="Yeni Mesaj Var" /></a>';
+			echo '<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="'.SITEURL.'/images/forum/yeni.png" alt="Yeni Mesaj Var" /></a>';
 			}
 			?>
 			</td>		
-			<td class="windowbg2" valign="middle" width="14%">
+			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" width="14%">
 			<?php echo $topic['first_post']['member']['link'];?>
 			</td>
 			<td class="windowbg<?php echo $topic['is_sticky'] ? '3' : '';?>" valign="middle" width="4%" align="center">
@@ -210,9 +231,9 @@ class ForumHTML {
 			<td class="windowbg<?php echo $topic['is_sticky'] ? '3' : '';?>" valign="middle" width="4%" align="center">
 			<?php echo $topic['views'];?>
 			</td>
-			<td class="windowbg2" valign="middle" width="22%">
+			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" width="22%">
 			<a href="<?php echo $topic['last_post']['href'];?>">
-			<img src="<?php echo SITEURL;?>/images/last_post.gif" alt="Son Mesaj" title="Son Mesaj" style="float: right;" />
+			<img src="<?php echo SITEURL;?>/images/forum/last_post.gif" alt="Son Mesaj" title="Son Mesaj" style="float: right;" />
 			</a>
 			<span class="smalltext">
 			<?php echo $topic['last_post']['time'], '<br />
@@ -227,21 +248,23 @@ class ForumHTML {
 				?>
 				<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 				
-		<a href="#" class="newtopic">Yeni Başlık</a>
-		<div id="newtopicwindow">
-		<form action="index.php?option=site&bolum=forum&task=newtopic" method="post">
-		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="inputbox" required ><br />
-		<textarea cols="50" rows="5" name="body" placeholder="Mesajınızın içeriği" class="textbox" required></textarea><br />
+		<a href="#" class="newtopic btn btn-warning">Yeni Başlık</a>
+		<div id="newtopicwindow" title="Yeni Başlık Ekle">
+		<form action="index.php?option=site&bolum=forum&task=newtopic" method="post" role="form">
+		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="form-control" required ><br />
+		<textarea rows="5" name="body" placeholder="Mesajınızın içeriği" class="form-control" required></textarea><br />
 		<?php if ($my->id == 1) {
 		 ?>
-		 <label for="locked">Kilitli</label><input id="locked" type="checkbox" name="locked" value="1" class="checkbox" />
-		 <label for="sticky">Yapışkan</label><input id="sticky" type="checkbox" name="isSticky" value="1" class="checkbox" />
+		 <label for="locked">Kilitli</label><input id="locked" type="checkbox" name="locked" value="1" class="form-control" />
+		 <label for="sticky">Yapışkan</label><input id="sticky" type="checkbox" name="isSticky" value="1" class="form-control" />
 		 <?php   
 		}
 		?>
-		<input type="submit" value="MESAJI GÖNDER" class="button">
+		<button type="submit" class="btn btn-primary">MESAJI GÖNDER</button>
 		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
 		</form>
+		</div>
+		</div>
 		</div>
 		<?php
 		
@@ -249,19 +272,23 @@ class ForumHTML {
 	
 	static function BoardIndex($context) {
 		?>
-		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
-	<tr class="titlebg">
-		<td colspan="2">Forum Adı</td>
-		<td width="6%" align="center">Başlıklar</td>
-		<td width="6%" align="center">Mesajlar</td>
-		<td width="22%" align="center">Son Mesaj</td>
-	</tr>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h4>FORUM</h4></div>
+		<div class="panel-body">
+		<table border="0" width="100%" class="bordercolor">
+			
+			<tr class="titlebg">
+				<td colspan="2">Forum Adı</td>
+				<td width="6%" align="center">Başlıklar</td>
+				<td width="6%" align="center">Mesajlar</td>
+				<td width="22%" align="center">Son Mesaj</td>
+			</tr>
 		<?php 
 		
 		foreach ($context['categories'] as $category) {
 			?>
 		<tr>
-		<td colspan="5" class="catbg" height="18">
+		<td colspan="5" class="catbg">
 		<?php echo $category['link'];?>
 		</td>
 	</tr>
@@ -271,10 +298,12 @@ class ForumHTML {
 			$text = $board['new'] ? 'Yeni Mesaj Var' : 'Yeni Mesaj Yok';
 			?>
 			<tr>
-		<td class="windowbg" width="6%" align="center" valign="top">
-		<img src="<?php echo SITEURL;?>/images/<?php echo $image;?>" alt="<?php echo $text;?>" title="<?php echo $text;?>" border="0" />
-		</td>
-		<td class="windowbg2" align="left" width="60%">
+			
+			<td class="windowbg" width="6%" align="center" valign="top">
+			<img src="<?php echo SITEURL;?>/images/forum/<?php echo $image;?>" alt="<?php echo $text;?>" title="<?php echo $text;?>" border="0" />
+			</td>
+			
+			<td class="windowbg2" align="left" width="60%">
 			<a name="b<?php echo $board['id'];?>"></a>
 			<b><?php echo $board['link'];?></b><br />
 			<?php echo $board['aciklama'];?>
@@ -293,7 +322,9 @@ class ForumHTML {
 				?>
 				
 		</td>
+		
 		<td class="windowbg" valign="middle" align="center" width="6%"><?php echo $board['topics'];?></td>
+		
 		<td class="windowbg" valign="middle" align="center" width="6%"><?php echo $board['posts'];?></td>
 
 		<td class="windowbg2" valign="middle" width="22%">
@@ -303,14 +334,11 @@ class ForumHTML {
 				Gönderen <?php echo $board['last_post']['member']['link'];?>
 			</span>
 		</td>
+		
 	</tr>
 	<?php
-			}
-
 	}
-	
-	echo '</table>';
-		
 	}
-	
+	echo '</table></div></div>';
+	}
 }

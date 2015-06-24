@@ -6,6 +6,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <?php showHead();?>
 </head>
 <body>
@@ -26,7 +27,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <div id="content" class="clearfix">
 <?php
 	if ($mosmsg) {
-	echo '<div id="message" title="Uyarı">'.$mosmsg.'</div>';
+	echo '<div id="message" title="Mesaj">'.$mosmsg.'</div>';
 	}
 ?>
 <?php loadSiteModule();?>

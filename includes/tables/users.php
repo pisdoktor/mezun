@@ -59,11 +59,11 @@ class Users extends DBTable {
 		return mosMakePassword($len);
 	}
 	
-	function userCinsiyet() {
-		return mosHTML::yesnoRadioList('cinsiyet', 'class="regular-radio"', $this->cinsiyet, 'Erkek', 'Bayan');
+	function userCinsiyet($required=0) {
+		return mosHTML::yesnoRadioList('cinsiyet', 'class="radio-inline" '.$required ? 'required' : ''.'', $this->cinsiyet, 'Erkek', 'Bayan');
 	}
 	
-	function selectBrans() {
+	function selectBrans($required=0) {
 		
 		$query = "SELECT * FROM #__branslar ORDER BY name ASC";
 		$this->_db->setQuery($query);
@@ -71,18 +71,28 @@ class Users extends DBTable {
 		$lists = $this->_db->loadObjectList();
 		
 		$b = array();
-		$b[] = mosHTML::makeOption('0', 'Bir Branş Seçin');
+		if ($required) {
+		$b[] = mosHTML::makeOption('', 'Bir Branş Seçin');    
+		} else {
+		$b[] = mosHTML::makeOption('0', 'Bir Branş Seçin');    
+		}
+		
 		foreach ($lists as $list) {
 			$b[] = mosHTML::makeOption($list->id, $list->name);
 		}
 		
-		return mosHTML::selectList($b, 'brans', 'class="inputbox" size="1"', 'value', 'text', $this->brans);
+		return mosHTML::selectList($b, 'brans', 'class="form-control" '.$required ? 'required' : ''.'', 'value', 'text', $this->brans);
 	   
 	}
 	
-	function selectUnvan() {
+	function selectUnvan($required=0) {
 		$u = array();
-		$u[] = mosHTML::makeOption('', 'Bir Ünvan Seçin');
+		if ($required) {
+		 $u[] = mosHTML::makeOption('', 'Bir Ünvan Seçin');   
+		} else {
+		 $u[] = mosHTML::makeOption('0', 'Bir Ünvan Seçin');   
+		}
+		
 		$u[] = mosHTML::makeOption('Dr');
 		$u[] = mosHTML::makeOption('Asist.Dr');
 		$u[] = mosHTML::makeOption('Uzm.Dr');
@@ -90,18 +100,18 @@ class Users extends DBTable {
 		$u[] = mosHTML::makeOption('Doç.Dr');
 		$u[] = mosHTML::makeOption('Prof.Dr');
 		
-		return mosHTML::selectList($u, 'unvan', 'class="inputbox" size="1"', 'value', 'text', $this->unvan);
+		return mosHTML::selectList($u, 'unvan', 'class="form-control" '.$required ? 'required' : ''.'', 'value', 'text', $this->unvan);
 	}
 	
-	function selectYil($arr) {
+	function selectYil($arr, $required=0) {
 		
 		$start = '1970';
 		$end = date('Y');
 		
-		return mosHTML::integerSelectList($start, $end, '1', $arr, 'class="inputbox" size="1"', $this->$arr);
+		return mosHTML::integerSelectList($start, $end, '1', $arr, 'class="form-control" '.$required ? 'required':''.'', $this->$arr, $required);
 	}
 	
-	function selectSehir($arr) {
+	function selectSehir($arr, $required=0) {
 		
 		$query = "SELECT * FROM #__sehirler ORDER BY id ASC";
 		$this->_db->setQuery($query);
@@ -109,12 +119,17 @@ class Users extends DBTable {
 		$lists = $this->_db->loadObjectList();
 		
 		$s = array();
-		$s[] = mosHTML::makeOption('0', 'Bir Şehir Seçin');
+		if ($required) {
+		$s[] = mosHTML::makeOption('', 'Bir Şehir Seçin');    
+		} else {
+		$s[] = mosHTML::makeOption('0', 'Bir Şehir Seçin');    
+		}
+		
 		foreach($lists as $list) {
 			$s[] = mosHTML::makeOption($list->id, $list->name);
 		}
 		
-		return mosHTML::selectList($s, $arr, 'class="inputbox" size="1"', 'value', 'text', $this->$arr);
+		return mosHTML::selectList($s, $arr, 'class="form-control" '.$required ? 'required':''.'', 'value', 'text', $this->$arr);
 	}
 
 	/**
@@ -146,6 +161,7 @@ class Users extends DBTable {
 			$this->password = substr( $password, 0, 50 );
 		}
 
+		//eregi yi değiştir
 		if (eregi( "[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]", $this->username) || strlen( $this->username ) < 3) {
 			$this->_error = sprintf( addslashes( 'Lütfen geçersiz karakterler kullanmayın' ), addslashes( 'Kullanıcı adı 3 karakterden kısa olamaz' ), 2 );
 			return false;

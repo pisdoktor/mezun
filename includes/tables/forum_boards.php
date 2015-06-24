@@ -31,9 +31,10 @@ class Boards extends DBTable {
 	}
 	
 	function BoardInfo($oid) {
-		global $dbase;
-		$dbase->setQuery("SELECT * FROM #__forum_boards WHERE ID_BOARD=".$oid);
-		$dbase->loadObject($board_info);
+		
+		$this->_db->setQuery("SELECT b.*, c.name AS catname FROM #__forum_boards AS b 
+		LEFT JOIN #__forum_categories AS c ON c.ID_CAT=b.ID_CAT WHERE b.ID_BOARD=".$oid);
+		$this->_db->loadObject($board_info);
 		
 		$board_info->parent_boards = Forum::getBoardParents($board_info->ID_BOARD);
 	
@@ -41,7 +42,7 @@ class Boards extends DBTable {
 	}
 	
 	function BoardTopics($id, $limitstart, $limit) {
-		global $dbase, $my;
+		global $my;
 		
 		$query = "SELECT t.ID_TOPIC, t.numReplies, t.locked, t.numViews, t.isSticky, "
 		. "\n IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from, "
@@ -60,8 +61,8 @@ class Boards extends DBTable {
 		. "\n WHERE t.ID_BOARD = ".$id." AND ml.ID_MSG = t.ID_LAST_MSG AND mf.ID_MSG = t.ID_FIRST_MSG "
 		. "\n ORDER BY t.isSticky DESC, ml.posterTime DESC";
 		
-		$dbase->setQuery($query, $limitstart, $limit);
-		$result = $dbase->query();
+		$this->_db->setQuery($query, $limitstart, $limit);
+		$result = $this->_db->query();
 		
 		while ($row = mysql_fetch_assoc($result)) {
 		

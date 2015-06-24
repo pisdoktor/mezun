@@ -36,7 +36,7 @@ class Mesajlar extends DBTable {
 		$this->_db->setQuery($query);
 		
 		if ($this->_db->loadResult()) {
-			echo "(".$this->_db->loadResult().")";
+			echo $this->_db->loadResult();
 		} 
 	}
 	
@@ -50,7 +50,7 @@ class Mesajlar extends DBTable {
 		$new = $this->_db->loadResult();
 		
 		if ($new) {
-			return 'Toplam [ <span id="newmsg"><a href="index.php?option=site&bolum=mesaj&task=inbox">'.$new.'</a></span> ] yeni mesajınız var!';
+			return 'Toplam <span id="badge"><a href="index.php?option=site&bolum=mesaj&task=inbox">'.$new.'</a></span> yeni mesajınız var!';
 		} else {
 			return '[ Yeni mesajınız yok ]';
 		}

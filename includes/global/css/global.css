@@ -1,0 +1,195 @@
+html {
+}
+
+body {
+	font-family: Open Sans, Droid Sans;
+	font-size: 13px;
+	margin: 0px;
+	background-color: #FAFAFA;
+}
+
+a {
+color: #FF0000;    
+text-decoration: none;
+}
+
+a:hover {
+color: #FF00FF;    
+text-decoration: underline;
+}
+
+a:visited, a:active {
+color: #FF0000;    
+text-decoration: none;    
+}
+
+#container {
+
+}
+
+#header {
+	width: 980px;
+	margin: 0px auto;
+	background-color: #fff;
+}
+
+.header {
+	width: 980px;
+	margin: 0px auto;
+}
+
+#logo {
+	
+}
+
+#header-bar {
+	height: 30px;
+	background-color: #cacaca;
+}
+
+#content {
+	width: 980px;
+	margin: 0px auto;
+	background-color: #fff;
+	padding: 10px;
+}
+
+.footer {
+	background-color: #cacaca;
+	padding: 10px;    
+}
+
+#message {
+	color: #ff0000;    
+}
+
+/**
+* Forum CSS
+*/
+.titlebg, tr.titlebg th, tr.titlebg td, .titlebg2, tr.titlebg2 th, tr.titlebg2 td
+{
+	color: black;
+	font-style: normal;
+	background: #F5F5F5;
+	border-bottom: solid 1px #9BAEBF;
+	border-top: solid 1px #FFFFFF;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 35px;
+}
+.titlebg, .titlebg a:link, .titlebg a:visited
+{
+	font-weight: bold;
+	color: black;
+	font-style: normal;
+}
+
+.titlebg a:hover
+{
+	color: #404040;
+}
+/* same as titlebg, but used where bold text is not needed */
+.titlebg2 a:link, .titlebg2 a:visited
+{
+	color: black;
+	font-style: normal;
+	text-decoration: underline;
+}
+
+.titlebg2 a:hover
+{
+	text-decoration: underline;
+}
+
+/* This is used for categories, page indexes, and several other areas in the forum.
+.catbg and .catbg2 is for boardindex, while .catbg3 is for messageindex and display headers*/
+.catbg , tr.catbg td , .catbg3 , tr.catbg3 td
+{
+	background: #88A6C0;
+	color: #ffffff;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 30px;
+}
+.catbg2 , tr.catbg2 td
+{
+	background: #A1BFD9;
+	color: #ffffff;
+	padding-left: 10px;
+	padding-right: 10px;
+	height: 30px;
+}
+.catbg, .catbg2, .catbg3
+{
+	border-bottom: solid 1px #375576;
+}
+.catbg, .catbg2
+{
+	font-weight: bold;
+}
+.catbg3, tr.catbg3 td, .catbg3 a:link, .catbg3 a:visited
+{
+	font-size: 95%;
+	color: white;
+	text-decoration: none;
+}
+.catbg a:link, .catbg a:visited , .catbg2 a:link, .catbg2 a:visited
+{
+	color: white;
+	text-decoration: none;
+}
+.catbg a:hover, .catbg2 a:hover, .catbg3 a:hover
+{
+	color: #e0e0ff;
+}
+/* This is used for tables that have a grid/border background color (such as the topic listing.) */
+.bordercolor
+{
+	background-color: #ADADAD;
+	padding: 0px;
+}
+
+/* This is used on tables that should just have a border around them. */
+.tborder
+{
+	padding: 1px;
+	border: 1px solid #696969;
+	background-color: #FFFFFF;
+}
+
+/* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
+.smalltext
+{
+	font-size: x-small;
+	font-family: verdana, sans-serif;
+}
+/* Alternating backgrounds for posts, and several other sections of the forum. */
+.windowbg, .windowbg0
+{
+	color: #000000;
+	background-color: #ECEDF3;
+	padding: 5px;
+}
+.windowbg2, .windowbg1
+{
+	color: #000000;
+	background-color: #F6F6F6;
+	padding: 5px;
+}
+.windowbg3
+{
+	color: #000000;
+	background-color: #E0E1E8;
+	padding: 5px;
+}
+
+.msg-profil {
+	padding: 10px;
+}
+
+.msg-info {
+	border-bottom: 1px solid #cacaca;
+}
+.msg-body {
+	padding: 10px;	
+}

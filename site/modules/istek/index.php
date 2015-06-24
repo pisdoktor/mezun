@@ -28,10 +28,6 @@ switch($task) {
 	changeDurum($cid, 1);
 	break;
 	
-	case  'red':
-	changeDurum($cid, -1);
-	break;
-	
 	case 'send':
 	sendIstek($id);
 	break;
@@ -49,7 +45,7 @@ function changeDurum($cid, $status) {
 	}
 	$total = count( $cid );
 	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir istek seçin'); window.history.go(-1);</script>\n";
+		echo "<script> alert('Bu işlem için listeden bir seçim yapın'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -76,8 +72,8 @@ function changeDurum($cid, $status) {
 function deleteDurum($cid) {
 	global $dbase, $my;
 	
-	//giden istek silme işlemi 
-	if ($type) {
+	$type = mosGetParam($_REQUEST, 'type');
+	
 		$total = count( $cid );
 	if ( $total < 1) {
 		echo "<script> alert('Silmek için listeden bir istek seçin'); window.history.go(-1);</script>\n";
@@ -94,12 +90,12 @@ function deleteDurum($cid) {
 		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
 		exit();
 	}
-	//gelen istek silme işlemi varsa reddet 
-	} else {
-		return false;
-	}
 	
-	mosRedirect('index.php?option=site&bolum=istek&task=outbox');
+	if ($type) {
+	mosRedirect('index.php?option=site&bolum=istek&task=outbox');    
+	} else {
+	mosRedirect('index.php?option=site&bolum=istek&task=inbox');
+	}
 }
 
 /**

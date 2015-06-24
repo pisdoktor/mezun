@@ -18,7 +18,7 @@ class BoardCategories extends DBTable {
 	* Forum ana sayfası için sorgu
 	*/
 	function ForumIndex() {
-		global $my, $dbase;
+		global $my;
 		
 		$most_recent_topic = array(
 		'timestamp' => 0,
@@ -39,8 +39,8 @@ class BoardCategories extends DBTable {
 		. "\n ORDER BY c.catOrder ASC"
 		;
 	
-		$dbase->setQuery($query);
-		$result_boards = $dbase->query();
+		$this->_db->setQuery($query);
+		$result_boards = $this->_db->query();
 		
 			
 	// Run through the categories and boards....
@@ -51,7 +51,7 @@ if (empty($context['categories'][$row_board['ID_CAT']])) {
 	$context['categories'][$row_board['ID_CAT']] = array(
 	'id' => $row_board['ID_CAT'],
 	'name' => $row_board['catName'],
-	'href' => 'index.php?option=site&bolum=forum#' . $row_board['ID_CAT'],
+	'href' => 'index.php?option=site&bolum=forum#cat' . $row_board['ID_CAT'],
 	'boards' => array(),
 	'new' => false
 	);
@@ -143,7 +143,7 @@ else
 continue;
 
 		// Prepare the subject, and make sure it's not too long.
-$row_board['short_subject'] = Forum::shorten_subject($row_board['subject'], 30);
+$row_board['short_subject'] = Forum::shorten_subject($row_board['subject'], 24);
 $this_last_post = array(
 'id' => $row_board['ID_MSG'],
 'time' => $row_board['posterTime'] > 0 ? Forum::timeformat($row_board['posterTime']) : 'N/A',
@@ -201,7 +201,7 @@ return $context['categories'];
 	* @param mixed $id : board id değeri
 	*/
 	function Board($id, $limitstart, $limit) {
-		global $dbase, $my;
+		global $my;
 		/**
 		* Alt forumları alalım
 		* 
@@ -218,8 +218,8 @@ return $context['categories'];
 		. "\n LEFT JOIN #__forum_log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = ".$my->id.")"
 		. "\n WHERE b.ID_PARENT = ".$id;
 		
-		$dbase->setQuery($query);
-		$result = $dbase->query();
+		$this->_db->setQuery($query);
+		$result = $this->_db->query();
 	
 		if (mysql_num_rows($result) != 0) {
 		$theboards = array();
@@ -229,7 +229,7 @@ return $context['categories'];
 				$theboards[] = $row_board['ID_BOARD'];
 
 				// Make sure the subject isn't too long.
-				$short_subject = Forum::shorten_subject($row_board['subject'], 30);
+				$short_subject = Forum::shorten_subject($row_board['subject'], 24);
 
 				$context['boards'][$row_board['ID_BOARD']] = array(
 					'id' => $row_board['ID_BOARD'],
@@ -277,8 +277,8 @@ return $context['categories'];
 		. "\n LEFT JOIN #__users AS mem ON (mem.id = m.ID_MEMBER) "
 		. "\n LEFT JOIN #__forum_log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = ".$my->id.")"
 		;
-		$dbase->setQuery($query);
-		$result = $dbase->query();
+		$this->_db->setQuery($query);
+		$result = $this->_db->query();
 		
 		$parent_map = array();
 		while ($row = mysql_fetch_assoc($result)) {
@@ -298,11 +298,11 @@ return $context['categories'];
 
 			if ($context['boards'][$row['ID_PARENT']]['last_post']['timestamp'] < Forum::forum_time($row['posterTime'])) {
 				// Make sure the subject isn't too long.
-				$short_subject = Forum::shorten_subject($row['subject'], 30);
+				$short_subject = Forum::shorten_subject($row['subject'], 24);
 
 				$context['boards'][$row['ID_PARENT']]['last_post'] = array(
 					'id' => $row['ID_MSG'],
-					'time' => $row['posterTime'] > 0 ? Forum::timeformat($row['posterTime']) : $txt[470],
+					'time' => $row['posterTime'] > 0 ? Forum::timeformat($row['posterTime']) : 'N/A',
 					'timestamp' => Forum::forum_time($row['posterTime']),
 					'subject' => $short_subject,
 					'member' => array(

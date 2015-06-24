@@ -6,66 +6,98 @@ class Message {
 	
 	static function createMsg($my, $userlist) {
 		?>
-		<h3>MESAJ KUTUSU: YENİ MESAJ</h3>
-		<form action="index.php" method="post" name="adminForm">
-		<table width="100%">
-		<tr>
-		<td valign="top" width="50%">
-		<h3>Mesaj İçeriği:</h3>
-		<div><input type="text" name="baslik" class="inputbox" placeholder="Mesajınızın başlığı"></div>
-		<div><textarea cols="50" rows="5" name="text" class="textbox"  placeholder="Mesajınızın içeriği"></textarea></div>
-		<div><input type="submit" name="submit" value="Gönder" value="button"></div>
-		</td>
-		<td valign="top" align="left"  width="50%">
-		<h3>Mesajın Gideceği Kişi:</h3>
+		<div class="panel panel-warning">
+		<div class="panel-heading"><h4>MESAJ KUTUSU: YENİ MESAJ</h4></div>
+		<div class="panel-body">
+		<form action="index.php" method="post" name="adminForm" role="form">
+		
+		<div class="col-sm-6">
+		<div class="form-group">
+		<div class="row">
+		<label for="baslik">Mesaj Başlığı:</label>
+		<input type="text" name="baslik" id="baslik" class="form-control" placeholder="Mesajınızın başlığı" required>
+		</div>
+		</div>
+	
+		<div class="form-group">
+		<div class="row">
+		<label for="text">Mesajın İçeriği:</label>
+		<textarea rows="5" name="text" id="text" class="form-control"  placeholder="Mesajınızın içeriği" required></textarea>
+		</div>
+		</div>
+		</div>
+				
+		<div class="col-sm-6">
+		<div class="form-group">
+		<div class="row">
+		<label for="aid">Gönderileceği Kişi:</label>
 		<div><?php echo $userlist;?></div>
+		</div>
+		</div>
+		</div>
 		
-		</td>
-		</tr>
-		</table>
-		
+		<div class="col-sm-12">
+		<div class="form-group">
+		<div class="row">
+		<button type="submit" class="btn btn-info">MESAJI GÖNDER</button>
+		</div>
+		</div>
+		</div>
+				
+	
 		<input type="hidden" name="option" value="site">
 		<input type="hidden" name="bolum" value="mesaj">
 		<input type="hidden" name="task" value="send">
 		<input type="hidden" name="gid" value="<?php echo $my->id;?>">
 		</form>
+		</div>
+		</div>
 		<?php
 	}
 	
 	static function inBox($rows, $pageNav, $type) {
 		$head = $type ? 'MESAJ KUTUSU: GİDEN' : 'MESAJ KUTUSU: GELEN';
 		?>
-	<h3><?php echo $head;?></h3>	
-	<form action="index.php" method="post" name="adminForm">
-	<table width="100%" border="0" class="veritable">
-<tr>
-<th width="5%">
-SIRA
-</th>
-<th width="1%">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows );?>)"/>
-</th>
-<th width="20%">
-<?php echo $type ? 'Gönderilen' : 'Gönderen';?>
-</th>
-<th width="60%">
-Başlık
-</th>
-<th width="15%">
-Gönderim Zamanı
-</th>
-</tr>
-</table>
+	<div class="panel panel-warning">
+		<div class="panel-heading"><h4><?php echo $head;?></h4></div>
+		<div class="panel-body">
+	<form action="index.php" method="post" name="adminForm" role="form">
+	
+	<div class="form-group">
+	<div class="btn-group">
+	<?php echo $type == 0 ? formButton("Okunmadı Olarak İşaretle", 'unread', 1) : '';?>
+	<?php echo $type == 0 ? formButton("Okundu Olarak İşaretle", 'read', 1) : '';?>
+	<?php echo formButton('Mesajı Sil', 'delete', 2);?>
+	</div>
+	</div>
+	
+	
+	<div class="row">
+	<div class="col-sm-1">
+	<strong>SIRA</strong>
+	</div>
+	<div class="col-sm-1">
+	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows );?>)"/>
+	</div>
+	<div class="col-sm-3">
+	<strong><?php echo $type ? 'Gönderilen' : 'Gönderen';?></strong>
+	</div>
+	<div class="col-sm-4">
+	<strong>BAŞLIK</strong>
+	</div>
+	<div class="col-sm-3">
+	<strong>GÖNDERİM ZAMANI</strong>
+	</div>
+	</div>
 <?php
 	if (!$rows) {
 		?>
-		<div align="center">Henüz mesajınız yok!</div>
-		<div align="center">Ama siz birilerine mesaj atabilirsiniz.</div>
+		<div align="center">Henüz arkadaşlarınızdan mesajınız yok!</div>
+		<div align="center">Ama siz arkadaşlarınıza mesaj atabilirsiniz.</div>
 		<?php
 	}
 ?>
 <?php
-$t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
@@ -75,42 +107,26 @@ $row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->g
 $row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';
 $checked = mosHTML::idBox( $i, $row->id );
 ?>
-<div id="<?php echo $row->id;?>">
-<table width="100%" border="0" class="veriitem<?php echo $t;?>">
-<tr>
-<td width="5%">
-<center>
-<?php echo $pageNav->rowNumber( $i ); ?>
-</center>
-</td>
-<td width="1%">
-<center>
-<?php echo $checked;?>
-</center>
-</td>
-<td width="20%">
-<center>
-<?php echo $type ? $row->giden : $row->gonderen;?>
-</center>
-</td>
-<td width="60%">
-<center>
-<a href="index.php?option=site&bolum=mesaj&task=show&id=<?php echo $row->id;?>">
+<div class="row" id="<?php echo $row->id;?>">
+	<div class="col-sm-1">
+	<?php echo $pageNav->rowNumber( $i ); ?>
+	</div>
+	<div class="col-sm-1">
+	<?php echo $checked;?>
+	</div>
+	<div class="col-sm-3">
+	<?php echo $type ? $row->giden : $row->gonderen;?>
+	</div>
+	<div class="col-sm-4">
+	<a href="index.php?option=site&bolum=mesaj&task=show&id=<?php echo $row->id;?>">
 <?php echo $row->baslik;?>
 </a>
-</center>
-</td>
-<td width="15%">
-<center>
-<?php echo $row->tarih;?>
-</center>
-</td>
-
-</tr>
-</table>
+	</div>
+	<div class="col-sm-3">
+	<?php echo mosFormatDate($row->tarih);?>
+	</div>
 </div>
 <?php
-$t = 1 - $t;
 }
 ?>
 <input type="hidden" name="option" value="site" />
@@ -119,6 +135,8 @@ $t = 1 - $t;
 <input type="hidden" name="type" value="<?php echo $type;?>" />
 <input type="hidden" name="boxchecked" value="0" />
 </form>
+</div>
+</div>
 		<?php
 	}
 }

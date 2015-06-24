@@ -50,7 +50,7 @@ class mosHTML {
 			reset( $arr );
 		}
 
-		$html     = "\n<select name=\"$tag_name\" $tag_attribs>";
+		$html     = "\n<select class=\"form-control\" name=\"$tag_name\" $tag_attribs >";
 		$count     = count( $arr );
 
 		for ($i=0, $n=$count; $i < $n; $i++ ) {
@@ -123,13 +123,18 @@ class mosHTML {
 	* @param string The printf format to be applied to the number
 	* @returns string HTML for the select list
 	*/
-	static function integerSelectList( $start, $end, $inc, $tag_name, $tag_attribs, $selected, $format="" ) {
+	static function integerSelectList( $start, $end, $inc, $tag_name, $tag_attribs, $selected, $required, $format="" ) {
 		$start     = intval( $start );
 		$end     = intval( $end );
 		$inc     = intval( $inc );
 		$arr     = array();
 
-		$arr[] = mosHTML::makeOption('', 'Bir Seçim Yapın');
+		if ($required) {
+		$arr[] = mosHTML::makeOption('', 'Bir Seçim Yapın');    
+		} else {
+		$arr[] = mosHTML::makeOption('0', 'Bir Seçim Yapın');    
+		}
+		
 		
 		for ($i=$start; $i <= $end; $i+=$inc) {
 			$fi = $format ? sprintf( "$format", $i ) : "$i";
@@ -257,8 +262,8 @@ class mosHTML {
 			} else {
 				$extra .= ($k == $selected ? " checked=\"checked\"" : '');
 			}
-			$html .= "\n\t<input type=\"radio\" name=\"$tag_name\" id=\"$tag_name$k\" value=\"".$k."\"$extra $tag_attribs />";
-			$html .= "\n\t<label for=\"$tag_name$k\">$t</label>";
+			$html .= "\n\t<label class=\"radio-inline\" for=\"$tag_name$k\"><input type=\"radio\" name=\"$tag_name\" id=\"$tag_name$k\" value=\"".$k."\"$extra $tag_attribs />";
+			$html .= "\n\t$t</label>";
 		}
 		$html .= "\n";
 
@@ -287,8 +292,8 @@ class mosHTML {
 				$extra .= ($k == $selected ? " checked=\"checked\"" : '');
 			}
 			$html .= "\n\t";
-			$html .= '<input type="checkbox" name="'.$tag_name.'[]" id="'.$tag_name.$k.'" value="'.$k.'"'.$extra.' '.$tag_attribs.' />';
-			$html .= "\n\t<label for=\"$tag_name$k\">$t</label>";
+			$html .= '<label class="checkbox-inline" for="'.$tag_name.$k.'"><input type="checkbox" name="'.$tag_name.'[]" id="'.$tag_name.$k.'" value="'.$k.'"'.$extra.' '.$tag_attribs.' />';
+			$html .= "\n\t$t</label>";
 		}
 		$html .= "\n";
 

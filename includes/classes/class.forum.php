@@ -6,12 +6,11 @@ class Forum {
 // Format a time to make it look purdy.
 static function timeformat($logTime, $show_today = true) {
 		
-	$txt['days'] = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
-$txt['days_short'] = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+	$txt['days'] = array('Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi');
+$txt['days_short'] = array('Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt');
 // Months must start with 1 => 'January'. (or translated, of course.)
-$txt['months'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-$txt['months_titles'] = array(1 => 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-$txt['months_short'] = array(1 => 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+$txt['months'] = array(1 => 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık');
+$txt['months_short'] = array(1 => 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara');
 
 	// Offset the time.
 	$time = $logTime + (OFFSET * 3600);
@@ -103,7 +102,30 @@ static function getBoardParents($id_parent) {
 	}
 	return $boards;
 }
+//Forum yönlendirme 
+static function forumBreadCrumb($board_info) {
+	global $dbase;
+	
+	$node = array();
+	
+	$node[] = '<a href="index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD.'">'.$board_info->name.'</a>';
+	
+	foreach ($board_info->parent_boards as $parent) {
+		if ($parent == 0) {
+			$node[] = '<a href="index.php?option=site&bolum=forum#cat'.$board_info->ID_CAT.'">'.$board_info->catname.'</a>';
+			$node[] = '<a href="index.php?option=site&bolum=forum">FORUM</a>';
+			
+		} else {
+			$dbase->setQuery("SELECT ID_BOARD, name FROM #__forum_boards WHERE ID_BOARD=".$parent);
+			$dbase->loadObject($row);
+			
+			$node[] = '<a href="index.php?option=site&bolum=forum&task=board&id='.$row->ID_BOARD.'">'.$row->name.'</a>';
+		}
+	}	
+	return implode(' » ', array_reverse($node));
+}
 
+//Forum sayfalandırma
 static function constructPageIndex($base_url, $total, $limitstart, $limit=10, $flexible_start = false) {
 	// Save whether $limitstart was less than 0 or not.
 	$limitstart_invalid = $limitstart < 0;
@@ -134,9 +156,7 @@ static function constructPageIndex($base_url, $total, $limitstart, $limit=10, $f
 		$display_page = ($limitstart + $limit) > $total ? $total : ($limitstart + $limit);
 		if ($limitstart != $counter - $total && !$limitstart_invalid)
 			$pageindex .= $display_page > $counter - $limit ? ' ' : sprintf($base_link, $display_page, '&#187;');
-	}
-	else
-	{
+	} else {
 		// If they didn't enter an odd value, pretend they did.
 		$PageContiguous = (int) (compactTopicPagesContiguous - (compactTopicPagesContiguous % 2)) / 2;
 

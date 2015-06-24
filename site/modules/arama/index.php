@@ -25,14 +25,14 @@ function searchForm() {
 	$type[] = mosHTML::makeOption('0', 'Herhangi bir eşleşme');
 	$type[] = mosHTML::makeOption('1', 'Tam eşleşme');
 	
-	$list['type'] = mosHTML::selectList($type, 'search_type', 'class="inputbox" size="1"', 'value', 'text');
+	$list['type'] = mosHTML::selectList($type, 'search_type', '', 'value', 'text');
 	
 	$cins = array();
 	$cins[] = mosHTML::makeOption('', 'Cinsiyet Seçin');
 	$cins[] = mosHTML::makeOption('1', 'Erkek');
 	$cins[] = mosHTML::makeOption('2', 'Bayan');
 	
-	$list['cinsiyet'] = mosHTML::selectList($cins, 'cinsiyet', 'class="inputbox" size="1"', 'value', 'text');
+	$list['cinsiyet'] = mosHTML::selectList($cins, 'cinsiyet', '', 'value', 'text');
 	
 	Search::Form($list, $user);
 }

@@ -25,33 +25,41 @@ class BoardTopics extends DBTable {
 	}
 	
 	function TopicInfo($id) {
-		global $dbase, $my;
+		global $my;
 		
-		$dbase->setQuery("SELECT t.ID_TOPIC, t.ID_BOARD, t.numReplies, t.numViews, t.locked, ms.subject, t.isSticky, t.ID_FIRST_MSG, t.ID_LAST_MSG, IFNULL(lt.ID_MSG, -1) + 1 AS new_from
+		$this->_db->setQuery("SELECT t.ID_TOPIC, t.ID_BOARD, t.numReplies, t.numViews, t.locked, ms.subject, t.isSticky, t.ID_FIRST_MSG, t.ID_LAST_MSG, IFNULL(lt.ID_MSG, -1) + 1 AS new_from
 	FROM (#__forum_topics AS t, #__forum_messages AS ms)
 	LEFT JOIN #__forum_log_topics AS lt ON (lt.ID_TOPIC = ".$id." AND lt.ID_MEMBER = ".$my->id.")
 	WHERE t.ID_TOPIC = ".$id." AND ms.ID_MSG = t.ID_FIRST_MSG LIMIT 1");
-		$dbase->loadObject($topic_info);
+		$this->_db->loadObject($topic_info);
 		
 		return $topic_info;
 	}
 	
 	function TopicIndex($id, $limitstart, $limit) {
-		global $dbase, $my;
+		global $my;
 		
-		$dbase->setQuery("SELECT m.*, u.myili, u.lastvisit, u.image, u.name as posterName, u.cinsiyet, s.name AS sehirAdi 
+		$this->_db->setQuery("SELECT m.*, t.ID_LAST_MSG, u.myili, u.lastvisit, u.image, u.name as posterName, u.cinsiyet, s.name AS sehirAdi 
 		FROM #__forum_messages AS m 
+		LEFT JOIN #__forum_topics AS t ON t.ID_TOPIC=m.ID_TOPIC
 		LEFT JOIN #__users AS u ON u.id=m.ID_MEMBER 
 		LEFT JOIN #__sehirler AS s ON s.id=u.sehir
-		WHERE m.ID_TOPIC=".$dbase->Quote($id)." ORDER BY m.posterTime ASC", $limitstart, $limit);
-		$rows = $dbase->loadObjectList();
+		WHERE m.ID_TOPIC=".$this->_db->Quote($id)." ORDER BY m.posterTime ASC", $limitstart, $limit);
+		$rows = $this->_db->loadObjectList();
 		
 		foreach ($rows as $row) {
-		if (!isset($context['messages'][$row->ID_MSG])) {
-			$context['messages'][$row->ID_MSG] = array(
-			'id' => $row->ID_MSG,
+		if (!isset($context['topic'])) {
+			$context['topic'] = array(
 			'ID_TOPIC' => $row->ID_TOPIC,
 			'ID_BOARD' => $row->ID_BOARD,
+			'lastMsg' => $row->ID_LAST_MSG,
+			'messages' => array()
+			);    
+		}	
+		
+		if (!isset($context['topic']['messages'][$row->ID_MSG])) {
+			$context['topic']['messages'][$row->ID_MSG] = array (
+			'id' => $row->ID_MSG,
 			'time' => Forum::timeformat($row->posterTime),
 			'timestamp' => Forum::forum_time($row->posterTime),
 			'member' => array(
@@ -60,8 +68,8 @@ class BoardTopics extends DBTable {
 				'href' => 'index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER,
 				'link' => '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER.'">'.$row->posterName.'</a>',
 				'cinsiyet' => $row->cinsiyet ? 'Erkek' : 'Bayan',
-				'profilimage' => $row->image ? SITEURL.'/images/'.$row->image : SITEURL.'/images/noimage.png',
-				'imagelink' => $row->image ? '<img src="'.SITEURL.'/images/'.$row->image.'" />' : '<img src="'.SITEURL.'/images/noimage.png" width="100" height="100" />',
+				'profilimage' => $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png',
+				'imagelink' => $row->image ? '<img class="img-circle" src="'.SITEURL.'/images/profil/'.$row->image.'" />' : '<img class="img-circle" src="'.SITEURL.'/images/profil/noimage.png" width="100" height="100" />',
 				'sehir' => $row->sehirAdi,
 				'ip' => $row->posterIP,
 				'lastvisit' => $row->lastvisit,
@@ -71,8 +79,9 @@ class BoardTopics extends DBTable {
 			'body' => $row->body
 			);
 		}
-		}
 		
-		return $context['messages'];
+		} //end foreach
+		
+		return $context['topic'];
 	}
 }

@@ -33,7 +33,7 @@ class DuyuruHTML {
 	<strong>Duyuru Metni:</strong>
 	</td>
 	<td width="70%">
-	<textarea id="metin" name="metin" cols="60" rows="10" class="textbox"><?php echo $row->metin;?></textarea>
+	<textarea id="metin" name="text" cols="60" rows="10" class="textbox"><?php echo $row->text;?></textarea>
 	</td>
   </tr>
 </table>
@@ -106,7 +106,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 </center>
 </td>
 <td>
-<?php echo $row->metin;?>
+<?php echo $row->text;?>
 </td>
 </tr>
 </table>

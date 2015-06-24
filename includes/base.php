@@ -1196,36 +1196,34 @@ function josHashPassword($password) {
 	* Assembles head tags
 	*/
 	function showHead() {
-		global $mainframe, $my;
+		global $mainframe, $my, $option, $bolum;
 
+		//site genel bilgileri
 		$mainframe->appendMetaTag( 'description', META_DESC );
 		$mainframe->appendMetaTag( 'keywords', META_KEYS );
 		$mainframe->addMetaTag( 'Generator', 'Soner Ekici');
 		$mainframe->addMetaTag( 'robots', 'index, follow' );
 		
-		if ($my->id) { 
-			if ($my->access_type == 'site') {
-			$mainframe->addStyleSheet(SITEURL.'/site/templates/'.SITETEMPLATE.'/css/standart.css');    
-			} else {
-			$mainframe->addStyleSheet(SITEURL.'/admin/templates/'.ADMINTEMPLATE.'/css/standart.css');    
-			}
-			
-		} else {
-		$mainframe->addStyleSheet(SITEURL.'/site/templates/'.SITETEMPLATE.'/css/login.css');    
-		}
-		
-		
+		//font family ve jquery eklemeleri
 		$mainframe->addStyleSheet('http://fonts.googleapis.com/css?family=Droid+Sans');
 		$mainframe->addStyleSheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,300,400,600&subset=latin,latin-ext&ver=4.1.1', 'all', 'open-sans-css');
 		$mainframe->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
 		
-		
 		$mainframe->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
 		$mainframe->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
-		$mainframe->addScript(0, SITEURL.'/includes/js/base.js');
-		$mainframe->addScript(0, SITEURL.'/includes/js/bootstrap.min.js');
-		$mainframe->addScript(0, SITEURL.'/includes/js/bootstrap-helper.js');
 		
-
+		//bootstrap eklemesi
+		$mainframe->addStyleSheet('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css');
+		$mainframe->addScript(0, 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js');
+		$mainframe->addScript(0, SITEURL.'/includes/global/js/bootstrap-helper.js');
+		
+		//site genel eklemeleri
+		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/global.css');
+		$mainframe->addScript(0, SITEURL.'/includes/global/js/global.js');
+		
+		//site menü css eklemesi
+		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/cssmenu.css');	
+		$mainframe->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');	
+		
 		echo $mainframe->getHead();
 	}

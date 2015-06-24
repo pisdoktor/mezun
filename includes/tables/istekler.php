@@ -24,7 +24,7 @@ class Istekler extends DBTable {
 		$this->_db->setQuery($query);
 		
 		if ($this->_db->loadResult()) {
-			echo "(".$this->_db->loadResult().")";
+			echo $this->_db->loadResult();
 		} 
 	}
 	

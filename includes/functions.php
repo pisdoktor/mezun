@@ -28,18 +28,18 @@ if (!$my->id) {
 <ul>
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
 <li><a href="index.php?option=site&bolum=arkadas"><span>Arkadaşlarım</span></a></li>
-<li><a href="index.php?option=site&bolum=online"><span>Online Üyeler <?php $online->totalOnline();?></span></a></li>
+<li><a href="index.php?option=site&bolum=online"><span>Online Üyeler <span class="badge"><?php $online->totalOnline();?></span></span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>İstekler</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler <?php $istek->totalWaiting();?></span></a></li>
+<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler <span class="badge"><?php $istek->totalWaiting();?></span></span></a></li>
 <li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>Mesajlarım</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu <?php $msg->totalUnread();?></span></a></li>
+<li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu <span class="badge"><?php $msg->totalUnread();?></span></span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj&task=outbox"><span>Giden Kutusu</span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj&task=new"><span>Yeni Mesaj</span></a></li>
 </ul>
@@ -56,7 +56,7 @@ if ($my->id == 1) {
 <li><a href="index.php?option=logout"><span>Çıkış Yap</span></a></li>	
 </ul>
 </div>
-<div id="messages"><?php echo $msg->newMsg();?></div>
+<div id="messages"></div>
 <?php
 }
 }
@@ -89,9 +89,7 @@ function loadSiteModule() {
 	
 	switch($option) {
 	default:
-	UserPanel();
-	//loadDuyuru();
-	loadStats();
+	MainPage();
 	break;
 	
 	case 'site':
@@ -108,6 +106,24 @@ function loadSiteModule() {
 	}
 	
 }
+
+function MainPage() {
+	?>
+	<div class="col-sm-5">
+	<?php 
+	UserPanel();
+	loadIstek();
+	loadMailBox();
+	loadStats();
+	?>
+	</div>
+	<div class="col-sm-7">
+	<?php
+	loadDuyuru();
+	?>
+	</div>
+	<?php
+}
 /**
 * Duyuruları getiren fonksiyon
 */
@@ -121,24 +137,26 @@ function loadDuyuru() {
 	$rows = $dbase->loadObjectList();
 	
 ?>
-<div id="duyurular" class="clearfix">
-<h3><span>Son Duyurular</span></h3>
+<div class="col-sm-12">
+<div class="panel panel-danger">
+  <div class="panel-heading">Duyuru Paneli</div>
+  <div class="panel-body">
 <?php
-$t = 1;
 	foreach ($rows as $row) {
 		?>
-		<div class="duyuru<?php echo $t;?>">
-		<div class="duyuru-tarih">
+		<span>
 		<strong>Duyuru Tarihi:</strong> <?php echo mosFormatDate($row->tarih, '%d-%m-%Y %H:%M:%S');?>
-		</div>
-		<div class="duyuru-metin">
-		<?php echo $row->metin;?>
-		</div>
-		</div>
+		</span>
+		<br />
+		<span>
+		<?php echo $row->text;?>
+		</span>
+		<br /><br />
 		<?php
-		$t = 1 - $t;
 	}
 ?>
+</div>
+</div>
 </div>
 <?php
 	
@@ -151,12 +169,15 @@ function UserPanel() {
 	
 	$lastvisit = ($my->lastvisit == '0000-00-00 00:00:00') ? 'İlk Defa Giriş Yaptınız' : mosFormatDate($my->lastvisit, '%d-%m-%Y %H:%M:%S');
 	
-	echo '<div id="welcome" class="clearfix">';
-	echo '<span><center><h3>Hoşgeldiniz '.$my->name.'</h3></center></span><br />';
+	echo '<div class="col-sm-12">';
+	echo '<div class="panel panel-primary">';
+	echo '<div class="panel-heading">Hoşgeldiniz '.$my->name.'</div>';
+	echo '<div class="panel-body">';
 	echo '<span><strong><u>Çalıştığınız Kurum:</u></strong><br />'. $my->work.'</span><br />';
 	echo '<span><strong><u>Bulunduğunuz Şehir:</u></strong><br />'. $my->sehir.'</span><br />';
 	echo '<span><strong><u>Siteye Son Gelişiniz:</u></strong><br />'. $lastvisit.'</span><br />';
-	echo loadIstek();
+	echo '</div>';
+	echo '</div>';
 	echo '</div>';
 }
 /**
@@ -206,9 +227,12 @@ function loadStats() {
 	
 	$link['ayniyilbitirme'] = $ayniyilbitirme-1 ? '<a href="index.php?option=site&bolum=arama&task=search&myili='.$my->myili.'">'.($ayniyilbitirme-1).'</a>' : '0';
 	?>
-	<div id="stats" class="clearfix">
-	<h3>Site İstatistikleri:</h3>
-	<table width="100%">
+	<div class="col-sm-12">
+	
+	<div class="panel panel-warning">
+  <div class="panel-heading">Site İstatistikleri</div>
+  <div class="panel-body">
+	<table width="100%" class="table-hover">
 	<tr>
 	<td>
 	Toplam Üye Sayısı:
@@ -261,6 +285,8 @@ function loadStats() {
 	</tr>
 	</table>
 	</div>
+	</div>
+	</div>
 	<?php
 }
 /**
@@ -276,7 +302,43 @@ function loadIstek() {
 	
 	$link = $total ? '<a href="index.php?option=site&bolum=istek&task=inbox">'.$total.'</a>' : $total;
 	?>
-	<div id="gelenistekler"><h3>Gelen Arkadaşlık İstekleri</h3><span>Toplam <?php echo $link;?> arkadaşlık isteğiniz var</span></div>
+	<div class="col-sm-12">
+	<div class="panel panel-default">
+  <div class="panel-heading">Gelen Arkadaşlık İstekleri</div>
+  <div class="panel-body">Toplam <span class="badge"><?php echo $link;?></span> arkadaşlık isteğiniz var
+  </div>
+  </div>
+	</div>
 	<?php
+}
+
+function loadMailBox() {
+	global $dbase;
+	$msg = new Mesajlar($dbase);
+	?>
+	<div class="col-sm-12">
+	<div class="panel panel-default">
+  <div class="panel-heading">Mesaj Kutunuz</div>
+  <div class="panel-body"><?php echo $msg->newMsg();?>
+  </div>
+  </div>
+	</div>
 	
+	 <?php
+}
+
+function formButton($value, $onclick, $uyari=0) {
+	$html = "";
+	$html.= '<input type="button" name="button"';
+	$html.= ' value="'.$value.'"';
+	if ($uyari==1) {
+	$html.= 'onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert(\'Lütfen listeden bir seçim yapın\'); } else {submitbutton(\''.$onclick.'\');}"';
+	} elseif ($uyari==2) {
+	$html.= 'onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert(\'Lütfen listeden bir seçim yapın\'); } else if (confirm(\'İşlemi onaylıyor musunuz?\')){ submitbutton(\''.$onclick.'\');}"';	
+	} else {
+	$html.= ' onclick="javascript:submitbutton(\''.$onclick.'\');"';
+	}
+	$html.= ' class="btn btn-default" />';
+	
+	return $html;
 }
