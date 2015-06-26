@@ -47,8 +47,8 @@ function createNewMessage() {
 	$msgOptions->ID_MEMBER = $my->id;
 	$msgOptions->ID_MSG_MODIFIED = null;
 	$msgOptions->posterIP = $_SERVER['REMOTE_ADDR'];
-	$msgOptions->subject = $content['subject'];
-	$msgOptions->body = $content['body'];
+	$msgOptions->subject = trim($content['subject']);
+	$msgOptions->body = nl2br($content['body']);
 	
 	$query = "INSERT INTO #__forum_messages (ID_TOPIC, ID_BOARD, posterTime, ID_MEMBER, posterIP, subject, body) VALUES (".$dbase->Quote($msgOptions->ID_TOPIC).", ".$dbase->Quote($msgOptions->ID_BOARD).",".$dbase->Quote($msgOptions->posterTime).",".$dbase->Quote($msgOptions->ID_MEMBER).",".$dbase->Quote($msgOptions->posterIP).",".$dbase->Quote($msgOptions->subject).",".$dbase->Quote($msgOptions->body).")";
 	$dbase->setQuery($query);
@@ -94,8 +94,8 @@ function createNewTopic() {
 	$msgOptions->ID_MEMBER = $my->id;
 	$msgOptions->ID_MSG_MODIFIED = null;
 	$msgOptions->posterIP = $_SERVER['REMOTE_ADDR'];
-	$msgOptions->subject = $content['subject'];
-	$msgOptions->body = $content['body'];
+	$msgOptions->subject = trim($content['subject']);
+	$msgOptions->body = nl2br($content['body']);
 	
 	$topicOptions->ID_TOPIC = null;
 	$topicOptions->isSticky = $content['isSticky'];

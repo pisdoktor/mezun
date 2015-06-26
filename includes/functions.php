@@ -167,7 +167,7 @@ function loadDuyuru() {
 function UserPanel() {
 	global $my;
 	
-	$lastvisit = ($my->lastvisit == '0000-00-00 00:00:00') ? 'İlk Defa Giriş Yaptınız' : mosFormatDate($my->lastvisit, '%d-%m-%Y %H:%M:%S');
+	$lastvisit = ($my->lastvisit == '0000-00-00 00:00:00') ? 'İlk Defa Giriş Yaptınız' : Forum::timeformat($my->lastvisit, true, true);
 	
 	echo '<div class="col-sm-12">';
 	echo '<div class="panel panel-primary">';

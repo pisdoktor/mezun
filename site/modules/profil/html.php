@@ -197,7 +197,7 @@ class Profile {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Siteye Kayıt Tarihi:</strong></div>
-		<div class="col-sm-8"><?php echo mosFormatDate($row->registerDate);?></div>
+		<div class="col-sm-8"><?php echo Forum::timeformat($row->registerDate, true, true);?></div>
 		</div>
 		</div>
 		
@@ -205,7 +205,7 @@ class Profile {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Siteye Son Geliş Tarihi:</strong></div>
-		<div class="col-sm-8"><?php echo mosFormatDate($row->lastvisit);?></div>
+		<div class="col-sm-8"><?php echo Forum::timeformat($row->lastvisit, true, true);?></div>
 		</div>
 		</div>
 		<?php } ?>

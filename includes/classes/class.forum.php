@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Forum {
 // Format a time to make it look purdy.
-static function timeformat($logTime, $show_today = true) {
+static function timeformat($logTime, $show_today = true, $datetime=false) {
 		
 	$txt['days'] = array('Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi');
 $txt['days_short'] = array('Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt');
@@ -12,6 +12,9 @@ $txt['days_short'] = array('Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt');
 $txt['months'] = array(1 => 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık');
 $txt['months_short'] = array(1 => 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara');
 
+	if ($datetime == true) {
+		$logTime = strtotime($logTime);
+	}
 	// Offset the time.
 	$time = $logTime + (OFFSET * 3600);
 

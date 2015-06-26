@@ -76,7 +76,10 @@ Bu siteye kayıt olarak;
  <input type="checkbox" name="remember" id="remember" value="yes" /> Beni hatırla</label>
   </div>
   </div>
- 
+
+<div class="form-group">
+<button type="submit" class="btn btn-primary">GİRİŞ YAP</button>
+</div>   
 
 <div class="form-group">
 <a href="#" id="forgot">ŞİFREMİ UNUTTUM!</a>
@@ -86,9 +89,7 @@ Bu siteye kayıt olarak;
 <a href="#" id="activ">HESAP AKTİVASYONU</a>
 </div>
 
-<div class="form-group">
-<button type="submit" class="btn btn-primary">GİRİŞ YAP</button>
-</div>  
+
 
 
 

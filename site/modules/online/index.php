@@ -18,7 +18,8 @@ function getOnline() {
 	$query = "SELECT s.userid, s.time, u.name, u.nowvisit, ss.name AS sehir FROM #__sessions AS s"
 	. "\n LEFT JOIN #__users AS u ON u.id=s.userid"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.sehir"
-	//. "\n WHERE s.userid NOT IN (".$dbase->Quote($my->id).")"
+	. "\n WHERE s.userid > 0 "
+	//. "\n AND s.userid NOT IN (".$dbase->Quote($my->id).")"
 	. "\n ORDER BY s.time DESC"
 	;
 	

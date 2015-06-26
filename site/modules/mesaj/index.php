@@ -3,7 +3,7 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $id = mosGetParam($_REQUEST, 'id');
-$cid = mosGetParam($_REQUEST, 'id'); 
+$cid = mosGetParam($_REQUEST, 'cid'); 
 $limit = intval(mosGetParam($_REQUEST, 'limit', 10));
 $limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
 $type = intval(mosGetParam($_REQUEST, 'type'));
@@ -59,6 +59,30 @@ function deleteMessage($cid, $type) {
 */
 function changeMessage($cid, $status) {
 	global $dbase, $my;
+	
+	$total = count( $cid );
+	if ( $total < 1) {
+		echo "<script> alert('Listeden bir seçim yapın'); window.history.go(-1);</script>\n";
+		exit;
+	}
+
+	mosArrayToInts( $cid );
+	$cids = 'id=' . implode( ' OR id=', $cid );
+	$query = "UPDATE #__mesajlar SET okunma=".$dbase->Quote($status)
+	. "\n WHERE ( $cids )"
+	;
+	$dbase->setQuery( $query );
+	if ( !$dbase->query() ) {
+		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		exit();
+	}
+	
+	if ($status) {
+		$msg = 'Seçili mesajlar okundu olarak işaretlendi!';
+	} else {
+		$msg = 'Seçili mesajlar okunmadı olarak işaretlendi!';
+	}
+	mosRedirect( 'index.php?option=site&bolum=mesaj', $msg);
 }
 /**
 * Mesaj gösterim fonksiyonu
@@ -70,15 +94,31 @@ function showMessage($id) {
 	$row = new Mesajlar($dbase);
 	$row->load($id);
 	
-	$row->baslik = base64_decode($row->baslik);
-	$row->text = base64_decode($row->text);
+	if ($row->aid == $my->id || $row->gid == $my->id) {
+		
+		$dbase->setQuery("SELECT m.*, u.name as gonderen FROM #__mesajlar AS m LEFT JOIN #__users AS u ON u.id=m.gid WHERE m.id=".$dbase->Quote($row->id));
+		
+		$dbase->loadObject($msg);
+	
+	$msg->baslik = base64_decode($row->baslik);
+	$msg->text = base64_decode($row->text);
 	
 	if ($row->aid == $my->id) {
-	$dbase->setQuery("UPDATE #__mesajlar SET okunma=1 WHERE id=".$dbase->Quote($row->id));
+	$dbase->setQuery("UPDATE #__mesajlar SET okunma=1 WHERE id=".$dbase->Quote($msg->id));
 	$dbase->query();
 	}
+	} else {
+		mosNotAuth();
+		exit;
+	}
 	
-	Message::showMsg($row, $my);
+	if ($row->aid == $my->id) {
+		$type = 0;
+	} else {
+		$type = 1;
+	}
+	
+	Message::showMsg($msg, $type);
 }
 /**
 * Mesaj gönderim fonksiyonu

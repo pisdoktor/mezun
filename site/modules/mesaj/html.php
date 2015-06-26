@@ -4,6 +4,60 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Message {
 	
+	static function showMsg($row, $type) {
+		?>
+		<div class="panel panel-warning">
+		<div class="panel-heading"><h4>MESAJ KUTUSU: <?php echo $row->baslik;?></h4></div>
+		<div class="panel-body">
+		
+		<div class="row">
+		<div class="col-sm-3">
+		<strong>Gönderen:</strong>
+		</div>
+		<div class="col-sm-9">
+		<?php echo $row->gonderen;?>
+		</div>
+		</div>
+		
+		<div class="row">
+		<div class="col-sm-3">
+		<strong>Gönderim Tarihi:</strong>
+		</div>
+		<div class="col-sm-9">
+		<?php echo Forum::timeformat($row->tarih, true, true);?>
+		</div>
+		</div>
+		
+		<div class="row">
+		<div class="col-sm-12">
+		<?php echo $row->text;?>
+		</div>
+		</div>
+		
+		<?php if (!$type) {?>
+		<a class="btn btn-default" href="#" id="sendamsg">Cevap Yaz</a>
+		<?php }?>
+		
+		<!-- Mesaj Gönderme-->
+		<div id="sendmessage" style="display: none;" title="Mesaj Gönder">
+		<form action="index.php" method="post" role="form">
+		<input type="text" name="baslik" class="form-control" value="Cvp: <?php echo $row->baslik;?>" required>
+		<textarea rows="5" name="text" class="form-control" placeholder="Mesajınızın içeriği" required></textarea>
+		<button type="submit" class="btn btn-primary">Mesajı Gönder</button>
+		<input type="hidden" name="option" value="site" />
+		<input type="hidden" name="bolum" value="mesaj" />
+		<input type="hidden" name="task" value="send" />
+		<input type="hidden" name="aid" value="<?php echo $row->gid;?>" />
+		</form>
+		</div>
+		<!-- Mesaj Gönderme -->
+		
+		</div>
+		</div>
+		<?php
+		
+	}
+	
 	static function createMsg($my, $userlist) {
 		?>
 		<div class="panel panel-warning">
@@ -123,7 +177,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 </a>
 	</div>
 	<div class="col-sm-3">
-	<?php echo mosFormatDate($row->tarih);?>
+	<?php echo Forum::timeformat($row->tarih, true, true);?>
 	</div>
 </div>
 <?php
