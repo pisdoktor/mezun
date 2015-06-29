@@ -202,7 +202,10 @@ $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 </div>
 
 </div>
-<br />        
+<?php if ($i < count($rows)) {
+	echo '<hr>';
+}
+?>       
 <?php
 }
 ?>	

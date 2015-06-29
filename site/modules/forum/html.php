@@ -30,7 +30,7 @@ class ForumHTML {
 		$t = 0;		
 		foreach ($context['topic']['messages'] as $row) {
 			if ($row['id'] == $context['topic']['lastMsg']) {
-				echo '<a href="#new"></a>';
+				echo '<a id="new"></a>';
 			}
 			?>
 			<table width="100%">

@@ -154,14 +154,11 @@ function registerUser() {
 	$row->password = $crypt.':'.$salt;
 	
 	$row->registerDate = date('Y-m-d H:i:s');
+	
+	if (USER_ACTIVATION) {
+	
 	$row->activated = 0;
 	$row->activation = $row->createCode();
-	
-	
-	if (!$row->store()) {
-		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
 	
 	$alink = '<a href="'.SITEURL.'/index.php?option=active&code='.$row->activation.'">Aktive Et</a>';
 	
@@ -174,8 +171,21 @@ function registerUser() {
 	$body.= "Siteye giriş yapmak için yukarıdaki aktivasyon linkine tıklayınız.\n";
 	   
 	mosMail(MAILFROM, MAILFROMNAME, $row->email, 'Yeni Üyelik', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
-		
-	Redirect( 'index.php', 'Kayıt talebiniz kaydedildi. E-posta adresinize aktivasyon linki gönderildi. Lütfen önce aktivasyonu gerçekleştiriniz!' );
+	
+	$msg = 'Kayıt talebiniz kaydedildi. E-posta adresinize aktivasyon linki gönderildi. Lütfen önce aktivasyonu gerçekleştiriniz!';
+	
+	} else {
+		$row->activated = 1;
+		$row->activation = '';
+		$msg = 'Üyeliğiniz başarıyla gerçekleştirildi. Siteye giriş yapabilirsiniz!';
+	}
+	
+	if (!$row->store()) {
+		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
+		exit();
+	}		
+	
+	Redirect( 'index.php', $msg );
 
 }
 

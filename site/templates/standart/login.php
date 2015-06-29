@@ -85,10 +85,11 @@ Bu siteye kayıt olarak;
 <a href="#" id="forgot">ŞİFREMİ UNUTTUM!</a>
 </div>
 
+<?php if (USER_ACTIVATION) { ?>
 <div class="form-group">
 <a href="#" id="activ">HESAP AKTİVASYONU</a>
 </div>
-
+<?php } ?>
 
 
 
@@ -134,6 +135,7 @@ Bu siteye kayıt olarak;
 </form>
 </div>
 
+<?php if (USER_ACTIVATION) { ?>
 <div id="activation">
 <form action="index.php" method="post" role="form">
 <span class="help-block">* E-posta adresinize gönderilen aktivasyon kodunu giriniz.</span>
@@ -161,6 +163,7 @@ Bu siteye kayıt olarak;
 <input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
 </div>
+<?php } ?>
 
 <?php include(ABSPATH.'/includes/footer.php');?>
 

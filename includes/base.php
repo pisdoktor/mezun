@@ -777,7 +777,7 @@ function MakePassword($length=8) {
 	$makepass	= '';
 	mt_srand(10000000*(double)microtime());
 	for ($i = 0; $i < $length; $i++)
-		$makepass .= $salt[mt_rand(0,59)];
+		$makepass .= $salt[mt_rand(0,58)];
 	return $makepass;
 }
 

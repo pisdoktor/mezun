@@ -26,6 +26,7 @@ define('SECRETWORD', 'deutf');
 define('ERROR_REPORT', 1);
 
 define('SESSION_TYPE', 0);
+define('USER_ACTIVATION', 0);
 
 define('MAILER', 'sendmail'); //sendmail or smtp
 define('SENDMAIL', '/usr/sbin/sendmail');

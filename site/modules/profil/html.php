@@ -122,7 +122,11 @@ class Profile {
 		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
 		<div class="panel panel-warning">
-		<div class="panel-heading"><h4><?php echo $head;?></h4><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></div>
+		<div class="panel-heading"><h4><?php echo $head;?></h4>
+		<div style="float:right;">
+		<?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?>
+		</div>
+		</div>
 		<div class="panel-body"> 
 		
 		<div class="row">

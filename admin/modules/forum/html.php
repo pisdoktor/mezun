@@ -99,10 +99,10 @@ $t = 0;
 $i = 0;
 foreach ($list as $row) {
 
-$checked = mosHTML::idBox( $i, $row->id );
+$checked = mosHTML::idBox( $i, $row->ID_BOARD );
 ?>
 
-<div id="detail<?php echo $row->id;?>">
+<div id="detail<?php echo $row->ID_BOARD;?>">
 <table width="100%" border="0" class="veriitem<?php echo $t;?>">
 <tr>
 <td width="5%">
@@ -249,7 +249,7 @@ $row = $rows[$i];
 $checked = mosHTML::idBox( $i, $row->ID_CAT );
 ?>
 
-<div id="detail<?php echo $row->id;?>">
+<div id="detail<?php echo $row->ID_CAT;?>">
 <table width="100%" border="0" class="veriitem<?php echo $t;?>">
 <tr>
 <td width="5%">

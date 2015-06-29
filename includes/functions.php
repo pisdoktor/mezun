@@ -31,17 +31,17 @@ if (!$my->id) {
 <li><a href="index.php?option=site&bolum=online"><span>Online Üyeler <span class="badge"><?php $online->totalOnline();?></span></span></a></li>
 </ul>
 </li>
-<li class="has-sub"><a href="#"><span>İstekler</span></a>
-<ul>
-<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler <span class="badge"><?php $istek->totalWaiting();?></span></span></a></li>
-<li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
-</ul>
-</li>
-<li class="has-sub"><a href="#"><span>Mesajlarım</span></a>
+<li class="has-sub"><a href="#"><span>Mesajlar</span></a>
 <ul>
 <li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu <span class="badge"><?php $msg->totalUnread();?></span></span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj&task=outbox"><span>Giden Kutusu</span></a></li>
 <li><a href="index.php?option=site&bolum=mesaj&task=new"><span>Yeni Mesaj</span></a></li>
+</ul>
+</li>
+<li class="has-sub"><a href="#"><span>İstekler</span></a>
+<ul>
+<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler <span class="badge"><?php $istek->totalWaiting();?></span></span></a></li>
+<li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
 </ul>
 </li>
 <li><a href="index.php?option=site&bolum=arama"><span>Üye Arama</span></a></li>

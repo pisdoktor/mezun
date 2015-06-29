@@ -79,12 +79,14 @@ $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 </div>
 
 </div>
-<br />		
+<?php if ($i < count($rows)) {
+	echo '<hr>';
+}
+?>	
 <?php
 }
 ?>    
-	</div>
-	</div>
+
 		
 <div align="center">
 
@@ -113,6 +115,9 @@ echo $pageNav->writeLimitBox($link);
 </div>
 
 </div>
+
+	</div>
+	</div>
 <?php        
 }
 }
