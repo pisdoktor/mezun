@@ -2,24 +2,14 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-if (phpversion() < '4.2.0') {
-	require_once( dirname( __FILE__ ) . '/compat/compat.php41x.php' );
-}
-if (phpversion() < '4.3.0') {
-	require_once( dirname( __FILE__ ) . '/compat/compat.php42x.php' );
-}
-if (version_compare( phpversion(), '5.0' ) < 0) {
-	require_once( dirname( __FILE__ ) . '/compat/compat.php50x.php' );
+ini_set('magic_quotes_runtime', 0);
+
+if ( ERROR_REPORT === 0 || ERROR_REPORT === '0' ) {
+	error_reporting( 0 );
+} else if (ERROR_REPORT > 0) {
+	error_reporting( E_ALL );
 }
 
-@set_magic_quotes_runtime( 0 );
-/*
-if ( @$error_reporting === 0 || @$error_reporting === '0' ) {
-	error_reporting( 0 );
-} else if (@$error_reporting > 0) {
-	error_reporting( $error_reporting );
-}
-*/
 require_once( dirname( __FILE__ ) . '/version.php' );
 require_once( dirname( __FILE__ ) . '/database.php' );
 require_once( dirname( __FILE__ ) . '/phpmailer/class.phpmailer.php' );

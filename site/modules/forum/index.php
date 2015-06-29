@@ -35,7 +35,8 @@ switch($task) {
 }
 
 function createNewMessage() {
-	global $dbase, $my;
+	global $dbase, $my, $limit, $limitstart;
+	
 	
 	$msgOptions = new stdClass();
 	$content = $_POST;
@@ -57,8 +58,7 @@ function createNewMessage() {
 	
 	if (isset($msgOptions->ID_MSG)) {
 	//Updateler
-	$dbase->setQuery("UPDATE #__forum_messages 
-	ID_MSG_MODIFIED = ".$dbase->Quote($msgOptions->ID_MSG)." WHERE ID_MSG=".$dbase->Quote($msgOptions->ID_MSG)."");
+	$dbase->setQuery("UPDATE #__forum_messages SET ID_MSG_MODIFIED = ".$dbase->Quote($msgOptions->ID_MSG)." WHERE ID_MSG=".$dbase->Quote($msgOptions->ID_MSG)."");
 	$dbase->query();
 	
 	//topic sayacı
@@ -77,7 +77,12 @@ function createNewMessage() {
 	$dbase->setQuery("UPDATE #__forum_log_topics SET ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC).", ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
 	$dbase->query();
 	
-	mosRedirect('index.php?option=site&bolum=forum&task=topic&id='.$msgOptions->ID_TOPIC.'#new');
+	$topic = new BoardTopics($dbase);
+	$topic_info = $topic->TopicInfo($msgOptions->ID_TOPIC);
+	
+	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $msgOptions->ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies/ $limit)) * $limit) : '') . '#new';
+	
+	mosRedirect($link);
 }
 
 function createNewTopic() {
@@ -217,9 +222,11 @@ function Topic($id) {
 }
 
 function ForumIndex() {
-	global $dbase;
+	global $dbase, $limitstart, $limit;
 	
 	$categories = new BoardCategories($dbase);
+	$latestposts = new BoardMessages($dbase);
+	$context['latestmsg'] = $latestposts->latestMessages(latestPostCount, $limitstart, $limit);
 	
 	$context['categories'] = $categories->ForumIndex();
 	

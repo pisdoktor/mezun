@@ -100,7 +100,7 @@ $this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']] = ar
 );
 
 // Counting child board posts is... slow :/.
-if (!empty(countChildPosts)) {
+if (countChildPosts) {
 $this_category[$row_board['ID_PARENT']]['posts'] += $row_board['numPosts'];
 $this_category[$row_board['ID_PARENT']]['topics'] += $row_board['numTopics'];
 }
@@ -112,7 +112,7 @@ $this_category[$row_board['ID_PARENT']]['children_new'] |= empty($row_board['isR
 $this_category[$row_board['ID_PARENT']]['link_children'][] = &$this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']]['link'];
 }
 		// Child of a child... just add it on...
-elseif (!empty(countChildPosts)) {
+elseif (countChildPosts) {
 if (!isset($parent_map))
 $parent_map = array();
 

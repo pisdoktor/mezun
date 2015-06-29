@@ -21,7 +21,7 @@ define('ADMINTEMPLATE', 'standart');
 define('SITETEMPLATE', 'standart');
 
 define('OFFSET', 1);
-define('DEBUGMODE', 0);
+define('DEBUGMODE', 1);
 define('SECRETWORD', 'deutf');
 define('ERROR_REPORT', 1);
 
@@ -51,4 +51,5 @@ define('todayMod', 2); //1 bugün ; 2 bugün dün
 define('time_format', '%d %B %Y, %H:%M:%S');
 define('compactTopicPagesEnable', 1); // okla ileri gitme seçeneği
 define('compactTopicPagesContiguous', 5); // ... koymak için gerekli sayfa sayısı
+define('latestPostCount', 3);
 

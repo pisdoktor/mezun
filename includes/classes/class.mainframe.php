@@ -222,6 +222,7 @@ class mainFrame {
 	* the jos_sessions table.
 	*/
 	function initSession() {
+		global $bolum;
 		// initailize session variables
 		$session     =& $this->_session;
 		$session     = new Session( $this->_db );
@@ -242,6 +243,7 @@ class mainFrame {
 		if ( $sessioncookie && strlen($sessioncookie) == 32 && $sessioncookie != '-' && $session->load($sessionValueCheck) ) {
 			// update time in session table
 			$session->time = time();
+			$session->nerede = $bolum;
 			$session->update();
 		} else {
 			// Remember Me Cookie `name`
@@ -414,6 +416,7 @@ class mainFrame {
 	* the users details.
 	*/
 	function login( $username=null, $passwd=null, $remember=0, $userid=NULL ) {
+		global $bolum;
 
 		$bypost = 0;
 		$valid_remember = false;
@@ -512,6 +515,7 @@ class mainFrame {
 				$session             =& $this->_session;
 				$session->username   = $row->username;
 				$session->userid     = intval( $row->id );
+				$session->nerede     = $bolum;
 				   
 				if ($row->id == 1) {
 				$this->_isAdmin = true;
@@ -584,6 +588,7 @@ class mainFrame {
 		$session->username   = '';
 		$session->userid     = '';
 		$session->access_type = '';
+		$session->nerede     = '';
 		$session->update();
 
 		// kill remember me cookie

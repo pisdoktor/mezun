@@ -170,7 +170,7 @@ function registerUser() {
 }
 
 function Login() {
-	global $mainframe;
+	global $mainframe, $return;
 	
 	$mainframe->login();
 
@@ -190,7 +190,7 @@ if ( $return ) {
 }
 
 function Logout() {
-	global $mainframe;
+	global $mainframe, $return;
 	
 	$mainframe->logout();
 
@@ -202,7 +202,7 @@ function Logout() {
 }
 
 function CookieCheck() {
-	global $mainframe;
+	global $mainframe, $return;
 	if (isset( $_COOKIE[$mainframe->sessionCookieName()] )) {
 		mosRedirect( $return );
 	} else {

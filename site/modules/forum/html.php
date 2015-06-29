@@ -339,6 +339,44 @@ class ForumHTML {
 	<?php
 	}
 	}
-	echo '</table></div></div>';
+	echo '</table>';
+	
+	if ($context['latestmsg']) {
+		?>
+		<br />
+	<div class="tborder" style="width: 100%;">
+	 <div class="catbg" style="padding: 6px; vertical-align: middle; text-align: center;">
+	 Forum - Bilgi Merkezi
+	 </div>
+		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<tr>
+		<td class="titlebg" colspan="2">Son Gönderilen <?php echo latestPostCount;?> Mesaj</td>
+		</tr>
+		<?php
+			foreach ($context['latestmsg'] as $post) {
+				?>
+			<tr>
+			<td class="middletext" valign="top"><b><?php echo $post['link'];?></b> Gönderen <?php echo $post['poster']['link'] ." (". $post['board']['link'].")";?>
+			</td>
+			<td class="middletext" align="right" valign="top" nowrap="nowrap"><?php echo $post['time'];?></td>
+			</tr>
+			<?php } ?>
+		
+		</table>
+		
+		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<tr>
+		<td class="titlebg">Şuanda Forumda Olan Üyeler</td>
+		</tr>
+			<tr>
+			<td class="middletext" nowrap="nowrap">
+			<?php echo implode(', ', Forum::getForumUsers());?>
+			</td>
+			</tr>
+		</table>
+		<?php
+	}
+	
+	echo '</div></div>';
 	}
 }

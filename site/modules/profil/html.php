@@ -19,15 +19,6 @@ class Profile {
 		</div>
 		</div>
 		
-		<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="email">E-posta Adresiniz:</label>
-<div class="col-sm-4">
-<input name="email" id="email" type="text" class="form-control" value="<?php echo $row->email;?>" required />
-</div>
-</div>
-</div>
-
 <div class="form-group">
 <div class="row">
 <label class="control-label col-sm-4" for="work">Şuanda Çalıştığınız Kurum:</label>

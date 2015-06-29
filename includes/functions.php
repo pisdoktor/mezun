@@ -142,6 +142,10 @@ function loadDuyuru() {
   <div class="panel-heading">Duyuru Paneli</div>
   <div class="panel-body">
 <?php
+
+if (!$rows) {
+	echo 'Herhangi bir duyuru bulunamadı!';
+}
 	foreach ($rows as $row) {
 		?>
 		<span>

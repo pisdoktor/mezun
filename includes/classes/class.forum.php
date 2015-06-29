@@ -3,6 +3,27 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Forum {
+	
+	static function getForumUsers() {
+		global $dbase;
+		
+		$query = "SELECT s.userid, s.username, u.name FROM #__sessions AS s
+		LEFT JOIN #__users AS u ON u.id=s.userid
+		 WHERE s.nerede='forum' AND s.userid>0 AND s.access_type='site'";
+		
+		$dbase->setQuery($query);
+		
+		$rows = $dbase->loadObjectList();
+		
+		$list = array();
+		
+		foreach ($rows as $row) {
+			$list[] = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->userid.'">'.$row->name.'</a>';
+		}
+		
+		return $list;
+		
+	}
 // Format a time to make it look purdy.
 static function timeformat($logTime, $show_today = true, $datetime=false) {
 		
@@ -146,7 +167,7 @@ static function constructPageIndex($base_url, $total, $limitstart, $limit=10, $f
 	$base_link = '<a class="navPages" href="' . ($flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . '&limitstart=%d&limit='.$limit) . '">%s</a> ';
 
 	// Compact pages is off or on?
-	if (empty(compactTopicPagesEnable)) {
+	if (!compactTopicPagesEnable) {
 		// Show the left arrow.
 		$pageindex = $limitstart == 0 ? ' ' : sprintf($base_link, $limitstart - $limit, '&#171;');
 

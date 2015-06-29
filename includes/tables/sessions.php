@@ -15,6 +15,8 @@ class Session extends DBTable {
 	var $_session_cookie    = null;
 	
 	var $access_type        = null;
+	
+	var $nerede             = null;
 	/**
 	* @param database A database connector object
 	*/
@@ -29,7 +31,7 @@ class Session extends DBTable {
 	function totalOnline() {
 		global $my;
 		$query = "SELECT COUNT(*) FROM #__sessions"
-		. "\n WHERE username!=''"
+		. "\n WHERE userid>0"
 		//. "\n AND userid NOT IN (".$this->_db->Quote($my->id).")"
 		;
 		$this->_db->setQuery($query);
