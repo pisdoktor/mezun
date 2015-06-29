@@ -331,7 +331,7 @@ return $context['categories'];
 			$context['boards'][$row['ID_PARENT']]['link_children'][] = '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>';
 			$context['boards'][$row['ID_PARENT']]['children_new'] |= empty($row['isRead']) && $row['posterName'] != '';
 
-			if (!empty(countChildPosts)) {
+			if (countChildPosts) {
 				$context['boards'][$row['ID_PARENT']]['posts'] += $row['numPosts'];
 				$context['boards'][$row['ID_PARENT']]['topics'] += $row['numTopics'];
 

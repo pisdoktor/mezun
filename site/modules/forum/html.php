@@ -374,6 +374,8 @@ class ForumHTML {
 			</td>
 			</tr>
 		</table>
+		</div>
+		</div>
 		<?php
 	}
 	

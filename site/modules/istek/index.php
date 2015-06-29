@@ -38,7 +38,7 @@ switch($task) {
 * @param mixed $status gelen isteğe ne yapılacağı 1: onayla -1: reddet
 */
 function changeDurum($cid, $status) {
-	global $dbase, $my;
+	global $dbase, $my, $type;
 	
 	if ($type) {
 		return false;
