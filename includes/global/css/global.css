@@ -197,3 +197,21 @@ text-decoration: none;
 .msg-body {
 	padding: 10px;	
 }
+
+
+/**
+* Admin Bölümü
+*/
+.quickicon {
+	width: 100px;
+	height: 100px;
+	border: 1px solid #dadada;
+	text-align: center;
+	vertical-align: middle;
+	padding: 5px;
+	margin: 5px;
+}
+
+.quickicon:hover {
+	background-color: #fafafa;
+}

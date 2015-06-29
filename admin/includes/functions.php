@@ -76,7 +76,7 @@ function convertSite() {
 
 function quickiconButton( $link, $image, $text ) {
 ?>
-<div class="quickicon">
+<div class="quickicon col-sm-3">
 <span>
 <a href="<?php echo $link; ?>">
 <img src="<?php echo SITEURL;?>/admin/templates/<?php echo ADMINTEMPLATE;?>/images/<?php echo $image;?>" alt="<?php echo $text;?>" title="<?php echo $text;?>" border="0" /><br /><?php echo $text;?>
@@ -87,6 +87,12 @@ function quickiconButton( $link, $image, $text ) {
 }
 
 function AdminPanelMenu() {
+	?>
+	<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Kısayollar</h4></div>
+	<div class="panel-body">
+	<div class="row">
+	<?php
 	echo quickiconButton('index.php?option=admin&bolum=duyuru', 'duyuru.png', 'Duyuru Yönetimi');    
 	echo quickiconButton('index.php?option=admin&bolum=sehir', 'ilce.png', 'Şehir Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=user', 'kullanici.png', 'Kullanıcı Yönetimi');
@@ -95,4 +101,8 @@ function AdminPanelMenu() {
 	echo quickiconButton('index.php?option=admin&bolum=forum', 'mesaj.png', 'Forum Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=ayarlar', 'config.png', 'Yapılandırma');
 	echo quickiconButton('index.php?option=site', 'change.png', 'Siteye Geçiş Yap');
+	?>
+	</div>
+	</div></div>
+	<?php
 }

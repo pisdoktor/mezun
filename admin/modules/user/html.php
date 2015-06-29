@@ -5,8 +5,10 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class KullaniciHTML {
 	static function editKullanici($row) {
 		?>
-		<div id="module_header">Kullanici <?php echo $row->id ? 'Düzenle' : 'Ekle';?></div>
-		<div id="module">
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Kullanıcı <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
+	</div>
+	<div class="panel-body">
 		<script type="text/javascript">
 		$(function(){
 			$('input[name=confirm_password]').on('keyup', function(){
@@ -100,125 +102,133 @@ $(document).ready(function() {
 			}
 		}
 		</script>
-<form action="index.php" method="post" name="adminForm">
-<table width="100%">
-  <tr>
-	<td width="30%">
-	<strong>Kullanıcı İsim:</strong>
-	</td>
-	<td width="70%">
-	<input type="text" name="name" class="inputbox" value="<?php echo $row->name;?>">
-	</td>
-  </tr>
-  <tr>
-	<td width="30%">
-	<strong>Kullanıcı Adı:</strong>
-	</td>
-	<td width="70%">
-	<input type="text" name="username" class="inputbox" value="<?php echo $row->username;?>">
-	</td>
-  </tr>
-  <tr>
-	<td width="30%">
-	<strong>Okul Numarası:</strong>
-	</td>
-	<td width="70%">
-	<input type="text" name="okulno" class="inputbox" value="<?php echo $row->okulno;?>">
-	</td>
-  </tr>
-  <tr>
-	<td width="30%">
-	<strong>E-posta Adresi:</strong>
-	</td>
-	<td width="70%">
-	<input type="text" name="email" class="inputbox" value="<?php echo $row->email;?>">
-	</td>
-  </tr>
-   <tr>
-	<td width="30%">
-	<strong>Parola:</strong>
-	</td>
-	<td width="70%">
-	
-	<input type="password" name="password" id="password" class="inputbox" value="">
-	<a href="#" class="link-password" id="olustur">Parola Oluştur</a>
-	<a href="#" class="link-password" id="confirm">Parolayı Kullan</a>
-	<span id="random"></span>
-	<span id="showpass"></span>
-	<span class="error" style="display: none; background-color: red;">Parolalar uyuşmuyor!</span>
-	</td>
-  </tr>
-	<tr>
-	<td width="30%">
-	<strong>Parola Tekrarı:</strong>
-	</td>
-	<td width="70%">
-	<input type="password" name="confirm_password" id="confirm_password" class="inputbox" value="">
-	</td>
-  </tr>
-  <tr>
-  <td>
-  
-  </td>
-  </tr>
-</table>
+<form action="index.php" method="post" name="adminForm" role="form">
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-3">
+<label for="name">Adı,Soyadı:</label>
+</div>
+<div class="col-sm-4">
+<input type="text" id="name" name="name" class="form-control" value="<?php echo $row->name;?>" required>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-3">
+<label for="username">Kullanıcı Adı:</label>
+</div>
+<div class="col-sm-4">
+<input type="text" id="username" name="username" class="form-control" value="<?php echo $row->username;?>" required>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-3">
+<label for="email">E-posta Adresi:</label>
+</div>
+<div class="col-sm-4">
+<input type="text" id="email" name="email" class="form-control" value="<?php echo $row->email;?>" required>
+</div>
+</div>
+</div>
+
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-3">
+<label for="password">Parola:</label>
+</div>
+<div class="col-sm-4">
+<input type="password" name="password" id="password" class="form-control" value="">
+</div>
+<div class="col-sm-5">
+<a href="#" class="link-password" id="olustur">Parola Oluştur</a>
+<a href="#" class="link-password" id="confirm">Parolayı Kullan</a>
+<span id="random"></span>
+<span id="showpass"></span>
+<span class="error" style="display: none; background-color: red;">Parolalar uyuşmuyor!</span>
+</div>
+</div>
+</div>
+
+
+<div class="form-group">
+<div class="row">
+<div class="col-sm-3">
+<label for="email">Parola Tekrarı:</label>
+</div>
+<div class="col-sm-4">
+<input type="password" name="confirm_password" id="confirm_password" class="form-control" value="">
+</div>
+</div>
+</div>
 <input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="user" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="id" value="<?php echo $row->id;?>" />
-<br />
+
 </form>
-</div>
 <br />
-<div align="right">
-<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="button"  />
-<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancel');" class="button" />
+<div class="form-group">
+<div class="btn-group">
+<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
+<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancel');" class="btn btn-warning" />
+</div>
+</div>
+
+</div>
 </div>
 <?php
 }
 	
 	static function getKullaniciList($rows, $pageNav, $search) {
 		?>
-<form action="index.php" method="post" name="adminForm">
-<div align="left" style="float:left;">
-Kullanıcı Adı: <input type="text" name="search" value="<?php echo htmlspecialchars( $search );?>" class="text_area" onChange="document.adminForm.submit();" />
-</div>
-<div align="right">
-<input type="button" name="button" value="Yeni Kullanıcı Ekle" onclick="javascript:submitbutton('add');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Blokla" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı pasif etmek istediğinize emin misiniz?')){ submitbutton('block');}" class="button" /> 
-<input type="button" name="button" value="Seçilenin Blok Kaldır" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı aktif etmek istediğinize emin misiniz?')){ submitbutton('unblock');}" class="button" />
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Kullanıcılar</h4></div>
+	<div class="panel-body">
+	
+<form action="index.php" method="post" name="adminForm" role="form">
+
+<div align="right" style="float:right;">
+<input type="text" name="search" value="<?php echo htmlspecialchars( $search );?>" class="form-control" onChange="document.adminForm.submit();" placeholder="Kullanıcı adı yazın" />
 </div>
 
-<table width="100%" border="0" class="veritable">
-<tr>
-<th width="5%">
-SIRA
-</th>
-<th width="1%">
+<div class="form-group">
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Kullanıcı Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" />
+<input type="button" name="button" value="Seçileni Blokla" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı pasif etmek istediğinize emin misiniz?')){ submitbutton('block');}" class="btn btn-info" /> 
+<input type="button" name="button" value="Seçilenin Blok Kaldır" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı aktif etmek istediğinize emin misiniz?')){ submitbutton('unblock');}" class="btn btn-info" /> 
+</div>
+</div>
+
+<div class="row">
+<div class="col-sm-1">
+<strong>SIRA</strong>
+</div>
+<div class="col-sm-1">
 <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</th>
-<th width="10%">
-Kullanıcı
-</th>
-<th width="10%">
-Kullanıcı Adı
-</th>
-<th width="15%">
-E-posta
-</th>
-<th width="10%">
-Bulunduğu Şehir
-</th>
-<th width="10%">
-Branş
-</th>
-<th width="10%">
-Üyelik Durumu
-</th>
-</tr>
-</table>
+</div>
+<div class="col-sm-2">
+<strong>KULLANICI</strong>
+</div>
+<div class="col-sm-2">
+<strong>KULLANICI ADI</strong>
+</div>
+<div class="col-sm-4">
+<strong>E-POSTA</strong>
+</div>
+<div class="col-sm-2">
+<strong>ÜYELİK DURUMU</strong>
+</div>
+
+</div>
 <?php
 $t = 0;
 for($i=0; $i<count($rows);$i++) {
@@ -228,53 +238,28 @@ $checked = mosHTML::idBox( $i, $row->id );
 
 $blok = $row->activated ? 'Aktif' : 'Pasif';
 ?>
-<div id="detail<?php echo $row->id;?>">
-<table width="100%" border="0" class="veriitem<?php echo $t;?>">
-<tr>
-<td width="5%">
-<center>
+<div class="row" id="detail<?php echo $row->id;?>">
+<div class="col-sm-1">
 <?php echo $pageNav->rowNumber( $i ); ?>
-</center>
-</td>
-<td width="1%">
-<center>
+</div>
+<div class="col-sm-1">
 <?php echo $checked;?>
-</center>
-</td>
-<td width="10%">
-<center>
+</div>
+<div class="col-sm-2">
 <a href="index.php?option=admin&bolum=user&task=editx&id=<?php echo $row->id;?>">
 <?php echo $row->name;?>
 </a>
-</center>
-</td>
-<td width="10%">
-<center>
+</div>
+<div class="col-sm-2">
 <?php echo $row->username;?>
-</center>
-</td>
-<td width="15%">
-<center>
+</div>
+<div class="col-sm-4">
 <?php echo $row->email;?>
-</center>
-</td>
-<td width="10%">
-<center>
-<?php echo $row->sehir;?>
-</center>
-</td>
-<td width="10%">
-<center>
-<?php echo $row->brans;?>
-</center>
-</td>
-<td width="10%">
-<center>
+</div>
+<div class="col-sm-2">
 <?php echo $blok;?>
-</center>
-</td>
-</tr>
-</table>
+</div>
+
 </div>
 <?php
 $t = 1 - $t;
@@ -285,12 +270,15 @@ $t = 1 - $t;
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
 <br />
-<div align="right">
-<input type="button" name="button" value="Yeni Kullanıcı Ekle" onclick="javascript:submitbutton('add');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" />
-<input type="button" name="button" value="Seçileni Blokla" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı pasif etmek istediğinize emin misiniz?')){ submitbutton('block');}" class="button" /> 
-<input type="button" name="button" value="Seçilenin Blok Kaldır" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı aktif etmek istediğinize emin misiniz?')){ submitbutton('unblock');}" class="button" /> 
+
+<div class="form-group">
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Kullanıcı Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" />
+<input type="button" name="button" value="Seçileni Blokla" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı pasif etmek istediğinize emin misiniz?')){ submitbutton('block');}" class="btn btn-info" /> 
+<input type="button" name="button" value="Seçilenin Blok Kaldır" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kullanıcı(lar)ı aktif etmek istediğinize emin misiniz?')){ submitbutton('unblock');}" class="btn btn-info" /> 
+</div>
 </div>
 </form>
 
@@ -305,6 +293,8 @@ echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
 
+</div>
+</div>
 <?php
 		
 	}

@@ -5,8 +5,11 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class DuyuruHTML {
 	static function editDuyuru($row) {
 		?>
-		<div id="module_header">Duyuru <?php echo $row->id ? 'Düzenle' : 'Ekle';?></div>
-		<div id="module">
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Duyuru <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
+	</div>
+	<div class="panel-body">
+
 		<script language="javascript" type="text/javascript">
 		<!--
 		function submitbutton(pressbutton) {
@@ -25,59 +28,68 @@ class DuyuruHTML {
 		}
 		//-->
 		</script> 
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" role="form">
 
-<table width="100%">
-  <tr>
-	<td width="30%">
-	<strong>Duyuru Metni:</strong>
-	</td>
-	<td width="70%">
-	<textarea id="metin" name="text" cols="60" rows="10" class="textbox"><?php echo $row->text;?></textarea>
-	</td>
-  </tr>
-</table>
+<div class="row">
+<div class="col-sm-3">
+<label for="metin">
+Duyuru Metni:
+</label>
+</div>
+<div class="col-sm-9">
+<textarea id="metin" name="text" cols="60" rows="10" class="form-control" required><?php echo $row->text;?></textarea>
+</div>
+</div>
+
 <input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="duyuru" />
 <input type="hidden" name="tarih" value="<?php echo $row->tarih ? $row->tarih : date('Y-m-d H:i:s');?>" />
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="id" value="<?php echo $row->id;?>" />
 </form>
-</div>
 <br />
-<div align="right">
-<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="button"  />
-<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancel');" class="button" />
+
+<div>
+<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('save');" class="btn btn-primary"  />
+<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancel');" class="btn btn-warning" />
+</div>
+
+</div>
 </div>
 <?php
 }
 	
 	static function getDuyuruList($rows, $pageNav) {
 		?>
-<form action="index.php" method="post" name="adminForm">
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Duyurular</h4></div>
+	<div class="panel-body">
+	
+<form action="index.php" method="post" name="adminForm" role="form">
 
-<div align="right">
-<input type="button" name="button" value="Yeni Duyuru Ekle" onclick="javascript:submitbutton('add');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu duyuruları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" /> 
+<div class="form-group">
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Duyuru Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu duyuruları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+</div>
 </div>
 
-<table width="100%" border="0" class="veritable">
-<tr>
-<th width="5%">
-SIRA
-</th>
-<th width="1%">
+<div class="row">
+<div class="col-sm-1">
+<strong>SIRA</strong>
+</div>
+<div class="col-sm-1">
 <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</th>
-<th width="10%">
-Duyuru Tarihi
-</th>
-<th>
-Duyuru İçeriği
-</th>
-</tr>
-</table>
+</div>
+<div class="col-sm-3">
+<strong>DUYURU TARİHİ</strong>
+</div>
+<div class="col-sm-7">
+<strong>DUYURU İÇERİĞİ</strong> 
+</div>
+
+</div>
 
 <?php
 $t = 0;
@@ -87,29 +99,20 @@ $row = $rows[$i];
 $checked = mosHTML::idBox( $i, $row->id );
 ?>
 
-<div id="detail<?php echo $row->id;?>">
-<table width="100%" border="0" class="veriitem<?php echo $t;?>">
-<tr>
-<td width="5%">
-<center>
+<div class="row" id="detail<?php echo $row->id;?>">
+
+<div class="col-sm-1">
 <?php echo $pageNav->rowNumber( $i ); ?>
-</center>
-</td>
-<td width="1%">
-<center>
+</div>
+<div class="col-sm-1">
 <?php echo $checked;?>
-</center>
-</td>
-<td width="10%">
-<center>
-<a href="index.php?option=admin&bolum=duyuru&task=editx&id=<?php echo $row->id;?>"><?php echo $row->tarih;?></a>
-</center>
-</td>
-<td>
+</div>
+<div class="col-sm-3">
+<a href="index.php?option=admin&bolum=duyuru&task=editx&id=<?php echo $row->id;?>"><?php echo Forum::timeformat($row->tarih, true, true);?></a>
+</div>
+<div class="col-sm-7">
 <?php echo $row->text;?>
-</td>
-</tr>
-</table>
+</div>
 </div>
 
 <?php
@@ -121,10 +124,10 @@ $t = 1 - $t;
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
 <br />
-<div align="right">
-<input type="button" name="button" value="Yeni Duyuru Ekle" onclick="javascript:submitbutton('add');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu duyuruları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="button" /> 
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Duyuru Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu duyuruları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
 </div>
 </form>
 
@@ -136,6 +139,10 @@ $t = 1 - $t;
 <?php 
 $link = 'index.php?option=admin&bolum=duyuru';
 echo $pageNav->writePagesLinks($link);?>
+</div>
+</div>
+
+
 </div>
 </div>
 
