@@ -2,10 +2,10 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-$cid = mosGetParam($_REQUEST, 'cid');
-$id = intval(mosGetParam($_REQUEST, 'id'));
-$limit = intval(mosGetParam($_REQUEST, 'limit', 5));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$cid = getParam($_REQUEST, 'cid');
+$id = intval(getParam($_REQUEST, 'id'));
+$limit = intval(getParam($_REQUEST, 'limit', 5));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -48,7 +48,7 @@ function delDuyuru(&$cid) {
 		exit;
 	}
 
-	mosArrayToInts( $cid );
+	ArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
 	$query = "DELETE FROM #__duyurular"
 	. "\n WHERE ( $cids )"
@@ -59,7 +59,7 @@ function delDuyuru(&$cid) {
 		exit();
 	}
 	
-	mosRedirect( 'index.php?option=admin&bolum=duyuru', 'Seçili duyuru(lar) silindi' );
+	Redirect( 'index.php?option=admin&bolum=duyuru', 'Seçili duyuru(lar) silindi' );
 }
 
 function saveDuyuru() {
@@ -82,7 +82,7 @@ function saveDuyuru() {
 		exit();
 	}
 	
-	mosRedirect('index.php?option=admin&bolum=duyuru', 'Duyuru kaydedildi');
+	Redirect('index.php?option=admin&bolum=duyuru', 'Duyuru kaydedildi');
 	
 }
 
@@ -92,7 +92,7 @@ function cancelDuyuru() {
 	$row = new Duyurular( $dbase );
 	$row->bind( $_POST );
 	$row->checkin();
-	mosRedirect( 'index.php?option=admin&bolum=duyuru');
+	Redirect( 'index.php?option=admin&bolum=duyuru');
 }
 
 function getDuyuruList() {

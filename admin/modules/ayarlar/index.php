@@ -21,7 +21,7 @@ switch($task) {
 }
 
 function cancelConfig() {
-	mosRedirect('index.php');
+	Redirect('index.php');
 }
 
 function getConfigFile() {
@@ -37,7 +37,7 @@ function saveConfig() {
 	
 	$ret = file_put_contents(ABSPATH.'/config.php', $data);
 	
-	mosRedirect('index.php', 'Yapılandırma dosyası güncellendi');
+	Redirect('index.php', 'Yapılandırma dosyası güncellendi');
 }
 
 function readConfig($filename, $incpath = false, $amount = 0, $chunksize = 8192, $offset = 0)	{

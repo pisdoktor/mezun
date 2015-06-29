@@ -2,9 +2,9 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$id = intval(mosGetParam($_REQUEST, 'id'));
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$id = intval(getParam($_REQUEST, 'id'));
+$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -82,7 +82,7 @@ function createNewMessage() {
 	
 	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $msgOptions->ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies/ $limit)) * $limit) : '') . '#new';
 	
-	mosRedirect($link);
+	Redirect($link);
 }
 
 function createNewTopic() {
@@ -156,7 +156,7 @@ function createNewTopic() {
 		VALUES ($topicOptions->ID_TOPIC, $my->id, $msgOptions->ID_MSG + 1)");
 		$dbase->query();
 	
-	mosRedirect('index.php?option=site&bolum=forum&task=topic&id='.$topicOptions->ID_TOPIC);
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$topicOptions->ID_TOPIC);
 }
 
 function Topic($id) {
@@ -166,7 +166,7 @@ function Topic($id) {
 	$controlid = $topics->load($id);
 	
 	if (!$controlid) {
-		mosNotAuth();
+		NotAuth();
 		exit;
 	}
 	$board = new Boards($dbase);

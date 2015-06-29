@@ -73,9 +73,9 @@ function convertAdmin() {
 	$session->access_type = 'admin';
 	$session->update();
 	
-	mosRedirect('index.php', 'Kullanıcı Panelinden başarıyla geçiş yapıldı');
+	Redirect('index.php');
 	} else {
-		mosNotAuth();
+		NotAuth();
 	}    
 }
 /**
@@ -96,7 +96,7 @@ function loadSiteModule() {
 	if ($bolum) {
 	include_once(ABSPATH. '/site/modules/'.$bolum.'/index.php');
 	} else {
-		mosRedirect('index.php');
+		Redirect('index.php');
 	}
 	break;
 	
@@ -149,7 +149,7 @@ if (!$rows) {
 	foreach ($rows as $row) {
 		?>
 		<span>
-		<strong>Duyuru Tarihi:</strong> <?php echo mosFormatDate($row->tarih, '%d-%m-%Y %H:%M:%S');?>
+		<strong>Duyuru Tarihi:</strong> <?php echo FormatDate($row->tarih, '%d-%m-%Y %H:%M:%S');?>
 		</span>
 		<br />
 		<span>

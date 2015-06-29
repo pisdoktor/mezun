@@ -27,7 +27,7 @@ class Mesajlar extends DBTable {
 	}
 	
 	function createID() {
-		return mosMakePassword(255);
+		return MakePassword(255);
 	}
 	
 	function totalUnread() {

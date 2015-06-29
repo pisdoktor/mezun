@@ -206,9 +206,6 @@ $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 <?php
 }
 ?>	
-	</div>
-	</div>	
-	
 <div align="center">
 
 <div class="row">
@@ -227,7 +224,7 @@ echo $pageNav->writePagesLinks($link);
 </div>
 
 <div class="row">
-<div class="col-sm-1">
+<div class="col-sm-2">
 <?php 
 $link = 'index.php?option=site&bolum=arama&task=search';
 echo $pageNav->writeLimitBox($link);
@@ -236,7 +233,14 @@ echo $pageNav->writeLimitBox($link);
 </div>
 
 </div>
+
+  
 <?php
-}		
+}	
+
+?>
+	</div>
+	</div>  
+<?php	
 	}
 }

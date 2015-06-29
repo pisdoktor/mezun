@@ -19,8 +19,6 @@ function adminMenu() {
 <ul>
 <li><a href="index.php?option=admin&bolum=forum&task=categories"><span>Kategori Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=forum&task=boards"><span>Forum Yönetimi</span></a></li>
-<li><a href="index.php?option=admin&bolum=forum&task=topics"><span>Başlık Yönetimi</span></a></li>
-<li><a href="index.php?option=admin&bolum=forum&task=messages"><span>Mesaj Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=forum&task=recount"><span>Tekrar Say</span></a></li>
 </ul>
 </li>
@@ -48,7 +46,7 @@ function loadAdminModule() {
 	if ($bolum) {
 	include_once(ABSPATH. '/admin/modules/'.$bolum.'/index.php');
 	} else {
-		mosRedirect('index.php');
+		Redirect('index.php');
 	}
 	break;
 	
@@ -68,9 +66,9 @@ function convertSite() {
 	$session->access_type = 'site';
 	$session->update();
 	
-	mosRedirect('index.php', 'Yönetim Panelinden başarıyla geçiş yapıldı');
+	Redirect('index.php');
 	} else {
-		mosNotAuth();
+		NotAuth();
 	}    
 }
 

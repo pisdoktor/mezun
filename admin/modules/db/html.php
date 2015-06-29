@@ -12,12 +12,14 @@ class BackupHTML {
 	<div class="panel-body">
 		<form action="index.php" method="post" name="adminForm" role="form">
 
-<div class="btn-group">
+		<div class="form-group">
+		<div class="btn-group">
 <input type="button" name="button" value="Yedekle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('backup');}" class="btn btn-primary" /> 
 <input type="button" name="button" value="Onar" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('repair');}" class="btn btn-default" /> 
 <input type="button" name="button" value="Kontrol Et" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('check');}" class="btn btn-warning" /> 
 <input type="button" name="button" value="Optimize Et" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('optimize');}" class="btn btn-info" /> 
 <input type="button" name="button" value="Analiz Et" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('analyze');}" class="btn btn-default" /> 
+</div>
 </div>
 
 <div class="row">

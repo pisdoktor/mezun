@@ -10,6 +10,9 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <?php showHead();?>
 </head>
 <body>
+<?php
+$validate = spoofValue(1);
+?>
 <script type="text/javascript">
 $(function(){
 	$('input[name=password2]').on('keyup', function(){
@@ -23,6 +26,18 @@ $(function(){
 			$('span.error').show();
 		}
 	});
+	
+	$('select[name=myili]').on('change', function(){
+			
+	var byili = $('select[name=byili]').val();
+	var myili = $(this).val();
+	
+	$('span.yil').hide();
+	
+		if (byili >= myili) {
+		$('span.yil').show();
+	}
+	});	
 });
 </script>
 <div id="container">
@@ -114,7 +129,9 @@ $(function(){
 <label class="control-label col-sm-4" for="password2">Parolanız Tekrar:</label>
 <div class="col-sm-4">
 <input name="password2" id="password2" type="password" class="form-control" placeholder="Parolanızı tekrar yazın" required />
+<div class="col-sm-6">
 <span class="error" style="display: none; background-color: red;"> * Parolalar uyuşmuyor!</span>
+</div>
 </div>
 </div>
 </div>
@@ -180,6 +197,9 @@ $(function(){
 <div class="col-sm-3">
 <?php echo $reg->selectYil('byili', 1);?>
 </div>
+<div class="col-sm-5">
+<span class="yil" style="display: none; background-color: red;">Başlangıç yılı mezuniyet yılına eşit veya büyük olamaz!</span>
+</div>
 </div>
 </div>
 
@@ -200,6 +220,7 @@ $(function(){
 </div>
 </div>
 </div>
+<input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
 </div>
 

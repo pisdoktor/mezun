@@ -15,18 +15,18 @@ require_once( dirname( __FILE__ ) . '/database.php' );
 require_once( dirname( __FILE__ ) . '/phpmailer/class.phpmailer.php' );
 
 //Veritabanı tablolarını içeri alalım
-$tables = mosReadDirectory(dirname(__FILE__).'/tables/');
+$tables = readDirectory(dirname(__FILE__).'/tables/');
 foreach ($tables as $table) {
 	require_once(dirname(__FILE__).'/tables/'.$table);
 }
 
 //sınıfları içeri alalım
-$classes = mosReadDirectory(dirname(__FILE__).'/classes/');
+$classes = readDirectory(dirname(__FILE__).'/classes/');
 foreach ($classes as $class) {
 	require_once(dirname(__FILE__).'/classes/'.$class);
 }
 
-$dbase = new database( DB_HOST, DB_USER, DB_PASS, DB, DB_PREFIX );
+$dbase = new DB( DB_HOST, DB_USER, DB_PASS, DB, DB_PREFIX );
 
 if ($dbase->getErrorNum()) {
 	$systemError = $dbase->getErrorNum();
@@ -81,7 +81,7 @@ if (!defined( '_SET_SQLMODE' )) {
 define( "_NOTRIM", 0x0001 );
 define( "_ALLOWHTML", 0x0002 );
 define( "_ALLOWRAW", 0x0004 );
-function mosGetParam( &$arr, $name, $def=null, $mask=0 ) {
+function getParam( &$arr, $name, $def=null, $mask=0 ) {
 	static $noHtmlFilter 	= null;
 	static $safeHtmlFilter 	= null;
 
@@ -154,7 +154,7 @@ function mosStripslashes( &$value ) {
 * @param string
 * @param boolean
 */
-function mosBindArrayToObject( $array, &$obj, $ignore='', $prefix=NULL, $checkSlashes=true ) {
+function BindArrayToObject( $array, &$obj, $ignore='', $prefix=NULL, $checkSlashes=true ) {
 	if (!is_array( $array ) || !is_object( $obj )) {
 		return (false);
 	}
@@ -185,7 +185,7 @@ function mosBindArrayToObject( $array, &$obj, $ignore='', $prefix=NULL, $checkSl
 * @param boolean Recurse search into sub-directories
 * @param boolean True if to prepend the full path to the file name
 */
-function mosReadDirectory( $path, $filter='.', $recurse=false, $fullpath=false  ) {
+function readDirectory( $path, $filter='.', $recurse=false, $fullpath=false  ) {
 	$arr = array();
 	if (!@is_dir( $path )) {
 		return $arr;
@@ -193,18 +193,18 @@ function mosReadDirectory( $path, $filter='.', $recurse=false, $fullpath=false  
 	$handle = opendir( $path );
 
 	while ($file = readdir($handle)) {
-		$dir = mosPathName( $path.'/'.$file, false );
+		$dir = PathName( $path.'/'.$file, false );
 		$isDir = is_dir( $dir );
 		if (($file != ".") && ($file != "..")) {
 			if (preg_match( "/$filter/", $file )) {
 				if ($fullpath) {
-					$arr[] = trim( mosPathName( $path.'/'.$file, false ) );
+					$arr[] = trim( PathName( $path.'/'.$file, false ) );
 				} else {
 					$arr[] = trim( $file );
 				}
 			}
 			if ($recurse && $isDir) {
-				$arr2 = mosReadDirectory( $dir, $filter, $recurse, $fullpath );
+				$arr2 = readDirectory( $dir, $filter, $recurse, $fullpath );
 				$arr = array_merge( $arr, $arr2 );
 			}
 		}
@@ -221,7 +221,7 @@ function mosReadDirectory( $path, $filter='.', $recurse=false, $fullpath=false  
 * @param string The file system path
 * @param string A filter for the names
 */
-function mosRedirect( $url, $msg='' ) {
+function Redirect( $url, $msg='' ) {
 
    global $mainframe;
 
@@ -256,29 +256,6 @@ function mosRedirect( $url, $msg='' ) {
 		header( "Location: ". $url );
 	}
 	exit();
-}
-
-function mosErrorAlert( $text, $action='window.history.go(-1);', $mode=1 ) {
-	$text = nl2br( $text );
-	$text = addslashes( $text );
-	$text = strip_tags( $text );
-
-	switch ( $mode ) {
-		case 2:
-			echo "<script>$action</script> \n";
-			break;
-
-		case 1:
-		default:
-			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; "._ISO."\" />";
-			echo "<script>alert('$text'); $action</script> \n";
-			//echo '<noscript>';
-			//mosRedirect( @$_SERVER['HTTP_REFERER'], $text );
-			//echo '</noscript>';
-			break;
-	}
-
-	exit;
 }
 
 function treeRecurse( $id, $indent, $list, &$children, $maxlevel=9999, $level=0, $type=1 ) {
@@ -316,7 +293,7 @@ function treeRecurse( $id, $indent, $list, &$children, $maxlevel=9999, $level=0,
 * @param string The path
 * @param boolean Add trailing slash
 */
-function mosPathName($p_path,$p_addtrailingslash = true) {
+function PathName($p_path,$p_addtrailingslash = true) {
 	$retval = "";
 
 	$isWin = (substr(PHP_OS, 0, 3) == 'WIN');
@@ -362,7 +339,7 @@ function mosPathName($p_path,$p_addtrailingslash = true) {
 	return $retval;
 }
 
-function mosObjectToArray($p_obj) {
+function ObjectToArray($p_obj) {
 	$retarray = null;
 	if(is_object($p_obj))
 	{
@@ -370,7 +347,7 @@ function mosObjectToArray($p_obj) {
 		foreach (get_object_vars($p_obj) as $k => $v)
 		{
 			if(is_object($v))
-			$retarray[$k] = mosObjectToArray($v);
+			$retarray[$k] = ObjectToArray($v);
 			else
 			$retarray[$k] = $v;
 		}
@@ -380,7 +357,7 @@ function mosObjectToArray($p_obj) {
 /**
 * Checks the user agent string against known browsers
 */
-function mosGetBrowser( $agent ) {
+function GetBrowser( $agent ) {
 	
 	require( ABSPATH .'/includes/stats/agent_browser.php' );
 
@@ -419,7 +396,7 @@ function mosGetBrowser( $agent ) {
 /**
 * Checks the user agent string against known operating systems
 */
-function mosGetOS( $agent ) {
+function GetOS( $agent ) {
 
 	require( ABSPATH .'/includes/stats/agent_os.php' );
 
@@ -443,7 +420,7 @@ function mosGetOS( $agent ) {
 * @param string|array An optional single field name or array of field names not
 *					 to be parsed (eg, for a textarea)
 */
-function mosMakeHtmlSafe( &$mixed, $quote_style=ENT_QUOTES, $exclude_keys='' ) {
+function MakeHtmlSafe( &$mixed, $quote_style=ENT_QUOTES, $exclude_keys='' ) {
 	if (is_object( $mixed )) {
 		foreach (get_object_vars( $mixed ) as $k => $v) {
 			if (is_array( $v ) || is_object( $v ) || $v == NULL || substr( $k, 1, 1 ) == '_' ) {
@@ -465,7 +442,7 @@ function mosMakeHtmlSafe( &$mixed, $quote_style=ENT_QUOTES, $exclude_keys='' ) {
 * @param offset time offset if different than global one
 * @returns formated date
 */
-function mosFormatDate( $date, $format="", $offset=NULL ){
+function FormatDate( $date, $format="", $offset=NULL ){
 	
 	if ( $format == '' ) {
 		// %Y-%m-%d %H:%M:%S
@@ -486,70 +463,15 @@ function mosFormatDate( $date, $format="", $offset=NULL ){
 * @param string format optional format for strftime
 * @returns current date
 */
-function mosCurrentDate( $format="" ) {
+function CurrentDate( $format="" ) {
 	if ($format=="") {
 		$format = '%d-%m-%Y %H:%M:%S';
 	}
-	$date = strftime( $format, time() + (OFFSET*60*60) );
+	$date = strftime( $format, time() + (OFFSET*3600) );
 	return $date;
 }
 
-/**
-* Utility function to provide ToolTips
-* @param string ToolTip text
-* @param string Box title
-* @returns HTML code for ToolTip
-*/
-function mosToolTip( $tooltip, $title='', $width='', $image='tooltip.png', $text='', $href='#', $link=1 ) {
-
-	if ( $width ) {
-		$width = ', WIDTH, \''.$width .'\'';
-	}
-	if ( $title ) {
-		$title = ', CAPTION, \''.$title .'\'';
-	}
-	if ( !$text ) {
-		$image 	= SITEURL . '/includes/js/ThemeOffice/'. $image;
-		$text 	= '<img src="'. $image .'" border="0" alt="tooltip"/>';
-	}
-	$style = 'style="text-decoration: none; color: #333;"';
-	if ( $href ) {
-		$style = '';
-	} else{
-		$href = '#';
-	}
-
-	$mousover = 'return overlib(\''. $tooltip .'\''. $title .', BELOW, RIGHT'. $width .');';
-
-	$tip = "<!-- Tooltip -->\n";
-	if ( $link ) {
-		$tip .= '<a href="'. $href .'" onmouseover="'. $mousover .'" onmouseout="return nd();" '. $style .'>'. $text .'</a>';
-	} else {
-		$tip .= '<span onmouseover="'. $mousover .'" onmouseout="return nd();" '. $style .'>'. $text .'</span>';
-	}
-
-	return $tip;
-}
-
-/**
-* Utility function to provide Warning Icons
-* @param string Warning text
-* @param string Box title
-* @returns HTML code for Warning
-*/
-function mosWarning($warning, $title='UYARI!') {
-
-
-	$mouseover 	= 'return overlib(\''. $warning .'\', CAPTION, \''. $title .'\', BELOW, RIGHT);';
-
-	$tip 		= "<!-- UYARI -->\n";
-	$tip 		.= '<a href="javascript:void(0)" onmouseover="'. $mouseover .'" onmouseout="return nd();">';
-	$tip 		.= '<img src="'. SITEURL .'/includes/js/ThemeOffice/warning.png" border="0"  alt="warning"/></a>';
-
-	return $tip;
-}
-
-function mosCreateGUID(){
+function CreateGUID(){
 	srand((double)microtime()*1000000);
 	$r = rand();
 	$u = uniqid(getmypid() . $r . (double)microtime()*1000000,1);
@@ -573,16 +495,16 @@ function mosExpandID( $ID ) {
 * @param string Message body
 * @return object Mail object
 */
-function mosCreateMail( $from='', $fromname='', $subject, $body ) {
-	$mail = new mosPHPMailer();
+function CreateMail( $from='', $fromname='', $subject, $body ) {
+	
+	$mail = new PHPMailer();
 
 	$mail->PluginDir = ABSPATH .'/includes/phpmailer/';
-	$mail->SetLanguage( 'en', ABSPATH . '/includes/phpmailer/language/' );
+	$mail->SetLanguage( 'tr', ABSPATH . '/includes/phpmailer/language/' );
 	$mail->CharSet 	= substr_replace(_ISO, '', 0, 8);
-	$mail->IsMail();
+	$mail->isSendmail();
 	$mail->From 	= $from ? $from : MAILFROM;
 	$mail->FromName = $fromname ? $fromname : MAILFROMNAME;
-	$mail->Mailer 	= MAILER;
 
 	// Add smtp values if needed
 	if ( MAILER == 'smtp' ) {
@@ -631,11 +553,11 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
 	}
 
 	// Filter from, fromname and subject
-	if (!JosIsValidEmail( $from ) || !JosIsValidName( $fromname ) || !JosIsValidName( $subject )) {
+	if (!IsValidEmail( $from ) || !IsValidName( $fromname ) || !IsValidName( $subject )) {
 		return false;
 	}
 
-	$mail = mosCreateMail( $from, $fromname, $subject, $body );
+	$mail = CreateMail( $from, $fromname, $subject, $body );
 
 	// activate HTML formatted emails
 	if ( $mode ) {
@@ -644,13 +566,13 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
 
 	if (is_array( $recipient )) {
 		foreach ($recipient as $to) {
-			if (!JosIsValidEmail( $to )) {
+			if (!IsValidEmail( $to )) {
 				return false;
 			}
 			$mail->AddAddress( $to );
 		}
 	} else {
-		if (!JosIsValidEmail( $recipient )) {
+		if (!IsValidEmail( $recipient )) {
 			return false;
 		}
 		$mail->AddAddress( $recipient );
@@ -658,13 +580,13 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
 	if (isset( $cc )) {
 		if (is_array( $cc )) {
 			foreach ($cc as $to) {
-				if (!JosIsValidEmail( $to )) {
+				if (!IsValidEmail( $to )) {
 					return false;
 				}
 				$mail->AddCC($to);
 			}
 		} else {
-			if (!JosIsValidEmail( $cc )) {
+			if (!IsValidEmail( $cc )) {
 				return false;
 			}
 			$mail->AddCC($cc);
@@ -673,13 +595,13 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
 	if (isset( $bcc )) {
 		if (is_array( $bcc )) {
 			foreach ($bcc as $to) {
-				if (!JosIsValidEmail( $to )) {
+				if (!IsValidEmail( $to )) {
 					return false;
 				}
 				$mail->AddBCC( $to );
 			}
 		} else {
-			if (!JosIsValidEmail( $bcc )) {
+			if (!IsValidEmail( $bcc )) {
 				return false;
 			}
 			$mail->AddBCC( $bcc );
@@ -700,13 +622,13 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
 			reset( $replytoname );
 			foreach ($replyto as $to) {
 				$toname = ((list( $key, $value ) = each( $replytoname )) ? $value : '');
-				if (!JosIsValidEmail( $to ) || !JosIsValidName( $toname )) {
+				if (!IsValidEmail( $to ) || !IsValidName( $toname )) {
 					return false;
 				}
 				$mail->AddReplyTo( $to, $toname );
 			}
 		} else {
-			if (!JosIsValidEmail( $replyto ) || !JosIsValidName( $replytoname )) {
+			if (!IsValidEmail( $replyto ) || !IsValidName( $replytoname )) {
 				return false;
 			}
 			$mail->AddReplyTo($replyto, $replytoname);
@@ -715,7 +637,7 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
 
 	$mailssend = $mail->Send();
 
-	if( $debug ) {
+	if( DEBUGMODE ) {
 		//$mosDebug->message( "Mails send: $mailssend");
 	}
 	if( $mail->error_count > 0 ) {
@@ -731,7 +653,7 @@ function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NU
  * @param	string	$email	String to check for a valid email address
  * @return	boolean
  */
-function JosIsValidEmail( $email ) {
+function IsValidEmail( $email ) {
 	$valid = preg_match( '/^[\w\.\-]+@\w+[\w\.\-]*?\.\w{1,4}$/', $email );
 
 	return $valid;
@@ -745,7 +667,7 @@ function JosIsValidEmail( $email ) {
  * @param		string		$string		String to check for validity
  * @return		boolean
  */
-function JosIsValidName( $string ) {
+function IsValidName( $string ) {
 	/*
 	 * The following regular expression blocks all strings containing any low control characters:
 	 * 0x00-0x1F, 0x7F
@@ -771,8 +693,8 @@ function initGzip() {
 	$do_gzip_compress = FALSE;
 	if (GZIPCOMP == 1) {
 		$phpver 	= phpversion();
-		$useragent 	= mosGetParam( $_SERVER, 'HTTP_USER_AGENT', '' );
-		$canZip 	= mosGetParam( $_SERVER, 'HTTP_ACCEPT_ENCODING', '' );
+		$useragent 	= getParam( $_SERVER, 'HTTP_USER_AGENT', '' );
+		$canZip 	= getParam( $_SERVER, 'HTTP_ACCEPT_ENCODING', '' );
 
 		$gzip_check 	= 0;
 		$zlib_check 	= 0;
@@ -850,7 +772,7 @@ function doGzip() {
 * Random password generator
 * @return password
 */
-function mosMakePassword($length=8) {
+function MakePassword($length=8) {
 	$salt 		= "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
 	$makepass	= '';
 	mt_srand(10000000*(double)microtime());
@@ -924,7 +846,7 @@ function SortArrayObjects( &$a, $k, $sort_direction=1 ) {
 *
 * If the user is not logged in then an addition message is displayed.
 */
-function mosNotAuth() {
+function NotAuth() {
 	global $my;
 
 	echo 'Yetkiniz yok!';
@@ -955,7 +877,7 @@ function ampReplace( $text ) {
 * @param dirmode Integer value to chmod directories. NULL = dont chmod directories.
 * @return TRUE=all succeeded FALSE=one or more chmods failed
 */
-function mosChmodRecursive($path, $filemode=NULL, $dirmode=NULL) {
+function ChmodRecursive($path, $filemode=NULL, $dirmode=NULL) {
 	$ret = TRUE;
 	if (is_dir($path)) {
 		$dh = opendir($path);
@@ -963,7 +885,7 @@ function mosChmodRecursive($path, $filemode=NULL, $dirmode=NULL) {
 			if ($file != '.' && $file != '..') {
 				$fullpath = $path.'/'.$file;
 				if (is_dir($fullpath)) {
-					if (!mosChmodRecursive($fullpath, $filemode, $dirmode))
+					if (!ChmodRecursive($fullpath, $filemode, $dirmode))
 						$ret = FALSE;
 				} else {
 					if (isset($filemode))
@@ -981,7 +903,7 @@ function mosChmodRecursive($path, $filemode=NULL, $dirmode=NULL) {
 			$ret = @chmod($path, $filemode);
 	} // if
 	return $ret;
-} // mosChmodRecursive
+} // ChmodRecursive
 
 /**
 * Chmods files and directories recursively to mos global permissions. Available from 1.0.0 up.
@@ -998,7 +920,7 @@ function mosChmod($path) {
 	if (DIRPERMS != '')
 		$dirmode = octdec(DIRPERMS);
 	if (isset($filemode) || isset($dirmode))
-		return mosChmodRecursive($path, $filemode, $dirmode);
+		return ChmodRecursive($path, $filemode, $dirmode);
 	return TRUE;
 } // mosChmod
 
@@ -1008,7 +930,7 @@ function mosChmod($path) {
  * @param int A default value to assign if $array is not an array
  * @return array
  */
-function mosArrayToInts( &$array, $default=null ) {
+function ArrayToInts( &$array, $default=null ) {
 	if (is_array( $array )) {
 		foreach( $array as $key => $value ) {
 			$array[$key] = (int) $value;
@@ -1028,14 +950,14 @@ function mosArrayToInts( &$array, $default=null ) {
 * Function to handle an array of integers
 * Added 1.0.11
 */
-function josGetArrayInts( $name, $type=NULL ) {
+function GetArrayInts( $name, $type=NULL ) {
 	if ( $type == NULL ) {
 		$type = $_POST;
 	}
 
-	$array = mosGetParam( $type, $name, array(0) );
+	$array = getParam( $type, $name, array(0) );
 
-	mosArrayToInts( $array );
+	ArrayToInts( $array );
 
 	if (!is_array( $array )) {
 		$array = array(0);
@@ -1069,17 +991,17 @@ function mosBackTrace() {
 	}
 }
 
-function josSpoofCheck( $header=NULL, $alt=NULL , $method = 'post') {
+function spoofCheck( $header=NULL, $alt=NULL , $method = 'post') {
 	switch(strtolower($method)) {
 		case "get":
-			$validate 	= mosGetParam( $_GET, spoofValue($alt), 0 );
+			$validate 	= getParam( $_GET, spoofValue($alt), 0 );
 			break;
 		case "request":
-			$validate 	= mosGetParam( $_REQUEST, spoofValue($alt), 0 );
+			$validate 	= getParam( $_REQUEST, spoofValue($alt), 0 );
 			break;
 		case "post":
 		default:
-			$validate 	= mosGetParam( $_POST, spoofValue($alt), 0 );
+			$validate 	= getParam( $_POST, spoofValue($alt), 0 );
 			break;
 	}
 
@@ -1119,16 +1041,16 @@ function josSpoofCheck( $header=NULL, $alt=NULL , $method = 'post') {
 
 		// Loop through each POST'ed value and test if it contains
 		// one of the $badStrings:
-		_josSpoofCheck( $_POST, $badStrings );
+		_spoofCheck( $_POST, $badStrings );
 	}
 }
 
-function _josSpoofCheck( $array, $badStrings ) {
+function _spoofCheck( $array, $badStrings ) {
 	// Loop through each $array value and test if it contains
 	// one of the $badStrings
 	foreach( $array as $v ) {
 		if (is_array( $v )) {
-			_josSpoofCheck( $v, $badStrings );
+			_spoofCheck( $v, $badStrings );
 		} else {
 			foreach ( $badStrings as $v2 ) {
 				if ( stripos( $v, $v2 ) !== false ) {
@@ -1175,7 +1097,7 @@ function spoofValue($alt=NULL) {
  */
 function josHashPassword($password) {
 	// Salt and hash the password
-	$salt	= mosMakePassword(16);
+	$salt	= MakePassword(16);
 	$crypt	= md5($password.$salt);
 	$hash	= $crypt.':'.$salt;
 

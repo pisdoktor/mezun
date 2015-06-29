@@ -2,11 +2,11 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
-$cid = mosGetParam($_REQUEST, 'cid');
-$id = intval(mosGetParam($_REQUEST, 'id'));
-$type = intval(mosGetParam($_REQUEST, 'type'));
+$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
+$cid = getParam($_REQUEST, 'cid');
+$id = intval(getParam($_REQUEST, 'id'));
+$type = intval(getParam($_REQUEST, 'type'));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -49,7 +49,7 @@ function changeDurum($cid, $status) {
 		exit;
 	}
 
-	mosArrayToInts( $cid );
+	ArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
 	$query = "UPDATE #__istekler SET durum=".$dbase->Quote($status)
 	. "\n WHERE ( $cids )"
@@ -60,7 +60,7 @@ function changeDurum($cid, $status) {
 		exit();
 	}
 	
-	mosRedirect('index.php?option=site&bolum=istek&task=inbox');
+	Redirect('index.php?option=site&bolum=istek&task=inbox');
 	
 }
 
@@ -72,7 +72,7 @@ function changeDurum($cid, $status) {
 function deleteDurum($cid) {
 	global $dbase, $my;
 	
-	$type = mosGetParam($_REQUEST, 'type');
+	$type = getParam($_REQUEST, 'type');
 	
 		$total = count( $cid );
 	if ( $total < 1) {
@@ -80,7 +80,7 @@ function deleteDurum($cid) {
 		exit;
 	}
 
-	mosArrayToInts( $cid );
+	ArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
 	$query = "DELETE FROM #__istekler"
 	. "\n WHERE ( $cids )"
@@ -92,9 +92,9 @@ function deleteDurum($cid) {
 	}
 	
 	if ($type) {
-	mosRedirect('index.php?option=site&bolum=istek&task=outbox');    
+	Redirect('index.php?option=site&bolum=istek&task=outbox');    
 	} else {
-	mosRedirect('index.php?option=site&bolum=istek&task=inbox');
+	Redirect('index.php?option=site&bolum=istek&task=inbox');
 	}
 }
 
@@ -109,7 +109,7 @@ function sendIstek($id) {
 	$istek = new Istekler($dbase);
 	
 	if ($my->id == $id) {
-		mosNotAuth();
+		NotAuth();
 		exit();
 	}
 	
@@ -125,7 +125,7 @@ function sendIstek($id) {
 
 	$istek->store();
 	
-	mosRedirect('index.php?option=site&bolum=istek&task=outbox', 'Arkadaşlık isteği gönderildi');
+	Redirect('index.php?option=site&bolum=istek&task=outbox', 'Arkadaşlık isteği gönderildi');
 	} else {
 		if ($onceki) {
 			$msg = 'Daha önceden istek gönderilmiş';
@@ -133,7 +133,7 @@ function sendIstek($id) {
 		if ($varolan) {
 			$msg = 'Bu kişiyle zaten bir arkadaşlığınız var';
 		}
-	mosRedirect('index.php?option=site&bolum=istek&task=inbox', $msg);    
+	Redirect('index.php?option=site&bolum=istek&task=inbox', $msg);    
 	}
 }
 

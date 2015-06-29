@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$cid = mosGetParam($_REQUEST, 'cid'); 
+$cid = getParam($_REQUEST, 'cid'); 
 
 include(dirname(__FILE__). '/html.php');
 
@@ -103,7 +103,7 @@ function saveBackup($cid) {
 	$filename.= date('Y-m-d-h-i-s');
 	$filename.= '.sql';
 	
-	$file = mosPathName(ABSPATH).'backups/'.$filename;
+	$file = PathName(ABSPATH).'backups/'.$filename;
 	
 	$file = fopen($file, 'x');
 	
@@ -157,7 +157,7 @@ function saveBackup($cid) {
 		
 	fclose($file);
 	
-mosRedirect('index.php?option=admin&bolum=db', 'Seçilen '.$total.' tablo '.$filename.' dosyasına kaydedildi');
+Redirect('index.php?option=admin&bolum=db', 'Seçilen '.$total.' tablo '.$filename.' dosyasına kaydedildi');
 		
 }
 

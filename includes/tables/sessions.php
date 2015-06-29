@@ -47,7 +47,7 @@ class Session extends DBTable {
 	 * @return mixed
 	 */
 	function get( $key, $default=null ) {
-		return mosGetParam( $_SESSION, $key, $default );
+		return getParam( $_SESSION, $key, $default );
 	}
 
 	/**

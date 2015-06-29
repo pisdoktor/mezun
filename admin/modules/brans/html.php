@@ -66,11 +66,12 @@ class IlHTML {
 	<div class="panel-body">
 <form action="index.php" method="post" name="adminForm" role="form">
 
-
+<div class="form-group">
 <div class="btn-group">
 <input type="button" name="button" value="Yeni Branş Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
 <input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
 <input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu şehir(ler)i silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+</div>
 </div>
 
 <div class="row">

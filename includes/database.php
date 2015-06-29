@@ -2,12 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );  
 
-/**
-* Database connector class
-* @subpackage Database
-* @package Joomla
-*/
-class database {
+class DB {
 	/** @var string Internal variable to hold the query sql */
 	var $_sql            = '';
 	/** @var int Internal variable to hold the database error number */
@@ -44,7 +39,7 @@ class database {
 	* @param string Common prefix for all tables
 	* @param boolean If true and there is an error, go offline
 	*/
-	function database( $host='localhost', $user, $pass, $db='', $table_prefix='', $goOffline=true ) {
+	function DB( $host='localhost', $user, $pass, $db='', $table_prefix='', $goOffline=true ) {
 		// perform a number of fatality checks, then die gracefully
 		if (!function_exists( 'mysql_connect' )) {
 			$systemError = 1;
@@ -462,7 +457,7 @@ class database {
 			}
 			if ($array = mysql_fetch_assoc( $cur )) {
 				mysql_free_result( $cur );
-				mosBindArrayToObject( $array, $object, null, null, false );
+				BindArrayToObject( $array, $object, null, null, false );
 				return true;
 			} else {
 				return false;
@@ -780,7 +775,7 @@ class DBTable {
 			$this->_error = strtolower(get_class( $this ))."::bağlama başarısız.";
 			return false;
 		} else {
-			return mosBindArrayToObject( $array, $this, $ignore );
+			return BindArrayToObject( $array, $this, $ignore );
 		}
 	}
 
@@ -1272,7 +1267,7 @@ class DBTable {
 	 * @since    1.0.4
 	 */
 	function publish( $cid=null, $publish=1, $user_id=0 ) {
-		mosArrayToInts( $cid, array() );
+		ArrayToInts( $cid, array() );
 		$user_id    = (int) $user_id;
 		$publish    = (int) $publish;
 		$k            = $this->_tbl_key;

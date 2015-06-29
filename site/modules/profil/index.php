@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$id = intval(mosGetParam($_REQUEST, 'id')); 
+$id = intval(getParam($_REQUEST, 'id')); 
 
 
 include(dirname(__FILE__). '/html.php');
@@ -67,7 +67,7 @@ function deleteImage() {
 		mosErrorAlert('Resim yok');
 	}
 	
-	mosRedirect('index.php?option=site&bolum=profil&task=my');
+	Redirect('index.php?option=site&bolum=profil&task=my');
 }
 /**
 * Profil parolası değiştirme fonksiyonu
@@ -75,13 +75,13 @@ function deleteImage() {
 function changePass() {
 	global $dbase, $my;
 	
-	$password = mosGetParam($_POST, 'password');
-	$password2 = mosGetParam($_POST, 'password2');
+	$password = getParam($_POST, 'password');
+	$password2 = getParam($_POST, 'password2');
 	
 	if ($password == $password2) {
 		
 		$row = new Users($dbase);
-		$salt = mosMakePassword(16);
+		$salt = MakePassword(16);
 		$crypt = md5($password.$salt);
 		
 		$password = $crypt.':'.$salt;
@@ -90,10 +90,10 @@ function changePass() {
 		$dbase->setQuery($query);
 		$dbase->query();
 			
-		mosRedirect('index.php?option=site&bolum=profil&task=my', 'Parolanız değiştirildi');
+		Redirect('index.php?option=site&bolum=profil&task=my', 'Parolanız değiştirildi');
 		
 	} else {
-		mosRedirect('index.php?option=site&bolum=profil&task=my', 'Parolalar uyuşmuyor!');
+		Redirect('index.php?option=site&bolum=profil&task=my', 'Parolalar uyuşmuyor!');
 	}
 }
 /**
@@ -102,10 +102,10 @@ function changePass() {
 function saveImage() {
 	global $dbase, $my;
 	
-	$image = mosGetParam($_FILES, 'image');
+	$image = getParam($_FILES, 'image');
 	
 	if (!$image['name']) {
-		mosRedirect('index.php?option=site&bolum=profil&task=my', 'Resim seçmemişsiniz');
+		Redirect('index.php?option=site&bolum=profil&task=my', 'Resim seçmemişsiniz');
 	}
 	
 	$row = new Users($dbase);
@@ -146,7 +146,7 @@ function saveImage() {
 	$dbase->setQuery($query);
 	$dbase->query();
 	
-	mosRedirect('index.php?option=site&bolum=profil', $error);
+	Redirect('index.php?option=site&bolum=profil', $error);
 }
 /**
 * Profil güncellemesi için açılacak sayfa
@@ -181,7 +181,7 @@ function saveProfile() {
 		exit();
 	}
 	
-	mosRedirect('index.php?option=site&bolum=profil&task=my', 'Değşiklikler başarıyla kaydedildi');
+	Redirect('index.php?option=site&bolum=profil&task=my', 'Değşiklikler başarıyla kaydedildi');
 }
 /**
 * Profil gösterimi
@@ -202,7 +202,7 @@ function getProfile($id) {
 		$user->load($id);
 		
 		if (!$user->activated) {
-		mosNotAuth();
+		NotAuth();
 		exit();
 	}
 	}
@@ -241,12 +241,12 @@ function getProfile($id) {
 	$dbase->loadObject($row);
 	
 	} else {
-		mosNotAuth();
+		NotAuth();
 		exit();	
 	}
 	
 	if (!$row) {
-		mosNotAuth();
+		NotAuth();
 		exit();
 	}
 		

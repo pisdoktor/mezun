@@ -71,7 +71,7 @@ function showOnlineUsers($rows) {
 	<?php echo $row->sehir;?>
 	</div>
 	<div class="col-sm-2">
-	<?php echo mosFormatDate($row->nowvisit, '%H:%M:%S');?>
+	<?php echo FormatDate($row->nowvisit, '%H:%M:%S');?>
 	</div>
 	<div class="col-sm-2">
 	<?php echo date('H:i:s', $row->time+(OFFSET*3600));?>

@@ -32,9 +32,9 @@ define('SENDMAIL', '/usr/sbin/sendmail');
 define('MAILFROM', 'Mezun Sistemi');
 define('MAILFROMNAME', 'mezun@mezunsistemi.com');
 define('smtpauth', '');
-define('smtpuser', '');
-define('smtppass', '');
-define('smtphost', '');
+define('smtpuser', 'no-reply@deutfmezunlari.com');
+define('smtppass', 'son20er35');
+define('smtphost', 'smtpout.secureserver.net');
 
 define('GZIPCOMP', 0);
 define('STATS', 1);

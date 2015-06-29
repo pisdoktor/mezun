@@ -2,11 +2,11 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-$cid = mosGetParam($_REQUEST, 'cid');
-$id = intval(mosGetParam($_REQUEST, 'id'));
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
-$search = mosGetParam($_REQUEST, 'search');
+$cid = getParam($_REQUEST, 'cid');
+$id = intval(getParam($_REQUEST, 'id'));
+$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
+$search = getParam($_REQUEST, 'search');
 
 include(dirname(__FILE__). '/html.php');
 
@@ -60,7 +60,7 @@ function blockUser($cid, $what) {
 		exit;
 	}
 
-	mosArrayToInts( $cid );
+	ArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
 	$query = "UPDATE #__users"
 	. "\n SET activated=".$dbase->Quote($what)
@@ -72,7 +72,7 @@ function blockUser($cid, $what) {
 		exit();
 	}
 	
-	mosRedirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) '.$islem2 );
+	Redirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) '.$islem2 );
 }
 
 function delKullanici(&$cid) {
@@ -84,7 +84,7 @@ function delKullanici(&$cid) {
 		exit;
 	}
 
-	mosArrayToInts( $cid );
+	ArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
 	$query = "DELETE FROM #__users"
 	. "\n WHERE ( $cids )"
@@ -95,7 +95,7 @@ function delKullanici(&$cid) {
 		exit();
 	}
 	
-	mosRedirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) silindi' );
+	Redirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) silindi' );
 }
 
 function saveKullanici() {
@@ -115,15 +115,15 @@ function saveKullanici() {
 	if ($isNew) {
 		// new user stuff
 		if ($row->password == '') {
-			$pwd             = mosMakePassword();
+			$pwd             = MakePassword();
 
-			$salt = mosMakePassword(16);
+			$salt = MakePassword(16);
 			$crypt = md5($pwd.$salt);
 			$row->password = $crypt.':'.$salt;
 		} else {
 			$pwd = trim( $row->password );
 
-			$salt = mosMakePassword(16);
+			$salt = MakePassword(16);
 			$crypt = md5($pwd.$salt);
 			$row->password = $crypt.':'.$salt;
 		}
@@ -138,7 +138,7 @@ function saveKullanici() {
 			$row->password = null;
 		} else {
 			$row->password = trim($row->password);
-			$salt = mosMakePassword(16);
+			$salt = MakePassword(16);
 			$crypt = md5($row->password.$salt);
 			$row->password = $crypt.':'.$salt;
 		}
@@ -154,7 +154,7 @@ function saveKullanici() {
 		exit();
 	}
 	
-	mosRedirect('index.php?option=admin&bolum=user', 'Kullanici kaydedildi');
+	Redirect('index.php?option=admin&bolum=user', 'Kullanici kaydedildi');
 	
 }
 
@@ -164,7 +164,7 @@ function cancelKullanici() {
 	$row = new Users( $dbase );
 	$row->bind( $_POST );
 	$row->checkin();
-	mosRedirect( 'index.php?option=admin&bolum=user');
+	Redirect( 'index.php?option=admin&bolum=user');
 }
 
 function getKullaniciList($search) {

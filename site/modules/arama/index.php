@@ -43,20 +43,20 @@ function searchForm() {
 function searchResults() {
 	global $dbase, $my;
 	
-$name = mosGetParam($_REQUEST, 'name');
-$username = mosGetParam($_REQUEST, 'username');
-$work = mosGetParam($_REQUEST, 'work');
-$brans = intval(mosGetParam($_REQUEST, 'brans'));
-$unvan = strval(mosGetParam($_REQUEST, 'unvan'));
-$byili = intval(mosGetParam($_REQUEST, 'byili'));
-$myili = intval(mosGetParam($_REQUEST, 'myili'));
-$sehir = intval(mosGetParam($_REQUEST, 'sehir'));
-$dogumyeri = intval(mosGetParam($_REQUEST, 'dogumyeri'));
-$cinsiyet = intval(mosGetParam($_REQUEST, 'cinsiyet'));
-$image = intval(mosGetParam($_REQUEST, 'image'));
-$search_type = intval(mosGetParam($_REQUEST, 'search_type'));
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$name = getParam($_REQUEST, 'name');
+$username = getParam($_REQUEST, 'username');
+$work = getParam($_REQUEST, 'work');
+$brans = intval(getParam($_REQUEST, 'brans'));
+$unvan = strval(getParam($_REQUEST, 'unvan'));
+$byili = intval(getParam($_REQUEST, 'byili'));
+$myili = intval(getParam($_REQUEST, 'myili'));
+$sehir = intval(getParam($_REQUEST, 'sehir'));
+$dogumyeri = intval(getParam($_REQUEST, 'dogumyeri'));
+$cinsiyet = intval(getParam($_REQUEST, 'cinsiyet'));
+$image = intval(getParam($_REQUEST, 'image'));
+$search_type = intval(getParam($_REQUEST, 'search_type'));
+$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 
 	

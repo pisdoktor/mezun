@@ -2,11 +2,11 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$id = mosGetParam($_REQUEST, 'id');
-$cid = mosGetParam($_REQUEST, 'cid'); 
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
-$type = intval(mosGetParam($_REQUEST, 'type'));
+$id = getParam($_REQUEST, 'id');
+$cid = getParam($_REQUEST, 'cid'); 
+$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
+$type = intval(getParam($_REQUEST, 'type'));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -66,7 +66,7 @@ function changeMessage($cid, $status) {
 		exit;
 	}
 
-	mosArrayToInts( $cid );
+	ArrayToInts( $cid );
 	$cids = 'id=' . implode( ' OR id=', $cid );
 	$query = "UPDATE #__mesajlar SET okunma=".$dbase->Quote($status)
 	. "\n WHERE ( $cids )"
@@ -82,7 +82,7 @@ function changeMessage($cid, $status) {
 	} else {
 		$msg = 'Seçili mesajlar okunmadı olarak işaretlendi!';
 	}
-	mosRedirect( 'index.php?option=site&bolum=mesaj', $msg);
+	Redirect( 'index.php?option=site&bolum=mesaj', $msg);
 }
 /**
 * Mesaj gösterim fonksiyonu
@@ -108,7 +108,7 @@ function showMessage($id) {
 	$dbase->query();
 	}
 	} else {
-		mosNotAuth();
+		NotAuth();
 		exit;
 	}
 	
@@ -133,7 +133,7 @@ function sendMessage() {
 	$row->id = $row->createID();
 	
 	$row->gid = $my->id;
-	$row->aid = intval(mosGetParam($_REQUEST, 'aid'));
+	$row->aid = intval(getParam($_REQUEST, 'aid'));
 	
 	if ( !$row->bind( $_POST ) ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
@@ -141,11 +141,11 @@ function sendMessage() {
 	}
 	
 	if ($row->aid == $my->id) {
-		mosRedirect('index.php?option=site&bolum=mesaj', 'Kendinize mesaj gönderemezsiniz');
+		Redirect('index.php?option=site&bolum=mesaj', 'Kendinize mesaj gönderemezsiniz');
 	}
 	
 	if (!$istek->checkDurum($my->id, $row->aid, 1)) {
-		mosRedirect('index.php?option=site&bolum=mesaj', 'Arkadaşlığınız olmayan birisine mesaj gönderemezsiniz');
+		Redirect('index.php?option=site&bolum=mesaj', 'Arkadaşlığınız olmayan birisine mesaj gönderemezsiniz');
 	}
 	
 	$row->baslik = base64_encode($row->baslik);
@@ -165,7 +165,7 @@ function sendMessage() {
 		exit();
 	}
 	
-	mosRedirect('index.php?option=site&bolum=mesaj', 'Mesajınız başarıyla gönderildi');
+	Redirect('index.php?option=site&bolum=mesaj', 'Mesajınız başarıyla gönderildi');
 }
 /**
 * Mesaj oluşturma

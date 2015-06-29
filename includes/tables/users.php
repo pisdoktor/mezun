@@ -56,7 +56,7 @@ class Users extends DBTable {
 	}	
 	
 	function createCode($len=12) {
-		return mosMakePassword($len);
+		return MakePassword($len);
 	}
 	
 	function userCinsiyet($required=0) {
@@ -162,7 +162,7 @@ class Users extends DBTable {
 		}
 
 		//eregi yi değiştir
-		if (preg_match( "[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]", $this->username) || strlen( $this->username ) < 3) {
+		if (preg_match( "/[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]/", $this->username) || strlen( $this->username ) < 3) {
 			$this->_error = sprintf( addslashes( 'Lütfen geçersiz karakterler kullanmayın' ), addslashes( 'Kullanıcı adı 3 karakterden kısa olamaz' ), 2 );
 			return false;
 		}

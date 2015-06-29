@@ -2,9 +2,9 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$id = intval(mosGetParam($_REQUEST, 'id')); 
-$limit = intval(mosGetParam($_REQUEST, 'limit', 10));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$id = intval(getParam($_REQUEST, 'id')); 
+$limit = intval(getParam($_REQUEST, 'limit', 10));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 

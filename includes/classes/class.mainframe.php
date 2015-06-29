@@ -175,7 +175,7 @@ class mainFrame {
 	*/
 	function getUserState( $var_name ) {
 		if (is_array( $this->_userstate )) {
-			return mosGetParam( $this->_userstate, $var_name, null );
+			return getParam( $this->_userstate, $var_name, null );
 		} else {
 			return null;
 		}
@@ -233,7 +233,7 @@ class mainFrame {
 		// Session Cookie `name`
 		$sessionCookieName     = mainFrame::sessionCookieName();
 		// Get Session Cookie `value`
-		$sessioncookie         = strval( mosGetParam( $_COOKIE, $sessionCookieName, null ) );
+		$sessioncookie         = strval( getParam( $_COOKIE, $sessionCookieName, null ) );
 
 		// Session ID / `value`
 		$sessionValueCheck     = mainFrame::sessionCookieValue( $sessioncookie );
@@ -261,7 +261,7 @@ class mainFrame {
 				setcookie( $sessionCookieName, '-', false, '/' );
 			} else {
 			// otherwise, sessioncookie was found, but set to test val or the session expired, prepare for session registration and register the session
-				$url = strval( mosGetParam( $_SERVER, 'REQUEST_URI', null ) );
+				$url = strval( getParam( $_SERVER, 'REQUEST_URI', null ) );
 				// stop sessions being created for requests to syndicated feeds
 					$session->username     = '';
 					$session->time         = time();
@@ -278,7 +278,7 @@ class mainFrame {
 			}
 
 			// Cookie used by Remember me functionality
-			$remCookieValue    = strval( mosGetParam( $_COOKIE, $remCookieName, null ) );
+			$remCookieValue    = strval( getParam( $_COOKIE, $remCookieName, null ) );
 
 			// test if cookie is correct length
 			if ( strlen($remCookieValue) > 64 ) {
@@ -423,23 +423,23 @@ class mainFrame {
 
 		// if no username and password passed from function, then function is being called from login module/component
 		if (!$username || !$passwd) {
-			$username   = stripslashes( strval( mosGetParam( $_POST, 'username', '' ) ) );
-			$passwd     = stripslashes( strval( mosGetParam( $_POST, 'passwd', '' ) ) );
+			$username   = stripslashes( strval( getParam( $_POST, 'username', '' ) ) );
+			$passwd     = stripslashes( strval( getParam( $_POST, 'passwd', '' ) ) );
 
 			$bypost     = 1;
 
 			// extra check to ensure that Joomla! sessioncookie exists
 			if (!$this->_session->session) {
-				mosRedirect('index.php', 'Çerezler açık olmalı!' );
+				Redirect('index.php', 'Çerezler açık olmalı!' );
 				return;
 			}
 
-			josSpoofCheck(NULL,1);
+			spoofCheck(NULL,1);
 		}
 
 		$row = null;
 		if (!$username || !$passwd) {
-			mosRedirect('index.php', 'Lütfen kullanıcı adı, parola alanlarını doldurunuz.');
+			Redirect('index.php', 'Lütfen kullanıcı adı, parola alanlarını doldurunuz.');
 			exit();
 		} else {
 			if ( $remember && strlen($username) == 32 && $userid ) {
@@ -478,7 +478,7 @@ class mainFrame {
 					// Conversion to new type
 					if ((strpos($row->password, ':') === false) && $row->password == md5($passwd)) {
 						// Old password hash storage but authentic ... lets convert it
-						$salt = mosMakePassword(16);
+						$salt = MakePassword(16);
 						$crypt = md5($passwd.$salt);
 						$row->password = $crypt.':'.$salt;
 
@@ -496,17 +496,17 @@ class mainFrame {
 					$cryptpass = md5($passwd.$salt);
 					if ($hash != $cryptpass) {
 						if ( $bypost ) {
-							mosRedirect('index.php', 'Hatalı kullanıcı adı ve/veya parola girdiniz');
+							Redirect('index.php', 'Hatalı kullanıcı adı ve/veya parola girdiniz');
 							//mosErrorAlert('Hatalı kullanıcı adı ve/veya parola girdiniz');
 						} else {
 							$this->logout();
-							mosRedirect('index.php');
+							Redirect('index.php');
 						}
 						exit();
 					}
 					//aktive edilmemiş hesap : soner ekledi
 					if ($row->activated == 0) {
-						mosRedirect('index.php', 'Hesabınız henüz aktive edilmemiş');
+						Redirect('index.php', 'Hesabınız henüz aktive edilmemiş');
 						exit();
 					}
 				}
@@ -557,7 +557,7 @@ class mainFrame {
 				}
 				
 				// set remember me cookie if selected
-				$remember = strval( mosGetParam( $_POST, 'remember', '' ) );
+				$remember = strval( getParam( $_POST, 'remember', '' ) );
 				if ( $remember == 'yes' ) {
 					// cookie lifetime of 365 days
 					$lifetime         = time() + 365*24*60*60;
@@ -567,11 +567,11 @@ class mainFrame {
 				}
 			} else {
 				if ( $bypost ) {
-					mosRedirect('index.php', 'Hatalı kullanıcı adı veya parola. Lütfen tekrar deneyiniz.');
+					Redirect('index.php', 'Hatalı kullanıcı adı veya parola. Lütfen tekrar deneyiniz.');
 					//mosErrorAlert('Hatalı kullanıcı adı veya parola. Lütfen tekrar deneyiniz.');
 				} else {
 					$this->logout();
-					mosRedirect('index.php');
+					Redirect('index.php');
 				}
 				exit();
 			}
@@ -643,7 +643,7 @@ class mainFrame {
 	*/
 	function detect() {
 		if (STATS == 1) {
-			if (mosGetParam( $_COOKIE, 'mosvisitor', 0 )) {
+			if (getParam( $_COOKIE, 'mosvisitor', 0 )) {
 				return;
 			}
 			setcookie( 'mosvisitor', 1 );
@@ -661,7 +661,7 @@ class mainFrame {
 				$domain = @gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
 			}
 
-			$browser = mosGetBrowser( $agent );
+			$browser = GetBrowser( $agent );
 
 			$query = "SELECT COUNT(*)"
 			. "\n FROM #__stats"
@@ -687,7 +687,7 @@ class mainFrame {
 			$this->_db->query();
 			
 
-			$os = mosGetOS( $agent );
+			$os = GetOS( $agent );
 
 			$query = "SELECT COUNT(*)"
 			. "\n FROM #__stats"

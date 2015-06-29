@@ -8,13 +8,13 @@ require( dirname( __FILE__ ) . '/config.php' );
 require_once( dirname( __FILE__ ) . '/includes/base.php' );
 require_once(dirname( __FILE__ ) . '/includes/functions.php');
 
-$option = strval(strtolower(mosGetParam($_REQUEST, 'option')));
-$bolum = strval(strtolower(mosGetParam($_REQUEST, 'bolum')));
-$task = strval(strtolower(mosGetParam($_REQUEST, 'task')));
-$return = strval( mosGetParam( $_REQUEST, 'return', NULL ) );
-$code = strval(mosGetParam($_REQUEST, 'code'));
+$option = strval(strtolower(getParam($_REQUEST, 'option')));
+$bolum = strval(strtolower(getParam($_REQUEST, 'bolum')));
+$task = strval(strtolower(getParam($_REQUEST, 'task')));
+$return = strval( getParam( $_REQUEST, 'return', NULL ) );
+$code = strval(getParam($_REQUEST, 'code'));
 
-$mosmsg = mosGetParam($_REQUEST, 'mosmsg');
+$mosmsg = getParam($_REQUEST, 'mosmsg');
 
 $mainframe = new mainFrame( $dbase, $option );
 $mainframe->initSession();
@@ -53,6 +53,8 @@ switch($option) {
 function activeUser($code) {
 	global $dbase;
 	
+	spoofCheck(NULL,1);
+	
 	$code = htmlspecialchars($code);
 	$code = stripslashes($code);
 	$code = trim($code);
@@ -65,27 +67,29 @@ function activeUser($code) {
 	if ($exist) {
 		$row = new Users($dbase);
 		$row->activateUser($exist);
-		mosRedirect('index.php', 'Kullanıcı başarıyla aktive edildi. Artık giriş yapabilirsiniz!');
+		Redirect('index.php', 'Kullanıcı başarıyla aktive edildi. Artık giriş yapabilirsiniz!');
 	} else {
-		mosRedirect('index.php', 'Kullanıcı yok yada daha önce aktive edilmiş!');
+		Redirect('index.php', 'Kullanıcı yok yada daha önce aktive edilmiş!');
 	}
 }
 
 function resendPassword() {
 	global $dbase;
 	
-	$mail = mosGetParam($_REQUEST, 'email');
+	spoofCheck(NULL,1);
+	
+	$mail = getParam($_REQUEST, 'email');
 	
 	$mail = htmlspecialchars($mail);
 	$mail = stripslashes($mail);
 	$mail = trim($mail);
 	
 	if (!$mail) {
-		mosRedirect('index.php', 'E-posta adresi girmemişsiniz!');
+		Redirect('index.php', 'E-posta adresi girmemişsiniz!');
 	}
 	
 	if (preg_match("/[\w\.\-]+@\w+[\w\.\-]*?\.\w{1,4}/", $mail) == false) {
-		mosRedirect('index.php', 'Geçerli bir e-posta adresi girmelisiniz!');
+		Redirect('index.php', 'Geçerli bir e-posta adresi girmelisiniz!');
 	}
 	
 	$query = "SELECT id FROM #__users WHERE email=".$dbase->Quote($mail);
@@ -97,8 +101,8 @@ function resendPassword() {
 		$user = new Users($dbase);
 		$user->load($exist);
 		
-		$passwd = mosMakePassword(8);
-		$salt = mosMakePassword(16);
+		$passwd = MakePassword(8);
+		$salt = MakePassword(16);
 		$crypt = md5($passwd.$salt);
 		
 		$password = $crypt.':'.$salt;
@@ -115,10 +119,10 @@ function resendPassword() {
 	   $body.= "Site: ".SITEURL."\n";
 	   $body.= "Lütfen siteye giriş yaparak parolanızı tekrar değiştiriniz.\n";
 	   
-	   mosMail(MAILFROM, MAILFROMNAME, $mail, 'Yeni Parola', $body);
-	   mosRedirect('index.php', 'Yeni parola verdiğiniz e-posta adresine gönderildi!');
+	   mosMail(MAILFROM, MAILFROMNAME, $mail, 'Yeni Parola', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
+	   Redirect('index.php', 'Yeni parola verdiğiniz e-posta adresine gönderildi!');
 	} else {
-		mosRedirect('index.php', 'Verilen e-postaya ait bir kullanıcı yok!');
+		Redirect('index.php', 'Verilen e-postaya ait bir kullanıcı yok!');
 	}
 }
 
@@ -126,6 +130,8 @@ function registerUser() {
 	global $dbase;
 	
 	$row = new Users($dbase);
+	
+	spoofCheck(NULL,1);
 	
 	if ( !$row->bind( $_POST ) ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
@@ -137,8 +143,12 @@ function registerUser() {
 		exit();
 	}
 	
+	if ($row->byili >= $row->myili) {
+		echo "<script> alert('Başlangıç yılı mezuniyet yılına eşit veya büyük olamaz!'); window.history.go(-1); </script>\n";
+		exit();
+	}
 	
-	$salt = mosMakePassword(16);
+	$salt = MakePassword(16);
 	$crypt = md5($row->password.$salt);
 		
 	$row->password = $crypt.':'.$salt;
@@ -163,9 +173,9 @@ function registerUser() {
 	$body.= "Site: ".SITEURL."\n";
 	$body.= "Siteye giriş yapmak için yukarıdaki aktivasyon linkine tıklayınız.\n";
 	   
-	mosMail(MAILFROM, MAILFROMNAME, $row->email, 'Yeni Üyelik', $body, 1);
+	mosMail(MAILFROM, MAILFROMNAME, $row->email, 'Yeni Üyelik', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
 		
-	mosRedirect( 'index.php', 'Kayıt talebiniz kaydedildi. E-posta adresinize aktivasyon linki gönderildi. Lütfen önce aktivasyonu gerçekleştiriniz!' );
+	Redirect( 'index.php', 'Kayıt talebiniz kaydedildi. E-posta adresinize aktivasyon linki gönderildi. Lütfen önce aktivasyonu gerçekleştiriniz!' );
 
 }
 
@@ -176,15 +186,15 @@ function Login() {
 
 if ( $return ) {
 		if (isset( $_COOKIE[$mainframe->sessionCookieName()] )) {
-			mosRedirect( $return );
+			Redirect( $return );
 		} else {
-			mosRedirect( 'index.php?option=cookiecheck&return=' . urlencode( $return ) );
+			Redirect( 'index.php?option=cookiecheck&return=' . urlencode( $return ) );
 		}
 	} else {
 		if (isset( $_COOKIE[$mainframe->sessionCookieName()] )) {
-			mosRedirect( 'index.php' );
+			Redirect( 'index.php' );
 		} else {
-			mosRedirect( 'index.php?option=cookiecheck&return=' . urlencode( 'index.php' ) );
+			Redirect( 'index.php?option=cookiecheck&return=' . urlencode( 'index.php' ) );
 		}
 	}
 }
@@ -195,16 +205,16 @@ function Logout() {
 	$mainframe->logout();
 
 	if ( $return ) {
-		mosRedirect( $return );
+		Redirect( $return );
 	} else {
-		mosRedirect( 'index.php' );
+		Redirect( 'index.php' );
 	}
 }
 
 function CookieCheck() {
 	global $mainframe, $return;
 	if (isset( $_COOKIE[$mainframe->sessionCookieName()] )) {
-		mosRedirect( $return );
+		Redirect( $return );
 	} else {
 		mosErrorAlert( 'Çerezler belirlenmemiş!' );
 	}

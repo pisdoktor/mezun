@@ -148,33 +148,41 @@ class Profile {
 		</div>
 		</div>
 		
+		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Cinsiyet:</strong></div>
 		<div class="col-sm-8"><?php echo $cinsiyet;?></div>
 		</div>
 		</div>
+		<?php } ?>
 		
+		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Doğum Tarihi:</strong></div>
 		<div class="col-sm-8"><?php echo $row->dogumtarihi;?></div>
 		</div>
 		</div>
+		<?php } ?>
 		
+		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Doğum Yeri:</strong></div>
 		<div class="col-sm-8"><?php echo $row->dogumyeri;?></div>
 		</div>
 		</div>
+		<?php } ?>
 		
+		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Yaşadığı Şehir:</strong></div>
 		<div class="col-sm-8"><?php echo $row->sehiradi;?></div>
 		</div>
 		</div>
+		<?php } ?>
 		
 		<?php if ($show) {?>
 		<div class="form-group">
@@ -230,6 +238,7 @@ class Profile {
 		</div>
 		</div>
 		<?php } ?>
+		
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-4"><strong>Branşı:</strong></div>

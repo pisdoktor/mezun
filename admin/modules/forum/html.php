@@ -6,30 +6,32 @@ class ForumHTML {
 	
 	static function editBoard($row, $lists) {
 			?>
-		<div id="module_header">Forum Board <?php echo $row->ID_BOARD ? 'Düzenle' : 'Ekle';?></div>
-		<div id="module">
-<form action="index.php" method="post" name="adminForm">
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Forum Board <?php echo $row->ID_BOARD ? 'Düzenle' : 'Ekle';?></h4></div>
+	<div class="panel-body">	
+			
+<form action="index.php" method="post" name="adminForm" role="form">
 
 <table width="100%">
   <tr>
 	<td width="30%">
-	<strong>Board Adı:</strong>
+	<strong>Adı:</strong>
 	</td>
 	<td width="70%">
-	<input type="text" name="name" class="inputbox" value="<?php echo $row->name;?>" />
+	<input type="text" name="name" class="form-control" value="<?php echo $row->name;?>" />
 	</td>
   </tr>
   <tr>
 	<td width="30%">
-	<strong>Board Açıklaması:</strong>
+	<strong>Açıklama:</strong>
 	</td>
 	<td width="70%">
-	<input type="text" name="aciklama" class="inputbox" value="<?php echo $row->aciklama;?>" />
+	<textarea cols="10" rows="5" class="form-control"><?php echo $row->aciklama;?></textarea>
 	</td>
   </tr>
    <tr>
 	<td width="30%">
-	<strong>Board Kategorisi:</strong>
+	<strong>Kategori:</strong>
 	</td>
 	<td width="70%">
 	<?php echo $lists['cat'];?>
@@ -37,7 +39,7 @@ class ForumHTML {
   </tr>
    <tr>
 	<td width="30%">
-	<strong>Board Ana Kategorisi:</strong>
+	<strong>Ana Board:</strong>
 	</td>
 	<td width="70%">
 	<?php echo $lists['parent'];?>
@@ -49,11 +51,13 @@ class ForumHTML {
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="ID_BOARD" value="<?php echo $row->ID_BOARD;?>" />
 </form>
-</div>
 <br />
-<div align="right">
-<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('saveboard');" class="button"  />
-<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancelboard');" class="button" />
+<div class="btn-group">
+<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('saveboard');" class="btn btn-primary"  />
+<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancelboard');" class="btn btn-warning" />
+</div>
+
+</div>
 </div>
 <?php
 		
@@ -64,10 +68,10 @@ class ForumHTML {
 		?>
 <form action="index.php" method="post" name="adminForm">
 
-<div align="right">
-<input type="button" name="button" value="Yeni Forum Ekle" onclick="javascript:submitbutton('addboard');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editboard');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu forumları silmek istediğinize emin misiniz?')){ submitbutton('deleteboard');}" class="button" /> 
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Forum Ekle" onclick="javascript:submitbutton('addboard');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editboard');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu forumları silmek istediğinize emin misiniz?')){ submitbutton('deleteboard');}" class="btn btn-warning" /> 
 </div>
 
 <table width="100%" border="0" class="veritable">
@@ -134,10 +138,10 @@ $i++;
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
 <br />
-<div align="right">
-<input type="button" name="button" value="Yeni Forum Ekle" onclick="javascript:submitbutton('addboard');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editboard');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deleteboard');}" class="button" /> 
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Forum Ekle" onclick="javascript:submitbutton('addboard');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editboard');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu forumları silmek istediğinize emin misiniz?')){ submitbutton('deleteboard');}" class="btn btn-warning" /> 
 </div>
 </form>
 
@@ -159,14 +163,16 @@ echo $pageNav->writePagesLinks($link);?>
 	
 	static function editCategory($row) {
 			?>
-		<div id="module_header">Forum Kategori <?php echo $row->ID_CAT ? 'Düzenle' : 'Ekle';?></div>
-		<div id="module">
+			<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Forum Kategori <?php echo $row->ID_CAT ? 'Düzenle' : 'Ekle';?></h4></div>
+	<div class="panel-body">
+	
 		<script language="javascript" type="text/javascript">
 		<!--
 		function submitbutton(pressbutton) {
 			var form = document.adminForm;
 
-			if (pressbutton == 'cancel') {
+			if (pressbutton == 'cancelcat') {
 				submitform( pressbutton );
 				return;
 			}
@@ -179,7 +185,7 @@ echo $pageNav->writePagesLinks($link);?>
 		}
 		//-->
 		</script> 
-<form action="index.php" method="post" name="adminForm">
+<form action="index.php" method="post" name="adminForm" role="form">
 
 <table width="100%">
   <tr>
@@ -187,7 +193,7 @@ echo $pageNav->writePagesLinks($link);?>
 	<strong>Kategori Adı:</strong>
 	</td>
 	<td width="70%">
-	<input type="text" name="name" class="inputbox" value="<?php echo $row->name;?>" />
+	<input type="text" name="name" class="form-control" value="<?php echo $row->name;?>" />
 	</td>
   </tr>
 </table>
@@ -196,11 +202,14 @@ echo $pageNav->writePagesLinks($link);?>
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="ID_CAT" value="<?php echo $row->ID_CAT;?>" />
 </form>
-</div>
+
 <br />
-<div align="right">
-<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('savecat');" class="button"  />
-<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancelcat');" class="button" />
+<div class="btn-group">
+<input type="button" name="button" value="Kaydet" onclick="javascript:submitbutton('savecat');" class="btn btn-primary"  />
+<input type="button" name="button" value="İptal" onclick="javascript:submitbutton('cancelcat');" class="btn btn-warning" />
+</div>
+
+</div>
 </div>
 <?php
 	}
@@ -209,10 +218,10 @@ echo $pageNav->writePagesLinks($link);?>
 		?>
 <form action="index.php" method="post" name="adminForm">
 
-<div align="right">
-<input type="button" name="button" value="Yeni Kategori Ekle" onclick="javascript:submitbutton('addcat');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editcat');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deletecat');}" class="button" /> 
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Kategori Ekle" onclick="javascript:submitbutton('addcat');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editcat');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deletecat');}" class="btn btn-warning" /> 
 </div>
 
 <table width="100%" border="0" class="veritable">
@@ -274,10 +283,10 @@ $t = 1 - $t;
 <input type="hidden" name="task" value="" />
 <input type="hidden" name="boxchecked" value="0" />
 <br />
-<div align="right">
-<input type="button" name="button" value="Yeni Kategori Ekle" onclick="javascript:submitbutton('addcat');" class="button" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editcat');}" class="button" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deletecat');}" class="button" /> 
+<div class="btn-group">
+<input type="button" name="button" value="Yeni Kategori Ekle" onclick="javascript:submitbutton('addcat');" class="btn btn-primary" />
+<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editcat');}" class="btn btn-default" /> 
+<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deletecat');}" class="btn btn-warning" /> 
 </div>
 </form>
 

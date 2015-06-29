@@ -116,7 +116,7 @@ Bu siteye kayıt olarak;
 <label for="email">E-posta Adresiniz:</label>
 </div>
 <div class="col-sm-7">
-<input type="text" name="email" id="email" class="form-control" />
+<input type="text" name="email" id="email" class="form-control" required />
 </div> 
 </div>
 </div>
@@ -130,6 +130,7 @@ Bu siteye kayıt olarak;
 </div>
 
 <input type="hidden" name="option" value="forgot" />
+<input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
 </div>
 
@@ -143,7 +144,7 @@ Bu siteye kayıt olarak;
 <label for="code">Aktivasyon Kodu:</label>
 </div>
 <div class="col-sm-7">
-<input type="text" name="code" id="code" class="form-control" />
+<input type="text" name="code" id="code" class="form-control" required />
 </div> 
 </div>
 </div>
@@ -157,6 +158,7 @@ Bu siteye kayıt olarak;
 </div>
 
 <input type="hidden" name="option" value="activate" />
+<input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
 </div>
 

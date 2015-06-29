@@ -2,10 +2,10 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$cid = mosGetParam($_REQUEST, 'cid');
-$id = intval(mosGetParam($_REQUEST, 'id'));  
-$limit = intval(mosGetParam($_REQUEST, 'limit', 30));
-$limitstart = intval(mosGetParam($_REQUEST, 'limitstart', 0));
+$cid = getParam($_REQUEST, 'cid');
+$id = intval(getParam($_REQUEST, 'id'));  
+$limit = intval(getParam($_REQUEST, 'limit', 30));
+$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
@@ -63,6 +63,17 @@ switch($task) {
 	reCountBoards();
 	break;
 }
+function cancelBoard() {
+	global $dbase;
+	
+	
+}
+
+function cancelCategory() {
+	global $dbase;
+	
+}
+
 function saveBoard() {
 	global $dbase;
 	
@@ -70,7 +81,7 @@ function saveBoard() {
 	$row->bind($_POST);
 	$row->store();
 	
-	mosRedirect('index.php?option=admin&bolum=forum&task=boards');
+	Redirect('index.php?option=admin&bolum=forum&task=boards');
 }
 /**
 * Kategori seçimine göre board kısıtlaması yapılacak
@@ -92,10 +103,12 @@ function editBoard($id) {
 		$cat[] = mosHTML::makeOption($cats->ID_CAT, $cats->name);
 	}
 	
-	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', 'class="inputbox" size="1"', 'value', 'text', $row->ID_CAT);
+	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', '', 'value', 'text', $row->ID_CAT);
 	
 	//board
-	$dbase->setQuery("SELECT * FROM #__forum_boards");
+	$dbase->setQuery("SELECT * FROM #__forum_boards"
+	. ($row->ID_BOARD ? " WHERE ID_BOARD NOT IN (".$row->ID_BOARD.")" : "")
+	);
 	$boards = $dbase->loadObjectList();
 	
 	$b[] = mosHTML::makeOption('0', 'ANA');
@@ -103,7 +116,7 @@ function editBoard($id) {
 		$b[] = mosHTML::makeOption($board->ID_BOARD, $board->name);
 	}
 	
-	$lists['parent'] = mosHTML::selectList($b, 'ID_PARENT', 'class="inputbox" size="1"', 'value', 'text', $row->ID_PARENT);
+	$lists['parent'] = mosHTML::selectList($b, 'ID_PARENT', '', 'value', 'text', $row->ID_PARENT);
 	
 	ForumHTML::editBoard($row, $lists);
 }
@@ -115,7 +128,7 @@ function saveCategory() {
 	$row->bind($_POST);
 	$row->store();
 	
-	mosRedirect('index.php?option=admin&bolum=forum&task=categories');
+	Redirect('index.php?option=admin&bolum=forum&task=categories');
 }
 
 function editCategory($id) {
