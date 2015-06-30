@@ -24,12 +24,14 @@ function adminMenu() {
 </li>
 </ul>
 </li>
+<?php if (STATS) {?>
 <li class="has-sub"><a href="index.php?option=admin&bolum=stats"><span>İstatistikler</span></a>
 <ul>
 <li><a href="index.php?option=admin&bolum=stats&task=acq"><span>Toplama</span></a></li>
 <li><a href="index.php?option=admin&bolum=stats&task=blocklist"><span>Blok Listesi</span></a></li>
 </ul>
 </li>
+<?php } ?>
 <li><a href="index.php?option=site"><span>Siteye Geçiş Yap</span></a></li>
 <li><a href="index.php?option=logout"><span>Çıkış Yap</span></a></li>    
 </ul>

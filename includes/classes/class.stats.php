@@ -50,18 +50,18 @@ class Analytics {
 	* 
 	*/
 	public function tracker() {
-		global $dbase, $option;
+		global $dbase, $my;
 		
 		
 		if (STATS == 0) {
 			return;
 		}
 		
-		if ($option == 'admin') {
+		if ($my->access_type == 'admin') {
 			return;
 		}
 		
-		$dbase->setQuery("SELECT 1 FROM #__stats_blocklist "
+		$dbase->setQuery("SELECT COUNT(*) FROM #__stats_blocklist "
 			. "\n WHERE	block=".$this->remoteAddr
 			. "\n OR block=".$this->refererHost
 			. "\n OR block=".$this->agent
@@ -77,6 +77,9 @@ class Analytics {
 
 				$row = new Stats($dbase);
 				
+				$time = time() + (OFFSET*3600);
+				$date_time = date('Y-m-d H:i:s', $time);
+				
 				$row->uri           = $this->requestUrl;
 				$row->referer       = $this->referer;
 				$row->referer_host  = $this->refererHost;
@@ -85,7 +88,7 @@ class Analytics {
 				$row->os            = $this->os;
 				$row->remote_add    = $this->remoteAddr;
 				$row->domain        = $this->domain;
-				$row->date_time     = date('Y-m-d H:i:s');
+				$row->date_time     = $date_time;
 				
 				$row->store();
 				
