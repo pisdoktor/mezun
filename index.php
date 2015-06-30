@@ -21,7 +21,13 @@ $mainframe->initSession();
 
 $my = $mainframe->getUser();
 
-$mainframe->detect();
+/**
+* Ziyaretçi istatistikleri
+* 
+* @var Analytics
+*/
+$stats = new Analytics();
+$stats->tracker();
 
 switch($option) {
 
@@ -226,7 +232,7 @@ function CookieCheck() {
 	if (isset( $_COOKIE[$mainframe->sessionCookieName()] )) {
 		Redirect( $return );
 	} else {
-		mosErrorAlert( 'Çerezler belirlenmemiş!' );
+		ErrorAlert( 'Çerezler açık değil!' );
 	}
 }
 

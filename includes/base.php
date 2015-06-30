@@ -354,60 +354,28 @@ function ObjectToArray($p_obj) {
 	}
 	return $retarray;
 }
-/**
-* Checks the user agent string against known browsers
-*/
-function GetBrowser( $agent ) {
-	
-	require( ABSPATH .'/includes/stats/agent_browser.php' );
 
-	if (preg_match( "/msie[\/\sa-z]*([\d\.]*)/i", $agent, $m )
-	&& !preg_match( "/webtv/i", $agent )
-	&& !preg_match( "/omniweb/i", $agent )
-	&& !preg_match( "/opera/i", $agent )) {
-		// IE
-		return "MS Internet Explorer $m[1]";
-	} else if (preg_match( "/netscape.?\/([\d\.]*)/i", $agent, $m )) {
-		// Netscape 6.x, 7.x ...
-		return "Netscape $m[1]";
-	} else if ( preg_match( "/mozilla[\/\sa-z]*([\d\.]*)/i", $agent, $m )
-	&& !preg_match( "/gecko/i", $agent )
-	&& !preg_match( "/compatible/i", $agent )
-	&& !preg_match( "/opera/i", $agent )
-	&& !preg_match( "/galeon/i", $agent )
-	&& !preg_match( "/safari/i", $agent )) {
-		// Netscape 3.x, 4.x ...
-		return "Netscape $m[1]";
-	} else {
-		// Other
-		$found = false;
-		foreach ($browserSearchOrder as $key) {
-			if (preg_match( "/$key.?\/([\d\.]*)/i", $agent, $m )) {
-				$name = "$browsersAlias[$key] $m[1]";
-				return $name;
-				break;
-			}
-		}
-	}
+function ErrorAlert( $text, $action='window.history.go(-1);', $mode=1 ) {
+	$text = nl2br( $text );
+	$text = addslashes( $text );
+	$text = strip_tags( $text );
 
-	return 'Bilinmiyor';
-}
-
-/**
-* Checks the user agent string against known operating systems
-*/
-function GetOS( $agent ) {
-
-	require( ABSPATH .'/includes/stats/agent_os.php' );
-
-	foreach ($osSearchOrder as $key) {
-		if (preg_match( "/$key/i", $agent )) {
-			return $osAlias[$key];
+	switch ( $mode ) {
+		case 2:
+			echo "<script>$action</script> \n";
 			break;
-		}
+
+		case 1:
+		default:
+			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; "._ISO."\" />";
+			echo "<script>alert('$text'); $action</script> \n";
+			//echo '<noscript>';
+			//mosRedirect( @$_SERVER['HTTP_REFERER'], $text );
+			//echo '</noscript>';
+			break;
 	}
 
-	return 'Bilinmiyor';
+	exit;
 }
 
 /**
