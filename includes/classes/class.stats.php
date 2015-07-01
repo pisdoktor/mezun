@@ -62,20 +62,19 @@ class Analytics {
 		}
 		
 		$dbase->setQuery("SELECT COUNT(*) FROM #__stats_blocklist "
-			. "\n WHERE	block=".$this->remoteAddr
-			. "\n OR block=".$this->refererHost
-			. "\n OR block=".$this->agent
-			. "\n OR block=".$this->browser
-			. "\n OR block=".$this->os
-			. "\n OR block=".$this->domain
+			. "\n WHERE	block=".$dbase->Quote($this->remoteAddr)
+			. "\n OR block=".$dbase->Quote($this->refererHost)
+			. "\n OR block=".$dbase->Quote($this->agent)
+			. "\n OR block=".$dbase->Quote($this->browser)
+			. "\n OR block=".$dbase->Quote($this->os)
+			. "\n OR block=".$dbase->Quote($this->domain)
 			);
-			$dbase->loadObject($block);
-
-			if($block){
+			
+			if($dbase->loadResult()){
 				return;
 			}
 
-				$row = new Stats($dbase);
+				$row = new Analytics_Stats($dbase);
 				
 				$time = time() + (OFFSET*3600);
 				$date_time = date('Y-m-d H:i:s', $time);
@@ -92,8 +91,11 @@ class Analytics {
 				
 				$row->store();
 				
+			if (COUNTSTATS) {
+				$this->Analytics_CountStats();
+			}
+				
 	}
-
 	/**
 	* Browser detect function
 	* 
@@ -154,12 +156,107 @@ class Analytics {
 
 	return 'Bilinmiyor';
 	}
+	
+	public function Analytics_CountStats() {
+		global $dbase;
+		
+		if (COUNTSTATS == 1) {
+			if (getParam( $_COOKIE, 'mosvisitor', 0 )) {
+				return;
+			}
+			setcookie( 'mosvisitor', 1 );
+
+			/**
+			* Type=0 Browser
+			* 
+			* @var mixed
+			*/
+			$query = "SELECT COUNT(*)"
+			. "\n FROM #__stats_counts"
+			. "\n WHERE agent = " . $dbase->Quote( $this->browser )
+			. "\n AND type = 0"
+			;
+			$dbase->setQuery( $query );
+			
+			if ($dbase->loadResult()) {
+				$query = "UPDATE #__stats_counts"
+				. "\n SET hits = ( hits + 1 )"
+				. "\n WHERE agent = " . $dbase->Quote( $this->browser )
+				. "\n AND type = 0"
+				;
+				$dbase->setQuery( $query );
+			} else {
+				$query = "INSERT INTO #__stats_counts"
+				. "\n ( agent, type, hits )"
+				. "\n VALUES ( " . $dbase->Quote( $this->browser ) . ", 0, 1 )"
+				;
+				$dbase->setQuery( $query );
+			}
+			$dbase->query();
+
+			/**
+			* Type=1 Operation System
+			* 
+			* @var mixed
+			*/
+			$query = "SELECT COUNT(*)"
+			. "\n FROM #__stats_counts"
+			. "\n WHERE agent = " . $dbase->Quote( $this->os )
+			. "\n AND type = 1"
+			;
+			$dbase->setQuery( $query );
+			
+			if ($dbase->loadResult()) {
+				$query = "UPDATE #__stats_counts"
+				. "\n SET hits = ( hits + 1 )"
+				. "\n WHERE agent = " . $dbase->Quote( $this->os )
+				. "\n AND type = 1"
+				;
+				$dbase->setQuery( $query );
+			} else {
+				$query = "INSERT INTO #__stats_counts"
+				. "\n ( agent, type, hits )"
+				. "\n VALUES ( " . $dbase->Quote( $this->os ) . ", 1, 1 )"
+				;
+				$dbase->setQuery( $query );
+			}
+			$dbase->query();
+
+			/**
+			* Type=2 Domain
+			* 
+			* @var mixed
+			*/
+			$query = "SELECT COUNT(*)"
+			. "\n FROM #__stats_counts"
+			. "\n WHERE agent = " . $dbase->Quote( $this->domain )
+			. "\n AND type = 2"
+			;
+			$dbase->setQuery( $query );
+			
+			if ($dbase->loadResult()) {
+				$query = "UPDATE #__stats_counts"
+				. "\n SET hits = ( hits + 1 )"
+				. "\n WHERE agent = " . $dbase->Quote( $this->domain )
+				. "\n AND type = 2"
+				;
+				$dbase->setQuery( $query );
+			} else {
+				$query = "INSERT INTO #__stats_counts"
+				. "\n ( agent, type, hits )"
+				. "\n VALUES ( " . $dbase->Quote( $this->domain ) . ", 2, 1 )"
+				;
+				$dbase->setQuery( $query );
+			}
+			$dbase->query();
+		}
+	}
 }
 
 /**
 * Veritabanı bağlayıcısı
 */
-class Stats extends DBTable {
+class Analytics_Stats extends DBTable {
 	
 	var $id = null;
 	
@@ -181,20 +278,20 @@ class Stats extends DBTable {
 	
 	var $date_time = null;
 	
-	function Stats( &$db ) {
+	function Analytics_Stats( &$db ) {
 		$this->DBTable( '#__stats', 'id', $db );
 	}
 }
 /**
 * Blocklist bağlayıcısı
 */
-class BlockList extends DBTable {
+class Analytics_BlockList extends DBTable {
 	
 	var $id = null;
 	
 	var $block = null;
 	
-	function BlockList(&$db) {
+	function Analytics_BlockList(&$db) {
 		$this->DBTable('#__stats_blocklist', 'id', $db);
 	}
 }

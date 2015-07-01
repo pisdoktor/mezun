@@ -25,8 +25,9 @@ function adminMenu() {
 </ul>
 </li>
 <?php if (STATS) {?>
-<li class="has-sub"><a href="index.php?option=admin&bolum=stats"><span>İstatistikler</span></a>
+<li class="has-sub"><a href="#"><span>İstatistikler</span></a>
 <ul>
+<li><a href="index.php?option=admin&bolum=stats"><span>Kontrol Paneli</span></a></li>
 <li><a href="index.php?option=admin&bolum=stats&task=acq"><span>Toplama</span></a></li>
 <li><a href="index.php?option=admin&bolum=stats&task=blocklist"><span>Blok Listesi</span></a></li>
 </ul>

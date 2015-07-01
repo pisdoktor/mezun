@@ -48,8 +48,10 @@ $(function(){
 </div>
 </div>
 
-<div id="header-bar">
-<?php siteMenu();?>
+<div id="header-bar" class="clearfix">
+<div class="header">
+<?php siteMenu();?> 
+</div>
 </div>
 
 <div id="content" class="clearfix">

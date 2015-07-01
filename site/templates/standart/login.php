@@ -21,8 +21,10 @@ $validate = spoofValue(1);
 </div>
 </div>
 
-<div id="header-bar">
-<?php siteMenu();?>
+<div id="header-bar" class="clearfix">
+<div class="header">
+<?php siteMenu();?> 
+</div>
 </div>
 
 <div id="content" class="clearfix">
@@ -32,7 +34,7 @@ $validate = spoofValue(1);
 	}
 ?>
 
-<div class="col-sm-8">
+<div class="col-sm-8 left">
 <div class="panel panel-default">
 <div class="panel-heading">HOŞGELDİNİZ!</div>
 <div class="panel-body">
@@ -54,7 +56,7 @@ Bu siteye kayıt olarak;
 </div>
 </div>
 
-<div class="col-sm-4">
+<div class="col-sm-4 right">
 <div class="panel panel-default">
 <div class="panel-heading">ÜYE GİRİŞİ</div>
 <div class="panel-body">

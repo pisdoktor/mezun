@@ -39,6 +39,7 @@ define('smtphost', 'smtpout.secureserver.net');
 
 define('GZIPCOMP', 0);
 define('STATS', 1);
+define('COUNTSTATS', 1);
 define('FILEPERMS', '');
 define('DIRPERMS', '');
 

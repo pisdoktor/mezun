@@ -1,6 +1,7 @@
 #cssmenu {
   margin: 0px auto;
-  width: 980px;
+  position: relative;
+  width: auto;
 }
 #cssmenu ul {
   list-style: none;
@@ -305,11 +306,12 @@
 	cursor: pointer;
   }
   #cssmenu #menu-button > a {
-	padding: 14px 20px;
+	padding: 8px 20px;
   }
   #cssmenu ul.open li,
   #cssmenu > ul.open > li {
 	display: block;
+	background-color: #cacaca;
   }
   #cssmenu > ul.open > li#menu-button > a {
 	color: #fff;
@@ -324,10 +326,10 @@
 	position: absolute;
 	height: 3px;
 	width: 22px;
-	border-top: 2px solid #7a8189;
-	border-bottom: 2px solid #7a8189;
+	border-top: 2px solid #f5f5f5;
+	border-bottom: 2px solid #f5f5f5;
 	right: 20px;
-	top: 15px;
+	top: 8px;
   }
   #cssmenu #menu-button::before {
 	display: block;
@@ -335,12 +337,13 @@
 	position: absolute;
 	height: 3px;
 	width: 22px;
-	border-top: 2px solid #7a8189;
+	border-top: 2px solid #f5f5f5;
+	border-bottom: 2px solid #f5f5f5;
 	right: 20px;
-	top: 25px;
+	top: 18px;
   }
   #cssmenu ul.open #menu-button::after,
   #cssmenu ul.open #menu-button::before {
-	border-color: #fff;
+	border-color: #fafafa;
   }
 }
