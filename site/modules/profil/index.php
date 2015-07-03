@@ -226,6 +226,8 @@ function saveImage() {
 		
 	$uzanti = pathinfo($image['name']);
 	$uzanti = strtolower($uzanti["extension"]);
+	
+	$error = '';
 		
 	if (!in_array($uzanti, $allow)) {
 		$error = addslashes( $image['name'].' için dosya türü uygun değil');

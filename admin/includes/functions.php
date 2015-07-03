@@ -30,6 +30,7 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=stats"><span>Kontrol Paneli</span></a></li>
 <li><a href="index.php?option=admin&bolum=stats&task=acq"><span>Toplama</span></a></li>
 <li><a href="index.php?option=admin&bolum=stats&task=blocklist"><span>Blok Listesi</span></a></li>
+<li><a href="index.php?option=admin&bolum=stats&task=counts"><span>Sayaç</span></a></li>
 </ul>
 </li>
 <?php } ?>

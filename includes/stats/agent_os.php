@@ -39,7 +39,10 @@ $osSearchOrder = array (
 'bsdi',
 'openbsd',
 'gnu',
-'unix'
+'unix',
+'android',
+'blackberry',
+'iphone'
 );
 
 $osAlias = array (
@@ -73,6 +76,8 @@ $osAlias = array (
 'bsdi' 				=> 'BSDi',
 'openbsd' 			=> 'OpenBSD',
 'gnu' 				=> 'GNU/Linux',
-'unix' 				=> 'Unknown Unix system'
+'unix' 				=> 'Unknown Unix system',
+'android'           => 'Google Android',
+'blackberry'        => 'BlackBerry',
+'iphone'            => 'IPhone'
 );
-?>

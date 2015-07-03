@@ -69,7 +69,7 @@ class BoardTopics extends DBTable {
 				'link' => '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER.'">'.$row->posterName.'</a>',
 				'cinsiyet' => $row->cinsiyet ? 'Erkek' : 'Bayan',
 				'profilimage' => $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png',
-				'imagelink' => $row->image ? '<img class="img-circle" src="'.SITEURL.'/images/profil/'.$row->image.'" />' : '<img class="img-circle" src="'.SITEURL.'/images/profil/noimage.png" width="100" height="100" />',
+				'imagelink' => $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" width="100" height="100" />' : '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" width="100" height="100" />',
 				'sehir' => $row->sehirAdi,
 				'ip' => $row->posterIP,
 				'lastvisit' => $row->lastvisit,

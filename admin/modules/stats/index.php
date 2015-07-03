@@ -43,6 +43,112 @@ switch($task) {
 	case 'acq_details':
 	AcqDetails($ref);
 	break;
+	
+	case 'counts':
+	StatsCounts();
+	break;
+}
+
+function StatsCounts() {
+	global $dbase;
+	
+	//browserlar
+	$query = "SELECT agent as browser, hits FROM #__stats_counts WHERE type=0 ORDER BY hits DESC";
+	$dbase->setQuery($query);
+	$browsers = $dbase->loadObjectList();
+	
+	//işletim sistemleri
+	$query = "SELECT agent as os, hits FROM #__stats_counts WHERE type=1 ORDER BY hits DESC";
+	$dbase->setQuery($query);
+	$oss = $dbase->loadObjectList();
+	
+	//domainler
+	$query = "SELECT agent as domain, hits FROM #__stats_counts WHERE type=2 ORDER BY hits DESC";
+	$dbase->setQuery($query);
+	$domains = $dbase->loadObjectList();
+	
+	?>
+	<div class="panel panel-default">
+	<div class="panel-heading"><h4>İstatistikler - Sayaçlar</h4>
+	</div>
+	<div class="panel-body">
+	<div class="row">
+	<div class="col-sm-4">
+			<div class="row">
+			<div class="col-sm-6">
+			BROWSER ADI
+			</div>
+			<div class="col-sm-6">
+			SAYI
+			</div>
+			</div>
+	<?php
+		foreach ($browsers as $browser) {
+			?>
+			<div class="row">
+			<div class="col-sm-6">
+			<?php echo $browser->browser;?>
+			</div>
+			<div class="col-sm-6">
+			<?php echo $browser->hits;?>
+			</div>
+			</div>
+			<?php
+		}
+	?>
+	</div>
+	<div class="col-sm-4">
+	<div class="row">
+			<div class="col-sm-6">
+			İŞLETİM SİSTEMİ
+			</div>
+			<div class="col-sm-6">
+			SAYI
+			</div>
+			</div>
+	<?php
+		foreach ($oss as $os) {
+			?>
+			<div class="row">
+			<div class="col-sm-6">
+			<?php echo $os->os;?>
+			</div>
+			<div class="col-sm-6">
+			<?php echo $os->hits;?>
+			</div>
+			</div>
+			<?php
+		} 
+	?>
+	</div>
+	<div class="col-sm-4">
+	<div class="row">
+			<div class="col-sm-6">
+			DOMAİN
+			</div>
+			<div class="col-sm-6">
+			SAYI
+			</div>
+			</div>
+	<?php
+		foreach ($domains as $domain) {
+			?>
+			<div class="row">
+			<div class="col-sm-6">
+			<?php echo $domain->domain;?>
+			</div>
+			<div class="col-sm-6">
+			<?php echo $domain->hits;?>
+			</div>
+			</div>
+			<?php
+		}
+	?>
+	</div>
+	</div>
+	</div>
+	</div>
+	<?php
 }
 
 function AcqDetails($ref) {
@@ -156,7 +262,7 @@ function Acquisition() {
 function Dashboard() {
 	global $dbase;
 	
-	$query = "SELECT * FROM (SELECT * FROM #__stats ORDER BY date_time DESC LIMIT 15) t ORDER BY date_time DESC";
+	$query = "SELECT * FROM (SELECT * FROM #__stats ORDER BY date_time DESC LIMIT 20) t ORDER BY date_time DESC";
 	$dbase->setQuery($query);
 	
 	$data = $dbase->loadObjectList();
