@@ -22,6 +22,7 @@ class Arkadas {
 	<?php
 	
 }
+
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
@@ -29,60 +30,22 @@ $image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/
 $link = '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
 $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 ?>
-<div class="row">
 
 <div class="col-sm-3">
-<img src="<?php echo $image;?>" class="img-circle" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="150" height="150" />
-</div>
-
-<div class="col-sm-7">
-
-<div class="form-group">
+<div align="center">
 <div class="row">
-<div class="col-sm-4"><strong>Adı, Soyadı:</strong></div>
-<div class="col-sm-8"><?php echo $row->name;?></div>
-</div>
+<div class="figure"> 
+<img src="<?php echo $image;?>" class="img-thumbnail profil-image" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+<div class="figcaption"><?php echo $link;?></div>
 </div>
 
-<div class="form-group">
+</div>
 <div class="row">
-<div class="col-sm-4"><strong>Siteye Son Geliş Tarihi:</strong></div>
-<div class="col-sm-8"><?php echo Forum::timeformat($row->lastvisit, true, true);?></div>
+<?php echo $row->unvan;?>. <?php echo $row->name;?>
+<div align="center"><?php isOnline($row->id);?></div>
 </div>
 </div>
-
-<div class="form-group">
-<div class="row">
-<div class="col-sm-4"><strong>Şuanda Çalıştığı Kurum:</strong></div>
-<div class="col-sm-8"><?php echo $row->work;?></div>
 </div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<div class="col-sm-4"><strong>Ünvanı:</strong></div>
-<div class="col-sm-8"><?php echo $row->unvan;?></div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<div class="col-sm-4"><strong>Branşı:</strong></div>
-<div class="col-sm-8"><?php echo $row->bransadi;?></div>
-</div>
-</div>
-
-</div>
-
-<div class="col-sm-2">
-<?php echo $link;?>
-</div>
-
-</div>
-<?php if ($i < count($rows)) {
-	echo '<hr>';
-}
-?>	
 <?php
 }
 ?>    

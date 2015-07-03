@@ -8,6 +8,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?php showHead();?>
+<link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
 <div id="container">

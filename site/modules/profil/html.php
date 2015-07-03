@@ -123,18 +123,31 @@ class Profile {
 		?>
 		<div class="panel panel-warning">
 		<div class="panel-heading"><h4><?php echo $head;?></h4>
-		<div style="float:right;">
-		<?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?>
-		</div>
 		</div>
 		<div class="panel-body"> 
 		
 		<div class="row">
 		<div class="col-sm-3">
-		<div>
-		<img src="<?php echo $image;?>" class="img-circle" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+		
+
+		
+		<div class="figure">
+		
+		<img src="<?php echo $image;?>" class="img-thumbnail" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+		
+		<div class="figcaption">
+		<div align="center"><?php echo $editimage;?></div>
+		<br />
+		<div align="center"><?php echo $deleteimage;?></div>
+		<br />
+		<div align="center"><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></div>
 		</div>
-		<div align="center"><?php echo $editimage;?> <?php echo $deleteimage;?></div>
+		
+		</div>
+		
+		<?php if (!$edit) {?>
+		<div align="center"><?php isOnline($row->id);?></div>
+		<?php }?>	
 		</div>
 		
 		<div class="col-sm-9">
@@ -266,10 +279,10 @@ class Profile {
 		
 		<!-- Profil Resmi Değiştirme -->
 		<div id="imagechange" style="display: none;" title="Profil Resmi Değiştir">
-		<div>* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>
-		<div>* Resminizin boyutu 2 Mb geçemez!</div>
+		<div class="text-info">* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>
+		<div class="text-warning">* Resminizin boyutu 2 Mb geçemez!</div>
 		<form action="index.php" method="post" enctype="multipart/form-data" role="form">
-		<input type="file" name="image" id="image" />
+		<input type="file" name="image" id="image" class="btn btn-default" />
 		<br />
 		<button type="submit" class="btn btn-primary">Profil Resmi Yap</button>
 		<input type="hidden" name="option" value="site" />

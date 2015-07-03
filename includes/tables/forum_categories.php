@@ -55,7 +55,7 @@ if (empty($context['categories'][$row_board['ID_CAT']])) {
 	'boards' => array(),
 	'new' => false
 	);
-	$context['categories'][$row_board['ID_CAT']]['link'] = '<a name="' . $row_board['ID_CAT'] . '" href="' . $context['categories'][$row_board['ID_CAT']]['href'] . '">' . $row_board['catName'] . '</a>';
+	$context['categories'][$row_board['ID_CAT']]['link'] = '<a id="cat' . $row_board['ID_CAT'] . '" href="' . $context['categories'][$row_board['ID_CAT']]['href'] . '">' . $row_board['catName'] . '</a>';
 }
 
 // Let's save some typing.  Climbing the array might be slower, anyhow.

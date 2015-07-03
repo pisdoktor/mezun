@@ -4,7 +4,6 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $id = intval(getParam($_REQUEST, 'id')); 
 
-
 include(dirname(__FILE__). '/html.php');
 
 switch($task) {

@@ -346,3 +346,29 @@ function formButton($value, $onclick, $uyari=0) {
 	
 	return $html;
 }
+
+function isOnline($userid, $showimage=true) {
+	global $dbase;
+		
+		$query = "SELECT userid FROM #__sessions WHERE userid=".$dbase->Quote($userid);
+		$dbase->setQuery($query);
+		$row = $dbase->loadResult();
+		
+		if ($showimage) {
+		if ($row) {
+			echo '<span class="onlineStatus">
+			<img src="'.SITEURL.'/images/online/online.png" alt="Online" title="Online" /> Online
+			</span>';
+		} else {
+			echo '<span class="onlineStatus">
+			<img src="'.SITEURL.'/images/online/offline.png" alt="Offline" title="Offline" /> Offline
+			</span>';
+		}
+		} else {
+		if ($row) {
+			return 'Online';
+		} else {
+			return 'Offline';
+		}    
+		}
+	}

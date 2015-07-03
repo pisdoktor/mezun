@@ -286,3 +286,13 @@ $(document).ready(function() {
 	  $( "#newmessagewindow" ).dialog( "open" );
 	});
 });
+
+		$(document).ready(function(){
+			$('.figcaption').css('top','100%');
+
+			$('.figure').hover(function(){
+				$(this).find('.figcaption').stop().animate({'top':'0px'}, '200px', function(){});
+			},function(){
+				$(this).find('.figcaption').stop().animate({'top':'200px'}, '200px', function(){});
+			});
+		});

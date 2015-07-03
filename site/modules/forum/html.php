@@ -47,6 +47,7 @@ class ForumHTML {
 			<?php echo $row['member']['sehir'];?>
 			<br />
 			M. Yılı: <?php echo $row['member']['mezuniyet'];?>
+			<div align="center"><?php isOnline($row['member']['id']);?></div>
 			</div>
 			
 			</td>
@@ -304,7 +305,7 @@ class ForumHTML {
 			</td>
 			
 			<td class="windowbg2" align="left" width="60%">
-			<a name="b<?php echo $board['id'];?>"></a>
+			<a id="b<?php echo $board['id'];?>"></a>
 			<b><?php echo $board['link'];?></b><br />
 			<?php echo $board['aciklama'];?>
 			<?php

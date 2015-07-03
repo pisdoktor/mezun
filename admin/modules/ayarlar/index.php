@@ -4,8 +4,6 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 include(dirname(__FILE__). '/html.php');
 
-
-
 switch($task) {
 	default:
 	getConfigFile();
