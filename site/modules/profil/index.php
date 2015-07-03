@@ -47,6 +47,110 @@ switch($task) {
 	case 'deleteimage':
 	deleteImage();
 	break;
+	
+	case 'editimage':
+	editImage();
+	break;
+	
+	case 'cropsave':
+	CropandSave();
+	break;
+}
+
+function CropandSave() {
+	global $dbase, $my;
+
+	$query = "SELECT image FROM #__users WHERE id=".$dbase->Quote($my->id);
+	$dbase->setQuery($query);
+	$image = $dbase->loadResult();
+	
+	if (!$image) {
+		return;
+	}
+	
+	$realimage = ABSPATH.'/images/profil/'.$image;
+	
+	if (!file_exists($realimage)) {
+		echo 'Resim yerinde yok';
+		return;
+	}
+	
+	$type = getParam($_POST, 'type');
+	
+	$x = getParam($_POST, 'x');
+	$y = getParam($_POST, 'y');
+	$w = getParam($_POST, 'w');
+	$h =getParam($_POST, 'h');
+	
+	$minWidth = 200;
+	$minHeight = 200;
+	
+	switch($type) {
+		case 'jpg':
+		case 'jpeg':
+		$img_r = imagecreatefromjpeg($realimage);
+		break;
+		
+		case 'png':
+		$img_r = imagecreatefrompng($realimage);
+		break;
+		
+		case 'gif':
+		$img_r = imagecreatefromgif($realimage);
+		break;
+	}
+	
+	$dst_r = ImageCreateTrueColor( $minWidth, $minHeight );
+	
+	imagecopyresampled($dst_r, $img_r, 0, 0, $x, $y, $minWidth, $minHeight, $w, $h);
+	
+	switch($type) {
+		case 'jpg':
+		case 'jpeg':
+		imagejpeg($dst_r,$realimage,100);
+		break;
+		
+		case 'png':
+		imagepng($dst_r,$realimage,100);
+		break;
+		
+		case 'gif':
+		imagegif($dst_r,$realimage,100);
+		break;
+	}
+	
+	Redirect('index.php?option=site&bolum=profil&task=my');
+}
+
+/**
+* Profil resmi düzenleme
+*/
+function editImage() {
+	global $dbase, $my;
+	
+	$query = "SELECT image FROM #__users WHERE id=".$dbase->Quote($my->id);
+	$dbase->setQuery($query);
+	$image = $dbase->loadResult();
+	
+	if (!$image) {
+		return;
+	} 
+	
+	$photo = array();
+	$photo['name'] = $image;
+	$photo['withpath'] = ABSPATH.'/images/profil/'.$image;
+	$photo['withaddr'] = SITEURL.'/images/profil/'.$image;
+	
+	
+	list($width, $height) = getimagesize($photo['withpath']);
+	
+	$type = pathinfo($photo['withpath']);
+	$type = strtolower($type["extension"]);
+	
+	$minWidth = 200;
+	$minHeight = 200;
+	
+	Profile::editImage($photo, $width, $height, $type, $minWidth, $minHeight);	
 }
 /**
 * Profil resmi silme fonksiyonu
@@ -63,7 +167,7 @@ function deleteImage() {
 			$dbase->setQuery("UPDATE #__users SET image='' WHERE id=".$dbase->Quote($my->id));
 			$dbase->query();
 	} else {
-		mosErrorAlert('Resim yok');
+		ErrorAlert('Resim yok');
 	}
 	
 	Redirect('index.php?option=site&bolum=profil&task=my');
@@ -134,10 +238,8 @@ function saveImage() {
 	$imagename = $row->id.$row->username.$row->createCode(6).'.'.$uzanti;
 	$targetfile= $dest.$imagename;
 		
-	if (move_uploaded_file($image['tmp_name'], $targetfile)) {
-		$error = 'Resminiz başarıyla yüklendi';
-	} else {
-		$error = addslashes( $image['name'].' yüklenemedi!');    
+	if (!move_uploaded_file($image['tmp_name'], $targetfile)) {
+		$error = addslashes( $image['name'].' yüklenemedi!');
 	}
 	
 	$query = "UPDATE #__users SET image=".$dbase->Quote($imagename)
@@ -145,7 +247,11 @@ function saveImage() {
 	$dbase->setQuery($query);
 	$dbase->query();
 	
-	Redirect('index.php?option=site&bolum=profil', $error);
+	if ($error) {
+	Redirect('index.php?option=site&bolum=profil&task=my', $error);
+	} else {
+	Redirect('index.php?option=site&bolum=profil&task=my');
+	}
 }
 /**
 * Profil güncellemesi için açılacak sayfa

@@ -11,6 +11,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
+<?php include_once( ABSPATH .'/includes/google_analytics.php');?>
 <?php
 $validate = spoofValue(1);
 ?>

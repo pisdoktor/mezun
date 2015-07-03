@@ -3,6 +3,57 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Profile {
+	static function editImage($photo, $width, $height, $type, $minWidth, $minHeight) {
+		
+		?>
+<script type="text/javascript">
+  $(function(){
+	  
+	$('#target').Jcrop({
+		boxWidth: 960,
+		boxHeight: 450,
+		setSelect:   [ <?php echo $minWidth;?>, <?php echo $minHeight;?>, 10, 10 ],
+		trueSize: [<?php echo $width;?>, <?php echo $height;?>],
+	  onSelect: updateCoords,
+	  onChange: updateCoords
+	});
+
+  });
+  
+  function checkCoords(){
+	if (parseInt(jQuery('#w').val())>0) return true;
+	alert('Lütfen bir alan seçin.');
+	return false;
+  };
+  
+  function updateCoords(c) {
+	$('#x').val(c.x);
+	$('#y').val(c.y);
+	$('#w').val(c.w);
+	$('#h').val(c.h);
+  };
+</script>
+<div class="text-info"><h4>Resmin içerisindeki kutucuğu uygun şekilde sürükleyip "Resmi Kes ve Kaydet" butonuna basınız! Kutucuk içerisinde kalan alan profil resminiz olarak kullanılacaktır!</h4></div>
+<div id="real-image" align="center">
+<img id="target" src="<?php echo $photo['withaddr'];?>" alt="Düzenlenecek Profil Resmi">
+</div>
+
+
+<form action="index.php" method="post" onsubmit="return checkCoords();">
+	<input type="hidden" id="x" name="x" />
+	<input type="hidden" id="y" name="y" />
+	<input type="hidden" id="w" name="w" />
+	<input type="hidden" id="h" name="h" />
+	<input type="hidden" name="option" value="site" />
+	<input type="hidden" name="bolum" value="profil" />
+	<input type="hidden" name="task" value="cropsave" />
+	<input type="hidden" name="type" value="<?php echo $type;?>" />
+<br />
+	<input type="submit" value="Resmi Kes ve Kaydet" class="btn btn-primary" />
+</form>
+		<?php
+	}
+	
 	static function editProfile($row) {
 		?>
 <form action="index.php" method="post" id="adminForm" role="form">
@@ -113,8 +164,9 @@ class Profile {
 		$cinsiyet = $row->cinsiyet ? 'Erkek' : 'Bayan';
 		$editlink = $edit ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
 		$passlink = $edit ? '<a class="btn btn-default" href="#" id="changepass">Parola Değiştir</a>' : '';
-		$editimage = $edit ? '<a class="btn btn-default" href="#" id="changeimg">Resmi Değiştir</a>' : '';
+		$editimage = $edit ? '<a class="btn btn-default" href="#" id="changeimg">Resim Ekle</a>' : '';
 		$deleteimage = ($edit && $row->image) ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=deleteimage">Resmi Sil</a>' : ''; 
+		$cropimage = ($edit && $row->image) ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=editimage">Resmi Düzenle</a>' : ''; 
 		$msglink = $msg ? '<a class="btn btn-default" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
 		$istemlink = !$istem ? '' : '<a class="btn btn-default" href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';		
 		
@@ -137,9 +189,8 @@ class Profile {
 		
 		<div class="figcaption">
 		<div align="center"><?php echo $editimage;?></div>
-		<br />
+		<div align="center"><?php echo $cropimage;?></div>
 		<div align="center"><?php echo $deleteimage;?></div>
-		<br />
 		<div align="center"><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></div>
 		</div>
 		
@@ -278,12 +329,12 @@ class Profile {
 		
 		
 		<!-- Profil Resmi Değiştirme -->
-		<div id="imagechange" style="display: none;" title="Profil Resmi Değiştir">
+		<div id="imagechange" style="display: none;" title="Profil Resmi Değiştir"> 
 		<div class="text-info">* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>
-		<div class="text-warning">* Resminizin boyutu 2 Mb geçemez!</div>
+	   <div class="text-warning">* Resminizin boyutu 2 Mb geçemez!</div>
 		<form action="index.php" method="post" enctype="multipart/form-data" role="form">
 		<input type="file" name="image" id="image" class="btn btn-default" />
-		<br />
+		<br />       
 		<button type="submit" class="btn btn-primary">Profil Resmi Yap</button>
 		<input type="hidden" name="option" value="site" />
 		<input type="hidden" name="bolum" value="profil" />
