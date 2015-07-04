@@ -4,6 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $cid = getParam($_REQUEST, 'cid');
 $id = intval(getParam($_REQUEST, 'id'));  
+$catid = intval(getParam($_REQUEST, 'catid'));  
 $limit = intval(getParam($_REQUEST, 'limit', 30));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
@@ -62,16 +63,36 @@ switch($task) {
 	case 'recount':
 	reCountBoards();
 	break;
+	
+	case 'getboards':
+	getBoards($catid, $id);
+	break;
 }
-function cancelBoard() {
+
+function getBoards($catid, $id) {
 	global $dbase;
 	
+	$dbase->setQuery("SELECT * FROM #__forum_boards WHERE ID_CAT=".$catid
+	. ($id ? " AND ID_BOARD!=".$id : "")
+	);
+	$rows = $dbase->loadObjectList();
 	
+	$board[] = mosHTML::makeOption('0', 'ANA');
+	foreach ($rows as $row) {
+		$board[] = mosHTML::makeOption($row->ID_BOARD, $row->name);
+	}
+	
+	echo mosHTML::selectList($board, 'ID_PARENT', '', 'value', 'text');	
+}
+
+function cancelBoard() {
+	
+	Redirect('index.php?option=admin&bolum=forum&task=boards');
 }
 
 function cancelCategory() {
-	global $dbase;
 	
+	Redirect('index.php?option=admin&bolum=forum&task=categories');
 }
 
 function saveBoard() {
@@ -103,11 +124,11 @@ function editBoard($id) {
 		$cat[] = mosHTML::makeOption($cats->ID_CAT, $cats->name);
 	}
 	
-	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', '', 'value', 'text', $row->ID_CAT);
+	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', 'id="ID_CAT" onchange="getBoards();"', 'value', 'text', $row->ID_CAT);
 	
 	//board
 	$dbase->setQuery("SELECT * FROM #__forum_boards"
-	. ($row->ID_BOARD ? " WHERE ID_BOARD NOT IN (".$row->ID_BOARD.")" : "")
+	. ($row->ID_BOARD ? " WHERE ID_BOARD NOT IN (".$row->ID_BOARD.") AND ID_CAT=".$row->ID_CAT : "")
 	);
 	$boards = $dbase->loadObjectList();
 	
@@ -116,9 +137,22 @@ function editBoard($id) {
 		$b[] = mosHTML::makeOption($board->ID_BOARD, $board->name);
 	}
 	
-	$lists['parent'] = mosHTML::selectList($b, 'ID_PARENT', '', 'value', 'text', $row->ID_PARENT);
+	//jquery ile board cat eşleştirmesi yapalım
+	$nodes = array();
+	foreach ($boards as $bo){
+		if (!isset($nodes[$bo->ID_CAT])) {
+		$nodes[$bo->ID_CAT]['id'] = $bo->ID_CAT;
+		$nodes[$bo->ID_CAT]['boards'] = array();
+		}
+		
+		if (!isset($nodes[$bo->ID_CAT]['boards'][$bo->ID_BOARD])) {
+			$nodes[$bo->ID_CAT]['boards'][$bo->ID_BOARD] = $bo->ID_BOARD;
+		}
+	}
 	
-	ForumHTML::editBoard($row, $lists);
+	$lists['parent'] = mosHTML::selectList($b, 'ID_PARENT', 'id="ID_PARENT"', 'value', 'text', $row->ID_PARENT);
+	
+	ForumHTML::editBoard($row, $lists, $nodes);
 }
 
 function saveCategory() {
@@ -167,7 +201,7 @@ function Boards() {
 	
 	$query = "SELECT b.ID_PARENT as parent, ID_BOARD AS id, b.*, c.name as catname FROM #__forum_boards AS b"
 	. "\n LEFT JOIN #__forum_categories AS c ON c.ID_CAT=b.ID_CAT"
-	. "\n ORDER BY b.boardOrder DESC";
+	. "\n ORDER BY c.catOrder ASC, b.boardOrder ASC";
 	$dbase->setQuery($query, $limitstart, $limit);
 	
 	$rows = $dbase->loadObjectList();

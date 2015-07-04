@@ -191,7 +191,7 @@ $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 <div class="form-group">
 <div class="row">
 <div class="col-sm-4"><strong>Durum:</strong></div>
-<div class="col-sm-8"><?php isOnline($row->id);?></div>
+<div class="col-sm-8"><?php isOnline($row->id, false);?></div>
 </div>
 </div>
 

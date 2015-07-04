@@ -4,8 +4,34 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
-	static function editBoard($row, $lists) {
+	static function editBoard($row, $lists, $nodes) {
 			?>
+			<script type="text/javascript">
+			function getBoards() {
+				catid = $("select[name=ID_CAT]").val();
+				
+				$("#parent").hide();
+				$("#loading").show();
+	
+				$.ajax({
+
+				type: "POST",
+
+				url: "index2.php?option=admin&bolum=forum&task=getboards&catid="+catid+"&id=<?php echo $row->ID_BOARD;?>",
+
+				data: "",
+
+				contentType: "application/json; charset=utf-8",
+
+				success: function (data) {
+					$("#loading").hide();
+					$("#parent").show().html(data);
+
+				}
+
+			});
+			}
+			</script>
 		<div class="panel panel-default">
 	<div class="panel-heading"><h4>Yönetim Paneli - Forum Board <?php echo $row->ID_BOARD ? 'Düzenle' : 'Ekle';?></h4></div>
 	<div class="panel-body">	
@@ -42,7 +68,10 @@ class ForumHTML {
 	<strong>Ana Board:</strong>
 	</td>
 	<td width="70%">
+	<span id="parent">
 	<?php echo $lists['parent'];?>
+	</span>
+	<span id="loading" style="display: none;">Yükleniyor...</span>
 	</td>
   </tr>
 </table>

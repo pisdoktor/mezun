@@ -32,7 +32,7 @@ class Session extends DBTable {
 		global $my;
 		$query = "SELECT COUNT(*) FROM #__sessions"
 		. "\n WHERE userid>0"
-		//. "\n AND userid NOT IN (".$this->_db->Quote($my->id).")"
+		. "\n AND userid NOT IN (".$this->_db->Quote($my->id).")"
 		;
 		$this->_db->setQuery($query);
 		

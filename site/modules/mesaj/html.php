@@ -119,6 +119,7 @@ class Message {
 	
 	<div class="form-group">
 	<div class="btn-group">
+	<?php echo $type == 0 ? formButton("Yeni", 'new', 0) : '';?>
 	<?php echo $type == 0 ? formButton("Okunmadı Olarak İşaretle", 'unread', 1) : '';?>
 	<?php echo $type == 0 ? formButton("Okundu Olarak İşaretle", 'read', 1) : '';?>
 	<?php echo formButton('Mesajı Sil', 'delete', 2);?>
@@ -146,8 +147,7 @@ class Message {
 <?php
 	if (!$rows) {
 		?>
-		<div align="center">Henüz arkadaşlarınızdan mesajınız yok!</div>
-		<div align="center">Ama siz arkadaşlarınıza mesaj atabilirsiniz.</div>
+		<div align="center">Henüz mesajınız yok!</div>
 		<?php
 	}
 ?>

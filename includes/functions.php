@@ -366,9 +366,9 @@ function isOnline($userid, $showimage=true) {
 		}
 		} else {
 		if ($row) {
-			return 'Online';
+			echo 'Online';
 		} else {
-			return 'Offline';
+			echo 'Offline';
 		}    
 		}
 	}

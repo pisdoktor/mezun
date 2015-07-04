@@ -32,7 +32,7 @@ class Mesajlar extends DBTable {
 	
 	function totalUnread() {
 		global $my;
-		$query = "SELECT COUNT(*) FROM #__mesajlar WHERE aid=".$this->_db->Quote($my->id)." AND okunma=0";
+		$query = "SELECT COUNT(*) FROM #__mesajlar WHERE aid=".$this->_db->Quote($my->id)." AND okunma=0 AND asilinme=0";
 		$this->_db->setQuery($query);
 		
 		if ($this->_db->loadResult()) {

@@ -52,7 +52,33 @@ switch($task) {
 * Mesaj silme
 */
 function deleteMessage($cid, $type) {
+	global $dbase, $my;
 	
+	$total = count( $cid );
+	if ( $total < 1) {
+		echo "<script> alert('Listeden bir seçim yapın'); window.history.go(-1);</script>\n";
+		exit;
+	}
+	
+	if ($type) {
+		$where = "gsilinme=1";
+	} else {
+		$where = "asilinme=1";
+	}
+	
+	ArrayToStrings( $cid );
+	foreach ($cid as $id) {
+		$dbase->setQuery("UPDATE #__mesajlar SET "
+		. $where
+		. "\n WHERE id=".$dbase->Quote($id));
+		$dbase->query();
+	}
+	
+	if ($type) {
+		Redirect('index.php?option=site&bolum=mesaj&task=outbox');
+	} else {
+		Redirect('index.php?option=site&bolum=mesaj&task=inbox');
+	}
 }
 /**
 * Mesaj durumu değiştirme
@@ -66,15 +92,10 @@ function changeMessage($cid, $status) {
 		exit;
 	}
 
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "UPDATE #__mesajlar SET okunma=".$dbase->Quote($status)
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	ArrayToStrings( $cid );
+	foreach ($cid as $id) {
+		$dbase->setQuery("UPDATE #__mesajlar SET okunma=".$dbase->Quote($status)." WHERE id=".$dbase->Quote($id));
+		$dbase->query();
 	}
 	
 	if ($status) {

@@ -914,6 +914,28 @@ function ArrayToInts( &$array, $default=null ) {
 	}
 }
 
+/**
+* Arraydan stringe: soner ekledi
+* 
+* @param mixed $array
+* @param mixed $default
+*/
+function ArrayToStrings( &$array, $default=null ) {
+	if (is_array( $array )) {
+		foreach( $array as $key => $value ) {
+			$array[$key] = (string) $value;
+		}
+	} else {
+		if (is_null( $default )) {
+			$array = array();
+			return array(); // Kept for backwards compatibility
+		} else {
+			$array = array( (string) $default );
+			return array( $default ); // Kept for backwards compatibility
+		}
+	}
+}
+
 /*
 * Function to handle an array of integers
 * Added 1.0.11

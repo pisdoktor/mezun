@@ -19,7 +19,7 @@ function getOnline() {
 	. "\n LEFT JOIN #__users AS u ON u.id=s.userid"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.sehir"
 	. "\n WHERE s.userid > 0 "
-	//. "\n AND s.userid NOT IN (".$dbase->Quote($my->id).")"
+	. "\n AND s.userid NOT IN (".$dbase->Quote($my->id).")"
 	. "\n ORDER BY s.time DESC"
 	;
 	
