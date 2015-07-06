@@ -52,7 +52,7 @@ class ForumHTML {
 	<strong>Açıklama:</strong>
 	</td>
 	<td width="70%">
-	<textarea cols="10" rows="5" class="form-control"><?php echo $row->aciklama;?></textarea>
+	<textarea cols="10" rows="5" class="form-control" name="aciklama"><?php echo $row->aciklama;?></textarea>
 	</td>
   </tr>
    <tr>

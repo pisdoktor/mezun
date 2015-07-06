@@ -5,6 +5,13 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Profile {
 	static function editImage($photo, $width, $height, $type, $minWidth, $minHeight) {
 		
+		if ($width < $minWidth) {
+			$minWidth = $width;
+		}
+		if ($height < $minHeight) {
+			$minHeight = $height;
+		}
+		
 		?>
 <script type="text/javascript">
   $(function(){
@@ -12,7 +19,7 @@ class Profile {
 	$('#target').Jcrop({
 		boxWidth: 960,
 		boxHeight: 450,
-		setSelect:   [ <?php echo $minWidth;?>, <?php echo $minHeight;?>, 10, 10 ],
+		setSelect: [ <?php echo $minWidth;?>, <?php echo $minHeight;?>, 0, 0 ],
 		trueSize: [<?php echo $width;?>, <?php echo $height;?>],
 	  onSelect: updateCoords,
 	  onChange: updateCoords

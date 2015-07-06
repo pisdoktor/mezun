@@ -76,4 +76,20 @@ class Mesajlar extends DBTable {
 			return true;
 		}
 	}
+	
+	function cryptionText($text, $cryption='encode') {
+		
+		$hash = md5(SECRETWORD);
+		
+		if ($cryption=='encode') {
+			$text = base64_encode($text);
+			$text = base64_encode($text.':'.$hash);
+		} else {
+			$text = base64_decode($text);
+			list($text, $hash) = explode(':', $text);
+			$text = base64_decode($text);
+		}
+		
+		return $text;
+	}
 }

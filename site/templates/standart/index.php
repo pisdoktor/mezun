@@ -9,6 +9,23 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?php showHead();?>
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
+<script type="text/javascript">
+		tinymce.init({
+			selector: "#textarea",
+			plugins: "autolink smileys advlist bbcode code wordcount visualchars visualblocks preview paste link",
+			toolbar: "smileys | visualchars | preview | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+			language: "tr"
+
+		});
+	
+// Prevent bootstrap dialog from blocking focusin
+$(document).on('focusin', function(e) {
+	if ($(e.target).closest(".mce-window").length) {
+		e.stopImmediatePropagation();
+	}
+});
+</script>
+
 </head>
 <body>
 <?php include_once( ABSPATH .'/includes/google_analytics.php');?>

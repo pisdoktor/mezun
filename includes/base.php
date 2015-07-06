@@ -1127,5 +1127,9 @@ function josHashPassword($password) {
 		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/cssmenu.css');	
 		$mainframe->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');	
 		
+		//tinymce text editor
+		$mainframe->addScript(0, SITEURL.'/includes/tinymce/tinymce.min.js');
+		
+		
 		echo $mainframe->getHead();
 	}

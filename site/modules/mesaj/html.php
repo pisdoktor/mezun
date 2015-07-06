@@ -29,7 +29,10 @@ class Message {
 		</div>
 		
 		<div class="row">
-		<div class="col-sm-12">
+		<div class="col-sm-3">
+		<strong>Mesaj İçeriği:</strong>
+		</div>
+		<div class="col-sm-9">
 		<?php echo $row->text;?>
 		</div>
 		</div>
@@ -109,7 +112,7 @@ class Message {
 		<?php
 	}
 	
-	static function inBox($rows, $pageNav, $type) {
+	static function inBox($rows, $pageNav, $type, $crpt) {
 		$head = $type ? 'MESAJ KUTUSU: GİDEN' : 'MESAJ KUTUSU: GELEN';
 		?>
 	<div class="panel panel-warning">
@@ -155,7 +158,7 @@ class Message {
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$row->baslik = base64_decode($row->baslik);
+$row->baslik = $crpt->cryptionText($row->baslik, 'decode');
 $row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
 $row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->gonderen.'</strong>';
 $row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';

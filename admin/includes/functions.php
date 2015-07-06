@@ -15,6 +15,7 @@ function adminMenu() {
 <li><a href="index.php?option=admin&bolum=db"><span>Veritabanı Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=duyuru"><span>Duyuru Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=ayarlar"><span>Yapılandırma</span></a></li>
+<li><a href="index.php?option=admin&bolum=bildirim"><span>Geri Bildirimler</span></a></li>
 <li class="has-sub"><a href="#"><span>Forum Yönetimi</span></a>
 <ul>
 <li><a href="index.php?option=admin&bolum=forum&task=categories"><span>Kategori Yönetimi</span></a></li>

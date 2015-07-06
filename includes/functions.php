@@ -29,6 +29,7 @@ if (!$my->id) {
 <li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
 <li><a href="index.php?option=site&bolum=arkadas"><span>Arkadaşlarım</span></a></li>
 <li><a href="index.php?option=site&bolum=online"><span>Online Üyeler <span class="badge"><?php $online->totalOnline();?></span></span></a></li>
+<li><a href="index.php?option=site&bolum=bildirim"><span>Geri Bildirim</span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>Mesajlar</span></a>

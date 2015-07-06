@@ -4,6 +4,110 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
+	static function newMessage($topic, $my, $topic_info, $board_info) {
+		?>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small><?php echo $topic_info->subject;?> - Yeni Mesaj</small></div>
+		<div class="panel-body">
+		
+		<form action="index.php?option=site&bolum=forum&task=savemessage" method="post" role="form">
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-8">
+		<input type="text" name="subject" value="Cvp: <?php echo $topic_info->subject;?>" placeholder="Mesajınızın başlığı" class="form-control" required>
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-12">
+		<textarea id="textarea" rows="5" name="body" class="form-control"></textarea>
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5">
+		<button type="submit" class="btn btn-default">MESAJI GÖNDER</button>
+		</div>
+		</div>
+		</div>
+		
+		<input type="hidden" name="ID_BOARD" value="<?php echo $topic_info->ID_BOARD;?>">
+		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
+		</form>
+		
+		</div>
+		</div>
+		<?php
+		
+	}
+	
+	static function newTopic($board, $my, $board_info) {
+		?>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small>Yeni Başlık</small></div>
+		<div class="panel-body">
+		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" role="form">
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-8">
+		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="form-control" required>
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-12">
+		<textarea id="textarea" rows="10" name="body" class="form-control"></textarea>
+		</div>
+		</div>
+		</div>
+		
+		
+		<?php if ($my->id == 1) { ?>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-2">
+		<label for="locked">Kilitli</label>
+		</div>
+		<div class="col-sm-1">
+		<input id="locked" type="checkbox" name="locked" value="1" class="form-control" />
+		</div>
+		</div>
+		
+		<div class="row">
+		<div class="col-sm-2">
+		<label for="sticky">Yapışkan</label>
+		</div>
+		<div class="col-sm-1">
+		<input id="sticky" type="checkbox" name="isSticky" value="1" class="form-control" />
+		</div>
+		
+		</div>
+		</div>		 
+		 <?php } ?>
+		 
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5">
+		<button type="submit" class="btn btn-primary">BAŞLIĞI OLUŞTUR</button>
+		</div>
+		</div>
+		</div>
+		
+		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
+		</form>
+		</div>
+		</div>
+		<?php
+	}
+	
 	static function TopicSeen($context, $pageNav, $topic_info, $board_info) {
 		?>
 		<div class="panel panel-default">
@@ -11,7 +115,7 @@ class ForumHTML {
 		<div class="panel-body">
 		
 		<?php if (!$topic_info->locked) {?>
-		<a href="#" class="newmsg btn btn-warning">Yeni Mesaj</a>
+		<a href="index.php?option=site&bolum=forum&task=newmessage&topic=<?php echo $topic_info->ID_TOPIC;?>" class="btn btn-default">Yeni Mesaj</a>
 		<?php } ?>
 		<div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
@@ -58,7 +162,9 @@ class ForumHTML {
 			</div>
 			
 			<div class="msg-body">
+			<div class="editable">
 			<?php echo $row['body'];?>
+			</div>
 			</div>
 			
 			</td>
@@ -73,16 +179,7 @@ class ForumHTML {
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
 		<?php if (!$topic_info->locked) {?>
-		<a href="#" class="newmsg btn btn-warning">Yeni Mesaj</a>
-		<div id="newmessagewindow" title="Başlığa Mesaj Gönder">
-		<form action="index.php?option=site&bolum=forum&task=newmessage" method="post" role="form">
-		<input type="text" name="subject" value="Cvp:<?php echo $topic_info->subject;?>" placeholder="Mesajınızın başlığı" class="form-control" required ><br />
-		<textarea rows="5" name="body" placeholder="Mesajınızın içeriği" class="form-control" required></textarea><br />
-		<button type="submit" class="btn btn-default">MESAJI GÖNDER</button>
-		<input type="hidden" name="ID_BOARD" value="<?php echo $topic_info->ID_BOARD;?>">
-		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
-		</form>
-		</div>
+		<a href="index.php?option=site&bolum=forum&task=newmessage&topic=<?php echo $topic_info->ID_TOPIC;?>" class="btn btn-default">Yeni Mesaj</a>
 		<?php } ?>
 		</div></div>
 <?php	
@@ -178,7 +275,7 @@ class ForumHTML {
 		}
 		?>
 		<br />
-		<a href="#" class="newtopic btn btn-warning">Yeni Başlık</a>
+		<a href="index.php?option=site&bolum=forum&task=newtopic&board=<?php echo $board_info->ID_BOARD;?>" class="btn btn-primary">Yeni Başlık</a>
 		<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 					<tr>
@@ -249,22 +346,8 @@ class ForumHTML {
 				?>
 				<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 				
-		<a href="#" class="newtopic btn btn-warning">Yeni Başlık</a>
-		<div id="newtopicwindow" title="Yeni Başlık Ekle">
-		<form action="index.php?option=site&bolum=forum&task=newtopic" method="post" role="form">
-		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="form-control" required ><br />
-		<textarea rows="5" name="body" placeholder="Mesajınızın içeriği" class="form-control" required></textarea><br />
-		<?php if ($my->id == 1) {
-		 ?>
-		 <label for="locked">Kilitli</label><input id="locked" type="checkbox" name="locked" value="1" class="form-control" />
-		 <label for="sticky">Yapışkan</label><input id="sticky" type="checkbox" name="isSticky" value="1" class="form-control" />
-		 <?php   
-		}
-		?>
-		<button type="submit" class="btn btn-primary">MESAJI GÖNDER</button>
-		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
-		</form>
-		</div>
+		<a href="index.php?option=site&bolum=forum&task=newtopic&board=<?php echo $board_info->ID_BOARD;?>" class="btn btn-primary">Yeni Başlık</a>
+	
 		</div>
 		</div>
 		<?php

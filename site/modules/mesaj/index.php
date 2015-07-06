@@ -121,8 +121,9 @@ function showMessage($id) {
 		
 		$dbase->loadObject($msg);
 	
-	$msg->baslik = base64_decode($row->baslik);
-	$msg->text = base64_decode($row->text);
+	$msg->baslik = $row->cryptionText($row->baslik, 'decode');
+	$msg->text = $row->cryptionText($row->text, 'decode');
+	$msg->text = nl2br($msg->text);
 	
 	if ($row->aid == $my->id) {
 	$dbase->setQuery("UPDATE #__mesajlar SET okunma=1 WHERE id=".$dbase->Quote($msg->id));
@@ -169,8 +170,8 @@ function sendMessage() {
 		Redirect('index.php?option=site&bolum=mesaj', 'Arkadaşlığınız olmayan birisine mesaj gönderemezsiniz');
 	}
 	
-	$row->baslik = base64_encode($row->baslik);
-	$row->text = base64_encode($row->text);
+	$row->baslik = $row->cryptionText($row->baslik);
+	$row->text = $row->cryptionText($row->text);
 	$row->tarih = date('Y-m-d H:i:s');
 	$row->okunma = 0;
 	$row->gsilinme = 0;
@@ -226,8 +227,10 @@ function createMessage() {
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
 	
-	$where = $type ? ' WHERE m.gid='.$dbase->Quote($my->id) : ' WHERE m.aid='.$dbase->Quote($my->id);
-	$where2 = $type ? 'AND m.gsilinme=0' : 'AND m.asilinme=0';
+	$crpt = new Mesajlar($dbase);
+	
+	$where = $type ? ' WHERE m.gid='.$dbase->Quote($my->id).' AND m.aid>0' : ' WHERE m.aid='.$dbase->Quote($my->id);
+	$where2 = $type ? ' AND m.gsilinme=0 ' : ' AND m.asilinme=0 ';
 	
 	$query = "SELECT COUNT(*) FROM #__mesajlar AS m"
 	.$where
@@ -248,5 +251,5 @@ function inBox($type) {
 	
 	$rows = $dbase->loadObjectList();
 	
-	Message::inBox($rows, $pageNav, $type);
+	Message::inBox($rows, $pageNav, $type, $crpt);
 }

@@ -26,12 +26,59 @@ switch($task) {
 	break;
 	
 	case 'newtopic':
-	createNewTopic();
+	newTopic();
 	break;
 	
 	case 'newmessage':
+	newMessage();
+	break;
+	
+	case 'savetopic':
+	createNewTopic();
+	break;
+	
+	case 'savemessage':
 	createNewMessage();
 	break;
+}
+
+function newMessage() {
+	global $dbase, $my;
+	
+	$ID_TOPIC = intval(getParam($_REQUEST, 'topic'));
+	
+	$topic = new BoardTopics($dbase);
+	$board = new Boards($dbase);
+	
+	$topic->load($ID_TOPIC);
+	
+	if (!$topic->ID_TOPIC) {
+		NotAuth();
+		return;
+	}
+	
+	$topic_info = $topic->TopicInfo($ID_TOPIC);
+	$board_info = $board->BoardInfo($topic->ID_BOARD);
+	
+	ForumHTML::newMessage($topic, $my, $topic_info, $board_info);
+}
+
+function newTopic() {
+	global $dbase, $my;
+	
+	$ID_BOARD = intval(getParam($_REQUEST, 'board'));
+	
+	$board = new Boards($dbase);
+	$board->load($ID_BOARD);
+	
+	if (!$board->ID_BOARD) {
+		NotAuth();
+		return;
+	}
+	
+	$board_info = $board->BoardInfo($board->ID_BOARD);
+	
+	ForumHTML::newTopic($board, $my, $board_info);
 }
 
 function createNewMessage() {
@@ -107,7 +154,7 @@ function createNewTopic() {
 	$topicOptions->ID_BOARD = $content['ID_BOARD'];
 	$topicOptions->ID_FIRST_MSG = $my->id;
 	$topicOptions->ID_LAST_MSG = $my->id;
-	$topicOptions->numReplies = null;
+	$topicOptions->numReplies = 1;
 	$topicOptions->numViews = null;
 	$topicOptions->locked = $content['locked'];
 	
@@ -125,8 +172,8 @@ function createNewTopic() {
 	}
 	//başlığı sokalım
 	$query = "INSERT INTO #__forum_topics "
-	. "\n (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews) "
-	. "\n VALUES (".$dbase->Quote($topicOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($topicOptions->locked).", ".$dbase->Quote($topicOptions->isSticky).", ".$dbase->Quote($topicOptions->numViews).")"
+	. "\n (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews, numReplies) "
+	. "\n VALUES (".$dbase->Quote($topicOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($topicOptions->locked).", ".$dbase->Quote($topicOptions->isSticky).", ".$dbase->Quote($topicOptions->numViews).", ".$dbase->Quote($topicOptions->numReplies).")"
 	;
 	$dbase->setQuery($query);
 	$dbase->query();		
@@ -167,7 +214,7 @@ function Topic($id) {
 	
 	if (!$controlid) {
 		NotAuth();
-		exit;
+		return;
 	}
 	$board = new Boards($dbase);
 		
@@ -238,6 +285,12 @@ function Board($id) {
 	
 	$boards = new BoardCategories($dbase);
 	$topics = new Boards($dbase);
+	
+	$topics->load($id);
+	if (!$topics->ID_BOARD) {
+		NotAuth();
+		return;
+	}
 	
 	$context['boards'] = $boards->Board($id, $limitstart, $limit);
 	$context['topics'] = $topics->BoardTopics($id, $limitstart, $limit);

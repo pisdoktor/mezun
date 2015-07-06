@@ -223,6 +223,8 @@ function saveImage() {
 	$dest = ABSPATH.'/images/profil/';
 	$maxsize = '2048';
 	$allow = array('png', 'gif', 'jpg', 'jpeg');
+	$minWidth = 200;
+	$minHeight = 200;
 		
 	$uzanti = pathinfo($image['name']);
 	$uzanti = strtolower($uzanti["extension"]);
@@ -249,10 +251,16 @@ function saveImage() {
 	$dbase->setQuery($query);
 	$dbase->query();
 	
+	list($imgwidth, $imgheight) = getimagesize($dest.$imagename); 
+	
 	if ($error) {
 	Redirect('index.php?option=site&bolum=profil&task=my', $error);
 	} else {
-	Redirect('index.php?option=site&bolum=profil&task=my');
+		if ($imgwidth > $minWidth || $imgheight > $minHeight) {
+			Redirect('index.php?option=site&bolum=profil&task=editimage');
+		} else {
+			Redirect('index.php?option=site&bolum=profil&task=my');        
+		}
 	}
 }
 /**
