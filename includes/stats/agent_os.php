@@ -42,7 +42,9 @@ $osSearchOrder = array (
 'unix',
 'android',
 'blackberry',
-'iphone'
+'iphone',
+'googlebot',
+'bingbot'
 );
 
 $osAlias = array (
@@ -79,5 +81,7 @@ $osAlias = array (
 'unix' 				=> 'Unknown Unix system',
 'android'           => 'Google Android',
 'blackberry'        => 'BlackBerry',
-'iphone'            => 'IPhone'
+'iphone'            => 'IPhone',
+'googlebot'         => 'Google Bot',
+'bingbot'           => 'Bing Bot'
 );

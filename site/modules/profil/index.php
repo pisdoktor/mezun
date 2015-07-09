@@ -238,8 +238,11 @@ function saveImage() {
 	if ($image['size'] > $maxsize*1024) {
 		$error = addslashes($image['name'].' için dosya boyutu istenilenden büyük!');
 	}
+	
+	$word = str_replace(' ', '_', $row->username);
+	$word = trim(strtolower($word));
 						
-	$imagename = $row->id.$row->username.$row->createCode(6).'.'.$uzanti;
+	$imagename = $row->id.$word.$row->createCode(6).'.'.$uzanti;
 	$targetfile= $dest.$imagename;
 		
 	if (!move_uploaded_file($image['tmp_name'], $targetfile)) {
@@ -251,7 +254,7 @@ function saveImage() {
 	$dbase->setQuery($query);
 	$dbase->query();
 	
-	list($imgwidth, $imgheight) = getimagesize($dest.$imagename); 
+	list($imgwidth, $imgheight) = getimagesize($targetfile); 
 	
 	if ($error) {
 	Redirect('index.php?option=site&bolum=profil&task=my', $error);

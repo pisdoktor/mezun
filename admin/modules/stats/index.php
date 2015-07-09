@@ -53,17 +53,17 @@ function StatsCounts() {
 	global $dbase;
 	
 	//browserlar
-	$query = "SELECT agent as browser, hits FROM #__stats_counts WHERE type=0 ORDER BY hits DESC";
+	$query = "SELECT agent as browser, hits FROM #__stats_counts WHERE type=0 ORDER BY hits DESC, browser DESC";
 	$dbase->setQuery($query);
 	$browsers = $dbase->loadObjectList();
 	
 	//işletim sistemleri
-	$query = "SELECT agent as os, hits FROM #__stats_counts WHERE type=1 ORDER BY hits DESC";
+	$query = "SELECT agent as os, hits FROM #__stats_counts WHERE type=1 ORDER BY hits DESC, os DESC";
 	$dbase->setQuery($query);
 	$oss = $dbase->loadObjectList();
 	
 	//domainler
-	$query = "SELECT agent as domain, hits FROM #__stats_counts WHERE type=2 ORDER BY hits DESC";
+	$query = "SELECT agent as domain, hits FROM #__stats_counts WHERE type=2 ORDER BY hits DESC, domain DESC";
 	$dbase->setQuery($query);
 	$domains = $dbase->loadObjectList();
 	

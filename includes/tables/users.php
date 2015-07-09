@@ -60,7 +60,12 @@ class Users extends DBTable {
 	}
 	
 	function userCinsiyet($required=0) {
-		return mosHTML::yesnoRadioList('cinsiyet', 'class="radio-inline" '.$required ? 'required' : ''.'', $this->cinsiyet, 'Erkek', 'Bayan');
+		
+		$c = array();
+		$c[] = mosHTML::makeOption('1', 'Erkek');
+		$c[] = mosHTML::makeOption('2', 'Bayan');
+		
+		return mosHTML::radioList($c, 'cinsiyet', 'class="radio-inline" '.$required ? 'required' : ''.'', 'value', 'text', $this->cinsiyet);
 	}
 	
 	function selectBrans($required=0) {

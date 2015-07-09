@@ -1964,3 +1964,39 @@ $(document).ready(function() {
 
   // }}}
 }(jQuery));
+
+jQuery(document).ready(function() {
+$ = jQuery;
+ 
+jQuery(function() {
+$(window).scroll(function () {
+if ($(this).scrollTop() > 50) {
+$('a#scroll-top').fadeIn();
+} else {
+$('a#scroll-top').fadeOut();
+}
+});
+ 
+$('a#scroll-top').on('click', function(){
+$('html, body').animate({scrollTop:0}, 'slow' );
+return false;
+});
+});
+});
+
+/**
+* Karakter sayacı
+*/
+$(document).ready(function(){
+$('#msgfield').keyup(function () {
+  var max = 255;
+  var len = $(this).val().length;
+  if (len >= max) {
+	$('#charNum').text('Limite ulaştınız');
+	$('#msgfield')
+  } else {
+	var char = max - len;
+	$('#charNum').text(char);
+  }
+});
+});

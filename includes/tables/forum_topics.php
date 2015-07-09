@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class BoardTopics extends DBTable {
+class BoardTopic extends DBTable {
 	
 	var $ID_TOPIC = null;
 	
@@ -20,14 +20,16 @@ class BoardTopics extends DBTable {
 	
 	var $locked = null;
 	
-	function BoardTopics(&$db) {
+	var $icon = null;
+	
+	function BoardTopic(&$db) {
 		$this->DBTable( '#__forum_topics', 'ID_TOPIC', $db );
 	}
 	
 	function TopicInfo($id) {
 		global $my;
 		
-		$this->_db->setQuery("SELECT t.ID_TOPIC, t.ID_BOARD, t.numReplies, t.numViews, t.locked, ms.subject, t.isSticky, t.ID_FIRST_MSG, t.ID_LAST_MSG, IFNULL(lt.ID_MSG, -1) + 1 AS new_from
+		$this->_db->setQuery("SELECT t.ID_TOPIC, t.ID_BOARD, t.icon, t.numReplies, t.numViews, t.locked, ms.subject, t.isSticky, t.ID_FIRST_MSG, t.ID_LAST_MSG, IFNULL(lt.ID_MSG, -1) + 1 AS new_from
 	FROM (#__forum_topics AS t, #__forum_messages AS ms)
 	LEFT JOIN #__forum_log_topics AS lt ON (lt.ID_TOPIC = ".$id." AND lt.ID_MEMBER = ".$my->id.")
 	WHERE t.ID_TOPIC = ".$id." AND ms.ID_MSG = t.ID_FIRST_MSG LIMIT 1");
@@ -36,7 +38,7 @@ class BoardTopics extends DBTable {
 		return $topic_info;
 	}
 	
-	function TopicIndex($id, $limitstart, $limit) {
+	function TopicIndex($id, $topicstart, $topiclimit) {
 		global $my;
 		
 		$this->_db->setQuery("SELECT m.*, t.ID_LAST_MSG, u.myili, u.lastvisit, u.image, u.name as posterName, u.cinsiyet, s.name AS sehirAdi 
@@ -44,7 +46,7 @@ class BoardTopics extends DBTable {
 		LEFT JOIN #__forum_topics AS t ON t.ID_TOPIC=m.ID_TOPIC
 		LEFT JOIN #__users AS u ON u.id=m.ID_MEMBER 
 		LEFT JOIN #__sehirler AS s ON s.id=u.sehir
-		WHERE m.ID_TOPIC=".$this->_db->Quote($id)." ORDER BY m.posterTime ASC", $limitstart, $limit);
+		WHERE m.ID_TOPIC=".$this->_db->Quote($id)." ORDER BY m.posterTime ASC", $topicstart, $topiclimit);
 		$rows = $this->_db->loadObjectList();
 		
 		foreach ($rows as $row) {
@@ -67,7 +69,7 @@ class BoardTopics extends DBTable {
 				'name' => $row->posterName,
 				'href' => 'index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER,
 				'link' => '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER.'">'.$row->posterName.'</a>',
-				'cinsiyet' => $row->cinsiyet ? 'Erkek' : 'Bayan',
+				'cinsiyet' => $row->cinsiyet == 1 ? 'Erkek' : 'Bayan',
 				'profilimage' => $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png',
 				'imagelink' => $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" width="100" height="100" />' : '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" width="100" height="100" />',
 				'sehir' => $row->sehirAdi,

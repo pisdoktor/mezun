@@ -41,10 +41,10 @@ class Boards extends DBTable {
 		return $board_info;
 	}
 	
-	function BoardTopics($id, $limitstart, $limit) {
+	function BoardTopics($id, $topicstart, $topiclimit, $limitstart, $limit) {
 		global $my;
 		
-		$query = "SELECT t.ID_TOPIC, t.numReplies, t.locked, t.numViews, t.isSticky, "
+		$query = "SELECT t.ID_TOPIC, t.numReplies, t.locked, t.icon, t.numViews, t.isSticky, "
 		. "\n IFNULL(lt.ID_MSG, IFNULL(lmr.ID_MSG, -1)) + 1 AS new_from, "
 		. "\n t.ID_LAST_MSG, ml.posterTime AS lastPosterTime, ml.ID_MSG_MODIFIED, "
 		. "\n ml.subject AS lastSubject, meml.name AS lastMemberName, "
@@ -120,6 +120,7 @@ class Boards extends DBTable {
 				'is_hot' => $row['numReplies'] >= hotTopicPosts,
 				'is_very_hot' => $row['numReplies'] >= hotTopicVeryPosts,
 				'is_posted_in' => false,
+				'icon' => $row['icon'] ? $row['icon'] : 'xx',
 				'subject' => $row['firstSubject'],
 				'new' => $row['new_from'] <= $row['ID_MSG_MODIFIED'],
 				'new_from' => $row['new_from'],
@@ -127,7 +128,7 @@ class Boards extends DBTable {
 				'new_href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new',
 				'replies' => $row['numReplies'],
 				'views' => $row['numViews'],
-				'pages' => ($row['numReplies'] > $limit ? 'Sayfalar:'.Forum::constructPageIndex('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC'], $row['numReplies'], $limitstart, $limit) : '')
+				'pages' => ($row['numReplies'] > $limit ? 'Sayfalar:'.Forum::constructPageIndex('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC'], $row['numReplies'], $topicstart, $topiclimit) : '')
 			);
 		}
 		if (isset($context['topics'])) {

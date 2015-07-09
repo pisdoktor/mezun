@@ -29,15 +29,15 @@ class Analytics {
 	public function __construct() {
 		
 		$this->requestUrl   = $_SERVER['REQUEST_URI'];
-		$this->referer      = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Bilinmiyor';
+		$this->referer      = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Yok';
 		$this->segments     = parse_url($this->referer);
-		$this->refererHost  = isset($this->segments['host']) ? $this->segments['host'] : 'Bilinmiyor';
+		$this->refererHost  = isset($this->segments['host']) ? $this->segments['host'] : 'Yok';
 		$this->agent        = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Bilinmiyor';
 		$this->browser      = $this->GetBrowser($this->agent);
 		$this->os           = $this->GetOS($this->agent);
 		$this->remoteAddr   = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Bilinmiyor';
 		$this->domain       = @gethostbyaddr( $_SERVER['REMOTE_ADDR'] );
-		// domainin son elementini dışarı atalım
+		// domainin son elementini dışarı alalım
 		$this->domain = explode( '.', $this->domain );
 		$this->domain = $this->domain[count( $this->domain )-1];
 

@@ -32,9 +32,8 @@ class BoardMessages extends DBTable {
 		return $this->_db->loadResult();
 	}
 	
-	function latestMessages($showlatestcount=5, $limitstart, $limit) {
-		// Find all the posts.  Newer ones will have higher IDs.  (assuming the last 20 * number are accessable...)
-	// !!!SLOW This query is now slow, NEEDS to be fixed.  Maybe break into two?
+	function latestMessages($showlatestcount=5, $limit) {
+		
 	$query = "
 		SELECT
 			m.posterTime, m.subject, m.ID_TOPIC, m.ID_MEMBER, m.ID_MSG,

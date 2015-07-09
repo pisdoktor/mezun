@@ -209,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `deu_forum_topics` (
   `numReplies` int(10) NOT NULL,
   `numViews` int(10) NOT NULL,
   `locked` tinyint(4) NOT NULL,
+  `icon` varchar(100) NOT NULL,
   PRIMARY KEY (`ID_TOPIC`),
   UNIQUE KEY `lastMessage` (`ID_LAST_MSG`,`ID_BOARD`),
   UNIQUE KEY `firstMessage` (`ID_FIRST_MSG`,`ID_BOARD`)

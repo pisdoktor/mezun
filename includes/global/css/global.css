@@ -573,3 +573,27 @@ background: rgba(0,0,0,.5);
 img.jcrop-preview {
   max-width: none;
 }
+
+a#scroll-top{ 
+display:none;    
+position:fixed;    
+right:20px;    
+bottom:20px; 
+height:42px; 
+width:42px; 
+line-height:42px;    
+background:#377f8f url(./images/scrolltop.png) center center no-repeat;    
+opacity:0.8;    
+-moz-opacity:0.8;    
+-webkit-opacity:0.8;    
+border-radius:4px;    
+-moz-border-radius:4px;    
+-webkit-border-radius:4px;    
+-webkit-transition:all 0.25s ease-in-out; 
+-moz-transition:all 0.25s ease-in-out; 
+-o-transition:all 0.25s ease-in-out; 
+}
+ 
+a#scroll-top:hover{ 
+background-color:#f56734; 
+}

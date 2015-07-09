@@ -33,6 +33,20 @@ header( 'Pragma: no-cache' );
 
 initGzip();
 
-require_once(ABSPATH.'/admin/includes/functions.php');
+//ziyaretçi
+if (!$my->id) {
 
-loadAdminModule();
+}
+//kayıtlı kullanıcı
+else {
+	//sistem yöneticisi ise 
+	if ($my->access_type == 'admin') {    
+		require_once(ABSPATH.'/admin/includes/functions.php');    
+			
+		loadAdminModule();
+			
+	} else {        
+		loadSiteModule();
+	}
+}
+

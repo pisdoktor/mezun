@@ -45,6 +45,13 @@ if (!$my->id) {
 <li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
 </ul>
 </li>
+<li class="has-sub"><a href="#"><span>Gruplar</span></a>
+<ul>
+<li><a href="index.php?option=site&bolum=group&task=all"><span>Tüm Gruplar</span></a></li>
+<li><a href="index.php?option=site&bolum=group&task=my"><span>Gruplarım</span></a></li>
+<li><a href="index.php?option=site&bolum=group&task=new"><span>Yeni Grup</span></a></li>
+</ul>
+</li>
 <li><a href="index.php?option=site&bolum=arama"><span>Üye Arama</span></a></li>
 <li><a href="index.php?option=site&bolum=forum"><span>Forum</span></a></li>
 <?php 

@@ -3,8 +3,10 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $id = intval(getParam($_REQUEST, 'id'));
+
 $limit = intval(getParam($_REQUEST, 'limit', 10));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
+
 
 include(dirname(__FILE__). '/html.php');
 
@@ -47,7 +49,7 @@ function newMessage() {
 	
 	$ID_TOPIC = intval(getParam($_REQUEST, 'topic'));
 	
-	$topic = new BoardTopics($dbase);
+	$topic = new BoardTopic($dbase);
 	$board = new Boards($dbase);
 	
 	$topic->load($ID_TOPIC);
@@ -78,7 +80,24 @@ function newTopic() {
 	
 	$board_info = $board->BoardInfo($board->ID_BOARD);
 	
-	ForumHTML::newTopic($board, $my, $board_info);
+	$icon = array();
+	$icon[] = mosHTML::makeOption('xx', 'Standart');
+	$icon[] = mosHTML::makeOption('thumbup', 'Thumb Up');
+	$icon[] = mosHTML::makeOption('thumbdown', 'Thumb Down');
+	$icon[] = mosHTML::makeOption('exclamation', 'Exclamation');
+	$icon[] = mosHTML::makeOption('question', 'Question');
+	$icon[] = mosHTML::makeOption('lamp', 'Lamp');
+	$icon[] = mosHTML::makeOption('smiley', 'Smiley');
+	$icon[] = mosHTML::makeOption('angry', 'Angry');
+	$icon[] = mosHTML::makeOption('cheesy', 'Cheesy');
+	$icon[] = mosHTML::makeOption('grin', 'Grin');
+	$icon[] = mosHTML::makeOption('sad', 'Sad');
+	$icon[] = mosHTML::makeOption('wink', 'Wink');
+	$icon[] = mosHTML::makeOption('solved', 'Solved');
+	
+	$list['icons'] = mosHTML::selectList($icon, 'icon', 'id="icon" onchange="showimage()"', 'value', 'text', 'xx');
+	
+	ForumHTML::newTopic($board, $my, $board_info, $list);
 }
 
 function createNewMessage() {
@@ -124,7 +143,7 @@ function createNewMessage() {
 	$dbase->setQuery("UPDATE #__forum_log_topics SET ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC).", ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
 	$dbase->query();
 	
-	$topic = new BoardTopics($dbase);
+	$topic = new BoardTopic($dbase);
 	$topic_info = $topic->TopicInfo($msgOptions->ID_TOPIC);
 	
 	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $msgOptions->ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies/ $limit)) * $limit) : '') . '#new';
@@ -157,6 +176,7 @@ function createNewTopic() {
 	$topicOptions->numReplies = 1;
 	$topicOptions->numViews = null;
 	$topicOptions->locked = $content['locked'];
+	$topicOptions->icon = $content['icon'];
 	
 	$new_topic = empty($topicOptions->ID_TOPIC);
 	//mesajı sokalım
@@ -172,8 +192,8 @@ function createNewTopic() {
 	}
 	//başlığı sokalım
 	$query = "INSERT INTO #__forum_topics "
-	. "\n (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews, numReplies) "
-	. "\n VALUES (".$dbase->Quote($topicOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($topicOptions->locked).", ".$dbase->Quote($topicOptions->isSticky).", ".$dbase->Quote($topicOptions->numViews).", ".$dbase->Quote($topicOptions->numReplies).")"
+	. "\n (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews, numReplies, icon) "
+	. "\n VALUES (".$dbase->Quote($topicOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($topicOptions->locked).", ".$dbase->Quote($topicOptions->isSticky).", ".$dbase->Quote($topicOptions->numViews).", ".$dbase->Quote($topicOptions->numReplies).", ".$dbase->Quote($topicOptions->icon).")"
 	;
 	$dbase->setQuery($query);
 	$dbase->query();		
@@ -207,9 +227,12 @@ function createNewTopic() {
 }
 
 function Topic($id) {
-	global $dbase, $limit, $limitstart, $my;
+	global $dbase, $my;
 	
-	$topics = new BoardTopics($dbase);
+	$topiclimit = intval(getParam($_REQUEST, 'limit', 10));
+	$topicstart = intval(getParam($_REQUEST, 'limitstart', 0));
+	
+	$topics = new BoardTopic($dbase);
 	$controlid = $topics->load($id);
 	
 	if (!$controlid) {
@@ -218,14 +241,14 @@ function Topic($id) {
 	}
 	$board = new Boards($dbase);
 		
-	$context['topic'] = $topics->TopicIndex($id, $limitstart, $limit);
+	$context['topic'] = $topics->TopicIndex($id, $topicstart, $topiclimit);
 	$topic_info = $topics->TopicInfo($id);
 	$board_info = $board->BoardInfo($topic_info->ID_BOARD);
 
 
 	$total = $topic_info->numReplies;
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new pageNav($total, $topicstart, $topiclimit);
 	
 	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages");
 		$maxMsg = $dbase->loadResult();
@@ -269,11 +292,11 @@ function Topic($id) {
 }
 
 function ForumIndex() {
-	global $dbase, $limitstart, $limit;
+	global $dbase, $limit;
 	
 	$categories = new BoardCategories($dbase);
 	$latestposts = new BoardMessages($dbase);
-	$context['latestmsg'] = $latestposts->latestMessages(latestPostCount, $limitstart, $limit);
+	$context['latestmsg'] = $latestposts->latestMessages(latestPostCount, $limit);
 	
 	$context['categories'] = $categories->ForumIndex();
 	
@@ -281,10 +304,14 @@ function ForumIndex() {
 }
 
 function Board($id) {
-	global $dbase, $limit, $limitstart, $my;
+	global $dbase, $my, $limit, $limitstart;
+	
+	$topiclimit = intval(getParam($_REQUEST, 'topiclimit', 10));
+	$topicstart = intval(getParam($_REQUEST, 'topicstart', 0));
 	
 	$boards = new BoardCategories($dbase);
 	$topics = new Boards($dbase);
+	$maxID = new BoardMessages($dbase);
 	
 	$topics->load($id);
 	if (!$topics->ID_BOARD) {
@@ -292,19 +319,25 @@ function Board($id) {
 		return;
 	}
 	
-	$context['boards'] = $boards->Board($id, $limitstart, $limit);
-	$context['topics'] = $topics->BoardTopics($id, $limitstart, $limit);
+	//Board içerisindeki alt boardlar
+	$context['boards'] = $boards->Board($id);
+	
+	//Board içerisindeki topicler
+	$context['topics'] = $topics->BoardTopics($id, $topicstart, $topiclimit, $limitstart, $limit);
 	$board_info = $topics->BoardInfo($id);
 	
+	//Board içerisindeki topicleri sayfalandıralım
 	$total = $board_info->numTopics;
 	$pageNav = new pageNav($total, $limitstart, $limit);
 	
-	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages");
-	$maxMsg = $dbase->loadResult();
+	//max msg id değerini alalım
+	$maxMsg = $maxID->maxMsgID();
+	
 	if (!$maxMsg) {
 		$maxMsg = 1;
 	}
 	
+	//board u ve üst bordları okundu olarak işaretleyelim
 	$dbase->setQuery("REPLACE INTO #__forum_log_boards "
 	. "\n (ID_MSG, ID_MEMBER, ID_BOARD) VALUES (".$dbase->Quote($maxMsg).", ".$dbase->Quote($my->id).", ".$dbase->Quote($id).")");
 	$dbase->query();
@@ -318,5 +351,6 @@ function Board($id) {
 	$dbase->query();
 	}
 		
+	//içeriği gösterelim    
 	ForumHTML::BoardSeen($context, $pageNav, $board_info);
 }

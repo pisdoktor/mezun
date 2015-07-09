@@ -46,18 +46,54 @@ class ForumHTML {
 		
 	}
 	
-	static function newTopic($board, $my, $board_info) {
+	static function newTopic($board, $my, $board_info, $list) {
 		?>
+		<script type="text/javascript">
+		var icon_urls = {
+				'xx': '<?php echo SITEURL;?>/images/forum/xx.gif',
+				'thumbup': '<?php echo SITEURL;?>/images/forum/thumbup.gif',
+				'thumbdown': '<?php echo SITEURL;?>/images/forum/thumbdown.gif',
+				'exclamation': '<?php echo SITEURL;?>/images/forum/exclamation.gif',
+				'question': '<?php echo SITEURL;?>/images/forum/question.gif',
+				'lamp': '<?php echo SITEURL;?>/images/forum/lamp.gif',
+				'smiley': '<?php echo SITEURL;?>/images/forum/smiley.gif',
+				'angry': '<?php echo SITEURL;?>/images/forum/angry.gif',
+				'cheesy': '<?php echo SITEURL;?>/images/forum/cheesy.gif',
+				'grin': '<?php echo SITEURL;?>/images/forum/grin.gif',
+				'sad': '<?php echo SITEURL;?>/images/forum/sad.gif',
+				'wink': '<?php echo SITEURL;?>/images/forum/wink.gif',
+				'solved': '<?php echo SITEURL;?>/images/forum/solved.gif'
+			};
+			function showimage() {
+				document.images.icons.src = icon_urls[document.form.icon.options[document.form.icon.selectedIndex].value];
+			}
+		</script>
 		<div class="panel panel-default">
 		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small>Yeni Başlık</small></div>
 		<div class="panel-body">
-		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" role="form">
+		
+		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" name="form" role="form">
 		
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-8">
-		<input type="text" name="subject" placeholder="Mesajınızın başlığı" class="form-control" required>
+		<input type="text" id="subject" name="subject" placeholder="Mesajınızın konusu" class="form-control" required>
 		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		
+		<div class="row">
+		
+		<div class="col-sm-3">
+		<?php echo $list['icons'];?>
+		</div>
+		
+		<div class="col-sm-1">
+		<img src="<?php echo SITEURL;?>/images/forum/xx.gif" name="icons" hspace="15" alt="" />
+		</div>
+		
 		</div>
 		</div>
 		
@@ -109,9 +145,12 @@ class ForumHTML {
 	}
 	
 	static function TopicSeen($context, $pageNav, $topic_info, $board_info) {
+		
+		$topic_icon =  '<img src="'.SITEURL.'/images/forum/'.$topic_info->icon.'.gif" alt="" title="" />'; 
+		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small><?php echo $topic_info->subject;?></small></div>
+		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4> <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
 		<?php if (!$topic_info->locked) {?>
@@ -282,7 +321,8 @@ class ForumHTML {
 		<?php
 		if (!empty($context['topics'])) {
 			?>
-			<td width="9%" class="catbg3"></td>
+			<td width="4%" class="catbg3"></td>
+			<td width="5%" class="catbg3"></td>
 			<td class="catbg3">Başlık</td>
 			<td class="catbg3" width="11%">Başlatan</td>
 			<td class="catbg3" width="4%" align="center">Mesaj</td>
@@ -299,25 +339,35 @@ class ForumHTML {
 			<?php
 		if (!empty($context['topics'])) {			
 		foreach ($context['topics'] as $topic) {
-			$image_locked = $topic['is_locked'] ? '<img src="'.SITEURL.'/images/forum/locked_topic.png" alt="Başlık Kilitli" title="Başlık Kilitli" />' : '<img src="'.SITEURL.'/images/forum/unlocked_topic.png" alt="Başlık Kilitli Değil" title="Başlık Kilitli Değil" />';
+			$image_locked = $topic['is_locked'] ? '<img src="'.SITEURL.'/images/forum/locked_topic.png" alt="Başlık Kilitli" title="Başlık Kilitli" />' : '';
 			$image_sticky = $topic['is_sticky'] ? '<img src="'.SITEURL.'/images/forum/sticky.png" alt="Başlık Yapışkan" title="Başlık Yapışkan" />' : ''; 
+			
+			$topic_icon = '<img src="'.SITEURL.'/images/forum/'.$topic['icon'].'.gif" alt="" title="" />';
 			?>
 			<tr>
 			
-			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" align="center" width="9%">
-			<?php echo $image_locked;?> <?php echo $image_sticky;?>
+			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" align="center" width="4%">
+			<?php echo $topic_icon;?>
+			</td>
+			
+			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" align="center" width="5%">
+		   <?php echo $image_locked;?> <?php echo $image_sticky;?>
 			</td>
 		
 			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle">
 			<?php
 			echo $topic['is_sticky'] ? '<b>' : '' , '<span id="msg_' . $topic['first_post']['id'] . '">', $topic['first_post']['link'], '</span>', $topic['is_sticky'] ? '</b>' : '';
 			
-			echo  '<br /><small>'.$topic['pages'].'</small>';
+			
 			
 			// Is this topic new? (assuming they are logged in!)
 			if ($topic['new']) {
-			echo '<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '"><img src="'.SITEURL.'/images/forum/yeni.png" alt="Yeni Mesaj Var" /></a>';
+			echo '<a href="', $topic['new_href'], '" id="newicon' . $topic['first_post']['id'] . '">
+			<img src="'.SITEURL.'/images/forum/yeni.png" alt="Yeni Mesaj Var" />
+			</a>';
 			}
+			
+			echo  '<br /><small>'.$topic['pages'].'</small>';
 			?>
 			</td>		
 			<td class="windowbg<?php echo $topic['is_sticky'] ? '3': '2';?>" valign="middle" width="14%">

@@ -150,11 +150,11 @@ $this_last_post = array(
 'timestamp' => Forum::forum_time($row_board['posterTime']),
 'subject' => $row_board['short_subject'],
 'member' => array(
-'id' => $row_board['ID_MEMBER'],
-'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : 'N/A',
-'name' => $row_board['realName'],
-'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] : '',
-'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
+	'id' => $row_board['ID_MEMBER'],
+	'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : 'N/A',
+	'name' => $row_board['realName'],
+	'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] : '',
+	'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
 			),
 'start' => '',
 'topic' => $row_board['ID_TOPIC']
@@ -200,7 +200,7 @@ return $context['categories'];
 	* 
 	* @param mixed $id : board id değeri
 	*/
-	function Board($id, $limitstart, $limit) {
+	function Board($id) {
 		global $my;
 		/**
 		* Alt forumları alalım
@@ -312,7 +312,7 @@ return $context['categories'];
 						'href' => !empty($row['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER'] : '',
 						'link' => $row['posterName'] != '' ? (!empty($row['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>' : $row['realName']) : 'N/A',
 					),
-					'start' => 'new',
+					'start' => '#new',
 					'topic' => $row['ID_TOPIC'],
 					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '#new'
 				);

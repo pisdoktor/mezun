@@ -9,13 +9,13 @@ class Version {
 	
 	var $DEV_STATUS  = 'Beta';
 	
-	var $DEV_LEVEL   = '0';
+	var $DEV_LEVEL   = '1';
 	
-	var $CODENAME    = 'Ata';
+	var $CODENAME    = 'Ankara';
 	
-	var $RELDATE     = '13 Haziran 2015';
+	var $RELDATE     = '06 Temmuz 2015';
 	
-	var $RELTIME     = '13:00';
+	var $RELTIME     = '20:00';
 	
 	var $COPYRIGHT   = "Copyright © 2015 Soner Ekici. Tüm hakları saklıdır.";
 	

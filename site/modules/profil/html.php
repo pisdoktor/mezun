@@ -168,7 +168,7 @@ class Profile {
 	static function getProfile($row, $edit, $msg, $istem, $show) {
 		
 		$image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
-		$cinsiyet = $row->cinsiyet ? 'Erkek' : 'Bayan';
+		$cinsiyet = $row->cinsiyet == 1 ? 'Erkek' : 'Bayan';
 		$editlink = $edit ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
 		$passlink = $edit ? '<a class="btn btn-default" href="#" id="changepass">Parola Değiştir</a>' : '';
 		$editimage = $edit ? '<a class="btn btn-default" href="#" id="changeimg">Resim Ekle</a>' : '';
