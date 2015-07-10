@@ -11,10 +11,6 @@ require_once(dirname( __FILE__ ) . '/includes/functions.php');
 $option = strval(strtolower(getParam($_REQUEST, 'option')));
 $bolum = strval(strtolower(getParam($_REQUEST, 'bolum')));
 $task = strval(strtolower(getParam($_REQUEST, 'task')));
-$return = strval( getParam( $_REQUEST, 'return', NULL ) );
-$code = strval(getParam($_REQUEST, 'code'));
-
-$mosmsg = getParam($_REQUEST, 'mosmsg');
 
 $mainframe = new mainFrame( $dbase, $option );
 $mainframe->initSession();
@@ -33,12 +29,7 @@ header( 'Pragma: no-cache' );
 
 initGzip();
 
-//ziyaretçi
-if (!$my->id) {
-
-}
-//kayıtlı kullanıcı
-else {
+if ($my->id) {
 	//sistem yöneticisi ise 
 	if ($my->access_type == 'admin') {    
 		require_once(ABSPATH.'/admin/includes/functions.php');    

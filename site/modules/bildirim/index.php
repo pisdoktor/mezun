@@ -24,6 +24,7 @@ function sysMessage() {
 	$bolum[] = mosHTML::makeOption('online', 'Online Üyeler');
 	$bolum[] = mosHTML::makeOption('mesaj', 'Mesajlar');
 	$bolum[] = mosHTML::makeOption('istek', 'İstekler');
+	$bolum[] = mosHTML::makeOption('group', 'Gruplar');
 	$bolum[] = mosHTML::makeOption('arama', 'Üye Arama');
 	$bolum[] = mosHTML::makeOption('forum', 'Forum');
 	$bolum[] = mosHTML::makeOption('diger', 'Diğer');

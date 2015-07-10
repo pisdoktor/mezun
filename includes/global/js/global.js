@@ -2000,3 +2000,25 @@ $('#msgfield').keyup(function () {
   }
 });
 });
+
+
+//gruba yeni üye ekleme penceresi
+$(document).ready(function() {
+	$("#addnewmember").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 300,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#newmember" ).click(function() {
+	  $( "#addnewmember" ).dialog( "open" );
+	});
+});

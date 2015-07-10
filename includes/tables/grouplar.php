@@ -61,7 +61,11 @@ class UserGroups extends DBTable {
 	public function canEditGroup() {
 		global $my;
 
-		if ($this->canDeleteGroup() || $this->isGroupAdmin() || $my->id == 1) {
+		if ($this->canDeleteGroup()) {
+			return true;
+		} else if ($this->isGroupAdmin()) {
+			return true;
+		} else if ($my->id == 1) {
 			return true;
 		} else {
 			return false;
@@ -72,7 +76,13 @@ class UserGroups extends DBTable {
 	public function canViewGroup() {
 		global $my;
 		
-		if ($this->creator == $my->id || $this->status == 0 || $my->id == 1) {
+		if ($this->creator == $my->id) {
+			return true;
+		} else if ($this->isGroupMember()) {
+			return true;
+		} else if ($this->isGroupAdmin()) {
+			return true;
+		} else if ($my->id == 1) {
 			return true;
 		} else {
 			return false;
@@ -105,7 +115,7 @@ class UserGroups extends DBTable {
 	public function isGroupAdmin() {
 		global $my;
 		
-		$this->_db->setQuery("SELECT 1 FROM #__group_members WHERE groupid=".$this->_db->Quote($this->id)." AND userid=".$this->_db->Quote($my->id));
+		$this->_db->setQuery("SELECT 1 FROM #__groups_members WHERE groupid=".$this->_db->Quote($this->id)." AND userid=".$this->_db->Quote($my->id)." AND isadmin=1");
 		
 		if ($this->_db->loadResult() > 0) {
 			return true;

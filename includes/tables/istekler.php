@@ -44,4 +44,20 @@ class Istekler extends DBTable {
 			return false;
 		}
 	}
+	
+	function getMyFriends() {
+		global $my;
+		
+		$query = "SELECT aid FROM #__istekler WHERE durum=1 AND gid=".$this->_db->Quote($my->id);
+		$this->_db->setQuery($query);
+		$rows1 = $this->_db->loadResultArray();
+		
+		$query = "SELECT gid FROM #__istekler WHERE durum=1 AND aid=".$this->_db->Quote($my->id);
+		$this->_db->setQuery($query);
+		$rows2 = $this->_db->loadResultArray();
+		
+		$rows = array_merge($rows1, $rows2);
+		
+		return $rows;
+	}
 }

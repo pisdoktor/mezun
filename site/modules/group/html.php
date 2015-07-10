@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class GroupHTML {
 	
-	static function showGroupMembers($group, $rows, $pageNav) {
+	static function showGroupMembers($group, $rows, $pageNav, $list, $other) {
 		$status = $group->status ? 'KAPALI GRUP':'AÇIK GRUP';
 		
 		$groupimage = $group->image ? '<img src="'.SITEURL.'/images/group/'.$group->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
@@ -21,6 +21,8 @@ class GroupHTML {
 		
 		$editlink = $group->canEditGroup() ? '<a href="index.php?option=site&bolum=group&task=edit&id='.$group->id.'" class="btn btn-info">Grubu Düzenle</a>':'';
 		$deletelink = $group->canDeleteGroup() ? '<a href="index.php?option=site&bolum=group&task=delete&id='.$group->id.'" class="btn btn-warning">Grubu Sil</a>':'';
+		
+		$addnewmember = ($group->isGroupMember() && $group->status && $other) ? '[ <a href="#" id="newmember">Yeni Üye Ekle</a> ]':'';
 		?>
 		<div class="panel panel-info">
 		<div class="panel-heading"><h4>GRUP : <?php echo $group->name;?> [<?php echo $status;?>]</h4><small><?php echo $group->aciklama;?></small></div>
@@ -29,7 +31,7 @@ class GroupHTML {
 		<div class="row">
 			<div class="col-sm-7">
 			<div class="panel panel-warning">
-		<div class="panel-heading"><h4>Grup Üyeleri</h4></div>
+		<div class="panel-heading"><h4>Grup Üyeleri <?php echo $addnewmember;?></h4></div>
 		<div class="panel-body">
 		
 		<div class="form-group">
@@ -115,7 +117,7 @@ class GroupHTML {
 		</div>        
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-5">Grup Yöneticileri:</div>
+		<div class="col-sm-5">Grup Moderatörleri:</div>
 		<div class="col-sm-7"><?php echo $group->admins;?></div>
 		</div>
 		</div>
@@ -140,6 +142,15 @@ class GroupHTML {
 		
 		
 		</div>
+		</div>
+		
+		<div id="addnewmember" title="Gruba Arkadaşını Ekle">
+		<form method="post" action="index.php?option=site&bolum=group&task=addmember" role="form">
+		<?php echo $list['invite'];?>
+		<input type="checkbox" name="isadmin" value="1" />
+		<button class="btn btn-primary">Gruba Ekle</button>
+		<input type="hidden" name="groupid" value="<?php echo $group->id;?>" />
+		</form>
 		</div>
 		<?php		
 	}
@@ -371,7 +382,7 @@ class GroupHTML {
 		</div>		
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-5">Grup Yöneticileri:</div>
+		<div class="col-sm-5">Grup Moderatörleri:</div>
 		<div class="col-sm-7"><?php echo $row->admins;?></div>
 		</div>
 		</div>

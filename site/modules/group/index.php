@@ -29,9 +29,9 @@ switch($task) {
 	case 'save':
 	saveGroup();
 	break;
-	//grubu silme
+	//grubu silme 
 	case 'delete':
-	deleteConfirm($id);
+	deleteGroup($id);
 	break;
 	//bir gruba katıl
 	case 'join':
@@ -49,10 +49,67 @@ switch($task) {
 	case 'showmembers':
 	showGroupMembers($id);
 	break;
+	
+	case 'addmember':
+	addNewMember();
+	break;
+}
+
+function addNewMember() {
+	global $dbase;
+	
+	$joindate = date('Y-m-d H:i:s');
+	$groupid = intval(getParam($_POST, 'groupid'));
+	$userid = intval(getParam($_POST, 'uid'));
+	$isadmin = intval(getParam($_POST, 'isadmin', 0));
+	
+	$dbase->setQuery("INSERT INTO #__groups_members (groupid, userid, joindate, isadmin) VALUES (".$dbase->Quote($groupid).", ".$dbase->Quote($userid).", ".$dbase->Quote($joindate).", ".$dbase->Quote($isadmin).")");
+	$dbase->query();
+	
+	Redirect('index.php?option=site&bolum=group&task=showmembers&id='.$groupid);
+}
+
+function deleteGroup($id) {
+	global $dbase;
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$row = new UserGroups($dbase);
+	$row->load($id);
+	
+	if (!$row->canDeleteGroup()) {
+		NotAuth();
+		return;
+	}
+	
+	//mesajları silelim
+	$dbase->setQuery("DELETE FROM #__groups_messages WHERE groupid=".$row->id);
+	$dbase->query();
+	
+	//üyeleri silelim
+	$dbase->setQuery("DELETE FROM #__groups_members WHERE groupid=".$row->id);
+	$dbase->query();
+	
+	//grubu silelim
+	$dbase->setQuery("DELETE FROM #__groups WHERE id=".$row->id);
+	$dbase->query();
+	
+	//grup resmini varsa silelim
+	if ($row->image) {
+			@unlink(ABSPATH.'/images/group/'.$row->image);
+	}
+	
+	
+	
+	Redirect('index.php?option=site&bolum=group', 'Grup ve tüm içeriği silindi');
+	
 }
 
 function showGroupMembers($id) {
-	global $dbase;
+	global $dbase, $my;
 	
 	if (!$id) {
 		NotAuth();
@@ -61,6 +118,11 @@ function showGroupMembers($id) {
 	
 	$group = new UserGroups($dbase);
 	$group->load($id);
+	
+	if (!$group->id) {
+		NotAuth();
+		return;
+	}
 	
 	//toplam üye sayısını alalım
 	$group->totalmember = $group->totalMembers();
@@ -91,7 +153,35 @@ function showGroupMembers($id) {
 	
 	$rows = $dbase->loadObjectList();
 	
-	GroupHTML::showGroupMembers($group, $rows, $pageNav);
+	//gruba eklemek için arkadaş listesini alalım
+	$friends = new Istekler($dbase);
+	$friendlist = $friends->getMyFriends();
+	//gruba ekli üyeleri alalım
+	$dbase->setQuery("SELECT userid FROM #__groups_members WHERE groupid=".$dbase->Quote($group->id)." AND userid NOT IN (".$my->id.")");
+	$memberlist = $dbase->loadResultArray();
+	
+	//gruba ekli olmayan arkadaşaları ayıralım
+	$others = array_diff($friendlist, $memberlist);
+	
+	//arkadaşların bilgilerini listeyelim
+	$other = implode(', ', $others);
+	
+	if ($other) {
+		$dbase->setQuery("SELECT id, name FROM #__users WHERE id IN (".$other.")");
+		$musers = $dbase->loadObjectList();
+		
+		foreach ($musers as $muser) {
+			$u[] = mosHTML::makeOption($muser->id, $muser->name);
+		}
+		
+		$list['invite'] = mosHTML::selectList($u, 'uid', 'size="10"', 'value', 'text');
+	} else {
+		$list['invite'] = '';
+	}
+	
+	
+	
+	GroupHTML::showGroupMembers($group, $rows, $pageNav, $list, $other);
 		
 }
 
