@@ -46,14 +46,11 @@ class Profile {
 </div>
 
 
-<form action="index.php" method="post" onsubmit="return checkCoords();">
+<form action="<?php echo sefLink('index.php?option=site&bolum=profil&task=cropsave');?>" method="post" onsubmit="return checkCoords();">
 	<input type="hidden" id="x" name="x" />
 	<input type="hidden" id="y" name="y" />
 	<input type="hidden" id="w" name="w" />
 	<input type="hidden" id="h" name="h" />
-	<input type="hidden" name="option" value="site" />
-	<input type="hidden" name="bolum" value="profil" />
-	<input type="hidden" name="task" value="cropsave" />
 	<input type="hidden" name="type" value="<?php echo $type;?>" />
 <br />
 	<input type="submit" value="Resmi Kes ve Kaydet" class="btn btn-primary" />
@@ -63,7 +60,7 @@ class Profile {
 	
 	static function editProfile($row) {
 		?>
-<form action="index.php" method="post" id="adminForm" role="form">
+<form action="<?php echo sefLink('index.php?option=site&bolum=profil&task=save');?>" method="post" id="adminForm" role="form">
 <div class="panel panel-warning">
 		<div class="panel-heading"><h4>PROFİL DÜZENLE</h4></div>
 		<div class="panel-body">
@@ -159,9 +156,6 @@ class Profile {
 </div>
 </div>
 </div>
-<input type="hidden" name="option" value="site" />
-<input type="hidden" name="bolum" value="profil" />
-<input type="hidden" name="task" value="save" />
 </form>
 		<?php
 	}
@@ -169,13 +163,13 @@ class Profile {
 		
 		$image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
 		$cinsiyet = $row->cinsiyet == 1 ? 'Erkek' : 'Bayan';
-		$editlink = $edit ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=edit">Profili Düzenle</a>' : '';
+		$editlink = $edit ? '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=edit').'">Profili Düzenle</a>' : '';
 		$passlink = $edit ? '<a class="btn btn-default" href="#" id="changepass">Parola Değiştir</a>' : '';
 		$editimage = $edit ? '<a class="btn btn-default" href="#" id="changeimg">Resim Ekle</a>' : '';
-		$deleteimage = ($edit && $row->image) ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=deleteimage">Resmi Sil</a>' : ''; 
-		$cropimage = ($edit && $row->image) ? '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=editimage">Resmi Düzenle</a>' : ''; 
+		$deleteimage = ($edit && $row->image) ? '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=deleteimage').'">Resmi Sil</a>' : ''; 
+		$cropimage = ($edit && $row->image) ? '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=editimage').'">Resmi Düzenle</a>' : ''; 
 		$msglink = $msg ? '<a class="btn btn-default" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
-		$istemlink = !$istem ? '' : '<a class="btn btn-default" href="index.php?option=site&bolum=istek&task=send&id='.$row->id.'">Arkadaşlık İsteği Gönder</a>';		
+		$istemlink = !$istem ? '' : '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=istek&task=send&id='.$row->id).'">Arkadaşlık İsteği Gönder</a>';		
 		
 		
 		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
@@ -339,20 +333,17 @@ class Profile {
 		<div id="imagechange" style="display: none;" title="Profil Resmi Değiştir"> 
 		<div class="text-info">* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>
 	   <div class="text-warning">* Resminizin boyutu 2 Mb geçemez!</div>
-		<form action="index.php" method="post" enctype="multipart/form-data" role="form">
+		<form action="<?php echo sefLink('index.php?option=site&bolum=profil&task=saveimage');?>" method="post" enctype="multipart/form-data" role="form">
 		<input type="file" name="image" id="image" class="btn btn-default" />
 		<br />       
 		<button type="submit" class="btn btn-primary">Profil Resmi Yap</button>
-		<input type="hidden" name="option" value="site" />
-		<input type="hidden" name="bolum" value="profil" />
-		<input type="hidden" name="task" value="saveimage" />
 		</form>
 		</div>
 		<!-- Profil Resmi Değiştirme -->
 		
 		<!-- Parola Değiştirme -->
 		<div id="passchange" style="display: none;" title="Parola Değiştir">
-		<form action="index.php" method="post" role="form">
+		<form action="<?php echo sefLink('index.php?option=site&bolum=profil&task=changepass');?>" method="post" role="form">
 		<label for="password">Yeni Parola:</label>
 		<input type="password" name="password" id="password" class="form-control" required />
 		<br />
@@ -360,22 +351,16 @@ class Profile {
 		<input type="password" name="password2" id="password2" class="form-control" required />
 		<br />
 		<button type="submit" class="btn btn-primary">Parolayı Değiştir</button>
-		<input type="hidden" name="option" value="site" />
-		<input type="hidden" name="bolum" value="profil" />
-		<input type="hidden" name="task" value="changepass" />
 		</form>
 		</div>
 		<!-- Parola Değiştirme -->
 		
 		<!-- Mesaj Gönderme-->
 		<div id="sendmessage" style="display: none;" title="Mesaj Gönder">
-		<form action="index.php" method="post" role="form">
+		<form action="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=send');?>" method="post" role="form">
 		<input type="text" name="baslik" class="form-control" placeholder="Mesajınızın başlığı" required>
 		<textarea rows="5" name="text" class="form-control" placeholder="Mesajınızın içeriği" required></textarea>
 		<button type="submit" class="btn btn-primary">Mesajı Gönder</button>
-		<input type="hidden" name="option" value="site" />
-		<input type="hidden" name="bolum" value="mesaj" />
-		<input type="hidden" name="task" value="send" />
 		<input type="hidden" name="aid" value="<?php echo $row->id;?>" />
 		</form>
 		</div>

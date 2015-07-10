@@ -51,7 +51,7 @@ if (empty($context['categories'][$row_board['ID_CAT']])) {
 	$context['categories'][$row_board['ID_CAT']] = array(
 	'id' => $row_board['ID_CAT'],
 	'name' => $row_board['catName'],
-	'href' => 'index.php?option=site&bolum=forum#cat' . $row_board['ID_CAT'],
+	'href' => sefLink('index.php?option=site&bolum=forum#cat' . $row_board['ID_CAT']),
 	'boards' => array(),
 	'new' => false
 	);
@@ -78,8 +78,8 @@ $this_category[$row_board['ID_BOARD']] = array(
 'children_new' => false,
 'topics' => $row_board['numTopics'],
 'posts' => $row_board['numPosts'],
-'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'],
-'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['boardName'] . '</a>'
+'href' => sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD']),
+'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD']).'">' . $row_board['boardName'] . '</a>'
 );
 }
 }
@@ -95,8 +95,8 @@ $this_category[$row_board['ID_PARENT']]['children'][$row_board['ID_BOARD']] = ar
 'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
 'topics' => $row_board['numTopics'],
 'posts' => $row_board['numPosts'],
-'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'],
-'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['boardName'] . '</a>'
+'href' => sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD']),
+'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD']).'">' . $row_board['boardName'] . '</a>'
 );
 
 // Counting child board posts is... slow :/.
@@ -153,8 +153,8 @@ $this_last_post = array(
 	'id' => $row_board['ID_MEMBER'],
 	'username' => $row_board['posterName'] != '' ? $row_board['posterName'] : 'N/A',
 	'name' => $row_board['realName'],
-	'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] : '',
-	'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER'] . '">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
+	'href' => $row_board['posterName'] != '' && !empty($row_board['ID_MEMBER']) ? sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER']) : '',
+	'link' => $row_board['posterName'] != '' ? (!empty($row_board['ID_MEMBER']) ? '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row_board['ID_MEMBER']).'">' . $row_board['realName'] . '</a>' : $row_board['realName']) : 'N/A',
 			),
 'start' => '',
 'topic' => $row_board['ID_TOPIC']
@@ -162,7 +162,7 @@ $this_last_post = array(
 
 		// Provide the href and link.
 if ($row_board['subject'] != '') {
-$this_last_post['href'] = 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'];
+$this_last_post['href'] = sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC']);
 $this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
 } else {
 $this_last_post['href'] = '';
@@ -247,9 +247,9 @@ return $context['categories'];
 						),
 						'start' => 'new',
 						'topic' => $row_board['ID_TOPIC'],
-						'href' => $row_board['subject'] != '' ? 'index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '#new' : '',
+						'href' => $row_board['subject'] != '' ? sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '#new') : '',
 						
-						'link' => $row_board['subject'] != '' ? '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '#new" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : ''
+						'link' => $row_board['subject'] != '' ? '<a href="'.sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC'] . '#new').'" title="' . $row_board['subject'] . '">' . $short_subject . '</a>' : ''
 					),
 					'new' => empty($row_board['isRead']) && $row_board['posterName'] != '',
 					'name' => $row_board['name'],
@@ -259,8 +259,8 @@ return $context['categories'];
 					'children_new' => false,
 					'topics' => $row_board['numTopics'],
 					'posts' => $row_board['numPosts'],
-					'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '',
-					'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD'] . '">' . $row_board['name'] . '</a>'
+					'href' => sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD']),
+					'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row_board['ID_BOARD']).'">' . $row_board['name'] . '</a>'
 				);
 			}
 		}
@@ -309,12 +309,12 @@ return $context['categories'];
 						'username' => $row['posterName'] != '' ? $row['posterName'] : 'N/A',
 						'name' => $row['realName'],
 						'id' => $row['ID_MEMBER'],
-						'href' => !empty($row['ID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER'] : '',
-						'link' => $row['posterName'] != '' ? (!empty($row['ID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER'] . '">' . $row['realName'] . '</a>' : $row['realName']) : 'N/A',
+						'href' => !empty($row['ID_MEMBER']) ? sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER']) : '',
+						'link' => $row['posterName'] != '' ? (!empty($row['ID_MEMBER']) ? '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER']).'">' . $row['realName'] . '</a>' : $row['realName']) : 'N/A',
 					),
 					'start' => '#new',
 					'topic' => $row['ID_TOPIC'],
-					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '#new'
+					'href' => sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '#new')
 				);
 				$context['boards'][$row['ID_PARENT']]['last_post']['link'] = $row['subject'] != '' ? '<a href="' . $context['boards'][$row['ID_PARENT']]['last_post']['href'] . '" title="' . $row['subject'] . '">' . $short_subject . '</a>' : 'N/A';
 			}
@@ -325,10 +325,10 @@ return $context['categories'];
 				'new' => empty($row['isRead']) && $row['posterName'] != '',
 				'topics' => $row['numTopics'],
 				'posts' => $row['numPosts'],
-				'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD'],
-				'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>'
+				'href' => sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD']),
+				'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD']).'">' . $row['name'] . '</a>'
 			);
-			$context['boards'][$row['ID_PARENT']]['link_children'][] = '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD'] . '">' . $row['name'] . '</a>';
+			$context['boards'][$row['ID_PARENT']]['link_children'][] = '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD']).'">' . $row['name'] . '</a>';
 			$context['boards'][$row['ID_PARENT']]['children_new'] |= empty($row['isRead']) && $row['posterName'] != '';
 
 			if (countChildPosts) {

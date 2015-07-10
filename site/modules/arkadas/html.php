@@ -27,7 +27,7 @@ for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
 $image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
-$link = '<a class="btn btn-default" href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
+$link = '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->id).'">Profili Göster</a>';
 $cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
 ?>
 

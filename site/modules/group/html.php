@@ -10,17 +10,17 @@ class GroupHTML {
 		$groupimage = $group->image ? '<img src="'.SITEURL.'/images/group/'.$group->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
 		
 		if ($group->isGroupMember()) {
-			$joinlink = '<a href="index.php?option=site&bolum=group&task=leave&id='.$group->id.'" class="btn btn-primary">Gruptan Ayrıl</a>';
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=leave&id='.$group->id).'" class="btn btn-primary">Gruptan Ayrıl</a>';
 		} else {
 			if ($group->canJoinGroup()) {
-			$joinlink = '<a href="index.php?option=site&bolum=group&task=join&id='.$group->id.'" class="btn btn-primary">Gruba Katıl</a>';    
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=join&id='.$group->id).'" class="btn btn-primary">Gruba Katıl</a>';    
 			} else {
 				$joinlink = 'Grup kapalı ve siz katılamazsınız';
 			}
 		}
 		
-		$editlink = $group->canEditGroup() ? '<a href="index.php?option=site&bolum=group&task=edit&id='.$group->id.'" class="btn btn-info">Grubu Düzenle</a>':'';
-		$deletelink = $group->canDeleteGroup() ? '<a href="index.php?option=site&bolum=group&task=delete&id='.$group->id.'" class="btn btn-warning">Grubu Sil</a>':'';
+		$editlink = $group->canEditGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=edit&id='.$group->id).'" class="btn btn-info">Grubu Düzenle</a>':'';
+		$deletelink = $group->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$group->id).'" class="btn btn-warning">Grubu Sil</a>':'';
 		
 		$addnewmember = ($group->isGroupMember() && $group->status && $other) ? '[ <a href="#" id="newmember">Yeni Üye Ekle</a> ]':'';
 		?>
@@ -50,7 +50,7 @@ class GroupHTML {
 			  $row = $rows[$i];
 			  $creator = $row->userid == $row->creatorid ? '<small style="color:red">(Kurucu Üye)</small>':'';
 			  $admin = $row->isadmin ? '<small style="color:blue;">Grup Yöneticisi</small>': '';
-			  $row->name = '<a href="index.php?option=site&bolum=profil&task=view&id='.$row->userid.'">'.$row->name.'</a>';	
+			  $row->name = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=view&id='.$row->userid).'">'.$row->name.'</a>';	
 			  ?>
 		<div class="form-group">
 		<div class="row">
@@ -112,7 +112,7 @@ class GroupHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">Toplam Üye:</div>
-		<div class="col-sm-7"><a href="index.php?option=site&bolum=group&task=showmembers&id=<?php echo $group->id;?>"><?php echo $group->totalmember;?></a> Üye</div>
+		<div class="col-sm-7"><a href="<?php echo sefLink('index.php?option=site&bolum=group&task=showmembers&id='.$group->id);?>"><?php echo $group->totalmember;?></a> Üye</div>
 		</div>
 		</div>        
 		<div class="form-group">
@@ -223,17 +223,17 @@ class GroupHTML {
 		$groupimage = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
 		
 		if ($row->isGroupMember()) {
-			$joinlink = '<a href="index.php?option=site&bolum=group&task=leave&id='.$row->id.'" class="btn btn-primary">Gruptan Ayrıl</a>';
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=leave&id='.$row->id).'" class="btn btn-primary">Gruptan Ayrıl</a>';
 		} else {
 			if ($row->canJoinGroup()) {
-			$joinlink = '<a href="index.php?option=site&bolum=group&task=join&id='.$row->id.'" class="btn btn-primary">Gruba Katıl</a>';    
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=join&id='.$row->id).'" class="btn btn-primary">Gruba Katıl</a>';    
 			} else {
 				$joinlink = 'Grup kapalı ve siz katılamazsınız';
 			}
 		}
 		
-		$editlink = $row->canEditGroup() ? '<a href="index.php?option=site&bolum=group&task=edit&id='.$row->id.'" class="btn btn-info">Grubu Düzenle</a>':'';
-		$deletelink = $row->canDeleteGroup() ? '<a href="index.php?option=site&bolum=group&task=delete&id='.$row->id.'" class="btn btn-warning">Grubu Sil</a>':'';
+		$editlink = $row->canEditGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=edit&id='.$row->id).'" class="btn btn-info">Grubu Düzenle</a>':'';
+		$deletelink = $row->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$row->id).'" class="btn btn-warning">Grubu Sil</a>':'';
 		?>
 		<div class="panel panel-info">
 		<div class="panel-heading"><h4>GRUP : <?php echo $row->name;?> [<?php echo $status;?>]</h4><small><?php echo $row->aciklama;?></small></div>
@@ -377,7 +377,7 @@ class GroupHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">Toplam Üye:</div>
-		<div class="col-sm-7"><a href="index.php?option=site&bolum=group&task=showmembers&id=<?php echo $row->id;?>"><?php echo $row->totalmember;?></a> Üye</div>
+		<div class="col-sm-7"><a href="<?php echo sefLink('index.php?option=site&bolum=group&task=showmembers&id='.$row->id);?>"><?php echo $row->totalmember;?></a> Üye</div>
 		</div>
 		</div>		
 		<div class="form-group">
@@ -427,12 +427,12 @@ class GroupHTML {
 			<div class="col-sm-3">
 			<div align="center">
 			<div class="row">
-			<a href="index.php?option=site&bolum=group&task=view&id=<?php echo $row->id;?>">
+			<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=view&id='.$row->id);?>">
 			<?php echo $row->image;?>
 			</a>
 			</div>
 			<div class="row">
-			<a href="index.php?option=site&bolum=group&task=view&id=<?php echo $row->id;?>">
+			<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=view&id='.$row->id);?>">
 			<?php echo $row->name;?>
 			</a>
 			</div>
@@ -483,12 +483,12 @@ class GroupHTML {
 			<div class="col-sm-3">
 			<div align="center">
 			<div class="row">
-			<a href="index.php?option=site&bolum=group&task=view&id=<?php echo $row->id;?>">
+			<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=view&id='.$row->id);?>">
 			<?php echo $row->image;?>
 			</a>
 			</div>
 			<div class="row">
-			<a href="index.php?option=site&bolum=group&task=view&id=<?php echo $row->id;?>">
+			<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=view&id='.$row->id);?>">
 			<?php echo $row->name;?>
 			</a>
 			</div>

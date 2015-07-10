@@ -154,7 +154,7 @@ class ForumHTML {
 		<div class="panel-body">
 		
 		<?php if (!$topic_info->locked) {?>
-		<a href="index.php?option=site&bolum=forum&task=newmessage&topic=<?php echo $topic_info->ID_TOPIC;?>" class="btn btn-default">Yeni Mesaj</a>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default">Yeni Mesaj</a>
 		<?php } ?>
 		<div>
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
@@ -218,7 +218,7 @@ class ForumHTML {
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
 		<?php if (!$topic_info->locked) {?>
-		<a href="index.php?option=site&bolum=forum&task=newmessage&topic=<?php echo $topic_info->ID_TOPIC;?>" class="btn btn-default">Yeni Mesaj</a>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default">Yeni Mesaj</a>
 		<?php } ?>
 		</div></div>
 <?php	
@@ -314,7 +314,7 @@ class ForumHTML {
 		}
 		?>
 		<br />
-		<a href="index.php?option=site&bolum=forum&task=newtopic&board=<?php echo $board_info->ID_BOARD;?>" class="btn btn-primary">Yeni Başlık</a>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-primary">Yeni Başlık</a>
 		<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 					<tr>
@@ -396,7 +396,7 @@ class ForumHTML {
 				?>
 				<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 				
-		<a href="index.php?option=site&bolum=forum&task=newtopic&board=<?php echo $board_info->ID_BOARD;?>" class="btn btn-primary">Yeni Başlık</a>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-primary">Yeni Başlık</a>
 	
 		</div>
 		</div>

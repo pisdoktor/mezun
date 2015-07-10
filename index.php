@@ -8,6 +8,8 @@ require( dirname( __FILE__ ) . '/config.php' );
 require_once( dirname( __FILE__ ) . '/includes/base.php' );
 require_once(dirname( __FILE__ ) . '/includes/functions.php');
 
+require(dirname(__FILE__).'/includes/sef.php');
+
 $option = strval(strtolower(getParam($_REQUEST, 'option')));
 $bolum = strval(strtolower(getParam($_REQUEST, 'bolum')));
 $task = strval(strtolower(getParam($_REQUEST, 'task')));

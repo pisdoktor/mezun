@@ -54,3 +54,5 @@ define('time_format', '%d %B %Y, %H:%M:%S');
 define('compactTopicPagesEnable', 1); // okla ileri gitme seçeneği
 define('compactTopicPagesContiguous', 5); // ... koymak için gerekli sayfa sayısı
 define('latestPostCount', 3);
+
+define('SEF', 0); //henüz hazır değil

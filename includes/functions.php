@@ -18,7 +18,7 @@ function siteMenu() {
 // üyelere özel menü
 if (!$my->id) {
 ?>
-<li><a href="index.php?option=register"><span>Kayıt Ol</span></a></li> 
+<li><a href="<?php echo sefLink('index.php?option=register');?>"><span>Kayıt Ol</span></a></li> 
 </ul> 
 </div>  
 <?php        
@@ -26,34 +26,35 @@ if (!$my->id) {
 ?>
 <li class="has-sub"><a href="#"><span>Menüm</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=profil&task=my"><span>Profilim</span></a></li>
-<li><a href="index.php?option=site&bolum=arkadas"><span>Arkadaşlarım</span></a></li>
-<li><a href="index.php?option=site&bolum=online"><span>Online Üyeler <span class="badge"><?php $online->totalOnline();?></span></span></a></li>
-<li><a href="index.php?option=site&bolum=bildirim"><span>Geri Bildirim</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=profil&task=my');?>"><span>Profilim</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=arkadas');?>"><span>Arkadaşlarım</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=online');?>"><span>Online Üyeler <span class="badge"><?php $online->totalOnline();?></span></span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=bildirim');?>"><span>Geri Bildirim</span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>Mesajlar</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=mesaj&task=inbox"><span>Gelen Kutusu <span class="badge"><?php $msg->totalUnread();?></span></span></a></li>
-<li><a href="index.php?option=site&bolum=mesaj&task=outbox"><span>Giden Kutusu</span></a></li>
-<li><a href="index.php?option=site&bolum=mesaj&task=new"><span>Yeni Mesaj</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=inbox');?>"><span>Gelen Kutusu <span class="badge"><?php $msg->totalUnread();?></span></span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=outbox');?>"><span>Giden Kutusu</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=new');?>"><span>Yeni Mesaj</span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>İstekler</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=istek&task=inbox"><span>Gelen İstekler <span class="badge"><?php $istek->totalWaiting();?></span></span></a></li>
-<li><a href="index.php?option=site&bolum=istek&task=outbox"><span>Giden İstekler</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=inbox');?>"><span>Gelen İstekler <span class="badge"><?php $istek->totalWaiting();?></span></span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=outbox');?>"><span>Giden İstekler</span></a></li>
 </ul>
 </li>
 <li class="has-sub"><a href="#"><span>Gruplar</span></a>
 <ul>
-<li><a href="index.php?option=site&bolum=group&task=all"><span>Tüm Gruplar</span></a></li>
-<li><a href="index.php?option=site&bolum=group&task=my"><span>Gruplarım</span></a></li>
-<li><a href="index.php?option=site&bolum=group&task=new"><span>Yeni Grup</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=group&task=all');?>"><span>Tüm Gruplar</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=group&task=my');?>"><span>Gruplarım</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=group&task=new');?>"><span>Yeni Grup</span></a></li>
 </ul>
 </li>
-<li><a href="index.php?option=site&bolum=arama"><span>Üye Arama</span></a></li>
-<li><a href="index.php?option=site&bolum=forum"><span>Forum</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=forum');?>"><span>Forum</span></a></li>
+<li><a href="<?php echo sefLink('index.php?option=site&bolum=arama');?>"><span>Üye Arama</span></a></li>
+
 <?php 
 if ($my->id == 1) {
 ?>
@@ -61,7 +62,7 @@ if ($my->id == 1) {
 <?php    
 }
 ?>
-<li><a href="index.php?option=logout"><span>Çıkış Yap</span></a></li>	
+<li><a href="<?php echo sefLink('index.php?option=logout');?>"><span>Çıkış Yap</span></a></li>	
 </ul>
 </div>
 <div id="messages"></div>
@@ -209,35 +210,35 @@ function loadStats() {
 	$dbase->setQuery($query);
 	$aynisehir = $dbase->loadResult();
 	
-	$link['aynisehir'] = $aynisehir-1 ? '<a href="index.php?option=site&bolum=arama&task=search&sehir='.$my->sehirid.'">'.($aynisehir-1).'</a>' : '0';
+	$link['aynisehir'] = $aynisehir-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&sehir='.$my->sehirid).'">'.($aynisehir-1).'</a>' : '0';
 	
 	//sizinle aynı şehirde doğan hemşeriniz üyeler
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND dogumyeri=".$dbase->Quote($my->dogumyeriid);
 	$dbase->setQuery($query);
 	$aynidogum = $dbase->loadResult();
 	
-	$link['aynidogum'] = $aynidogum-1 ? '<a href="index.php?option=site&bolum=arama&task=search&dogumyeri='.$my->dogumyeriid.'">'.($aynidogum-1).'</a>' : '0';
+	$link['aynidogum'] = $aynidogum-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&dogumyeri='.$my->dogumyeriid).'">'.($aynidogum-1).'</a>' : '0';
 	
 	//aynı branştaki üye sayısı
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND brans=".$dbase->Quote($my->brans);
 	$dbase->setQuery($query);
 	$aynibrans = $dbase->loadResult();
 	
-	$link['aynibrans'] = $aynibrans-1 ? '<a href="index.php?option=site&bolum=arama&task=search&brans='.$my->brans.'">'.($aynibrans-1).'</a>' : '0';
+	$link['aynibrans'] = $aynibrans-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&brans='.$my->brans).'">'.($aynibrans-1).'</a>' : '0';
 	
 	//aynı yıl okula başlayanlar
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND byili=".$dbase->Quote($my->byili);
 	$dbase->setQuery($query);
 	$ayniyilbaslama = $dbase->loadResult();
 	
-	$link['ayniyilbaslama'] = $ayniyilbaslama-1 ? '<a href="index.php?option=site&bolum=arama&task=search&byili='.$my->byili.'">'.($ayniyilbaslama-1).'</a>' : '0';
+	$link['ayniyilbaslama'] = $ayniyilbaslama-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&byili='.$my->byili).'">'.($ayniyilbaslama-1).'</a>' : '0';
 	
 	//aynı yıl okulu bitirenler
 	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND myili=".$dbase->Quote($my->myili);
 	$dbase->setQuery($query);
 	$ayniyilbitirme = $dbase->loadResult();
 	
-	$link['ayniyilbitirme'] = $ayniyilbitirme-1 ? '<a href="index.php?option=site&bolum=arama&task=search&myili='.$my->myili.'">'.($ayniyilbitirme-1).'</a>' : '0';
+	$link['ayniyilbitirme'] = $ayniyilbitirme-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&myili='.$my->myili).'">'.($ayniyilbitirme-1).'</a>' : '0';
 	?>
 	<div class="col-sm-12">
 	
@@ -312,7 +313,7 @@ function loadIstek() {
 	
 	$total = $dbase->loadResult();
 	
-	$link = $total ? '<a href="index.php?option=site&bolum=istek&task=inbox">'.$total.'</a>' : $total;
+	$link = $total ? '<a href="'.sefLink('index.php?option=site&bolum=istek&task=inbox').'">'.$total.'</a>' : $total;
 	?>
 	<div class="col-sm-12">
 	<div class="panel panel-default">

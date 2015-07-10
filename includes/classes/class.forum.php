@@ -18,7 +18,7 @@ class Forum {
 		$list = array();
 		
 		foreach ($rows as $row) {
-			$list[] = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->userid.'">'.$row->name.'</a>';
+			$list[] = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->userid).'">'.$row->name.'</a>';
 		}
 		
 		return $list;
@@ -132,18 +132,18 @@ static function forumBreadCrumb($board_info) {
 	
 	$node = array();
 	
-	$node[] = '<a href="index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD.'">'.$board_info->name.'</a>';
+	$node[] = '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD).'">'.$board_info->name.'</a>';
 	
 	foreach ($board_info->parent_boards as $parent) {
 		if ($parent == 0) {
-			$node[] = '<a href="index.php?option=site&bolum=forum#cat'.$board_info->ID_CAT.'">'.$board_info->catname.'</a>';
-			$node[] = '<a href="index.php?option=site&bolum=forum">FORUM</a>';
+			$node[] = '<a href="'.sefLink('index.php?option=site&bolum=forum#cat'.$board_info->ID_CAT).'">'.$board_info->catname.'</a>';
+			$node[] = '<a href="'.sefLink('index.php?option=site&bolum=forum').'">FORUM</a>';
 			
 		} else {
 			$dbase->setQuery("SELECT ID_BOARD, name FROM #__forum_boards WHERE ID_BOARD=".$parent);
 			$dbase->loadObject($row);
 			
-			$node[] = '<a href="index.php?option=site&bolum=forum&task=board&id='.$row->ID_BOARD.'">'.$row->name.'</a>';
+			$node[] = '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id='.$row->ID_BOARD).'">'.$row->name.'</a>';
 		}
 	}	
 	return implode(' » ', array_reverse($node));
@@ -164,7 +164,7 @@ static function constructPageIndex($base_url, $total, $limitstart, $limit=10, $f
 	else
 		$limitstart = max(0, (int) $limitstart - ((int) $limitstart % (int) $limit));
 
-	$base_link = '<a class="navPages" href="' . ($flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . '&limitstart=%d&limit='.$limit) . '">%s</a> ';
+	$base_link = '<a class="navPages" href="'.sefLink(($flexible_start ? $base_url : strtr($base_url, array('%' => '%%')) . '&limitstart=%d&limit='.$limit)).'">%s</a> ';
 
 	// Compact pages is off or on?
 	if (!compactTopicPagesEnable) {

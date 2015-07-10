@@ -46,7 +46,6 @@ if ( isset( $_SERVER['REQUEST_URI'] ) ) {
 		$request_uri .= '?' . $_SERVER['QUERY_STRING'];
 	}
 }
-
 $_SERVER['REQUEST_URI'] = $request_uri;
 
 // current server time
@@ -246,6 +245,10 @@ function Redirect( $url, $msg='' ) {
 		} else {
 			$url .= '?mosmsg=' . urlencode( $msg );
 		}
+	}
+	
+	if (SEF) {
+		$url = sefLink($url);
 	}
 
 	if (headers_sent()) {

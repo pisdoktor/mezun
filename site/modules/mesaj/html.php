@@ -175,7 +175,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 	<?php echo $type ? $row->giden : $row->gonderen;?>
 	</div>
 	<div class="col-sm-4">
-	<a href="index.php?option=site&bolum=mesaj&task=show&id=<?php echo $row->id;?>">
+	<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=show&id='.$row->id);?>">
 <?php echo $row->baslik;?>
 </a>
 	</div>

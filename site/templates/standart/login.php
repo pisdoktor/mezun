@@ -45,15 +45,17 @@ Eğer siz de bir <strong>9 Eylül Üniversitesi Tıp Fakültesi</strong> mezunu 
 Bu siteye kayıt olarak;
 <ul>
 <li>Sizinle aynı dönem okumuş olan arkadaşlarınıza ulaşabilirsiniz,</li>
-<li>Sizinle aynı bölümde okumuş diğer meslektaşlarınıza ulaşabilirsiniz,</li>
+<li>Sizinle aynı fakültede okumuş diğer meslektaşlarınıza ulaşabilirsiniz,</li>
 <li>Sizinle aynı şehirde çalışmakta olan meslektaşlarınıza ulaşabilirsiniz,</li>
 <li>Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilirsiniz,</li>
+<li>Sizinle aynı branştaki meslektaşlarınıza ulaşabilirsiniz,</li>
 <li>Arkadaşlarınızın size ulaşmasını sağlayabilirsiniz,</li>
 <li>Arkadaşlarınızla iletişim kurabilir, mesajlaşabilirsiniz,</li>
-<li>Forumda paylaşımda bulunabilir, arkadaşlarınızın paylaşımlarına cevap verebilirsiniz</li>
+<li>Forumda paylaşımda bulunabilir, arkadaşlarınızın paylaşımlarına cevap verebilirsiniz,</li>
+<li>Gruplar kurabilir, gruplara katılarak paylaşımda bulunabilirsiniz.</li>
 </ul>
 
-<h4>Hemen şimdi <a href="index.php?option=register">Kayıt Ol!</a></h4>
+<h4>Hemen şimdi <a href="<?php echo sefLink('index.php?option=register');?>">Kayıt Ol!</a></h4>
 </div>
 </div>
 </div>

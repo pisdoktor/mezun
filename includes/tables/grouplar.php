@@ -26,7 +26,7 @@ class UserGroups extends DBTable {
 		$this->_db->setQuery("SELECT name FROM #__users WHERE id=".$this->_db->Quote($this->creator));
 		$name = $this->_db->loadResult();
 		
-		return '<a href="index.php?option=site&bolum=profil&task=show&id='.$this->creator.'">'.$name.'</a>';
+		return '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$this->creator).'">'.$name.'</a>';
 	}
 	
 	function totalMembers() {

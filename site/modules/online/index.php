@@ -59,7 +59,7 @@ function showOnlineUsers($rows) {
 	</div>
 	<?php
 	foreach($rows as $row) {
-	$link = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->userid.'">'.$row->name.'</a>';
+	$link = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->userid).'">'.$row->name.'</a>';
 	$onlinetime = calcOnlineTime(($row->time), strtotime($row->nowvisit));
 	?>
 	<div class="form-group">

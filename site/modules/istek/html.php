@@ -48,8 +48,8 @@ class Istek {
 <?php
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
-$row->giden = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->aid.'">'.$row->giden.'</a>';
-$row->gonderen = '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->gid.'">'.$row->gonderen.'</a>';
+$row->giden = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->aid).'">'.$row->giden.'</a>';
+$row->gonderen = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->gid).'">'.$row->gonderen.'</a>';
 $checked = mosHTML::idBox( $i, $row->id );
 ?>
 <div class="row" id="<?php echo $row->id;?>">

@@ -60,15 +60,15 @@ class BoardMessages extends DBTable {
 			'board' => array(
 				'id' => $row['ID_BOARD'],
 				'name' => $row['bName'],
-				'href' => 'index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD'],
-				'link' => '<a href="index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD'] . '">' . $row['bName'] . '</a>'
+				'href' => sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD']),
+				'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=board&id=' . $row['ID_BOARD']).'">' . $row['bName'] . '</a>'
 			),
 			'topic' => $row['ID_TOPIC'],
 			'poster' => array(
 				'id' => $row['ID_MEMBER'],
 				'name' => $row['posterName'],
-				'href' => empty($row['ID_MEMBER']) ? '' : 'index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER'],
-				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER'] . '">' . $row['posterName'] . '</a>'
+				'href' => empty($row['ID_MEMBER']) ? '' : sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER']),
+				'link' => empty($row['ID_MEMBER']) ? $row['posterName'] : '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['ID_MEMBER']).'">' . $row['posterName'] . '</a>'
 			),
 			'subject' => $row['subject'],
 			'short_subject' => Forum::shorten_subject($row['subject'], 24),
@@ -76,8 +76,8 @@ class BoardMessages extends DBTable {
 			'time' => Forum::timeformat($row['posterTime']),
 			'timestamp' => Forum::forum_time(true, $row['posterTime']),
 			'raw_timestamp' => $row['posterTime'],
-			'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC']. ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new',
-			'link' => '<a href="index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC']. ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new">' . $row['subject'] . '</a>'
+			'href' => sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC']. ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new'),
+			'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC']. ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new').'">' . $row['subject'] . '</a>'
 		);
 	}
 	mysql_free_result($request);

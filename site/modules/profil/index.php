@@ -299,7 +299,7 @@ function saveProfile() {
 		exit();
 	}
 	
-	Redirect('index.php?option=site&bolum=profil&task=my', 'Değşiklikler başarıyla kaydedildi');
+	Redirect('index.php?option=site&bolum=profil&task=my', 'Değişiklikler başarıyla kaydedildi');
 }
 /**
 * Profil gösterimi

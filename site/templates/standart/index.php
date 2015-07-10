@@ -12,8 +12,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <script type="text/javascript">
 		tinymce.init({
 			selector: "#textarea",
-			plugins: "autolink smileys advlist bbcode code wordcount visualchars visualblocks preview paste link",
-			toolbar: "smileys | visualchars | preview | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+			plugins: "autolink emoticons advlist bbcode code wordcount visualchars visualblocks preview paste link",
+			toolbar: "emoticons | visualchars | preview | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
 			language: "tr"
 
 		});

@@ -98,8 +98,8 @@ class pageNav {
 		
 		if ($this_page > 1) {
 			$page = ($this_page - 2) * $this->limit;
-			$txt .= '<li><a href="'. $link .'&amp;limitstart=0" class="pagenav" title="Başa Dön">'.$pnSpace.'Başa Dön</a></li> ';
-			$txt .= '<li><a href="'. $link .'&amp;limitstart='.$page.'" class="pagenav" title="Önceki">'.$pnSpace.'Önceki</a></li> ';
+			$txt .= '<li><a href="'.sefLink($link .'&amp;limitstart=0').'" class="pagenav" title="Başa Dön">'.$pnSpace.'Başa Dön</a></li> ';
+			$txt .= '<li><a href="'.sefLink($link .'&amp;limitstart='.$page).'" class="pagenav" title="Önceki">'.$pnSpace.'Önceki</a></li> ';
 		} else {
 			$txt .= '<li><span class="pagenav">'. $pnSpace .'Başa Dön</span></li> ';
 			$txt .= '<li><span class="pagenav">'. $pnSpace .'Önceki</span></li> ';
@@ -110,15 +110,15 @@ class pageNav {
 			if ($i == $this_page) {
 				$txt .= '<li class="active"><span class="pagenav">'. $i .'</span></li> ';
 			} else {
-				$txt .= '<li><a href="'. $link .'&amp;limitstart='. $page .'" class="pagenav"><strong>'. $i .'</strong></a></li> ';
+				$txt .= '<li><a href="'.sefLink($link .'&amp;limitstart='. $page).'" class="pagenav"><strong>'. $i .'</strong></a></li> ';
 			}
 		}
 
 		if ($this_page < $total_pages) {
 			$page = $this_page * $this->limit;
 			$end_page = ($total_pages-1) * $this->limit;
-			$txt .= '<li><a href="'. $link .'&amp;limitstart='. $page .'" class="pagenav" title="Sonraki">'. $pnSpace .'Sonraki</a></li> ';
-			$txt .= '<li><a href="'. $link .'&amp;limitstart='. $end_page .'" class="pagenav" title="Sona Git">'. $pnSpace .'Sona Git</a></li>';
+			$txt .= '<li><a href="'.sefLink($link .'&amp;limitstart='. $page).'" class="pagenav" title="Sonraki">'. $pnSpace .'Sonraki</a></li> ';
+			$txt .= '<li><a href="'.sefLink($link .'&amp;limitstart='. $end_page).'" class="pagenav" title="Sona Git">'. $pnSpace .'Sona Git</a></li>';
 		} else {
 			$txt .= '<li><span class="pagenav">'. $pnSpace .'Sonraki</span></li> ';
 			$txt .= '<li><span class="pagenav">'. $pnSpace .'Sona Git</span></li>';

@@ -131,7 +131,7 @@ function showGroupMembers($id) {
 	//grubun adminlerini alalım
 	$adminU = $group->adminMembers();
 	foreach ($adminU as $admin) {
-		$list[] = '<a href="index.php?option=site&bolum=profil&task=show&id='.$admin->userid.'">'.$admin->adminUser.'</a>';
+		$list[] = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$admin->userid).'">'.$admin->adminUser.'</a>';
 	}
 	$group->admins = implode('<br />', $list);
 	
@@ -294,6 +294,8 @@ function leaveGroup($id) {
 function joinGroup($id) {
 	global $dbase, $my;
 	
+	$id = intval(getParam($_REQUEST, 'id'));
+	
 	if (!$id) {
 		NotAuth();
 		return;
@@ -308,7 +310,7 @@ function joinGroup($id) {
 	}
 	
 	//grup kapalı bir grupsa giriş yapma
-	if ($group->status) {
+	if ($group->status && !$group->canJoinGroup()) {
 		NotAuth();
 		return;
 	} else {
@@ -422,7 +424,7 @@ function viewGroup($id) {
 	//grubun adminlerini alalım
 	$adminU = $row->adminMembers();
 	foreach ($adminU as $admin) {
-		$list[] = '<a href="index.php?option=site&bolum=profil&task=show&id='.$admin->userid.'">'.$admin->adminUser.'</a>';
+		$list[] = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$admin->userid).'">'.$admin->adminUser.'</a>';
 	}
 	$row->admins = implode('<br />', $list);
 

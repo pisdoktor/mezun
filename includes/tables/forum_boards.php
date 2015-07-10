@@ -88,15 +88,15 @@ class Boards extends DBTable {
 						'username' => $row['firstMemberName'],
 						'name' => $row['firstDisplayName'],
 						'id' => $row['firstID_MEMBER'],
-						'href' => !empty($row['firstID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row['firstID_MEMBER'] : '',
-						'link' => !empty($row['firstID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row['firstID_MEMBER'] . '" title="' . $row['firstDisplayName'] . '">' . $row['firstDisplayName'] . '</a>' : $row['firstDisplayName']
+						'href' => !empty($row['firstID_MEMBER']) ? sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['firstID_MEMBER']) : '',
+						'link' => !empty($row['firstID_MEMBER']) ? '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['firstID_MEMBER']).'" title="' . $row['firstDisplayName'] . '">' . $row['firstDisplayName'] . '</a>' : $row['firstDisplayName']
 					),
 					'time' => Forum::timeformat($row['firstPosterTime']),
 					'timestamp' => Forum::forum_time($row['firstPosterTime']),
 					'subject' => $row['firstSubject'],
 					'preview' => $row['firstBody'],
-					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'],
-					'link' => '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . '">' . $row['firstSubject'] . '</a>'
+					'href' => sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC']),
+					'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC']).'">' . $row['firstSubject'] . '</a>'
 				),
 				'last_post' => array(
 					'id' => $row['ID_LAST_MSG'],
@@ -104,16 +104,16 @@ class Boards extends DBTable {
 						'username' => $row['lastMemberName'],
 						'name' => $row['lastDisplayName'],
 						'id' => $row['lastID_MEMBER'],
-						'href' => !empty($row['lastID_MEMBER']) ? 'index.php?option=site&bolum=profil&task=show&id=' . $row['lastID_MEMBER'] : '',
-						'link' => !empty($row['lastID_MEMBER']) ? '<a href="index.php?option=site&bolum=profil&task=show&id=' . $row['lastID_MEMBER'] . '">' . $row['lastDisplayName'] . '</a>' : $row['lastDisplayName']
+						'href' => !empty($row['lastID_MEMBER']) ? sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['lastID_MEMBER']) : '',
+						'link' => !empty($row['lastID_MEMBER']) ? '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id=' . $row['lastID_MEMBER']).'">' . $row['lastDisplayName'] . '</a>' : $row['lastDisplayName']
 					),
 					'time' => Forum::timeformat($row['lastPosterTime']),
 					'timestamp' => Forum::forum_time($row['lastPosterTime']),
 					'subject' => $row['lastSubject'],
 					'preview' => $row['lastBody'],
 					//son mesaja link verebilmeyi yapalım
-					'href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new',
-					'link' => '<a href="index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new">' . $row['lastSubject'] . '</a>'
+					'href' => sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new'),
+					'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new').'">' . $row['lastSubject'] . '</a>'
 				),
 				'is_sticky' => !empty($row['isSticky']),
 				'is_locked' => !empty($row['locked']),
@@ -125,7 +125,7 @@ class Boards extends DBTable {
 				'new' => $row['new_from'] <= $row['ID_MSG_MODIFIED'],
 				'new_from' => $row['new_from'],
 				'newtime' => $row['new_from'],
-				'new_href' => 'index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new',
+				'new_href' => sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row['ID_TOPIC'] . ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new'),
 				'replies' => $row['numReplies'],
 				'views' => $row['numViews'],
 				'pages' => ($row['numReplies'] > $limit ? 'Sayfalar:'.Forum::constructPageIndex('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC'], $row['numReplies'], $topicstart, $topiclimit) : '')

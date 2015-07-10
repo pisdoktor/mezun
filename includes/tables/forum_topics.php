@@ -67,8 +67,8 @@ class BoardTopic extends DBTable {
 			'member' => array(
 				'id' => $row->ID_MEMBER,
 				'name' => $row->posterName,
-				'href' => 'index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER,
-				'link' => '<a href="index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER.'">'.$row->posterName.'</a>',
+				'href' => sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER),
+				'link' => '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->ID_MEMBER).'">'.$row->posterName.'</a>',
 				'cinsiyet' => $row->cinsiyet == 1 ? 'Erkek' : 'Bayan',
 				'profilimage' => $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png',
 				'imagelink' => $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" width="100" height="100" />' : '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" width="100" height="100" />',
