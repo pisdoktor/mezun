@@ -2,13 +2,13 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class Branslar extends DBTable {
+class mezunBranslar extends mezunTable {
 	
 	var $id     = null;
 	
 	var $name  = null;
 	
-	function Branslar( &$db ) {
-		$this->DBTable( '#__branslar', 'id', $db );
+	function mezunBranslar( &$db ) {
+		$this->mezunTable( '#__branslar', 'id', $db );
 	}
 }

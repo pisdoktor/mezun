@@ -7,7 +7,7 @@ class ForumHTML {
 	static function newMessage($topic, $my, $topic_info, $board_info) {
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small><?php echo $topic_info->subject;?> - Yeni Mesaj</small></div>
+		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4><small><?php echo $topic_info->subject;?> - Yeni Mesaj</small></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=forum&task=savemessage" method="post" role="form">
@@ -31,7 +31,7 @@ class ForumHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">
-		<button type="submit" class="btn btn-default">MESAJI GÖNDER</button>
+		<button type="submit" class="btn btn-primary">MESAJI GÖNDER</button>
 		</div>
 		</div>
 		</div>
@@ -69,7 +69,7 @@ class ForumHTML {
 			}
 		</script>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small>Yeni Başlık</small></div>
+		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4><small>Yeni Başlık</small></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" name="form" role="form">
@@ -150,7 +150,7 @@ class ForumHTML {
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4> <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
+		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4> <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
 		<?php if (!$topic_info->locked) {?>
@@ -190,7 +190,7 @@ class ForumHTML {
 			<?php echo $row['member']['sehir'];?>
 			<br />
 			M. Yılı: <?php echo $row['member']['mezuniyet'];?>
-			<div align="center"><?php isOnline($row['member']['id']);?></div>
+			<div align="center"><?php mezunOnlineHelper::isOnline($row['member']['id']);?></div>
 			</div>
 			
 			</td>
@@ -230,7 +230,7 @@ class ForumHTML {
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo Forum::forumBreadCrumb($board_info);?></h4><small><?php echo $board_info->aciklama;?></small></div>
+		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4><small><?php echo $board_info->aciklama;?></small></div>
 		<div class="panel-body">
 		
 		<?php
@@ -504,7 +504,7 @@ class ForumHTML {
 		</tr>
 			<tr>
 			<td class="middletext" nowrap="nowrap">
-			<?php echo implode(', ', Forum::getForumUsers());?>
+			<?php echo implode(', ', mezunForumHelper::getForumUsers());?>
 			</td>
 			</tr>
 		</table>

@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-$footer = new Version();  
+$footer = new mezunVersion();  
 ?>
 <div align="center" class="footer">
 

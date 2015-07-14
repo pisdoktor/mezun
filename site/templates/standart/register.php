@@ -11,7 +11,6 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
-<?php include_once( ABSPATH .'/includes/google_analytics.php');?>
 <?php
 $validate = spoofValue(1);
 ?>
@@ -52,14 +51,15 @@ $(function(){
 
 <div id="header-bar" class="clearfix">
 <div class="header">
-<?php siteMenu();?> 
+<?php mezunGlobalHelper::siteMenu();?> 
 </div>
 </div>
 
 <div id="content" class="clearfix">
 
-<div id="register-form">
-<h4>ÜYE KAYIT FORMU</h4>
+<div class="panel panel-primary">
+<div class="panel-heading">ÜYE KAYIT FORMU</div>
+<div class="panel-body">
 <form action="index.php?option=reguser" method="post" id="adminForm" role="form">
 
 <div class="form-group">
@@ -226,6 +226,7 @@ $(function(){
 </div>
 <input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
+</div>
 </div>
 
 

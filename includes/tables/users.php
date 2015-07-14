@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class Users extends DBTable {
+class mezunUsers extends mezunTable {
 	
 	var $id       = null;
 	
@@ -51,97 +51,19 @@ class Users extends DBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function Users( &$database ) {
-		$this->DBTable( '#__users', 'id', $database );
+	function __construct( &$database ) {
+		$this->mezunTable( '#__users', 'id', $database );
 	}	
 	
-	function createCode($len=12) {
+	static function createCode($len=12) {
 		return MakePassword($len);
 	}
 	
-	function userCinsiyet($required=0) {
-		
-		$c = array();
-		$c[] = mosHTML::makeOption('1', 'Erkek');
-		$c[] = mosHTML::makeOption('2', 'Bayan');
-		
-		return mosHTML::radioList($c, 'cinsiyet', 'class="radio-inline" '.$required ? 'required' : ''.'', 'value', 'text', $this->cinsiyet);
-	}
-	
-	function selectBrans($required=0) {
-		
-		$query = "SELECT * FROM #__branslar ORDER BY name ASC";
-		$this->_db->setQuery($query);
-		
-		$lists = $this->_db->loadObjectList();
-		
-		$b = array();
-		if ($required) {
-		$b[] = mosHTML::makeOption('', 'Bir Branş Seçin');    
-		} else {
-		$b[] = mosHTML::makeOption('0', 'Bir Branş Seçin');    
-		}
-		
-		foreach ($lists as $list) {
-			$b[] = mosHTML::makeOption($list->id, $list->name);
-		}
-		
-		return mosHTML::selectList($b, 'brans', 'class="form-control" '.$required ? 'required' : ''.'', 'value', 'text', $this->brans);
-	   
-	}
-	
-	function selectUnvan($required=0) {
-		$u = array();
-		if ($required) {
-		 $u[] = mosHTML::makeOption('', 'Bir Ünvan Seçin');   
-		} else {
-		 $u[] = mosHTML::makeOption('0', 'Bir Ünvan Seçin');   
-		}
-		
-		$u[] = mosHTML::makeOption('Dr');
-		$u[] = mosHTML::makeOption('Asist.Dr');
-		$u[] = mosHTML::makeOption('Uzm.Dr');
-		$u[] = mosHTML::makeOption('Yrd.Doç.Dr');
-		$u[] = mosHTML::makeOption('Doç.Dr');
-		$u[] = mosHTML::makeOption('Prof.Dr');
-		
-		return mosHTML::selectList($u, 'unvan', 'class="form-control" '.$required ? 'required' : ''.'', 'value', 'text', $this->unvan);
-	}
-	
-	function selectYil($arr, $required=0) {
-		
-		$start = '1970';
-		$end = date('Y');
-		
-		return mosHTML::integerSelectList($start, $end, '1', $arr, 'class="form-control" '.$required ? 'required':''.'', $this->$arr, $required);
-	}
-	
-	function selectSehir($arr, $required=0) {
-		
-		$query = "SELECT * FROM #__sehirler ORDER BY id ASC";
-		$this->_db->setQuery($query);
-		
-		$lists = $this->_db->loadObjectList();
-		
-		$s = array();
-		if ($required) {
-		$s[] = mosHTML::makeOption('', 'Bir Şehir Seçin');    
-		} else {
-		$s[] = mosHTML::makeOption('0', 'Bir Şehir Seçin');    
-		}
-		
-		foreach($lists as $list) {
-			$s[] = mosHTML::makeOption($list->id, $list->name);
-		}
-		
-		return mosHTML::selectList($s, $arr, 'class="form-control" '.$required ? 'required':''.'', 'value', 'text', $this->$arr);
-	}
-
 	/**
 	 * Validation and filtering
 	 * @return boolean True is satisfactory
 	 */
-	function check() {
+	public function check() {
 
 		// Validate user information
 		if (trim( $this->name ) == '') {
@@ -206,7 +128,7 @@ class Users extends DBTable {
 		return true;
 	}
 
-	function store( $updateNulls=false ) {
+	public function store( $updateNulls=false ) {
 		global $migrate;
 
 		$k = $this->_tbl_key;
@@ -226,7 +148,7 @@ class Users extends DBTable {
 		}
 	}
 
-	function delete( $oid=null ) {
+	public function delete( $oid=null ) {
 
 		$k = $this->_tbl_key;
 		if ($oid) {
@@ -239,7 +161,7 @@ class Users extends DBTable {
 		$this->_db->setQuery( $query );
 	}
 	
-	function activateUser($oid=null) {
+	public function activateUser($oid=null) {
 		$k = $this->_tbl_key;
 		if ($oid) {
 			$this->$k = intval( $oid );
@@ -251,5 +173,83 @@ class Users extends DBTable {
 		;
 		$this->_db->setQuery($query);
 		$this->_db->query();		
+	}
+	
+	public function userCinsiyet($required=0) {
+		
+		$c = array();
+		$c[] = mezunHTML::makeOption('1', 'Erkek');
+		$c[] = mezunHTML::makeOption('2', 'Bayan');
+		
+		return mezunHTML::radioList($c, 'cinsiyet', 'class="radio-inline" '.$required ? 'required' : ''.'', 'value', 'text', $this->cinsiyet);
+	}
+	
+	public function selectBrans($required=0) {
+		
+		$query = "SELECT * FROM #__branslar ORDER BY name ASC";
+		$this->_db->setQuery($query);
+		
+		$lists = $this->_db->loadObjectList();
+		
+		$b = array();
+		if ($required) {
+		$b[] = mezunHTML::makeOption('', 'Bir Branş Seçin');    
+		} else {
+		$b[] = mezunHTML::makeOption('0', 'Bir Branş Seçin');    
+		}
+		
+		foreach ($lists as $list) {
+			$b[] = mezunHTML::makeOption($list->id, $list->name);
+		}
+		
+		return mezunHTML::selectList($b, 'brans', 'class="form-control" '.$required ? 'required' : ''.'', 'value', 'text', $this->brans);
+	   
+	}
+	
+	public function selectUnvan($required=0) {
+		$u = array();
+		if ($required) {
+		 $u[] = mezunHTML::makeOption('', 'Bir Ünvan Seçin');   
+		} else {
+		 $u[] = mezunHTML::makeOption('0', 'Bir Ünvan Seçin');   
+		}
+		
+		$u[] = mezunHTML::makeOption('Dr');
+		$u[] = mezunHTML::makeOption('Asist.Dr');
+		$u[] = mezunHTML::makeOption('Uzm.Dr');
+		$u[] = mezunHTML::makeOption('Yrd.Doç.Dr');
+		$u[] = mezunHTML::makeOption('Doç.Dr');
+		$u[] = mezunHTML::makeOption('Prof.Dr');
+		
+		return mezunHTML::selectList($u, 'unvan', 'class="form-control" '.$required ? 'required' : ''.'', 'value', 'text', $this->unvan);
+	}
+	
+	public function selectYil($arr, $required=0) {
+		
+		$start = '1970';
+		$end = date('Y');
+		
+		return mezunHTML::integerSelectList($start, $end, '1', $arr, 'class="form-control" '.$required ? 'required':''.'', $this->$arr, $required);
+	}
+	
+	public function selectSehir($arr, $required=0) {
+		
+		$query = "SELECT * FROM #__sehirler ORDER BY id ASC";
+		$this->_db->setQuery($query);
+		
+		$lists = $this->_db->loadObjectList();
+		
+		$s = array();
+		if ($required) {
+		$s[] = mezunHTML::makeOption('', 'Bir Şehir Seçin');    
+		} else {
+		$s[] = mezunHTML::makeOption('0', 'Bir Şehir Seçin');    
+		}
+		
+		foreach($lists as $list) {
+			$s[] = mezunHTML::makeOption($list->id, $list->name);
+		}
+		
+		return mezunHTML::selectList($s, $arr, 'class="form-control" '.$required ? 'required':''.'', 'value', 'text', $this->$arr);
 	}
 }

@@ -8,6 +8,9 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.arkadas.helper');
+mimport('helpers.modules.online.helper');
+
 switch($task) {
 	default:
 	getArkadasList();
@@ -47,7 +50,7 @@ function getArkadasList() {
 	$dbase->setQuery($query, $limitstart, $limit);
 	$list = $dbase->loadObjectList();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	Arkadas::getList($list, $pageNav);	
 }

@@ -10,6 +10,9 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.forum.forum');
+mimport('helpers.modules.forum.helper');
+
 switch($task) {
 	default:
 	ForumIndex();
@@ -47,20 +50,19 @@ switch($task) {
 function newMessage() {
 	global $dbase, $my;
 	
-	$ID_TOPIC = intval(getParam($_REQUEST, 'topic'));
+	$topicid = intval(getParam($_REQUEST, 'topic'));
 	
-	$topic = new BoardTopic($dbase);
-	$board = new Boards($dbase);
-	
-	$topic->load($ID_TOPIC);
+	mimport('tables.forumtopic');
+	$topic = new mezunForumtopic($dbase);
+	$topic->load($topicid);
 	
 	if (!$topic->ID_TOPIC) {
 		NotAuth();
 		return;
 	}
 	
-	$topic_info = $topic->TopicInfo($ID_TOPIC);
-	$board_info = $board->BoardInfo($topic->ID_BOARD);
+	$topic_info = mezunForum::TopicInfo($topic->ID_TOPIC);
+	$board_info = mezunForum::BoardInfo($topic->ID_BOARD);
 	
 	ForumHTML::newMessage($topic, $my, $topic_info, $board_info);
 }
@@ -68,34 +70,35 @@ function newMessage() {
 function newTopic() {
 	global $dbase, $my;
 	
-	$ID_BOARD = intval(getParam($_REQUEST, 'board'));
+	$boardid = intval(getParam($_REQUEST, 'board'));
 	
-	$board = new Boards($dbase);
-	$board->load($ID_BOARD);
+	mimport('tables.forumboard');
+	$board = new mezunForumboard($dbase);
+	$board->load($boardid);
 	
 	if (!$board->ID_BOARD) {
 		NotAuth();
 		return;
 	}
 	
-	$board_info = $board->BoardInfo($board->ID_BOARD);
+	$board_info = mezunForum::BoardInfo($board->ID_BOARD);
 	
 	$icon = array();
-	$icon[] = mosHTML::makeOption('xx', 'Standart');
-	$icon[] = mosHTML::makeOption('thumbup', 'Thumb Up');
-	$icon[] = mosHTML::makeOption('thumbdown', 'Thumb Down');
-	$icon[] = mosHTML::makeOption('exclamation', 'Exclamation');
-	$icon[] = mosHTML::makeOption('question', 'Question');
-	$icon[] = mosHTML::makeOption('lamp', 'Lamp');
-	$icon[] = mosHTML::makeOption('smiley', 'Smiley');
-	$icon[] = mosHTML::makeOption('angry', 'Angry');
-	$icon[] = mosHTML::makeOption('cheesy', 'Cheesy');
-	$icon[] = mosHTML::makeOption('grin', 'Grin');
-	$icon[] = mosHTML::makeOption('sad', 'Sad');
-	$icon[] = mosHTML::makeOption('wink', 'Wink');
-	$icon[] = mosHTML::makeOption('solved', 'Solved');
+	$icon[] = mezunHTML::makeOption('xx', 'Standart');
+	$icon[] = mezunHTML::makeOption('thumbup', 'Thumb Up');
+	$icon[] = mezunHTML::makeOption('thumbdown', 'Thumb Down');
+	$icon[] = mezunHTML::makeOption('exclamation', 'Exclamation');
+	$icon[] = mezunHTML::makeOption('question', 'Question');
+	$icon[] = mezunHTML::makeOption('lamp', 'Lamp');
+	$icon[] = mezunHTML::makeOption('smiley', 'Smiley');
+	$icon[] = mezunHTML::makeOption('angry', 'Angry');
+	$icon[] = mezunHTML::makeOption('cheesy', 'Cheesy');
+	$icon[] = mezunHTML::makeOption('grin', 'Grin');
+	$icon[] = mezunHTML::makeOption('sad', 'Sad');
+	$icon[] = mezunHTML::makeOption('wink', 'Wink');
+	$icon[] = mezunHTML::makeOption('solved', 'Solved');
 	
-	$list['icons'] = mosHTML::selectList($icon, 'icon', 'id="icon" onchange="showimage()"', 'value', 'text', 'xx');
+	$list['icons'] = mezunHTML::selectList($icon, 'icon', 'id="icon" onchange="showimage()"', 'value', 'text', 'xx');
 	
 	ForumHTML::newTopic($board, $my, $board_info, $list);
 }
@@ -103,50 +106,64 @@ function newTopic() {
 function createNewMessage() {
 	global $dbase, $my, $limit, $limitstart;
 	
+	$ID_TOPIC = intval(getParam($_REQUEST, 'ID_TOPIC'));
+	$ID_BOARD = intval(getParam($_REQUEST, 'ID_BOARD'));
+	$subject = trim(getParam($_REQUEST, 'subject'));
+	$body = nl2br(getParam($_REQUEST, 'body'));
 	
-	$msgOptions = new stdClass();
-	$content = $_POST;
+	mimport('tables.forummessage');
+	$msg = new mezunForummessage($dbase);
 	
-	$msgOptions->ID_MSG = null;
-	$msgOptions->ID_TOPIC = $content['ID_TOPIC'];
-	$msgOptions->ID_BOARD = $content['ID_BOARD'];
-	$msgOptions->posterTime = time();
-	$msgOptions->ID_MEMBER = $my->id;
-	$msgOptions->ID_MSG_MODIFIED = null;
-	$msgOptions->posterIP = $_SERVER['REMOTE_ADDR'];
-	$msgOptions->subject = trim($content['subject']);
-	$msgOptions->body = nl2br($content['body']);
+	$msg->ID_TOPIC = $ID_TOPIC;
+	$msg->ID_BOARD = $ID_BOARD;
+	$msg->posterTime = time();
+	$msg->ID_MEMBER = $my->id;
+	$msg->posterIP = $_SERVER['REMOTE_ADDR'];
+	$msg->subject = $subject;
+	$msg->body = $body;
 	
-	$query = "INSERT INTO #__forum_messages (ID_TOPIC, ID_BOARD, posterTime, ID_MEMBER, posterIP, subject, body) VALUES (".$dbase->Quote($msgOptions->ID_TOPIC).", ".$dbase->Quote($msgOptions->ID_BOARD).",".$dbase->Quote($msgOptions->posterTime).",".$dbase->Quote($msgOptions->ID_MEMBER).",".$dbase->Quote($msgOptions->posterIP).",".$dbase->Quote($msgOptions->subject).",".$dbase->Quote($msgOptions->body).")";
-	$dbase->setQuery($query);
-	$dbase->query();
-	$msgOptions->ID_MSG = $dbase->insertid();
+	$msg->store();
 	
-	if (isset($msgOptions->ID_MSG)) {
-	//Updateler
-	$dbase->setQuery("UPDATE #__forum_messages SET ID_MSG_MODIFIED = ".$dbase->Quote($msgOptions->ID_MSG)." WHERE ID_MSG=".$dbase->Quote($msgOptions->ID_MSG)."");
-	$dbase->query();
+	$ID_MSG = $dbase->insertid();
 	
-	//topic sayacı
-	$dbase->setQuery("UPDATE #__forum_topics SET ID_LAST_MSG = ".$dbase->Quote($msgOptions->ID_MSG).", numReplies = numReplies + 1 WHERE ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC)."");
-	$dbase->query();
-	
-	//board sayacı
-	$dbase->setQuery("UPDATE #__forum_boards SET ID_LAST_MSG = ".$dbase->Quote($msgOptions->ID_MSG).", ID_MSG_UPDATED = ".$dbase->Quote($msgOptions->ID_MSG).", numPosts = numPosts + 1 WHERE ID_BOARD = ".$dbase->Quote($msgOptions->ID_BOARD)."");
-	$dbase->query();
+	if (isset($ID_MSG)) {
+		$update = new mezunForummessage($dbase);
+		$update->ID_MSG = $ID_MSG;
+		$update->ID_MSG_MODIFIED = $ID_MSG;
+		$update->store();
+		
+		mimport('tables.forumtopic');
+		$topic = new mezunForumtopic($dbase);
+		$topic->load($ID_TOPIC);
+		
+		$tupdate = new mezunForumtopic($dbase);
+		$tupdate->ID_TOPIC = $ID_TOPIC;
+		$tupdate->ID_LAST_MSG = $ID_MSG;
+		$tupdate->numReplies = $topic->numReplies+1;
+		$tupdate->store();
+		
+		mimport('tables.forumboard');
+		$board = new mezunForumboard($dbase);
+		$board->load($ID_BOARD);
+		
+		$bupdate = new mezunForumboard($dbase);
+		$bupdate->ID_BOARD = $ID_BOARD;
+		$bupdate->ID_LAST_MSG = $ID_MSG;
+		$bupdate->ID_MSG_UPDATED = $ID_MSG;
+		$bupdate->numPosts = $board->numPosts+1;
+		$bupdate->store();
 	}
 	
 	//logları güncelle
-	$dbase->setQuery("UPDATE #__forum_log_boards SET ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_BOARD = ".$dbase->Quote($msgOptions->ID_BOARD).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
+	$dbase->setQuery("UPDATE #__forum_log_boards SET ID_MEMBER = ".$dbase->Quote($msg->ID_MEMBER).", ID_BOARD = ".$dbase->Quote($ID_BOARD).", ID_MSG = ".$dbase->Quote($ID_MSG)."");
 	$dbase->query();
 	
-	$dbase->setQuery("UPDATE #__forum_log_topics SET ID_TOPIC = ".$dbase->Quote($msgOptions->ID_TOPIC).", ID_MEMBER = ".$dbase->Quote($msgOptions->ID_MEMBER).", ID_MSG = ".$dbase->Quote($msgOptions->ID_MSG)."");
+	$dbase->setQuery("UPDATE #__forum_log_topics SET ID_TOPIC = ".$dbase->Quote($ID_TOPIC).", ID_MEMBER = ".$dbase->Quote($msg->ID_MEMBER).", ID_MSG = ".$dbase->Quote($ID_MSG)."");
 	$dbase->query();
 	
-	$topic = new BoardTopic($dbase);
-	$topic_info = $topic->TopicInfo($msgOptions->ID_TOPIC);
+	$topic_info = mezunForum::TopicInfo($ID_TOPIC);
 	
-	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $msgOptions->ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies/ $limit)) * $limit) : '') . '#new';
+	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies / $limit)) * $limit) : '') . '#new';
 	
 	Redirect($link);
 }
@@ -154,104 +171,114 @@ function createNewMessage() {
 function createNewTopic() {
 	global $dbase, $my;
 	
-	$msgOptions = new stdClass();
-	$topicOptions = new stdClass();
-	$content = $_POST;
+	$subject = trim(getParam($_REQUEST, 'subject'));
 	
-	$msgOptions->ID_MSG = null;
-	$msgOptions->ID_TOPIC = null;
-	$msgOptions->ID_BOARD = $content['ID_BOARD'];
-	$msgOptions->posterTime = time();
-	$msgOptions->ID_MEMBER = $my->id;
-	$msgOptions->ID_MSG_MODIFIED = null;
-	$msgOptions->posterIP = $_SERVER['REMOTE_ADDR'];
-	$msgOptions->subject = trim($content['subject']);
-	$msgOptions->body = nl2br($content['body']);
+	$icon = getParam($_REQUEST, 'icon');
 	
-	$topicOptions->ID_TOPIC = null;
-	$topicOptions->isSticky = $content['isSticky'];
-	$topicOptions->ID_BOARD = $content['ID_BOARD'];
-	$topicOptions->ID_FIRST_MSG = $my->id;
-	$topicOptions->ID_LAST_MSG = $my->id;
-	$topicOptions->numReplies = 1;
-	$topicOptions->numViews = null;
-	$topicOptions->locked = $content['locked'];
-	$topicOptions->icon = $content['icon'];
+	$body = nl2br(getParam($_REQUEST, 'body'));
 	
-	$new_topic = empty($topicOptions->ID_TOPIC);
-	//mesajı sokalım
-	$query = "INSERT INTO #__forum_messages "
-	. "\n (ID_BOARD, posterTime, ID_MEMBER, posterIP, subject, body) "
-	. "\n VALUES(".$dbase->Quote($msgOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->posterTime).", ".$dbase->Quote($msgOptions->ID_MEMBER).", ".$dbase->Quote($msgOptions->posterIP).", ".$dbase->Quote($msgOptions->subject).", ".$dbase->Quote($msgOptions->body).")";
-	$dbase->setQuery($query);
-	$dbase->query();
-	$msgOptions->ID_MSG = $dbase->insertid();
+	$boardid = intval(getParam($_REQUEST, 'ID_BOARD'));
 	
-	if (empty($msgOptions->ID_MSG)) {
+	$isSticky = intval(getParam($_REQUEST, 'isSticky', 0));
+	
+	$locked = intval(getParam($_REQUEST, 'locked', 0));
+	
+	//mesaj initleyelim
+	mimport('tables.forummessage');
+	$msg = new mezunForummessage($dbase);
+	
+	$msg->ID_BOARD = $boardid;
+	$msg->posterTime = time();
+	$msg->ID_MEMBER = $my->id;
+	$msg->posterIP = $_SERVER['REMOTE_ADDR'];
+	$msg->subject = $subject;
+	$msg->body = $body;
+	$msg->store();
+	
+	$ID_MSG = $dbase->insertid();
+	
+	if (empty($ID_MSG)) {
 		return false;
 	}
-	//başlığı sokalım
-	$query = "INSERT INTO #__forum_topics "
-	. "\n (ID_BOARD, ID_FIRST_MSG, ID_LAST_MSG, locked, isSticky, numViews, numReplies, icon) "
-	. "\n VALUES (".$dbase->Quote($topicOptions->ID_BOARD).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($msgOptions->ID_MSG).", ".$dbase->Quote($topicOptions->locked).", ".$dbase->Quote($topicOptions->isSticky).", ".$dbase->Quote($topicOptions->numViews).", ".$dbase->Quote($topicOptions->numReplies).", ".$dbase->Quote($topicOptions->icon).")"
-	;
-	$dbase->setQuery($query);
-	$dbase->query();		
-	$topicOptions->ID_TOPIC = $dbase->insertid();
+	//topic initleyelim
+	mimport('tables.forumtopic');
+	$topic = new mezunForumtopic($dbase);
+	
+	$topic->ID_BOARD = $boardid;
+	$topic->ID_FIRST_MSG = $ID_MSG;
+	$topic->ID_LAST_MSG = $ID_MSG;
+	$topic->numReplies = 1;
+	$topic->numViews = 0;
+	$topic->locked = $locked;
+	$topic->isSticky = $isSticky;
+	$topic->icon = $icon;
+	$topic->store();
+	
+	$ID_TOPIC = $dbase->insertid();
 	
 	//başlık oluşturulamazsa eklenen mesajı da silelim
-	if (empty($topicOptions->ID_TOPIC)) {
-	// We should delete the post that did work, though...
-	$dbase->setQuery("DELETE FROM #__forum_messages WHERE ID_MSG = ".$msgOptions->ID_MSG." LIMIT 1");
-	$dbase->query();
-	return false;
+	if (empty($ID_TOPIC)) {
+		$msg->delete($ID_MSG);
+		return false;
 	}
 	
-	//mesajı düzeltelim
-	$dbase->setQuery("UPDATE #__forum_messages SET ID_TOPIC = ".$topicOptions->ID_TOPIC.", ID_MSG_MODIFIED = ".$msgOptions->ID_MSG." WHERE ID_MSG = ".$msgOptions->ID_MSG." LIMIT 1");
+	//mesajı güncelleyelim
+	$update = new mezunForummessage($dbase);
+	$update->ID_MSG = $ID_MSG;	
+	$update->ID_TOPIC = $ID_TOPIC;
+	$update->ID_MSG_MODIFIED = $ID_MSG;
+	$update->store();
+	
+	//board sayaçlarını güncelleyelim
+	mimport('tables.forumboard');
+	$board = new mezunForumboard($dbase);
+	$board->ID_BOARD = $boardid;
+	$board->numPosts = $board->numPosts+1;
+	$board->numTopics = $board->numTopics+1;
+	$board->ID_LAST_MSG = $ID_MSG;
+	$board->ID_MSG_UPDATED = $ID_MSG;
+	$board->store();
+	
+	//log alalım
+	$dbase->setQuery("REPLACE INTO #__forum_log_topics 
+	(ID_TOPIC, ID_MEMBER, ID_MSG) 
+	VALUES ($ID_TOPIC, $my->id, $ID_MSG + 1)");
 	$dbase->query();
 	
-	//board sayaçlarını düzeltelim
-	$dbase->setQuery("UPDATE #__forum_boards
-		SET numPosts = numPosts + 1, numTopics = numTopics + 1, ID_LAST_MSG = ".$msgOptions->ID_MSG.", ID_MSG_UPDATED = ".$msgOptions->ID_MSG."
-		WHERE ID_BOARD = ".$topicOptions->ID_BOARD." LIMIT 1");
-		$dbase->query();
-		
-		//log alalım
-		$dbase->setQuery("REPLACE INTO #__forum_log_topics 
-		(ID_TOPIC, ID_MEMBER, ID_MSG) 
-		VALUES ($topicOptions->ID_TOPIC, $my->id, $msgOptions->ID_MSG + 1)");
-		$dbase->query();
-	
-	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$topicOptions->ID_TOPIC);
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$ID_TOPIC);
 }
 
 function Topic($id) {
 	global $dbase, $my;
 	
+	mimport('helpers.modules.online.helper');
+	
 	$topiclimit = intval(getParam($_REQUEST, 'limit', 10));
 	$topicstart = intval(getParam($_REQUEST, 'limitstart', 0));
 	
-	$topics = new BoardTopic($dbase);
-	$controlid = $topics->load($id);
+	//topic var mı yok mu?
+	mimport('tables.forumtopic');
+	$topic = new mezunForumtopic($dbase);
+	$oid = $topic->load($id);
 	
-	if (!$controlid) {
+	if (!$oid) {
 		NotAuth();
 		return;
 	}
-	$board = new Boards($dbase);
-		
-	$context['topic'] = $topics->TopicIndex($id, $topicstart, $topiclimit);
-	$topic_info = $topics->TopicInfo($id);
-	$board_info = $board->BoardInfo($topic_info->ID_BOARD);
-
-
+	
+	//topic içerisindeki mesajları alalım	
+	$context['topic'] = mezunForum::TopicIndex($topic->ID_TOPIC, $topicstart, $topiclimit);
+	//topic bilgileri
+	$topic_info = mezunForum::TopicInfo($topic->ID_TOPIC);
+	//board bilgileri
+	$board_info = mezunForum::BoardInfo($topic_info->ID_BOARD);
+	//topic içerisindeki toplam mesaj sayısı
 	$total = $topic_info->numReplies;
 	
-	$pageNav = new pageNav($total, $topicstart, $topiclimit);
+	$pageNav = new mezunPagenation($total, $topicstart, $topiclimit);
 	
-	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages");
-		$maxMsg = $dbase->loadResult();
+	$maxMsg = mezunForum::maxMsgID();
+	
 		if (!$maxMsg) {
 		  $maxMsg = 1;
 		}
@@ -294,11 +321,9 @@ function Topic($id) {
 function ForumIndex() {
 	global $dbase, $limit;
 	
-	$categories = new BoardCategories($dbase);
-	$latestposts = new BoardMessages($dbase);
-	$context['latestmsg'] = $latestposts->latestMessages(latestPostCount, $limit);
+	$context['categories'] = mezunForum::ForumIndex();
 	
-	$context['categories'] = $categories->ForumIndex();
+	$context['latestmsg'] = mezunForum::latestMessages(latestPostCount, $limit);
 	
 	ForumHTML::BoardIndex($context);
 }
@@ -309,29 +334,29 @@ function Board($id) {
 	$topiclimit = intval(getParam($_REQUEST, 'topiclimit', 10));
 	$topicstart = intval(getParam($_REQUEST, 'topicstart', 0));
 	
-	$boards = new BoardCategories($dbase);
-	$topics = new Boards($dbase);
-	$maxID = new BoardMessages($dbase);
+	mimport('tables.forumboard');
+	$board = new mezunForumboard($dbase);
 	
-	$topics->load($id);
-	if (!$topics->ID_BOARD) {
+	$board->load($id);
+	if (!$board->ID_BOARD) {
 		NotAuth();
 		return;
 	}
+	//board bilgileri
+	$board_info = mezunForum::BoardInfo($id);
 	
 	//Board içerisindeki alt boardlar
-	$context['boards'] = $boards->Board($id);
+	$context['boards'] = mezunForum::BoardIndex($board->ID_BOARD);
 	
 	//Board içerisindeki topicler
-	$context['topics'] = $topics->BoardTopics($id, $topicstart, $topiclimit, $limitstart, $limit);
-	$board_info = $topics->BoardInfo($id);
+	$context['topics'] = mezunForum::BoardTopics($board->ID_BOARD, $topicstart, $topiclimit, $limitstart, $limit);
 	
 	//Board içerisindeki topicleri sayfalandıralım
 	$total = $board_info->numTopics;
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	//max msg id değerini alalım
-	$maxMsg = $maxID->maxMsgID();
+	$maxMsg = mezunForum::maxMsgID();
 	
 	if (!$maxMsg) {
 		$maxMsg = 1;

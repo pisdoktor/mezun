@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class Duyurular extends DBTable {
+class mezunDuyurular extends mezunTable {
 	
 	var $id     = null;
 	
@@ -10,7 +10,7 @@ class Duyurular extends DBTable {
 	
 	var $tarih = null;
 	
-	function Duyurular( &$db ) {
-		$this->DBTable( '#__duyurular', 'id', $db );
+	function mezunDuyurular( &$db ) {
+		$this->mezunTable( '#__duyurular', 'id', $db );
 	}
 }

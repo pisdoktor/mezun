@@ -42,7 +42,7 @@ $cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
 </div>
 <div class="row">
 <?php echo $row->unvan;?>. <?php echo $row->name;?>
-<div align="center"><?php isOnline($row->id);?></div>
+<div align="center"><?php mezunOnlineHelper::isOnline($row->id);?></div>
 </div>
 </div>
 </div>

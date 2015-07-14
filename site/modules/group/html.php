@@ -58,7 +58,7 @@ class GroupHTML {
 		<?php echo $row->name;?> <?php echo $creator;?> <?php echo $admin;?>
 		</div>
 		<div class="col-sm-5">
-		<?php echo Forum::timeformat($row->joindate, true, true);?>
+		<?php echo mezunGlobalHelper::timeformat($row->joindate, true, true);?>
 		</div>
 		</div>
 		</div>
@@ -106,7 +106,7 @@ class GroupHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">Oluşturma Zamanı:</div>
-		<div class="col-sm-7"><?php echo Forum::timeformat($group->creationdate, true, true);?></div>
+		<div class="col-sm-7"><?php echo mezunGlobalHelper::timeformat($group->creationdate, true, true);?></div>
 		</div>
 		</div>
 		<div class="form-group">
@@ -312,7 +312,7 @@ class GroupHTML {
 					<div class="row">
 					<div class="col-sm-12">
 					<small>Gönderen: <?php echo $msg->gonderen;?></small> 
-					<small>Tarih: <?php echo Forum::timeformat($msg->tarih, true, true);?></small>
+					<small>Tarih: <?php echo mezunForumHelper::timeformat($msg->tarih, true, true);?></small>
 					</div>
 					</div>
 					
@@ -371,7 +371,7 @@ class GroupHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">Oluşturma Zamanı:</div>
-		<div class="col-sm-7"><?php echo Forum::timeformat($row->creationdate, true, true);?></div>
+		<div class="col-sm-7"><?php echo mezunGlobalHelper::timeformat($row->creationdate, true, true);?></div>
 		</div>
 		</div>
 		<div class="form-group">
@@ -421,8 +421,8 @@ class GroupHTML {
 		
 		foreach ($rows as $row) {
 			$row->image = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
-			$row->name = shortText($row->name, 20);
-			$row->aciklama = shortText($row->aciklama, 30);
+			$row->name = mezunGlobalHelper::shortText($row->name, 20);
+			$row->aciklama = mezunGlobalHelper::shortText($row->aciklama, 30);
 			?>
 			<div class="col-sm-3">
 			<div align="center">
@@ -477,8 +477,8 @@ class GroupHTML {
 		
 		foreach ($rows as $row) {
 			$row->image = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
-			$row->name = shortText($row->name, 20);
-			$row->aciklama = shortText($row->aciklama, 30);
+			$row->name = mezunGlobalHelper::shortText($row->name, 20);
+			$row->aciklama = mezunGlobalHelper::shortText($row->aciklama, 30);
 			?>
 			<div class="col-sm-3">
 			<div align="center">

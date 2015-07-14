@@ -10,6 +10,8 @@ $type = intval(getParam($_REQUEST, 'type'));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.mesaj.helper');
+
 switch($task) {
 	default:
 	case 'inbox':
@@ -112,7 +114,7 @@ function changeMessage($cid, $status) {
 function showMessage($id) {
 	global $dbase, $my;
 	
-	$row = new Mesajlar($dbase);
+	$row = new mezunMesajlar($dbase);
 	$row->load($id);
 	
 	if ($row->aid == $my->id || $row->gid == $my->id) {
@@ -149,8 +151,8 @@ function showMessage($id) {
 function sendMessage() {
 	global $dbase, $my;
 	
-	$row = new Mesajlar( $dbase );
-	$istek = new Istekler($dbase);
+	$row = new mezunMesajlar( $dbase );
+	$istek = new mezunIstekler($dbase);
 	
 	$row->id = $row->createID();
 	
@@ -213,10 +215,10 @@ function createMessage() {
 	$rows = array_merge($rows1, $rows2);
 	
 	foreach ($rows as $row) {
-		$user[] = mosHTML::makeOption($row->id, $row->name.' ('.$row->username.')');
+		$user[] = mezunHTML::makeOption($row->id, $row->name.' ('.$row->username.')');
 	}
 	
-	$userlist = mosHTML::selectList($user, 'aid', 'id="aid" required size="10"', 'value', 'text');
+	$userlist = mezunHTML::selectList($user, 'aid', 'id="aid" required size="10"', 'value', 'text');
 	
 	Message::createMsg($my, $userlist);
 }
@@ -227,7 +229,9 @@ function createMessage() {
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
 	
-	$crpt = new Mesajlar($dbase);
+	mimport('helpers.modules.forum.helper');
+	
+	$crpt = new mezunMesajlar($dbase);
 	
 	$where = $type ? ' WHERE m.gid='.$dbase->Quote($my->id).' AND m.aid>0' : ' WHERE m.aid='.$dbase->Quote($my->id);
 	$where2 = $type ? ' AND m.gsilinme=0 ' : ' AND m.asilinme=0 ';
@@ -239,7 +243,7 @@ function inBox($type) {
 	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav( $total, $limitstart, $limit);
+	$pageNav = new mezunPagenation( $total, $limitstart, $limit);
 	
 	$query = "SELECT m.*, u.name as gonderen, uu.name as giden FROM #__mesajlar AS m"
 	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"

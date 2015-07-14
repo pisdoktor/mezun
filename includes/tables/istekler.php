@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class Istekler extends DBTable {
+class mezunIstekler extends mezunTable {
 	
 	var $id = null;
 	
@@ -14,8 +14,8 @@ class Istekler extends DBTable {
 	
 	var $durum  = null;
 	
-	function Istekler( &$db ) {
-		$this->DBTable( '#__istekler', 'id', $db );
+	function mezunIstekler( &$db ) {
+		$this->mezunTable( '#__istekler', 'id', $db );
 	}
 	
 	function totalWaiting() {

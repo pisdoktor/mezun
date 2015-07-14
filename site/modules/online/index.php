@@ -2,6 +2,8 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
+mimport('helpers.modules.online.helper');
+
 switch($task) {
 	default:
 	getOnline();
@@ -60,7 +62,7 @@ function showOnlineUsers($rows) {
 	<?php
 	foreach($rows as $row) {
 	$link = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->userid).'">'.$row->name.'</a>';
-	$onlinetime = calcOnlineTime(($row->time), strtotime($row->nowvisit));
+	$onlinetime = mezunOnlineHelper::calcOnlineTime(($row->time), strtotime($row->nowvisit));
 	?>
 	<div class="form-group">
 	<div class="row">
@@ -87,39 +89,4 @@ function showOnlineUsers($rows) {
 	</div>
 	</div>
 	<?php
-}
-
-//Online süresi hesaplama
-function calcOnlineTime($end, $start) {
-
-$difference = $end-$start;
-
-$second = 1;
-$minute = 60*$second;
-$hour   = 60*$minute;
-$day    = 24*$hour;
-
-$ans["day"]    = floor($difference/$day);
-$ans["hour"]   = floor(($difference%$day)/$hour);
-$ans["minute"] = floor((($difference%$day)%$hour)/$minute);
-$ans["second"] = floor(((($difference%$day)%$hour)%$minute)/$second);
-
-$html = '';
-
-if ($ans["day"]) {
-	$html.= $ans["day"]. " gün ";
-}
-
-if ($ans["hour"]) {
-	$html.= $ans["hour"]. " saat ";
-}
-
-if ($ans["minute"]) {
-	$html.= $ans["minute"]. " dakika ";
-}
-
-if ($ans["second"]) {
-	$html.= $ans["second"]. " saniye";
-}
-return $html;
 }

@@ -24,7 +24,7 @@ class Message {
 		<strong>Gönderim Tarihi:</strong>
 		</div>
 		<div class="col-sm-9">
-		<?php echo Forum::timeformat($row->tarih, true, true);?>
+		<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 		</div>
 		</div>
 		
@@ -122,10 +122,10 @@ class Message {
 	
 	<div class="form-group">
 	<div class="btn-group">
-	<?php echo $type == 0 ? formButton("Yeni", 'new', 0) : '';?>
-	<?php echo $type == 0 ? formButton("Okunmadı Olarak İşaretle", 'unread', 1) : '';?>
-	<?php echo $type == 0 ? formButton("Okundu Olarak İşaretle", 'read', 1) : '';?>
-	<?php echo formButton('Mesajı Sil', 'delete', 2);?>
+	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Yeni", 'new', 0) : '';?>
+	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Okunmadı Olarak İşaretle", 'unread', 1) : '';?>
+	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Okundu Olarak İşaretle", 'read', 1) : '';?>
+	<?php echo mezunGlobalHelper::formButton('Mesajı Sil', 'delete', 2);?>
 	</div>
 	</div>
 	
@@ -162,7 +162,7 @@ $row->baslik = $crpt->cryptionText($row->baslik, 'decode');
 $row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
 $row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->gonderen.'</strong>';
 $row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';
-$checked = mosHTML::idBox( $i, $row->id );
+$checked = mezunHTML::idBox( $i, $row->id );
 ?>
 <div class="row" id="<?php echo $row->id;?>">
 	<div class="col-sm-1">
@@ -180,7 +180,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 </a>
 	</div>
 	<div class="col-sm-3">
-	<?php echo Forum::timeformat($row->tarih, true, true);?>
+	<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 	</div>
 </div>
 <?php

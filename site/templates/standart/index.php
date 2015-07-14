@@ -28,7 +28,6 @@ $(document).on('focusin', function(e) {
 
 </head>
 <body>
-<?php include_once( ABSPATH .'/includes/google_analytics.php');?>
 <div id="container">
 
 <div id="header">
@@ -39,7 +38,7 @@ $(document).on('focusin', function(e) {
 
 <div id="header-bar" class="clearfix">
 <div class="header">
-<?php siteMenu();?> 
+<?php mezunGlobalHelper::siteMenu();?> 
 </div>
 </div>
 

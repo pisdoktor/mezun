@@ -4,6 +4,9 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.group.helper');
+mimport('tables.gruplar');
+
 switch($task) {
 	default:
 	case 'all':
@@ -77,7 +80,7 @@ function deleteGroup($id) {
 		return;
 	}
 	
-	$row = new UserGroups($dbase);
+	$row = new mezunGruplar($dbase);
 	$row->load($id);
 	
 	if (!$row->canDeleteGroup()) {
@@ -116,7 +119,7 @@ function showGroupMembers($id) {
 		return;
 	}
 	
-	$group = new UserGroups($dbase);
+	$group = new mezunGruplar($dbase);
 	$group->load($id);
 	
 	if (!$group->id) {
@@ -141,7 +144,7 @@ function showGroupMembers($id) {
 	$dbase->setQuery("SELECT COUNT(userid) FROM #__groups_members WHERE groupid=".$dbase->Quote($id));
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	$query = "SELECT m.userid, m.isadmin, m.joindate, u.name, g.creator AS creatorid FROM #__groups_members AS m "
 	. "\n LEFT JOIN #__users AS u ON u.id=m.userid "
@@ -154,7 +157,8 @@ function showGroupMembers($id) {
 	$rows = $dbase->loadObjectList();
 	
 	//gruba eklemek için arkadaş listesini alalım
-	$friends = new Istekler($dbase);
+	mimport('tables.istekler');
+	$friends = new mezunIstekler($dbase);
 	$friendlist = $friends->getMyFriends();
 	//gruba ekli üyeleri alalım
 	$dbase->setQuery("SELECT userid FROM #__groups_members WHERE groupid=".$dbase->Quote($group->id)." AND userid NOT IN (".$my->id.")");
@@ -171,24 +175,21 @@ function showGroupMembers($id) {
 		$musers = $dbase->loadObjectList();
 		
 		foreach ($musers as $muser) {
-			$u[] = mosHTML::makeOption($muser->id, $muser->name);
+			$u[] = mezunHTML::makeOption($muser->id, $muser->name);
 		}
 		
-		$list['invite'] = mosHTML::selectList($u, 'uid', 'size="10"', 'value', 'text');
+		$list['invite'] = mezunHTML::selectList($u, 'uid', 'size="10"', 'value', 'text');
 	} else {
 		$list['invite'] = '';
 	}
 	
-	
-	
-	GroupHTML::showGroupMembers($group, $rows, $pageNav, $list, $other);
-		
+	GroupHTML::showGroupMembers($group, $rows, $pageNav, $list, $other);	
 }
 
 function saveGroup() {
 	global $dbase, $my;
 	
-	$row = new UserGroups($dbase);
+	$row = new mezunGruplar($dbase);
 	$row->bind($_POST);
 	
 	$image = getParam($_FILES, 'image');
@@ -215,49 +216,62 @@ function saveGroup() {
 	
 	//grup resmi işlemleri
 	if ($image['name']) {
-		$dest = ABSPATH.'/images/group/';
+		mimport('helpers.image.helper');
 		
+		$maxWidth = 55;
+		$maxHeight = 55;
+
 		//eğer varsa önce eski resmi silelim
-		if ($row->image) {
-			@unlink(ABSPATH.'/images/group/'.$row->image);
+		if (!$new) {
+			$oldimage = new mezunGruplar($dbase);
+			$oldimage->load($row->id);
+			if ($oldimage->image) {
+				$src = ABSPATH.'/images/group/'.$oldimage->image;
+				mezunImageHelper::deleteImage($src);
+			}
 		}
 		
-		$maxsize = '2048';
-		$allow = array('png', 'gif', 'jpg', 'jpeg');
-		$minWidth = 55;
-		$minHeight = 55;
+		mezunImageHelper::check($image['name']);
 		
-		$uzanti = pathinfo($image['name']);
-		$uzanti = strtolower($uzanti["extension"]);
+		//dosya adını değiştirelim
+		$newname = mezunImageHelper::changeName($image['name']);
+		//hedef dosya
+		$dest = ABSPATH.'/images/group/';
+		$targetfile= $dest.$newname;
+		
+		//upload image
+		mimport('helpers.file.file');
+		mezunFile::upload($image['tmp_name'], $targetfile);
 	
-		$error = '';
+		$query = "UPDATE #__groups SET image=".$dbase->Quote($newname)
+		. "\n WHERE id=".$dbase->Quote($row->id);
+		$dbase->setQuery($query);
+		$dbase->query();	
 		
-		if (!in_array($uzanti, $allow)) {
-			$error = addslashes( $image['name'].' için dosya türü uygun değil');
-		}
+		list($imgwidth, $imgheight) = getimagesize($targetfile);
+	
+	if ($imgwidth > $maxWidth) {
+		$oran = floor($maxWidth / $imgwidth);
 		
-		if ($image['size'] > $maxsize*1024) {
-			$error = addslashes($image['name'].' için dosya boyutu istenilenden büyük!');
-		}
-						
-		$imagename = MakePassword(10).'.'.$uzanti;
-		$targetfile= $dest.$imagename;
+		$newwidth = $maxWidth;
+		$newheight = $oran * $imgheight;
 		
-	if (!move_uploaded_file($image['tmp_name'], $targetfile)) {
-		$error = addslashes( $image['name'].' yüklenemedi!');
+	} else if ($imgheight > $maxHeight) {
+		$oran = floor($maxHeight / $imgheight);
+		
+		$newheight = $maxHeight;
+		$newwidth = $oran * $imgwidth;
+		
+	} else {
+		$newheight = $imgheight;
+		$newwidth = $imgwidth;
 	}
-	
-	$query = "UPDATE #__groups SET image=".$dbase->Quote($imagename)
-	. "\n WHERE id=".$dbase->Quote($row->id);
-	$dbase->setQuery($query);
-	$dbase->query();		
+		
+	mezunImageHelper::resize($targetfile, 0, 0, 0, 0, $newwidth, $newheight, $imgwidth, $imgheight);	
 	
 	}
 	
 	Redirect('index.php?option=site&bolum=group&task=view&id='.$row->id);
-	
-	
-	
 }
 
 function leaveGroup($id) {
@@ -268,7 +282,7 @@ function leaveGroup($id) {
 		return;
 	}
 	
-	$group = new UserGroups($dbase);
+	$group = new mezunGruplar($dbase);
 	$group->load($id);
 	
 	if (!$group->id) {
@@ -301,7 +315,7 @@ function joinGroup($id) {
 		return;
 	}
 	
-	$group = new UserGroups($dbase);
+	$group = new mezunGruplar($dbase);
 	$group->load($id);
 	
 	if (!$group->id) {
@@ -330,7 +344,7 @@ function editMyGroup($id) {
 	global $dbase;
 	
 	
-	$row = new UserGroups($dbase);
+	$row = new mezunGruplar($dbase);
 	$row->load($id);
 	
 	if ($row->id && !$row->canEditGroup()) {
@@ -339,10 +353,10 @@ function editMyGroup($id) {
 	}
 	
 	$s = array();
-	$s[] = mosHTML::makeOption('1', 'Herkese Kapalı');
-	$s[] = mosHTML::makeOption('0', 'Herkese Açık');
+	$s[] = mezunHTML::makeOption('1', 'Herkese Kapalı');
+	$s[] = mezunHTML::makeOption('0', 'Herkese Açık');
 	
-	$list['status'] = mosHTML::radioList($s, 'status', 'required', 'value', 'text', $row->status);
+	$list['status'] = mezunHTML::radioList($s, 'status', 'required', 'value', 'text', $row->status);
 		
 	GroupHTML::editMyGroup($row, $list); 
 }
@@ -387,7 +401,7 @@ function sendGMessage() {
 				$veri .= '<div class="row">';
 				$veri .= '<div class="col-sm-12">';
 				$veri .= '<small>Gönderen: '.$msg->gonderen.'</small>'; 
-				$veri .= ' <small>Tarih: '.Forum::timeformat($msg->tarih, true, true).'</small>';
+				$veri .= ' <small>Tarih: '.mezunGlobalHelper::timeformat($msg->tarih, true, true).'</small>';
 				$veri .= '</div></div>';
 					
 				$veri .= '<div class="row">';
@@ -409,7 +423,7 @@ function viewGroup($id) {
 	global $dbase;
 	
 	//grup bilgilerini alalım
-	$row = new UserGroups($dbase);
+	$row = new mezunGruplar($dbase);
 	$row->load($id);
 	
 	if (!$row->id) {
@@ -456,7 +470,7 @@ function listGroups() {
 	$dbase->setQuery($query, $limitstart, $limit);
 	$rows = $dbase->loadObjectList();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	//html ye gönderelim
 	GroupHTML::listGroups($rows, $pageNav);	
@@ -475,7 +489,7 @@ function getMyGroups() {
 	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	$query = "SELECT g.* FROM #__groups AS g "
 	. "\n LEFT JOIN #__groups_members AS m ON m.groupid=g.id "
@@ -490,14 +504,4 @@ function getMyGroups() {
 	}
 	
 	GroupHTML::getMyGroups($rows, $pageNav);
-}
-
-function shortText($text, $len) {
-	// It was already short enough!
-	if (strlen($text) <= $len)
-		return $text;
-
-	// Shorten it by the length it was too long, and strip off junk from the end.
-	return substr($text, 0, $len) . '...';
-	
 }

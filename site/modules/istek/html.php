@@ -14,9 +14,9 @@ class Istek {
 	
 	<div class="form-group">
 	<div class="btn-group">
-	<?php echo $type == 0 ? formButton("Kabul Et", 'onayla', 1) : '';?>
-	<?php echo $type == 0 ? formButton("Red Et", 'delete', 2) : '';?>
-	<?php echo $type == 1 ? formButton("İptal Et", 'delete', 2) : '';?>
+	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Kabul Et", 'onayla', 1) : '';?>
+	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Red Et", 'delete', 2) : '';?>
+	<?php echo $type == 1 ? mezunGlobalHelper::formButton("İptal Et", 'delete', 2) : '';?>
 	</div>  
 	</div>
 	
@@ -50,7 +50,7 @@ for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 $row->giden = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->aid).'">'.$row->giden.'</a>';
 $row->gonderen = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->gid).'">'.$row->gonderen.'</a>';
-$checked = mosHTML::idBox( $i, $row->id );
+$checked = mezunHTML::idBox( $i, $row->id );
 ?>
 <div class="row" id="<?php echo $row->id;?>">
 	<div class="col-sm-1">
@@ -63,7 +63,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 	<?php echo $type ? $row->giden : $row->gonderen;?>
 	</div>
 	<div class="col-sm-5">
-	<?php echo Forum::timeformat($row->tarih, true, true);?>
+	<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 	</div>
 </div>
 <?php

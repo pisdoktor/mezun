@@ -4,6 +4,9 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.arama.helper');
+mimport('helpers.modules.online.helper');
+
 switch($task) {
 	default:
 	searchForm();
@@ -19,20 +22,20 @@ switch($task) {
 function searchForm() {
 	global $dbase, $my;
 	
-	$user = new Users($dbase);
+	$user = new mezunUsers($dbase);
 	
 	$type = array();
-	$type[] = mosHTML::makeOption('0', 'Herhangi bir eşleşme');
-	$type[] = mosHTML::makeOption('1', 'Tam eşleşme');
+	$type[] = mezunHTML::makeOption('0', 'Herhangi bir eşleşme');
+	$type[] = mezunHTML::makeOption('1', 'Tam eşleşme');
 	
-	$list['type'] = mosHTML::selectList($type, 'search_type', '', 'value', 'text');
+	$list['type'] = mezunHTML::selectList($type, 'search_type', '', 'value', 'text');
 	
 	$cins = array();
-	$cins[] = mosHTML::makeOption('', 'Cinsiyet Seçin');
-	$cins[] = mosHTML::makeOption('1', 'Erkek');
-	$cins[] = mosHTML::makeOption('2', 'Bayan');
+	$cins[] = mezunHTML::makeOption('', 'Cinsiyet Seçin');
+	$cins[] = mezunHTML::makeOption('1', 'Erkek');
+	$cins[] = mezunHTML::makeOption('2', 'Bayan');
 	
-	$list['cinsiyet'] = mosHTML::selectList($cins, 'cinsiyet', '', 'value', 'text');
+	$list['cinsiyet'] = mezunHTML::selectList($cins, 'cinsiyet', '', 'value', 'text');
 	
 	Search::Form($list, $user);
 }
@@ -42,6 +45,8 @@ function searchForm() {
 */
 function searchResults() {
 	global $dbase, $my;
+	
+	mimport('helpers.modules.forum.helper');
 	
 $name = getParam($_REQUEST, 'name');
 $username = getParam($_REQUEST, 'username');
@@ -117,7 +122,7 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	$query = "SELECT u.*, s.name AS sehiradi, ss.name as dogumyeriadi, b.name as bransadi FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"

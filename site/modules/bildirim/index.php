@@ -4,6 +4,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.bildirim.helper');
+
 switch($task) {
 	default:
 	sysMessage();
@@ -18,18 +20,18 @@ function sysMessage() {
 	global $my;
 	
 	$bolum = array();
-	$bolum[] = mosHTML::makeOption('', 'Hata ile karşılaştığınız bölümü seçin');
-	$bolum[] = mosHTML::makeOption('profil', 'Profil');
-	$bolum[] = mosHTML::makeOption('arkadas', 'Arkadaşlarım');
-	$bolum[] = mosHTML::makeOption('online', 'Online Üyeler');
-	$bolum[] = mosHTML::makeOption('mesaj', 'Mesajlar');
-	$bolum[] = mosHTML::makeOption('istek', 'İstekler');
-	$bolum[] = mosHTML::makeOption('group', 'Gruplar');
-	$bolum[] = mosHTML::makeOption('arama', 'Üye Arama');
-	$bolum[] = mosHTML::makeOption('forum', 'Forum');
-	$bolum[] = mosHTML::makeOption('diger', 'Diğer');
+	$bolum[] = mezunHTML::makeOption('', 'Hata ile karşılaştığınız bölümü seçin');
+	$bolum[] = mezunHTML::makeOption('profil', 'Profil');
+	$bolum[] = mezunHTML::makeOption('arkadas', 'Arkadaşlarım');
+	$bolum[] = mezunHTML::makeOption('online', 'Online Üyeler');
+	$bolum[] = mezunHTML::makeOption('mesaj', 'Mesajlar');
+	$bolum[] = mezunHTML::makeOption('istek', 'İstekler');
+	$bolum[] = mezunHTML::makeOption('group', 'Gruplar');
+	$bolum[] = mezunHTML::makeOption('arama', 'Üye Arama');
+	$bolum[] = mezunHTML::makeOption('forum', 'Forum');
+	$bolum[] = mezunHTML::makeOption('diger', 'Diğer');
 	
-	$list = mosHTML::selectList($bolum, 'hatabolumu', '', 'value', 'text');
+	$list = mezunHTML::selectList($bolum, 'hatabolumu', '', 'value', 'text');
 	
 	systemMessage::Form($my, $list);
 }
@@ -37,7 +39,7 @@ function sysMessage() {
 function sendSysMsg() {
 	global $dbase, $my;
 	
-	$row = new Mesajlar($dbase);
+	$row = new mezunMesajlar($dbase);
 	$row->bind($_POST);
 	
 	$hatabolumu = getParam($_POST, 'hatabolumu');

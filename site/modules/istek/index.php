@@ -10,6 +10,8 @@ $type = intval(getParam($_REQUEST, 'type'));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('helpers.modules.istek.helper');
+
 switch($task) {
 	default:
 	case 'inbox':
@@ -144,6 +146,8 @@ function sendIstek($id) {
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
 	
+	mimport('helpers.modules.forum.helper');
+	
 	$where = $type ? "WHERE i.gid=".$my->id." AND i.durum=0" : "WHERE i.aid=".$my->id." AND i.durum=0";
 	
 	$query = "SELECT COUNT(*) FROM #__istekler AS i "
@@ -151,7 +155,7 @@ function inBox($type) {
 	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	$query = "SELECT i.*, u.name AS gonderen, uu.name as giden FROM #__istekler AS i"
 	. "\n LEFT JOIN #__users AS u ON u.id=i.gid"

@@ -1,36 +1,66 @@
 <?php
-//  ;)
+/**
+* Sistemin ana dosyası.
+* İçerisinden geçmeyen tüm dosyalar hata mesajı verecek ;)
+*/
 define('ERISIM', 1);
 
+/**
+* Global ve Config Dosyalarını önce alalım
+*/
 require( dirname( __FILE__ ) . '/global.php' );
 require( dirname( __FILE__ ) . '/config.php' );
 
-require_once( dirname( __FILE__ ) . '/includes/base.php' );
+/**
+* Gerekli olan Base dosyalarını alalım
+*/
+require_once(dirname( __FILE__ ) . '/includes/base.php' );
+/**
+* Gerekli olan fonksiyonları alalım
+*/
 require_once(dirname( __FILE__ ) . '/includes/functions.php');
 
+/**
+* Sef desteği sağlayalım
+* NOT: Henüz tam olarak aktif değil. Üzerinde çalışılması gerekiyor :( 
+*/
 require(dirname(__FILE__).'/includes/sef.php');
 
+/**
+* Genel döngü değerlerini alalım
+*/
 $option = strval(strtolower(getParam($_REQUEST, 'option')));
 $bolum = strval(strtolower(getParam($_REQUEST, 'bolum')));
 $task = strval(strtolower(getParam($_REQUEST, 'task')));
 $return = strval( getParam( $_REQUEST, 'return', NULL ) );
 $code = strval(getParam($_REQUEST, 'code'));
-
 $mosmsg = getParam($_REQUEST, 'mosmsg');
 
-$mainframe = new mainFrame( $dbase, $option );
+/**
+* Çatıyı oluşturalım, oturumu başlatalım
+* 
+* @var mezunMainFrame
+*/
+$mainframe = new mezunMainFrame( $dbase, $option );
 $mainframe->initSession();
-
+/**
+* mezunUsers tablosundan kullanıcının bilgilerini çekelim
+* 
+* @var mezunUsers
+*/
 $my = $mainframe->getUser();
 
 /**
-* Ziyaretçi istatistikleri
+* Site ziyaretçilerinin bilgilerini alalım ve istatistik oluşturalım
 * 
-* @var Analytics
+* @var mezunStatsHelper
 */
-$stats = new Analytics();
+$stats = new mezunStatsHelper();
 $stats->tracker();
 
+/**
+* $option ile döngüleri alalım
+*/
 switch($option) {
 
 	case 'login':
@@ -58,6 +88,11 @@ switch($option) {
 	break;
 }
 
+/**
+* Kullanıcı aktivasyon fonksiyonu
+* 
+* @param mixed $code kullanıcı tarafından girilen kod
+*/
 function activeUser($code) {
 	global $dbase;
 	
@@ -81,6 +116,9 @@ function activeUser($code) {
 	}
 }
 
+/**
+* Kullanıcı parola sıfırlama fonksiyonu
+*/
 function resendPassword() {
 	global $dbase;
 	
@@ -106,7 +144,7 @@ function resendPassword() {
 	$exist = $dbase->loadResult();
 	
 	if ($exist) {		
-		$user = new Users($dbase);
+		$user = new mezunUsers($dbase);
 		$user->load($exist);
 		
 		$passwd = MakePassword(8);
@@ -133,11 +171,13 @@ function resendPassword() {
 		Redirect('index.php', 'Verilen e-postaya ait bir kullanıcı yok!');
 	}
 }
-
+/**
+* Kullanıcı kayıt fonksiyonu
+*/
 function registerUser() {
 	global $dbase;
 	
-	$row = new Users($dbase);
+	$row = new mezunUsers($dbase);
 	
 	spoofCheck(NULL,1);
 	
@@ -197,6 +237,9 @@ function registerUser() {
 
 }
 
+/**
+* Kullanıcı giriş fonksiyonu
+*/
 function Login() {
 	global $mainframe, $return;
 	
@@ -216,7 +259,9 @@ if ( $return ) {
 		}
 	}
 }
-
+/**
+* Kullanıcı çıkış fonksiyonu
+*/
 function Logout() {
 	global $mainframe, $return;
 	
@@ -229,6 +274,9 @@ function Logout() {
 	}
 }
 
+/**
+* Cookie kontrol fonksiyonu
+*/
 function CookieCheck() {
 	global $mainframe, $return;
 	if (isset( $_COOKIE[$mainframe->sessionCookieName()] )) {
@@ -239,6 +287,9 @@ function CookieCheck() {
 }
 
 
+/**
+* Sayfa açılışı...
+*/
 ob_start();
 
 ob_end_clean();
@@ -249,30 +300,42 @@ header( 'Cache-Control: no-store, no-cache, must-revalidate' );
 header( 'Cache-Control: post-check=0, pre-check=0', false );
 header( 'Pragma: no-cache' );
 
+/**
+* Gzip desteği
+*/
 initGzip();
 
-//ziyaretçi
+/**
+* Kullanıcı eğer üye değilse muhtemelen ya anasayfadadır ya da kayıt sayfasındas
+*/
 if (!$my->id) {
+	// Kullanıcı kayıt sayfasında ise...
 	if ($option == 'register') {
-		$reg = new Users($dbase);
+		$reg = new mezunUsers($dbase);
 		include_once(ABSPATH. '/site/templates/'.SITETEMPLATE.'/register.php');    
+	//Kullanıcı anasayfada giriş ekranını görüyor...
 	} else {
 		include_once(ABSPATH. '/site/templates/'.SITETEMPLATE.'/login.php');    
 	}
 }
-//kayıtlı kullanıcı
+/**
+* Kullanıcı eğer üye ise yetki düzeyine bakalım
+*/
 else {
-	//sistem yöneticisi ise 
+	//Kullanıcı ($id=1 olan) eğer yönetici ise...
 	if ($my->access_type == 'admin') {    
 		require_once(ABSPATH.'/admin/includes/functions.php');    
 			
 		include_once(ABSPATH.'/admin/templates/'.ADMINTEMPLATE.'/index.php');
-			
+	//Kullanıcı normal bir üye ise...		
 	} else {		
 		include_once(ABSPATH.'/site/templates/'.SITETEMPLATE.'/index.php');
 	}
 }
 
+/**
+* Site hata gösterimi açık ise...
+*/
 if (DEBUGMODE) {
 	
 	echo '<div id="sql">';
@@ -283,5 +346,8 @@ if (DEBUGMODE) {
 	}
 	echo '</pre></div>';
 }
-	
+
+/**
+* Gzip çalıştır...	
+*/
 doGzip();

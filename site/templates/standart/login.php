@@ -11,7 +11,6 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
-<?php include_once( ABSPATH .'/includes/google_analytics.php');?>
 <?php
 $validate = spoofValue(1);
 ?>
@@ -25,7 +24,7 @@ $validate = spoofValue(1);
 
 <div id="header-bar" class="clearfix">
 <div class="header">
-<?php siteMenu();?> 
+<?php mezunGlobalHelper::siteMenu();?> 
 </div>
 </div>
 

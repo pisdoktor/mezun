@@ -71,7 +71,7 @@ function convertSite() {
 	global $mainframe, $dbase, $my;
 	
 	if ($my->id == 1) {
-	$session = new Session($dbase);
+	$session = new mezunSession($dbase);
 	$session->load($mainframe->_session->session);
 
 	$session->access_type = 'site';

@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class Mesajlar extends DBTable {
+class mezunMesajlar extends mezunTable {
 	
 	var $id     = null;
 	
@@ -22,8 +22,8 @@ class Mesajlar extends DBTable {
 	
 	var $asilinme = null;
 	
-	function Mesajlar( &$db ) {
-		$this->DBTable( '#__mesajlar', 'id', $db );
+	function mezunMesajlar( &$db ) {
+		$this->mezunTable( '#__mesajlar', 'id', $db );
 	}
 	
 	function createID() {

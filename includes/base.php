@@ -10,28 +10,38 @@ if ( ERROR_REPORT === 0 || ERROR_REPORT === '0' ) {
 	error_reporting( E_ALL );
 }
 
-require_once( dirname( __FILE__ ) . '/version.php' );
-require_once( dirname( __FILE__ ) . '/database.php' );
-require_once( dirname( __FILE__ ) . '/phpmailer/class.phpmailer.php' );
+require(dirname(__FILE__).'/importer.php');
 
-//Veritabanı tablolarını içeri alalım
-$tables = readDirectory(dirname(__FILE__).'/tables/');
-foreach ($tables as $table) {
-	require_once(dirname(__FILE__).'/tables/'.$table);
-}
+mimport('global.version');
+//database sınıfını import edelim
+mimport('helpers.database.database');
+mimport('helpers.database.table');
 
-//sınıfları içeri alalım
-$classes = readDirectory(dirname(__FILE__).'/classes/');
-foreach ($classes as $class) {
-	require_once(dirname(__FILE__).'/classes/'.$class);
-}
+//mainframe
+mimport('helpers.mainframe');
 
-$dbase = new DB( DB_HOST, DB_USER, DB_PASS, DB, DB_PREFIX );
+//genel kullanılan fonksiyonları alalım
+mimport('global.helper');
+
+//mail
+mimport('helpers.phpmailer.phpmailer');
+//filter 
+mimport('helpers.filter.inputfilter');
+
+//stats
+mimport('helpers.stats.helper');
+//html
+mimport('helpers.html.html');
+//pagenation
+mimport('helpers.html.pagenation');
+
+
+$dbase = new mezunDatabase( DB_HOST, DB_USER, DB_PASS, DB, DB_PREFIX );
 
 if ($dbase->getErrorNum()) {
 	$systemError = $dbase->getErrorNum();
 	$systemErrorMsg = $dbase->getErrorMsg();
-	include ABSPATH . '/closed.php';
+	include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
 	exit();
 }
 $dbase->debug( DEBUGMODE );
@@ -101,7 +111,7 @@ function getParam( &$arr, $name, $def=null, $mask=0 ) {
 			} else {
 				// send to inputfilter
 				if (is_null( $noHtmlFilter )) {
-					$noHtmlFilter = new InputFilter( /* $tags, $attr, $tag_method, $attr_method, $xss_auto */ );
+					$noHtmlFilter = new mezunInputFilter( /* $tags, $attr, $tag_method, $attr_method, $xss_auto */ );
 				}
 				$return = $noHtmlFilter->process( $return );
 
@@ -225,7 +235,7 @@ function Redirect( $url, $msg='' ) {
    global $mainframe;
 
 	// specific filters
-	$iFilter = new InputFilter();
+	$iFilter = new mezunInputFilter();
 	$url = $iFilter->process( $url );
 	if (!empty($msg)) {
 		$msg = $iFilter->process( $msg );
@@ -1001,7 +1011,7 @@ function spoofCheck( $header=NULL, $alt=NULL , $method = 'post') {
 	// probably a spoofing attack
 	if (!$validate) {
 		header( 'HTTP/1.0 403 Forbidden' );
-		mosErrorAlert( 'Yetkiniz yok' );
+		ErrorAlert( 'Yetkiniz yok' );
 		return;
 	}
 
@@ -1010,7 +1020,7 @@ function spoofCheck( $header=NULL, $alt=NULL , $method = 'post') {
 	// other than requests from a browser:
 	if (!isset( $_SERVER['HTTP_USER_AGENT'] )) {
 		header( 'HTTP/1.0 403 Forbidden' );
-		mosErrorAlert( 'Yetkiniz yok' );
+		ErrorAlert( 'Yetkiniz yok' );
 		return;
 	}
 
@@ -1018,7 +1028,7 @@ function spoofCheck( $header=NULL, $alt=NULL , $method = 'post') {
 	//  (requires your html form to use: action="post")
 	if (!$_SERVER['REQUEST_METHOD'] == 'POST' ) {
 		header( 'HTTP/1.0 403 Forbidden' );
-		mosErrorAlert( 'Yetkiniz yok' );
+		ErrorAlert( 'Yetkiniz yok' );
 		return;
 	}
 
@@ -1048,8 +1058,8 @@ function _spoofCheck( $array, $badStrings ) {
 			foreach ( $badStrings as $v2 ) {
 				if ( stripos( $v, $v2 ) !== false ) {
 					header( 'HTTP/1.0 403 Forbidden' );
-					mosErrorAlert( 'Yetkiniz yok' );
-					exit(); // mosErrorAlert dies anyway, double check just to make sure
+					ErrorAlert( 'Yetkiniz yok' );
+					exit(); // ErrorAlert dies anyway, double check just to make sure
 				}
 			}
 		}
@@ -1096,43 +1106,3 @@ function josHashPassword($password) {
 
 	return $hash;
 }
-
-	/**
-	* Assembles head tags
-	*/
-	function showHead() {
-		global $mainframe, $my, $option, $bolum;
-
-		//site genel bilgileri
-		$mainframe->appendMetaTag( 'description', META_DESC );
-		$mainframe->appendMetaTag( 'keywords', META_KEYS );
-		$mainframe->addMetaTag( 'Generator', 'Soner Ekici');
-		$mainframe->addMetaTag( 'robots', 'index, follow' );
-		
-		//font family ve jquery eklemeleri
-		$mainframe->addStyleSheet('http://fonts.googleapis.com/css?family=Droid+Sans');
-		$mainframe->addStyleSheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,300,400,600&subset=latin,latin-ext&ver=4.1.1', 'all', 'open-sans-css');
-		$mainframe->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
-		
-		$mainframe->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-		$mainframe->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
-		
-		//bootstrap eklemesi
-		$mainframe->addStyleSheet('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css');
-		$mainframe->addScript(0, 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js');
-		$mainframe->addScript(0, SITEURL.'/includes/global/js/bootstrap-helper.js');
-		
-		//site genel eklemeleri
-		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/global.css');
-		$mainframe->addScript(0, SITEURL.'/includes/global/js/global.js');
-		
-		//site menü css eklemesi
-		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/cssmenu.css');	
-		$mainframe->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');	
-		
-		//tinymce text editor
-		$mainframe->addScript(0, SITEURL.'/includes/tinymce/tinymce.min.js');
-		
-		
-		echo $mainframe->getHead();
-	}
