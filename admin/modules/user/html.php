@@ -234,7 +234,7 @@ $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$checked = mosHTML::idBox( $i, $row->id );
+$checked = mezunHTML::idBox( $i, $row->id );
 
 $blok = $row->activated ? 'Aktif' : 'Pasif';
 ?>

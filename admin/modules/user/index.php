@@ -10,6 +10,8 @@ $search = getParam($_REQUEST, 'search');
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('tables.users');
+
 switch($task) {
 	default:
 	getKullaniciList($search);
@@ -101,7 +103,7 @@ function delKullanici(&$cid) {
 function saveKullanici() {
 	 global $dbase;
 	
-	$row = new Users( $dbase );
+	$row = new mezunUsers( $dbase );
 	
 	if ( !$row->bind( $_POST ) ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
@@ -161,9 +163,8 @@ function saveKullanici() {
 function cancelKullanici() {
 	global $dbase;
 	
-	$row = new Users( $dbase );
+	$row = new mezunUsers( $dbase );
 	$row->bind( $_POST );
-	$row->checkin();
 	Redirect( 'index.php?option=admin&bolum=user');
 }
 
@@ -185,7 +186,7 @@ function getKullaniciList($search) {
 	 $dbase->setQuery($query);
 	 $total = $dbase->loadResult();
 	 
-	 $pageNav = new pageNav( $total, $limitstart, $limit);
+	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
 	 
 	 $query = "SELECT k.*, s.name as sehir, b.name as brans FROM #__users AS k"
 	 . "\n LEFT JOIN #__sehirler AS s ON s.id=k.sehir"
@@ -203,7 +204,7 @@ function getKullaniciList($search) {
 function editKullanici($cid) {
 	global $dbase, $my;
 	
-	$row = new Users($dbase);
+	$row = new mezunUsers($dbase);
 	$row->load($cid);
 	
 	KullaniciHTML::editKullanici($row);

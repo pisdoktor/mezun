@@ -232,7 +232,7 @@ $(function(){
 
 </div><!-- content -->
 
-<?php include(ABSPATH.'/includes/footer.php');?>
+<?php getFooter();?>
 
 </div><!-- container -->
 </body>

@@ -128,7 +128,7 @@ $t = 0;
 $i = 0;
 foreach ($list as $row) {
 
-$checked = mosHTML::idBox( $i, $row->ID_BOARD );
+$checked = mezunHTML::idBox( $i, $row->ID_BOARD );
 ?>
 
 <div id="detail<?php echo $row->ID_BOARD;?>">
@@ -275,7 +275,7 @@ $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$checked = mosHTML::idBox( $i, $row->ID_CAT );
+$checked = mezunHTML::idBox( $i, $row->ID_CAT );
 ?>
 
 <div id="detail<?php echo $row->ID_CAT;?>">

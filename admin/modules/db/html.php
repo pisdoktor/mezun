@@ -49,7 +49,7 @@ foreach ($rows as $key=>$value) {
 	$dbase->setQuery('SELECT COUNT(*) FROM '.$value);
 	$total = $dbase->loadResult();
 
-$checked = mosHTML::idBox( $i, $value );
+$checked = mezunHTML::idBox( $i, $value );
 ?>
 
 <div class="row" id="detail<?php echo $key;?>">

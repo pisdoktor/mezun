@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-if (defined(SEF) && SEF) {
+if (SEF) {
 	
 	$parts = explode('/index.php/', $_SERVER['REQUEST_URI']);
 	
@@ -12,14 +12,10 @@ if (defined(SEF) && SEF) {
 	$upart = explode('/', $parts[1]);
 	
 		for($i=0; $i<count($upart);$i++) {
-			$part = $upart[$i];
+			$part = str_replace('/', '', $upart[$i]);
 			
 			if (!empty($part)) {
 				list($key, $value) = explode(',', $part);
-				if ($key == 'mosmsg') {
-				$value = str_replace( '%2b', ' ', $value);
-				$value = utf8_encode($value);
-				}
 					if ($i==0) {
 						$_GET[$key] = $value;
 						$_REQUEST[$key] = $value;
@@ -38,10 +34,6 @@ if (defined(SEF) && SEF) {
 	} else {
 		$_SERVER['REQUEST_URI']  = '';
 	}
-	
-	
-		
-		
 	
 	//var_dump($upart);
 	//var_dump($qstring);

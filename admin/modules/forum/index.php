@@ -77,12 +77,12 @@ function getBoards($catid, $id) {
 	);
 	$rows = $dbase->loadObjectList();
 	
-	$board[] = mosHTML::makeOption('0', 'ANA');
+	$board[] = mezunHTML::makeOption('0', 'ANA');
 	foreach ($rows as $row) {
-		$board[] = mosHTML::makeOption($row->ID_BOARD, $row->name);
+		$board[] = mezunHTML::makeOption($row->ID_BOARD, $row->name);
 	}
 	
-	echo mosHTML::selectList($board, 'ID_PARENT', '', 'value', 'text');	
+	echo mezunHTML::selectList($board, 'ID_PARENT', '', 'value', 'text');	
 }
 
 function cancelBoard() {
@@ -98,7 +98,8 @@ function cancelCategory() {
 function saveBoard() {
 	global $dbase;
 	
-	$row = new Boards($dbase);
+	mimport('tables.forumboard');
+	$row = new mezunForumboard($dbase);
 	$row->bind($_POST);
 	$row->store();
 	
@@ -112,19 +113,20 @@ function saveBoard() {
 function editBoard($id) {
 	global $dbase;
 	
-	$row = new Boards($dbase);
+	mimport('tables.forumboard');
+	$row = new mezunForumboard($dbase);
 	$row->load($id);
 	
 	//cat
 	$dbase->setQuery("SELECT * FROM #__forum_categories");
 	$cats = $dbase->loadObjectList();
 	
-	$cat[] = mosHTML::makeOption('', 'Kategori Seçin');
+	$cat[] = mezunHTML::makeOption('', 'Kategori Seçin');
 	foreach ($cats as $cats) {
-		$cat[] = mosHTML::makeOption($cats->ID_CAT, $cats->name);
+		$cat[] = mezunHTML::makeOption($cats->ID_CAT, $cats->name);
 	}
 	
-	$lists['cat'] = mosHTML::selectList($cat, 'ID_CAT', 'id="ID_CAT" onchange="getBoards();"', 'value', 'text', $row->ID_CAT);
+	$lists['cat'] = mezunHTML::selectList($cat, 'ID_CAT', 'id="ID_CAT" onchange="getBoards();"', 'value', 'text', $row->ID_CAT);
 	
 	//board
 	$dbase->setQuery("SELECT * FROM #__forum_boards"
@@ -132,9 +134,9 @@ function editBoard($id) {
 	);
 	$boards = $dbase->loadObjectList();
 	
-	$b[] = mosHTML::makeOption('0', 'ANA');
+	$b[] = mezunHTML::makeOption('0', 'ANA');
 	foreach($boards as $board) {
-		$b[] = mosHTML::makeOption($board->ID_BOARD, $board->name);
+		$b[] = mezunHTML::makeOption($board->ID_BOARD, $board->name);
 	}
 	
 	//jquery ile board cat eşleştirmesi yapalım
@@ -150,7 +152,7 @@ function editBoard($id) {
 		}
 	}
 	
-	$lists['parent'] = mosHTML::selectList($b, 'ID_PARENT', 'id="ID_PARENT"', 'value', 'text', $row->ID_PARENT);
+	$lists['parent'] = mezunHTML::selectList($b, 'ID_PARENT', 'id="ID_PARENT"', 'value', 'text', $row->ID_PARENT);
 	
 	ForumHTML::editBoard($row, $lists, $nodes);
 }
@@ -158,7 +160,8 @@ function editBoard($id) {
 function saveCategory() {
 	global $dbase;
 	
-	$row = new BoardCategories($dbase);
+	mimport('tables.forumcategory');
+	$row = new mezunForumcategory($dbase);
 	$row->bind($_POST);
 	$row->store();
 	
@@ -168,7 +171,8 @@ function saveCategory() {
 function editCategory($id) {
 	global $dbase;
 	
-	$row = new BoardCategories($dbase);
+	mimport('tables.forumcategory');
+	$row = new mezunForumcategory($dbase);
 	$row->load($id);
 	
 	ForumHTML::editCategory($row);
@@ -180,7 +184,7 @@ function Categories() {
 	$dbase->setQuery("SELECT COUNT(*) FROM #__forum_categories");
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	$dbase->setQuery("SELECT * FROM #__forum_categories", $limitstart, $limit);
 	$rows = $dbase->loadObjectList();
@@ -197,7 +201,7 @@ function Boards() {
 	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	$query = "SELECT b.ID_PARENT as parent, ID_BOARD AS id, b.*, c.name as catname FROM #__forum_boards AS b"
 	. "\n LEFT JOIN #__forum_categories AS c ON c.ID_CAT=b.ID_CAT"

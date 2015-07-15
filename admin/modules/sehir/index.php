@@ -9,6 +9,8 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('tables.sehirler');
+
 switch($task) {
 	default:
 	getIlList();
@@ -65,7 +67,7 @@ function delIl(&$cid) {
 function saveIl() {
 	 global $dbase;
 	
-	$row = new Sehirler( $dbase );
+	$row = new mezunSehirler( $dbase );
 	
 	if ( !$row->bind( $_POST ) ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
@@ -89,9 +91,8 @@ function saveIl() {
 function cancelIl() {
 	global $dbase;
 	
-	$row = new Sehirler( $dbase );
+	$row = new mezunSehirler( $dbase );
 	$row->bind( $_POST );
-	$row->checkin();
 	Redirect( 'index.php?option=admin&bolum=sehir');
 }
 
@@ -101,7 +102,7 @@ function getIlList() {
 	 $dbase->setQuery("SELECT COUNT(*) FROM #__sehirler");
 	 $total = $dbase->loadResult();
 	 
-	 $pageNav = new pageNav( $total, $limitstart, $limit);
+	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
 	 $query = "SELECT * FROM #__sehirler";
 	
 	$dbase->setQuery($query, $limitstart, $limit);
@@ -113,7 +114,7 @@ function getIlList() {
 function editIl($cid) {
 	global $dbase;
 	
-	$row = new Sehirler($dbase);
+	$row = new mezunSehirler($dbase);
 	$row->load($cid);
 	
 	IlHTML::editIl($row);

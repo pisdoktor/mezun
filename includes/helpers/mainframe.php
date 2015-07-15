@@ -485,12 +485,14 @@ class mezunMainFrame {
 				$session->username   = $row->username;
 				$session->userid     = intval( $row->id );
 				$session->nerede     = $bolum;
-				   
+				
+				/*   
 				if ($row->id == 1) {
-				$this->_isAdmin = true;
+				$this->set('_isAdmin', true);
 				} else {
-				$this->_isAdmin = false;	
+				$this->set('_isAdmin', false);	
 				}
+				*/
 				$session->access_type = 'site';
 				$session->update();
 

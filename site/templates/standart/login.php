@@ -170,7 +170,7 @@ Bu siteye kayıt olarak;
 </div>
 <?php } ?>
 
-<?php include(ABSPATH.'/includes/footer.php');?>
+<?php getFooter();?>
 
 </div><!-- container -->
 </body>

@@ -232,8 +232,6 @@ function readDirectory( $path, $filter='.', $recurse=false, $fullpath=false  ) {
 */
 function Redirect( $url, $msg='' ) {
 
-   global $mainframe;
-
 	// specific filters
 	$iFilter = new mezunInputFilter();
 	$url = $iFilter->process( $url );

@@ -90,7 +90,7 @@ $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$checked = mosHTML::idBox( $i, $row->id );
+$checked = mezunHTML::idBox( $i, $row->id );
 ?>
 <div class="row" id="detail<?php echo $row->id;?>">
 <div class="col-sm-1">

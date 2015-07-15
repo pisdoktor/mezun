@@ -70,3 +70,7 @@ function MainPage() {
 	</div>
 	<?php
 }
+
+function getFooter() {
+	include(ABSPATH.'/site/templates/'.SITETEMPLATE.'/footer.php');
+}

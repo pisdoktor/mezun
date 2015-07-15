@@ -91,7 +91,7 @@ function getDBTables() {
 	
 	$tables = $dbase->getTableList();
 	$total = count($tables);
-	$pageNav = new pageNav( $total, 0, 10);
+	$pageNav = new mezunPagenation( $total, 0, 10);
 	
 	BackupHTML::getDBTableList($tables, $pageNav);
 }
@@ -133,7 +133,7 @@ function saveBackup($cid) {
 		  
 		  $data .= "INSERT INTO `$table` VALUES (";
 		  
-		  $row = mysql_fetch_row($alanlar);
+		  $row = mysqli_fetch_row($alanlar);
 				
 			//alan adlarını ' karakterleriyle yazdır
 		  for ($d=0; $d<$nf; $d++) {

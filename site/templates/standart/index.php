@@ -51,7 +51,7 @@ $(document).on('focusin', function(e) {
 <?php loadSiteModule();?>
 </div><!-- content -->
 
-<?php include(ABSPATH.'/includes/footer.php');?>
+<?php getFooter();?>
 
 </div><!-- container -->
 <a href="#" id="scroll-top"></a>

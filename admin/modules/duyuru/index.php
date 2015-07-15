@@ -9,6 +9,8 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('tables.duyurular');
+
 switch($task) {
 	default:
 	getDuyuruList();
@@ -65,7 +67,7 @@ function delDuyuru(&$cid) {
 function saveDuyuru() {
 	 global $dbase;
 	
-	$row = new Duyurular( $dbase );
+	$row = new mezunDuyurular( $dbase );
 	
 	if ( !$row->bind( $_POST ) ) {
 		echo "<script> alert('".$row->getError()."'); window.history.go(-1); </script>\n";
@@ -89,9 +91,8 @@ function saveDuyuru() {
 function cancelDuyuru() {
 	global $dbase;
 	
-	$row = new Duyurular( $dbase );
+	$row = new mezunDuyurular( $dbase );
 	$row->bind( $_POST );
-	$row->checkin();
 	Redirect( 'index.php?option=admin&bolum=duyuru');
 }
 
@@ -101,7 +102,7 @@ function getDuyuruList() {
 	 $dbase->setQuery("SELECT COUNT(*) FROM #__duyurular");
 	 $total = $dbase->loadResult();
 	 
-	 $pageNav = new pageNav( $total, $limitstart, $limit);
+	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
 	 $query = "SELECT * FROM #__duyurular";
 	
 	$dbase->setQuery($query, $limitstart, $limit);
@@ -113,7 +114,7 @@ function getDuyuruList() {
 function editDuyuru($cid) {
 	global $dbase;
 	
-	$row = new Duyurular($dbase);
+	$row = new mezunDuyurular($dbase);
 	$row->load($cid);
 	
 	DuyuruHTML::editDuyuru($row);

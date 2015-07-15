@@ -96,7 +96,7 @@ $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$checked = mosHTML::idBox( $i, $row->id );
+$checked = mezunHTML::idBox( $i, $row->id );
 ?>
 
 <div class="row" id="detail<?php echo $row->id;?>">
@@ -108,7 +108,7 @@ $checked = mosHTML::idBox( $i, $row->id );
 <?php echo $checked;?>
 </div>
 <div class="col-sm-3">
-<a href="index.php?option=admin&bolum=duyuru&task=editx&id=<?php echo $row->id;?>"><?php echo Forum::timeformat($row->tarih, true, true);?></a>
+<a href="index.php?option=admin&bolum=duyuru&task=editx&id=<?php echo $row->id;?>"><?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?></a>
 </div>
 <div class="col-sm-7">
 <?php echo $row->text;?>

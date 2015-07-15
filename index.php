@@ -49,7 +49,6 @@ $mainframe->initSession();
 * @var mezunUsers
 */
 $my = $mainframe->getUser();
-
 /**
 * Site ziyaretçilerinin bilgilerini alalım ve istatistik oluşturalım
 * 

@@ -24,7 +24,7 @@ class Bildirim {
 		<strong>Gönderim Tarihi:</strong>
 		</div>
 		<div class="col-sm-9">
-		<?php echo Forum::timeformat($row->tarih, true, true);?>
+		<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 		</div>
 		</div>
 		
@@ -79,7 +79,7 @@ $row->baslik = $crypt->cryptionText($row->baslik, 'decode');
 <?php echo $row->gonderen;?>
 </div>
 <div class="col-sm-3">
-<?php echo Forum::timeformat($row->tarih, true, true);?>
+<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 </div>
 </div>
 

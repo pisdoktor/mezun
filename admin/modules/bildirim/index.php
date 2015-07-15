@@ -8,6 +8,8 @@ $limit = intval(getParam($_REQUEST, 'limit', 20));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('tables.mesajlar');
+
 switch($task) {
 	default:
 	getBildirim();
@@ -21,7 +23,7 @@ switch($task) {
 function showBildirim($id) {
 	global $dbase;
 	
-	$msg = new Mesajlar($dbase);
+	$msg = new mezunMesajlar($dbase);
 	
 	$dbase->setQuery("SELECT m.*, u.name as gonderen FROM #__mesajlar AS m"
 	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"
@@ -37,7 +39,7 @@ function showBildirim($id) {
 function getBildirim() {
 	global $dbase, $limitstart, $limit;
 	
-	$crypt = new Mesajlar($dbase);
+	$crypt = new mezunMesajlar($dbase);
 	
 	$query = "SELECT COUNT(m.id) FROM #__mesajlar AS m"
 	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"
@@ -45,7 +47,7 @@ function getBildirim() {
 	$dbase->setQuery($query);
 	$total = $dbase->loadResult();
 	
-	$pageNav = new pageNav($total, $limitstart, $limit);
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 		
 	$query = "SELECT m.*, u.name AS gonderen FROM #__mesajlar AS m"
 	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"
