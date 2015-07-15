@@ -6,15 +6,17 @@ amacıyla tasarlanmış bir sistem olmakla birlikte kodlarda ufak tefek değişi
 istenilen herhangi bir fakültenin mezuniyet sistemi haline getirilebilmektedir.
 
 Mezun Sistemindeki asıl amaçlarımız;
-<ul>
-<li>Sizinle aynı dönem okumuş olan arkadaşlarınıza ulaşabilme,</li>
-<li>Sizinle aynı bölümde okumuş diğer meslektaşlarınıza ulaşabilme,</li>
-<li>Sizinle aynı şehirde çalışmakta olan meslektaşlarınıza ulaşabilme,</li>
-<li>Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilme,</li>
-<li>Arkadaşlarınızın size ulaşmasını sağlayabilme,</li>
-<li>Arkadaşlarınızla iletişim kurabilme, mesajlaşabilme,</li>
-<li>Forumda paylaşımda bulunabilme, arkadaşlarınızın paylaşımlarına cevap verebilme</li>
-</ul>
+
+	Sizinle aynı dönem okumuş olan arkadaşlarınıza ulaşabilme,
+	Sizinle aynı fakültede okumuş diğer meslektaşlarınıza ulaşabilme,
+	Sizinle aynı şehirde çalışmakta olan meslektaşlarınıza ulaşabilme,
+	Sizinle aynı şehirde doğmuş meslektaşlarınıza ulaşabilme,
+	Sizinle aynı branştaki meslektaşlarınıza ulaşabilme,
+	Arkadaşlarınızın size ulaşmasını sağlayabilme,
+	Arkadaşlarınızla iletişim kurabilme, mesajlaşabilme,
+	Forumda paylaşımda bulunabilme, arkadaşlarınızın paylaşımlarına cevap verebilme,
+	Gruplar kurabilme, gruplara katılarak paylaşımda bulunabilme
+	
 olarak sıralanabilir.
 
 Biraz daha kodlarla oynanılarak basit bir iletişim sistemi haline getirilebilir elbette!
