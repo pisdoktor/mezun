@@ -195,6 +195,13 @@ $cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
 </div>
 </div>
 
+<div class="form-group">
+<div class="row">
+<div class="col-sm-4"><strong>Ortak Arkadaş:</strong></div>
+<div class="col-sm-8"><?php mezunArkadasHelper::ortakArkadasCount($row->id,true);?> kişi</div>
+</div>
+</div>
+
 </div>
 
 <div class="col-sm-2">

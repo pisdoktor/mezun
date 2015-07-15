@@ -43,6 +43,7 @@ $cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
 <div class="row">
 <?php echo $row->unvan;?>. <?php echo $row->name;?>
 <div align="center"><?php mezunOnlineHelper::isOnline($row->id);?></div>
+<div align="center"><small><?php mezunArkadasHelper::ortakArkadasCount($row->id, true);?> ortak arkadaş</small></div>
 </div>
 </div>
 </div>

@@ -6,6 +6,7 @@ include(dirname(__FILE__). '/html.php');
 
 mimport('helpers.modules.arama.helper');
 mimport('helpers.modules.online.helper');
+mimport('helpers.modules.arkadas.helper');
 
 switch($task) {
 	default:

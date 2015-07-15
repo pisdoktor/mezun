@@ -88,6 +88,11 @@ function deleteGroup($id) {
 		return;
 	}
 	
+	//grup resmini varsa silelim
+	if ($row->image) {
+			@unlink(ABSPATH.'/images/group/'.$row->image);
+	}
+	
 	//mesajları silelim
 	$dbase->setQuery("DELETE FROM #__groups_messages WHERE groupid=".$row->id);
 	$dbase->query();
@@ -100,15 +105,7 @@ function deleteGroup($id) {
 	$dbase->setQuery("DELETE FROM #__groups WHERE id=".$row->id);
 	$dbase->query();
 	
-	//grup resmini varsa silelim
-	if ($row->image) {
-			@unlink(ABSPATH.'/images/group/'.$row->image);
-	}
-	
-	
-	
 	Redirect('index.php?option=site&bolum=group', 'Grup ve tüm içeriği silindi');
-	
 }
 
 function showGroupMembers($id) {
