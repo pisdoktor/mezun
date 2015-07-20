@@ -92,6 +92,13 @@ function CropandSave() {
 	
 	mezunImageHelper::crop($src, 0, 0, $x, $y, $minWidth, $minHeight, $w, $h);
 	
+	//akış içerisine ekleme yapalım
+	mimport('tables.akis');
+	$akis = new mezunAkis($dbase);
+	$akis->tarih = date('Y-m-d H:i:s');
+	$akis->text = $my->name.' isimli kullanıcı profil resmini düzenledi';
+	$akis->store();
+	
 	Redirect('index.php?option=site&bolum=profil&task=my');
 }
 
@@ -144,6 +151,14 @@ function deleteImage() {
 		$dbase->setQuery("UPDATE #__users SET image='' WHERE id=".$dbase->Quote($my->id));
 		$dbase->query();
 	}
+	
+	//akış içerisine ekleme yapalım
+	mimport('tables.akis');
+	$akis = new mezunAkis($dbase);
+	$akis->tarih = date('Y-m-d H:i:s');
+	$akis->text = $my->name.' isimli kullanıcı profil resmini sildi';
+	$akis->store();
+	
 	Redirect('index.php?option=site&bolum=profil&task=my');
 }
 /**
@@ -245,6 +260,13 @@ function saveImage() {
 		
 	mezunImageHelper::resize($targetfile, 0, 0, 0, 0, $newwidth, $newheight, $imgwidth, $imgheight);
 	
+	//akış içerisine ekleme yapalım
+	mimport('tables.akis');
+	$akis = new mezunAkis($dbase);
+	$akis->tarih = date('Y-m-d H:i:s');
+	$akis->text = $my->name.' isimli kullanıcı profil resmi ekledi';
+	$akis->store();
+	
 	
 	if ($error) {
 	Redirect('index.php?option=site&bolum=profil&task=my', $error);
@@ -291,6 +313,13 @@ function saveProfile() {
 		exit();
 	}
 	
+	//akış içerisine ekleme yapalım
+	mimport('tables.akis');
+	$akis = new mezunAkis($dbase);
+	$akis->tarih = date('Y-m-d H:i:s');
+	$akis->text = $my->name.' isimli kullanıcı profilini güncelledi';
+	$akis->store();
+	
 	Redirect('index.php?option=site&bolum=profil&task=my', 'Değişiklikler başarıyla kaydedildi');
 }
 /**
@@ -303,6 +332,8 @@ function getProfile($id) {
 	
 	mimport('tables.istekler');
 	mimport('helpers.modules.online.helper');
+	mimport('helpers.modules.arkadas.helper');
+	mimport('.helpers.modules.istek.helper');
 	
 	$edit = false;
 	$user = new mezunUsers($dbase);
@@ -325,20 +356,19 @@ function getProfile($id) {
 		$istem = false;
 	} else {
 		
-		$istek = new mezunIstekler($dbase);
-	if ($istek->checkDurum($my->id, $user->id, 1) == true) {
+	if (mezunArkadasHelper::checkArkadaslik($user->id)) {
 		$istem = false;
 		$msg = true;
-	} else if ($istek->checkDurum($my->id, $user->id, 0) == true) {
+	} else if (mezunIstekHelper::checkIstek($user->id)) {
 		$istem = false;
 		$msg = false;
-	} else if (($istek->checkDurum($my->id, $user->id, 1) == false) && ($istek->checkDurum($my->id, $user->id, 0) == false)) {
+	} else if ((!mezunArkadasHelper::checkArkadaslik($user->id)) && (!mezunIstekHelper::checkIstek($user->id))) {
 		$istem = true;
 		$msg = false;
 	}
 	}
 	
-	if ($my->id == $user->id || $istek->checkDurum($my->id, $user->id, 1)) {
+	if ($my->id == $user->id || mezunArkadasHelper::checkArkadaslik($user->id)) {
 		$show = true;
 	} else {
 		$show = false;

@@ -9,7 +9,7 @@ class mezunTable {
 	var $_tbl_key     = '';
 	/** @var string Error message */
 	var $_error     = '';
-	/** @var mosDatabase Database connector */
+	/** @var Database connector */
 	var $_db         = null;
 
 	/**
@@ -293,7 +293,7 @@ class mezunTable {
 	 * Increments the hit counter for an object
 	 * @param int Object id
 	 */
-	public function hit( $oid=null ) {
+	public function hit( $oid, $what ) {
 
 		$k = $this->_tbl_key;
 		if ($oid !== null) {
@@ -301,8 +301,8 @@ class mezunTable {
 		}
 
 		$query = "UPDATE $this->_tbl"
-		. "\n SET hits = ( hits + 1 )"
-		. "\n WHERE $this->_tbl_key = " . $this->_db->Quote( $this->id )
+		. "\n SET $what = ( $what + 1 )"
+		. "\n WHERE $this->_tbl_key = " . $this->_db->Quote( $this->$k )
 		;
 		$this->_db->setQuery( $query );
 		$this->_db->query();
@@ -315,7 +315,7 @@ class mezunTable {
 	* @returns TRUE if completely successful, FALSE if partially or not succesful
 	* NOTE: Filter will be deprecated in verion 1.1
 	*/
-	public function save( $source, $order_filter='' ) {
+	public function save( $source ) {
 		if (!$this->bind( $source )) {
 			return false;
 		}
@@ -328,11 +328,7 @@ class mezunTable {
 		if (!$this->checkin()) {
 			return false;
 		}
-
-		if ($order_filter) {
-			$filter_value = $this->$order_filter;
-			$this->updateOrder( $order_filter ? "`$order_filter` = " . $this->_db->Quote( $filter_value ) : '' );
-		}
+		
 		$this->_error = '';
 		return true;
 	}

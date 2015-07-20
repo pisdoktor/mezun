@@ -11,6 +11,7 @@ $type = intval(getParam($_REQUEST, 'type'));
 include(dirname(__FILE__). '/html.php');
 
 mimport('helpers.modules.istek.helper');
+mimport('tables.istekler');
 
 switch($task) {
 	default:
@@ -37,7 +38,7 @@ switch($task) {
 /**
 * Gelen istekleri değerlendirme fonksiyon
 * @param mixed $cid gelen isteklerin id değeri
-* @param mixed $status gelen isteğe ne yapılacağı 1: onayla -1: reddet
+* @param mixed $status gelen isteğe ne yapılacağı 1: onayla
 */
 function changeDurum($cid, $status) {
 	global $dbase, $my, $type;
@@ -108,17 +109,24 @@ function deleteDurum($cid) {
 function sendIstek($id) {
 	global $dbase, $my;
 	
-	$istek = new Istekler($dbase);
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$istek = new mezunIstekler($dbase);
 	
 	if ($my->id == $id) {
 		NotAuth();
-		exit();
+		return;
 	}
 	
-	$onceki = $istek->checkDurum($my->id, $id, 0);
-	$varolan = $istek->checkDurum($my->id, $id, 1);
+	mimport('helpers.modules.arkadas.helper');
 	
-	if ($onceki == false && $varolan == false) {
+	$arkadasmisin = mezunArkadasHelper::checkArkadaslik($id);
+	$istekvarmi = mezunIstekHelper::checkIstek($id);
+	
+	if ($arkadasmisin == false && $istekvarmi == false) {
 		
 	$istek->gid = $my->id;
 	$istek->aid = $id;
@@ -129,10 +137,10 @@ function sendIstek($id) {
 	
 	Redirect('index.php?option=site&bolum=istek&task=outbox', 'Arkadaşlık isteği gönderildi');
 	} else {
-		if ($onceki) {
+		if ($istekvarmi) {
 			$msg = 'Daha önceden istek gönderilmiş';
 		}
-		if ($varolan) {
+		if ($arkadasmisin) {
 			$msg = 'Bu kişiyle zaten bir arkadaşlığınız var';
 		}
 	Redirect('index.php?option=site&bolum=istek&task=inbox', $msg);    
@@ -145,8 +153,6 @@ function sendIstek($id) {
 */
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
-	
-	mimport('helpers.modules.forum.helper');
 	
 	$where = $type ? "WHERE i.gid=".$my->id." AND i.durum=0" : "WHERE i.aid=".$my->id." AND i.durum=0";
 	

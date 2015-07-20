@@ -12,10 +12,12 @@ if ( ERROR_REPORT === 0 || ERROR_REPORT === '0' ) {
 
 require(dirname(__FILE__).'/importer.php');
 
-mimport('global.version');
 //database sınıfını import edelim
 mimport('helpers.database.database');
 mimport('helpers.database.table');
+
+mimport('global.version');
+
 
 //mainframe
 mimport('helpers.mainframe');
@@ -45,7 +47,6 @@ if ($dbase->getErrorNum()) {
 	exit();
 }
 $dbase->debug( DEBUGMODE );
-
 // platform neurtral url handling
 if ( isset( $_SERVER['REQUEST_URI'] ) ) {
 	$request_uri = $_SERVER['REQUEST_URI'];

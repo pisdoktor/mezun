@@ -25,24 +25,6 @@ class mezunSession extends mezunTable {
 	}
 	
 	/**
-	* soner ekledi
-	* toplam online üye
-	*/
-	function totalOnline() {
-		global $my;
-		
-		$query = "SELECT COUNT(*) FROM ".$this->_tbl
-		. "\n WHERE userid>0"
-		. "\n AND userid NOT IN (".$this->_db->Quote($my->id).")"
-		;
-		$this->_db->setQuery($query);
-		
-		if ($this->_db->loadResult()) {
-			echo $this->_db->loadResult();
-		}
-	}
-
-	/**
 	 * @param string Key search for
 	 * @param mixed Default value if not set
 	 * @return mixed

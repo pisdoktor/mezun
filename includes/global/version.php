@@ -4,7 +4,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunVersion {
 	
-	var $PRODUCT     = 'Mezun Sistemi';
+	var $PRODUCT     = 'Mezun';
 	
 	var $RELEASE     = '2.0';
 	

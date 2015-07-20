@@ -11,6 +11,7 @@ $type = intval(getParam($_REQUEST, 'type'));
 include(dirname(__FILE__). '/html.php');
 
 mimport('helpers.modules.mesaj.helper');
+mimport('tables.mesajlar');
 
 switch($task) {
 	default:
@@ -123,8 +124,8 @@ function showMessage($id) {
 		
 		$dbase->loadObject($msg);
 	
-	$msg->baslik = $row->cryptionText($row->baslik, 'decode');
-	$msg->text = $row->cryptionText($row->text, 'decode');
+	$msg->baslik = mezunMesajHelper::cryptionText($row->baslik, 'decode');
+	$msg->text = mezunMesajHelper::cryptionText($row->text, 'decode');
 	$msg->text = nl2br($msg->text);
 	
 	if ($row->aid == $my->id) {
@@ -152,7 +153,8 @@ function sendMessage() {
 	global $dbase, $my;
 	
 	$row = new mezunMesajlar( $dbase );
-	$istek = new mezunIstekler($dbase);
+	
+	mimport('helpers.modules.arkadas.helper');
 	
 	$row->id = $row->createID();
 	
@@ -168,12 +170,12 @@ function sendMessage() {
 		Redirect('index.php?option=site&bolum=mesaj', 'Kendinize mesaj gönderemezsiniz');
 	}
 	
-	if (!$istek->checkDurum($my->id, $row->aid, 1)) {
+	if (!mezunArkadasHelper::checkArkadaslik($row->aid)) {
 		Redirect('index.php?option=site&bolum=mesaj', 'Arkadaşlığınız olmayan birisine mesaj gönderemezsiniz');
 	}
 	
-	$row->baslik = $row->cryptionText($row->baslik);
-	$row->text = $row->cryptionText($row->text);
+	$row->baslik = mezunMesajHelper::cryptionText($row->baslik);
+	$row->text = mezunMesajHelper::cryptionText($row->text);
 	$row->tarih = date('Y-m-d H:i:s');
 	$row->okunma = 0;
 	$row->gsilinme = 0;
@@ -198,21 +200,14 @@ function sendMessage() {
 function createMessage() {
 	global $dbase, $my;
 	
-	$query = "SELECT u.id, u.name, u.username FROM #__istekler AS i"
-	. "\n LEFT JOIN #__users AS u ON u.id=i.aid"
-	. "\n WHERE i.gid=".$dbase->Quote($my->id)." AND durum=1"
-	;
-	$dbase->setQuery($query);
-	$rows1 = $dbase->loadObjectList();
+	mimport('helpers.modules.arkadas.helper');
 	
-	$query = "SELECT u.id, u.name, u.username FROM #__istekler AS i"
-	. "\n LEFT JOIN #__users AS u ON u.id=i.gid"
-	. "\n WHERE i.aid=".$dbase->Quote($my->id)." AND durum=1"
-	;
-	$dbase->setQuery($query);
-	$rows2 = $dbase->loadObjectList();
+	$fs = mezunArkadasHelper::getMyFriends();
 	
-	$rows = array_merge($rows1, $rows2);
+	$friends = implode(',', $fs);
+	
+	$dbase->setQuery("SELECT id, name, username FROM #__users WHERE id IN (".$friends.")");
+	$rows = $dbase->loadObjectList();
 	
 	foreach ($rows as $row) {
 		$user[] = mezunHTML::makeOption($row->id, $row->name.' ('.$row->username.')');
@@ -228,8 +223,6 @@ function createMessage() {
 */
 function inBox($type) {
 	global $dbase, $my, $limit, $limitstart;
-	
-	mimport('helpers.modules.forum.helper');
 	
 	$crpt = new mezunMesajlar($dbase);
 	

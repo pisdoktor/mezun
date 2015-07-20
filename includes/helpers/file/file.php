@@ -7,11 +7,8 @@ mimport('helpers.file.path');
 /**
  * A File handling class
  *
- * @static
- * @package 	Joomla.Framework
- * @subpackage	FileSystem
- * @since		1.5
- */
+*/
+
 class mezunFile {
 	/**
 	 * Gets the extension of a file name

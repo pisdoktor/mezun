@@ -165,6 +165,13 @@ function createNewMessage() {
 	
 	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies / $limit)) * $limit) : '') . '#new';
 	
+	//akış içerisine ekleme yapalım
+	mimport('tables.akis');
+	$akis = new mezunAkis($dbase);
+	$akis->tarih = date('Y-m-d H:i:s');
+	$akis->text = $my->name.' isimli kullanıcı Forum bölümünde "'.$subject.'" konulu bir mesaj gönderdi';
+	$akis->store();
+	
 	Redirect($link);
 }
 
@@ -244,6 +251,13 @@ function createNewTopic() {
 	(ID_TOPIC, ID_MEMBER, ID_MSG) 
 	VALUES ($ID_TOPIC, $my->id, $ID_MSG + 1)");
 	$dbase->query();
+	
+	//akış içerisine ekleme yapalım
+	mimport('tables.akis');
+	$akis = new mezunAkis($dbase);
+	$akis->tarih = date('Y-m-d H:i:s');
+	$akis->text = $my->name.' isimli kullanıcı Forum bölümünde "'.$subject.'" konulu yeni bir başlık açtı';
+	$akis->store();
 	
 	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$ID_TOPIC);
 }

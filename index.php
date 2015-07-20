@@ -41,7 +41,7 @@ $mosmsg = getParam($_REQUEST, 'mosmsg');
 * 
 * @var mezunMainFrame
 */
-$mainframe = new mezunMainFrame( $dbase, $option );
+$mainframe = new mezunMainFrame( $dbase );
 $mainframe->initSession();
 /**
 * mezunUsers tablosundan kullanıcının bilgilerini çekelim
@@ -305,7 +305,7 @@ header( 'Pragma: no-cache' );
 initGzip();
 
 /**
-* Kullanıcı eğer üye değilse muhtemelen ya anasayfadadır ya da kayıt sayfasındas
+* Kullanıcı eğer üye değilse muhtemelen ya anasayfadadır ya da kayıt sayfasında
 */
 if (!$my->id) {
 	// Kullanıcı kayıt sayfasında ise...

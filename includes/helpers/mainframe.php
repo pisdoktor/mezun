@@ -5,21 +5,19 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class mezunMainFrame {
 	/** @var database Internal database class pointer */
 	var $_db                        = null;
-	/** @var mosSession The current session */
+	/** @var mezunSession The current session */
 	var $_session                    = null;
 	/** @var array An array to hold global user state within a session */
 	var $_userstate                    = null;
 	/** @var array An array of page meta information */
 	var $_head                        = null;
-	/** @var boolean True if in the admin client */
-	var $_isAdmin                     = false;
 	/**
 	* Class constructor
 	* @param database A database connection object
 	* @param string The url option
 	* @param string The path of the mos directory
 	*/
-	function mezunMainFrame( &$db, $option ) {
+	function mezunMainFrame( &$db ) {
 		$this->_db =& $db;
 
 		if (isset( $_SESSION['session_userstate'] )) {
@@ -217,7 +215,7 @@ class mezunMainFrame {
 	* Old sessions are flushed based on the configuration value for the cookie
 	* lifetime. If an existing session, then the last access time is updated.
 	* If a new session, a session id is generated and a record is created in
-	* the jos_sessions table.
+	* the #__sessions table.
 	*/
 	function initSession() {
 		global $bolum;

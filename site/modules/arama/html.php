@@ -150,7 +150,7 @@ $row = $rows[$i];
 
 $image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
 $link = '<a class="btn btn-warning" href="index.php?option=site&bolum=profil&task=show&id='.$row->id.'">Profili Göster</a>';
-$cinsiyet = $row->cinsiyet ? 'Erkek':'Bayan';
+$cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
 ?>
 <div class="row">
 

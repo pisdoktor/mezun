@@ -58,14 +58,15 @@ function MainPage() {
 	<div class="col-sm-5">
 	<?php 
 	mezunGlobalHelper::WelcomePanel();
-	mezunIstekHelper::loadIstek();
-	mezunMesajHelper::loadMailBox();
+	mezunIstekHelper::loadIstekPanel();
+	mezunMesajHelper::loadMailPanel();
 	mezunGlobalHelper::loadUserStats();
 	?>
 	</div>
 	<div class="col-sm-7">
 	<?php
 	mezunGlobalHelper::loadDuyuru();
+	mezunGlobalHelper::getSiteAkis();
 	?>
 	</div>
 	<?php

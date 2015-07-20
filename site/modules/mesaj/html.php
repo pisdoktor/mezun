@@ -158,7 +158,7 @@ class Message {
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$row->baslik = $crpt->cryptionText($row->baslik, 'decode');
+$row->baslik = mezunMesajHelper::cryptionText($row->baslik, 'decode');
 $row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
 $row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->gonderen.'</strong>';
 $row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';

@@ -6,11 +6,6 @@ mimport('helpers.file.path');
 
 /**
  * A Folder handling class
- *
- * @static
- * @package 	Joomla.Framework
- * @subpackage	FileSystem
- * @since		1.5
  */
 class mezunFolder
 {

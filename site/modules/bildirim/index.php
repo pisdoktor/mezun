@@ -5,6 +5,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 include(dirname(__FILE__). '/html.php');
 
 mimport('helpers.modules.bildirim.helper');
+mimport('tables.mesajlar');
 
 switch($task) {
 	default:

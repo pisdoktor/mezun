@@ -15,10 +15,6 @@ if (!defined('DS')) {
 /**
  * A Path handling class
  *
- * @static
- * @package 	Joomla.Framework
- * @subpackage	FileSystem
- * @since		1.5
  */
 class mezunPath {
 	/**

@@ -24,21 +24,7 @@ switch($task) {
 function getArkadasList() {
 	global $dbase, $my, $limit, $limitstart;
 	
-	//benim gönderip karşı tarafın kabul ettiği arkadaşlıklar
-	$query = "SELECT i.aid FROM #__istekler AS i "
-	. "\n WHERE i.gid=".$dbase->Quote($my->id)." AND i.durum=1"
-	;
-	$dbase->setQuery($query);
-	$rows1 = $dbase->loadResultArray();
-	
-	//karşı tarafın gönderdiği ve benim kabul ettiğim arkadaşlıklar
-	$query = "SELECT i.gid FROM #__istekler AS i"
-	. "\n WHERE i.aid=".$dbase->Quote($my->id)." AND i.durum=1"
-	;
-	$dbase->setQuery($query);
-	$rows2 = $dbase->loadResultArray();
-	
-	$rows = array_merge($rows1, $rows2);
+	$rows = mezunArkadasHelper::getMyFriends();
 	
 	$total = count($rows);
 	

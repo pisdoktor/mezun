@@ -32,7 +32,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <?php loadAdminModule();?>
 </div><!-- content -->
 
-<?php include(ABSPATH.'/includes/footer.php');?>
+<?php getFooter();?>
 
 </div><!-- container -->
 </body>

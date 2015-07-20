@@ -154,9 +154,8 @@ function showGroupMembers($id) {
 	$rows = $dbase->loadObjectList();
 	
 	//gruba eklemek için arkadaş listesini alalım
-	mimport('tables.istekler');
-	$friends = new mezunIstekler($dbase);
-	$friendlist = $friends->getMyFriends();
+	mimport('helpers.modules.arkadas.helper');
+	$friendlist = mezunArkadasHelper::getMyFriends();
 	//gruba ekli üyeleri alalım
 	$dbase->setQuery("SELECT userid FROM #__groups_members WHERE groupid=".$dbase->Quote($group->id)." AND userid NOT IN (".$my->id.")");
 	$memberlist = $dbase->loadResultArray();
@@ -297,6 +296,13 @@ function leaveGroup($id) {
 		$dbase->setQuery("DELETE FROM #__groups_members WHERE userid=".$my->id." AND groupid=".$group->id."");
 		$dbase->query();
 		
+		//akış içerisine ekleme yapalım
+			mimport('tables.akis');
+			$akis = new mezunAkis($dbase);
+			$akis->tarih = date('Y-m-d H:i:s');
+			$akis->text = $my->name.' isimli kullanıcı '.$group->name.' isimli gruptan ayrıldı';
+			$akis->store();
+		
 		Redirect('index.php?option=site&bolum=group&task=view&id='.$group->id, 'Gruptan ayrıldınız!');
 		
 	}
@@ -331,6 +337,13 @@ function joinGroup($id) {
 			$joindate = date('Y-m-d H:i:s');
 			$dbase->setQuery("INSERT INTO #__groups_members (userid, groupid, joindate) VALUES (".$dbase->Quote($my->id).", ".$dbase->Quote($id).", ".$dbase->Quote($joindate).")");
 			$dbase->query();
+			
+			//akış içerisine ekleme yapalım
+			mimport('tables.akis');
+			$akis = new mezunAkis($dbase);
+			$akis->tarih = date('Y-m-d H:i:s');
+			$akis->text = $my->name.' isimli kullanıcı '.$group->name.' isimli gruba katıldı';
+			$akis->store();
 			
 			Redirect('index.php?option=site&bolum=group&task=view&id='.$group->id, 'Gruba katıldınız!');
 		}

@@ -245,7 +245,7 @@ class GroupHTML {
 		<div class="panel-heading"><h4>Grup Mesajları</h4></div>
 		<div class="panel-body">
 		<?php
-			if (!$row->canViewGroup()) {
+			if (!$row->canViewGroup() && !$row->canJoinGroup()) {
 				echo 'Bu kapalı bir gruptur! Grubun içeriğini görmeniz için gruba katılmanız gerekiyor. Bunun için ise grup yöneticisiyle iletişime geçmelisiniz';
 				
 			} else if (!$row->isGroupMember()) {
@@ -312,7 +312,7 @@ class GroupHTML {
 					<div class="row">
 					<div class="col-sm-12">
 					<small>Gönderen: <?php echo $msg->gonderen;?></small> 
-					<small>Tarih: <?php echo mezunForumHelper::timeformat($msg->tarih, true, true);?></small>
+					<small>Tarih: <?php echo mezunGlobalHelper::timeformat($msg->tarih, true, true);?></small>
 					</div>
 					</div>
 					

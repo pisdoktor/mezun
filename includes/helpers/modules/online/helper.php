@@ -3,14 +3,14 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunOnlineHelper {
-	
-	function __construct() {
-		
-	}
-	
-	
+	/**
+	* Kullanıcı online mı değil mi?
+	* 
+	* @param mixed $userid : kontrol edilecek kullanıcı id
+	* @param mixed $showimage : resim olarak mı yoksa sadece text mi
+	*/
 	static function isOnline($userid, $showimage=true) {
-	global $dbase;
+		global $dbase;
 		
 		$query = "SELECT userid FROM #__sessions WHERE userid=".$dbase->Quote($userid);
 		$dbase->setQuery($query);
@@ -34,39 +34,61 @@ class mezunOnlineHelper {
 		}    
 		}
 	}
-	
-	//Online süresi hesaplama
+	/**
+	* Kullanıcının online süresini hesaplayan fonksiyon
+	* 
+	* @param mixed $end : bitiş zamanı
+	* @param mixed $start : başlangıç zamanı
+	*/
 	static function calcOnlineTime($end, $start) {
+		
+		$difference = $end-$start;
 
-$difference = $end-$start;
+		$second = 1;
+		$minute = 60*$second;
+		$hour   = 60*$minute;
+		$day    = 24*$hour;
 
-$second = 1;
-$minute = 60*$second;
-$hour   = 60*$minute;
-$day    = 24*$hour;
+		$ans["day"]    = floor($difference/$day);
+		$ans["hour"]   = floor(($difference%$day)/$hour);
+		$ans["minute"] = floor((($difference%$day)%$hour)/$minute);
+		$ans["second"] = floor(((($difference%$day)%$hour)%$minute)/$second);
 
-$ans["day"]    = floor($difference/$day);
-$ans["hour"]   = floor(($difference%$day)/$hour);
-$ans["minute"] = floor((($difference%$day)%$hour)/$minute);
-$ans["second"] = floor(((($difference%$day)%$hour)%$minute)/$second);
+		$html = '';
 
-$html = '';
+		if ($ans["day"]) {
+			$html.= $ans["day"]. " gün ";
+		}
 
-if ($ans["day"]) {
-	$html.= $ans["day"]. " gün ";
-}
+		if ($ans["hour"]) {
+			$html.= $ans["hour"]. " saat ";
+		}
 
-if ($ans["hour"]) {
-	$html.= $ans["hour"]. " saat ";
-}
+		if ($ans["minute"]) {
+			$html.= $ans["minute"]. " dakika ";
+		}
 
-if ($ans["minute"]) {
-	$html.= $ans["minute"]. " dakika ";
-}
+		if ($ans["second"]) {
+			$html.= $ans["second"]. " saniye";
+		}
 
-if ($ans["second"]) {
-	$html.= $ans["second"]. " saniye";
-}
-return $html;
-}
+		return $html;
+	}
+	/**
+	* Toplam online olan kullanıcı sayısını gösteren fonksiyon
+	* 
+	*/
+	static function totalOnline() {
+		global $dbase, $my;
+		
+		$query = "SELECT COUNT(*) FROM #__sessions"
+		. "\n WHERE userid > 0"
+		. "\n AND userid NOT IN (".$dbase->Quote($my->id).")"
+		;
+		$dbase->setQuery($query);
+		
+		if ($dbase->loadResult()) {
+			echo $dbase->loadResult();
+		}
+	}
 }

@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-class mezunGlobalHelper {
+class mezunGlobalHelper {	
 	
 	static function calculateAge($bday) {
 		
@@ -35,6 +35,36 @@ class mezunGlobalHelper {
 			$html.= ' class="btn btn-default" />';
 	
 		return $html;
+	}
+	
+	static function getSiteAkis() {
+		global $dbase;
+		
+		$dbase->setQuery("SELECT * FROM #__akis ORDER BY tarih DESC LIMIT 10");
+		$rows = $dbase->loadObjectList();
+		?>
+		<div class="col-sm-12">
+		<div class="panel panel-danger">
+		<div class="panel-heading">Sitede Neler Oluyor?</div>
+		<div class="panel-body">
+		<?php
+		  foreach ($rows as $row) {
+			  ?>
+			  <div class="row">
+			  <div class="col-sm-3">
+			  <?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
+			  </div>
+			  <div class="col-sm-9">
+			  <?php echo $row->text;?>
+			  </div>
+			  </div>
+			  <?php
+		  }  
+		?>
+		</div>
+		</div>
+		</div>
+		<?php
 	}
 	
 	static function loadDuyuru() {
@@ -197,12 +227,9 @@ if (!$rows) {
 	static function siteMenu() {
 		global $my, $dbase;
 	
-		mimport('tables.mesajlar');
-		mimport('tables.istekler');
-	
-		$msg = new mezunMesajlar($dbase);
-		$istek = new mezunIstekler($dbase);
-		$online = new mezunSession($dbase);
+		mimport('helpers.modules.mesaj.helper');
+		mimport('helpers.modules.istek.helper');
+		mimport('helpers.modules.online.helper');
 	?>
 <div id="cssmenu">
 
@@ -227,7 +254,7 @@ if (!$my->id) {
 <a href="<?php echo sefLink('index.php?option=site&bolum=arkadas');?>"><span>Arkadaşlarım</span></a>
 </li>
 <li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=online');?>"><span>Online Üyeler <span class="badge"><?php $online->totalOnline();?></span></span></a>
+<a href="<?php echo sefLink('index.php?option=site&bolum=online');?>"><span>Online Üyeler <span class="badge"><?php mezunOnlineHelper::totalOnline();?></span></span></a>
 </li>
 <li>
 <a href="<?php echo sefLink('index.php?option=site&bolum=bildirim');?>"><span>Geri Bildirim</span></a>
@@ -241,7 +268,7 @@ if (!$my->id) {
 
 <ul>
 <li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=inbox');?>"><span>Gelen Kutusu <span class="badge"><?php $msg->totalUnread();?></span></span></a>
+<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=inbox');?>"><span>Gelen Kutusu <span class="badge"><?php mezunMesajHelper::totalUnread();?></span></span></a>
 </li>
 <li>
 <a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=outbox');?>"><span>Giden Kutusu</span></a>
@@ -259,7 +286,7 @@ if (!$my->id) {
 <ul>
 
 <li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=inbox');?>"><span>Gelen İstekler <span class="badge"><?php $istek->totalWaiting();?></span></span></a>
+<a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=inbox');?>"><span>Gelen İstekler <span class="badge"><?php mezunIstekHelper::totalWaiting();?></span></span></a>
 </li>
 <li>
 <a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=outbox');?>"><span>Giden İstekler</span></a>
@@ -399,6 +426,8 @@ if ($my->id == 1) {
 	$lastvisit = ($my->lastvisit == '0000-00-00 00:00:00') ? 'İlk Defa Giriş Yaptınız' : mezunGlobalHelper::timeformat($my->lastvisit, true, true);
 	
 	$pimage = $my->image ? '<img src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="100" height="100" />':'<img src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="100" height="100" />';
+	
+	$pimage = '<a href="index.php?option=site&bolum=profil&task=my">'.$pimage.'</a>';
 	
 	echo '<div class="col-sm-12">';
 	echo '<div class="panel panel-primary">';

@@ -3,6 +3,68 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunArkadasHelper {
+	/**
+	* Belirtilen kullanıcının arkadaşlarını getiren fonksiyon
+	* 
+	* @param mixed $userid
+	*/
+	static function getUserFriends($userid) {
+		global $dbase, $my;
+		
+		$query = "SELECT aid AS fid FROM #__istekler WHERE durum=1 AND gid=".$dbase->Quote($userid);
+		$dbase->setQuery($query);
+		$rows1 = $dbase->loadResultArray();
+		
+		$query = "SELECT gid AS fid FROM #__istekler WHERE durum=1 AND aid=".$dbase->Quote($userid);
+		$dbase->setQuery($query);
+		$rows2 = $dbase->loadResultArray();
+		
+		$rows = array_merge($rows1, $rows2);
+		
+		return $rows;
+	}
+	/**
+	* Arkadaşların id değerini array olarak getiren fonksiyon
+	* 
+	*/
+	static function getMyFriends() {
+		global $dbase, $my;
+		
+		$query = "SELECT aid AS fid FROM #__istekler WHERE durum=1 AND gid=".$dbase->Quote($my->id);
+		$dbase->setQuery($query);
+		$rows1 = $dbase->loadResultArray();
+		
+		$query = "SELECT gid AS fid FROM #__istekler WHERE durum=1 AND aid=".$dbase->Quote($my->id);
+		$dbase->setQuery($query);
+		$rows2 = $dbase->loadResultArray();
+		
+		$rows = array_merge($rows1, $rows2);
+		
+		return $rows;		
+	}
+	/**
+	* Belirtilen kullanıcı ile arkadaş olup olmadığına bakan fonksiyon
+	* 
+	* @param mixed $userid : bakılacak kullanıcı
+	*/
+	static function checkArkadaslik($userid) {
+		global $dbase, $my;
+		
+		$where[] = "(gid=".$dbase->Quote($userid)." AND aid=".$dbase->Quote($my->id).")";
+		$where[] = "(gid=".$dbase->Quote($my->id)." AND aid=".$dbase->Quote($userid).")";
+		
+		$query = "SELECT id FROM #__istekler"
+		. "\n WHERE (" . implode( ' OR ', $where ).")"
+		. "\n AND durum=1";
+		;
+		$dbase->setQuery($query);
+		
+		if ($dbase->loadResult() > 0) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
 	
 	/**
 	* Tanıyor olabileceğin kullanıcıları getiren fonksiyon
@@ -15,15 +77,8 @@ class mezunArkadasHelper {
 	static function belkiTaniyorsun() {
 		global $dbase, $my;
 		
-		//önce kendi arkadaşlarımızı alalım
-		$dbase->setQuery("SELECT gid AS fid FROM #__istekler WHERE aid=".$dbase->Quote($my->id)." AND durum=1");
-		$myrows1 = $dbase->loadResultArray();
-		
-		$dbase->setQuery("SELECT aid AS fid FROM #__istekler WHERE gid=".$dbase->Quote($my->id)." AND durum=1");
-		$myrows2 = $dbase->loadResultArray();
-		
-		$myrows = array_merge($myrows1, $myrows2);
 		//arkadaşları sql sorgusuna uygun hale getirelim
+		$myrows = mezunArkadasHelper::getMyFriends();
 		$myfriends = implode(',', $myrows);
 		
 		//şimdi de  tanıyor olabileceğimiz üyeleri bulalım. ama içerisinde arkadaşlarımız olmasın!
@@ -51,22 +106,10 @@ class mezunArkadasHelper {
 		global $dbase, $my;
 		
 		//önce kendi arkadaşlarımızı alalım
-		$dbase->setQuery("SELECT gid AS fid FROM #__istekler WHERE aid=".$dbase->Quote($my->id)." AND durum=1 AND gid NOT IN (".$userid.")");
-		$myrows1 = $dbase->loadResultArray();
-		
-		$dbase->setQuery("SELECT aid AS fid FROM #__istekler WHERE gid=".$dbase->Quote($my->id)." AND durum=1 AND aid NOT IN (".$userid.")");
-		$myrows2 = $dbase->loadResultArray();
-		
-		$myrows = array_merge($myrows1, $myrows2);
+		$myrows = mezunArkadasHelper::getMyFriends();
 		
 		//şimdide belirtilen üyenin arkadaşlarını alalım 
-		$dbase->setQuery("SELECT gid AS fid FROM #__istekler WHERE aid=".$dbase->Quote($userid)." AND durum=1 AND gid NOT IN (".$my->id.")");
-		$rows1 = $dbase->loadResultArray();
-		
-		$dbase->setQuery("SELECT aid AS fid FROM #__istekler WHERE gid=".$dbase->Quote($userid)." AND durum=1 AND aid NOT IN (".$my->id.")");
-		$rows2 = $dbase->loadResultArray();
-		
-		$rows = array_merge($rows1, $rows2);
+		$rows = mezunArkadasHelper::getUserFriends($userid);
 		
 		//karşılaştırma yapalım
 		$ayni = array_intersect($myrows, $rows);
@@ -81,5 +124,4 @@ class mezunArkadasHelper {
 			return $ayni;
 		}
 	}
-	
 }
