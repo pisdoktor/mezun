@@ -267,6 +267,14 @@ function saveGroup() {
 	
 	}
 	
+	if ($new) {
+		$akistext = '<a href="index.php?option=site&bolum=group&task=view&id='.$row->id.'">'.$row->name.'</a> adlı bir grup oluşturdu';
+			mezunGlobalHelper::AkisTracker($akistext);
+	} else {
+		$akistext = '<a href="index.php?option=site&bolum=group&task=view&id='.$row->id.'">'.$row->name.'</a> grubunu düzenledi';
+			mezunGlobalHelper::AkisTracker($akistext);
+	}
+	
 	Redirect('index.php?option=site&bolum=group&task=view&id='.$row->id);
 }
 
@@ -296,12 +304,8 @@ function leaveGroup($id) {
 		$dbase->setQuery("DELETE FROM #__groups_members WHERE userid=".$my->id." AND groupid=".$group->id."");
 		$dbase->query();
 		
-		//akış içerisine ekleme yapalım
-			mimport('tables.akis');
-			$akis = new mezunAkis($dbase);
-			$akis->tarih = date('Y-m-d H:i:s');
-			$akis->text = $my->name.' isimli kullanıcı '.$group->name.' isimli gruptan ayrıldı';
-			$akis->store();
+		$akistext = '<a href="index.php?option=site&bolum=group&task=view&id='.$group->id.'">'.$group->name.'</a> grubundan ayrıldı';
+			mezunGlobalHelper::AkisTracker($akistext);
 		
 		Redirect('index.php?option=site&bolum=group&task=view&id='.$group->id, 'Gruptan ayrıldınız!');
 		
@@ -338,12 +342,8 @@ function joinGroup($id) {
 			$dbase->setQuery("INSERT INTO #__groups_members (userid, groupid, joindate) VALUES (".$dbase->Quote($my->id).", ".$dbase->Quote($id).", ".$dbase->Quote($joindate).")");
 			$dbase->query();
 			
-			//akış içerisine ekleme yapalım
-			mimport('tables.akis');
-			$akis = new mezunAkis($dbase);
-			$akis->tarih = date('Y-m-d H:i:s');
-			$akis->text = $my->name.' isimli kullanıcı '.$group->name.' isimli gruba katıldı';
-			$akis->store();
+			$akistext = '<a href="index.php?option=site&bolum=group&task=view&id='.$group->id.'">'.$group->name.'</a> grubuna katıldı';
+			mezunGlobalHelper::AkisTracker($akistext);
 			
 			Redirect('index.php?option=site&bolum=group&task=view&id='.$group->id, 'Gruba katıldınız!');
 		}

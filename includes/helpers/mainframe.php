@@ -579,6 +579,7 @@ class mezunMainFrame {
 		$user->username     = $this->_session->username;
 		$user->sessionid    = $this->_session->session;
 		$user->access_type  = $this->_session->access_type;
+		$user->nerede       = $this->_session->nerede ? $this->_session->nerede : 'akis';
 				
 		if ($user->id) {
 			$query = "SELECT u.id, u.name, u.email, u.image, u.dogumtarihi, s.name AS sehir, "

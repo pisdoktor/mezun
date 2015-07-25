@@ -48,7 +48,24 @@ $(document).on('focusin', function(e) {
 	echo '<div id="message" title="Mesaj">'.$mosmsg.'</div>';
 	}
 ?>
+
+<?php if (CountBlocks('left')) {?>
+<div class="col-sm-4">
+<?php LoadBlocks('left');?>
+</div>
+<?php } ?>
+
+<div class="col-sm-<?php echo CountBlocks('left') ? '8':'12';?>">
+<?php 
+if (CountBlocks('top')) { ?>
+<div class="row">
+<?php  LoadBlocks('top');?>
+</div>  
+<?php } ?>
+
 <?php loadSiteModule();?>
+</div>
+
 </div><!-- content -->
 
 <?php getFooter();?>

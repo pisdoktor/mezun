@@ -10,6 +10,8 @@ function adminMenu() {
 <li class="has-sub"><a href="#"><span>Yönetim</span></a>
 <ul>
 <li><a href="index.php?option=admin&bolum=user"><span>Üye Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=menu"><span>Menü Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=blocks"><span>Block Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=sehir"><span>Şehir Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=brans"><span>Branş Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=db"><span>Veritabanı Yönetimi</span></a></li>
@@ -114,4 +116,20 @@ function AdminPanelMenu() {
 	</div>
 	</div></div>
 	<?php
+}
+
+function itemState($status) {
+	
+	return $status ? '<img src="'.SITEURL.'/admin/images/tick.png" />':'<img src="'.SITEURL.'/admin/images/x.png" />';
+	
+}
+
+function itemAccess($status) {
+	if ($status == 0) {
+		return 'Ziyaretçi';
+	} else if ($status == 1) {
+		return 'Üye';
+	} else {
+		return 'Admin';
+	}
 }

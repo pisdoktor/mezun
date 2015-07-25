@@ -6,6 +6,8 @@ class mezunAkis extends mezunTable {
 	
 	var $id     = null;
 	
+	var $userid = null;
+	
 	var $tarih  = null;
 	
 	var $text   = null;

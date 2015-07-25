@@ -3,32 +3,6 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunIstekHelper {
-	
-	/**
-	* Gelen arkadaşlık isteklerini gösteren fonksiyon
-	* 
-	*/
-	static function loadIstekPanel() {
-		global $dbase, $my;
-	
-	$query = "SELECT COUNT(*) FROM #__istekler WHERE durum=0 AND aid=".$my->id;
-	$dbase->setQuery($query);
-	
-	$total = $dbase->loadResult();
-	
-	$link = $total ? '<a href="'.sefLink('index.php?option=site&bolum=istek&task=inbox').'">'.$total.'</a>' : $total;
-	?>
-	<div class="col-sm-12">
-	<div class="panel panel-default">
-	<div class="panel-heading">Arkadaşlık İstekleri</div>
-	<div class="panel-body">
-	Toplam <span class="badge"><?php echo $link;?></span> yeni arkadaşlık isteğiniz var
-	</div>
-	</div>
-	</div>
-	<?php
-	}
-	
 	/**
 	* Belirtilen kullanıcı ile bir arkadaşlık isteği olup olmadığına bakan fonksiyon
 	* 

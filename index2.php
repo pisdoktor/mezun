@@ -32,7 +32,7 @@ $task = strval(strtolower(getParam($_REQUEST, 'task')));
 * 
 * @var mezunMainFrame
 */
-$mainframe = new mezunMainFrame( $dbase, $option );
+$mainframe = new mezunMainFrame( $dbase );
 $mainframe->initSession();
 /**
 * mezunUsers tablosundan kullanıcının bilgilerini çekelim

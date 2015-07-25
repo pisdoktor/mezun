@@ -165,12 +165,8 @@ function createNewMessage() {
 	
 	$link = 'index.php?option=site&bolum=forum&task=topic&id=' . $ID_TOPIC . ($topic_info->numReplies > $limit ? '&limit='.$limit.'&limitstart='.((floor($topic_info->numReplies / $limit)) * $limit) : '') . '#new';
 	
-	//akış içerisine ekleme yapalım
-	mimport('tables.akis');
-	$akis = new mezunAkis($dbase);
-	$akis->tarih = date('Y-m-d H:i:s');
-	$akis->text = $my->name.' isimli kullanıcı Forum bölümünde "'.$subject.'" konulu bir mesaj gönderdi';
-	$akis->store();
+	$akistext = '<a href="index.php?option=site&bolum=forum&task=topic&id='.$ID_TOPIC.'">'.$topic_info->subject.'</a> başlığına bir mesaj gönderdi';
+			mezunGlobalHelper::AkisTracker($akistext);
 	
 	Redirect($link);
 }
@@ -252,12 +248,8 @@ function createNewTopic() {
 	VALUES ($ID_TOPIC, $my->id, $ID_MSG + 1)");
 	$dbase->query();
 	
-	//akış içerisine ekleme yapalım
-	mimport('tables.akis');
-	$akis = new mezunAkis($dbase);
-	$akis->tarih = date('Y-m-d H:i:s');
-	$akis->text = $my->name.' isimli kullanıcı Forum bölümünde "'.$subject.'" konulu yeni bir başlık açtı';
-	$akis->store();
+	$akistext = '<a href="index.php?option=site&bolum=forum&task=topic&id='.$ID_TOPIC.'">'.$subject.'</a> başlıklı bir konu oluşturdu';
+			mezunGlobalHelper::AkisTracker($akistext);
 	
 	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$ID_TOPIC);
 }

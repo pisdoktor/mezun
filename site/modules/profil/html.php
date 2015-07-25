@@ -180,7 +180,7 @@ class Profile {
 		<div class="panel-body"> 
 		
 		<div class="row">
-		<div class="col-sm-3">
+		<div class="col-sm-5">
 		
 
 		
@@ -202,26 +202,69 @@ class Profile {
 		<?php }?>	
 		</div>
 		
-		<div class="col-sm-9">
+		<div class="col-sm-7">
+		
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Adı, Soyadı:</strong></div>
-		<div class="col-sm-8"><?php echo $row->name;?></div>
+		<div class="col-sm-5"><strong>Adı, Soyadı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->name;?></div>
 		</div>
 		</div>
 		
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Kullanıcı Adı:</strong></div>
-		<div class="col-sm-8"><?php echo $row->username;?></div>
+		<div class="col-sm-5"><strong>Branşı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->brans;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Ünvanı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->unvan;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Kullanıcı Adı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->username;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Fakülteye Girişi:</strong></div>
+		<div class="col-sm-7"><?php echo $row->byili;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Mezuniyet Yılı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->myili;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Siteye Kayıt Tarihi:</strong></div>
+		<div class="col-sm-7"><?php echo mezunGlobalHelper::timeformat($row->registerDate, true, true);?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Okul Numarası:</strong></div>
+		<div class="col-sm-7"><?php echo $row->okulno;?></div>
 		</div>
 		</div>
 		
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Cinsiyet:</strong></div>
-		<div class="col-sm-8"><?php echo $cinsiyet;?></div>
+		<div class="col-sm-5"><strong>Cinsiyet:</strong></div>
+		<div class="col-sm-7"><?php echo $cinsiyet;?></div>
 		</div>
 		</div>
 		<?php } ?>
@@ -229,8 +272,8 @@ class Profile {
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Doğum Tarihi:</strong></div>
-		<div class="col-sm-8"><?php echo $row->dogumtarihi;?></div>
+		<div class="col-sm-5"><strong>Doğum Tarihi:</strong></div>
+		<div class="col-sm-7"><?php echo $row->dogumtarihi;?></div>
 		</div>
 		</div>
 		<?php } ?>
@@ -238,8 +281,8 @@ class Profile {
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Doğum Yeri:</strong></div>
-		<div class="col-sm-8"><?php echo $row->dogumyeri;?></div>
+		<div class="col-sm-5"><strong>Doğum Yeri:</strong></div>
+		<div class="col-sm-7"><?php echo $row->dogumyeri;?></div>
 		</div>
 		</div>
 		<?php } ?>
@@ -247,8 +290,8 @@ class Profile {
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Yaşadığı Şehir:</strong></div>
-		<div class="col-sm-8"><?php echo $row->sehiradi;?></div>
+		<div class="col-sm-5"><strong>Yaşadığı Şehir:</strong></div>
+		<div class="col-sm-7"><?php echo $row->sehiradi;?></div>
 		</div>
 		</div>
 		<?php } ?>
@@ -256,79 +299,36 @@ class Profile {
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Telefon Numarası:</strong></div>
-		<div class="col-sm-8"><?php echo $row->phone;?></div>
+		<div class="col-sm-5"><strong>Telefon Numarası:</strong></div>
+		<div class="col-sm-7"><?php echo $row->phone;?></div>
 		</div>
 		</div>
 		<?php } ?>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-4"><strong>Siteye Kayıt Tarihi:</strong></div>
-		<div class="col-sm-8"><?php echo mezunGlobalHelper::timeformat($row->registerDate, true, true);?></div>
-		</div>
-		</div>
 		
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Siteye Son Geliş Tarihi:</strong></div>
-		<div class="col-sm-8"><?php echo mezunGlobalHelper::timeformat($row->lastvisit, true, true);?></div>
+		<div class="col-sm-5"><strong>Siteye Son Gelişi:</strong></div>
+		<div class="col-sm-7"><?php echo mezunGlobalHelper::timeformat($row->lastvisit, true, true);?></div>
 		</div>
 		</div>
 		<?php } ?>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-4"><strong>Fakülteye Giriş Yılı:</strong></div>
-		<div class="col-sm-8"><?php echo $row->byili;?></div>
-		</div>
-		</div>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-4"><strong>Mezuniyet Yılı:</strong></div>
-		<div class="col-sm-8"><?php echo $row->myili;?></div>
-		</div>
-		</div>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-4"><strong>Okul Numarası:</strong></div>
-		<div class="col-sm-8"><?php echo $row->okulno;?></div>
-		</div>
-		</div>
 		
 		<?php if ($show) {?>
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-4"><strong>Şuanda Çalıştığı Kurum:</strong></div>
-		<div class="col-sm-8"><?php echo $row->work;?></div>
+		<div class="col-sm-5"><strong>Çalıştığı Kurum:</strong></div>
+		<div class="col-sm-7"><?php echo $row->work;?></div>
 		</div>
 		</div>
 		<?php } ?>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-4"><strong>Branşı:</strong></div>
-		<div class="col-sm-8"><?php echo $row->brans;?></div>
-		</div>
-		</div>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-4"><strong>Ünvanı:</strong></div>
-		<div class="col-sm-8"><?php echo $row->unvan;?></div>
-		</div>
-		</div>
-		
+			
 		</div>
 		
 		</div>
 		</div>
 		</div>
-		
-		
+			
 		<!-- Profil Resmi Değiştirme -->
 		<div id="imagechange" style="display: none;" title="Profil Resmi Değiştir"> 
 		<div class="text-info">* Resminizin uzantısı jpg, jpeg, gif, png olmak zorundadır.</div>

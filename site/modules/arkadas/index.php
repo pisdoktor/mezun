@@ -15,11 +15,14 @@ switch($task) {
 	default:
 	getArkadasList();
 	break;
+	
+	case 'delete':
+	deleteArkadaslik($id);
+	break;
 }
 
 /**
 * Arkadaş listesi gösterimi
-* sql sorgularında iyileştirme yapılmalı!
 */
 function getArkadasList() {
 	global $dbase, $my, $limit, $limitstart;
@@ -39,4 +42,23 @@ function getArkadasList() {
 	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
 	Arkadas::getList($list, $pageNav);	
+}
+
+/**
+* Arkadaşlıktan çıkarma fonksiyonu
+* 
+* @param mixed $id : Çıkarılacak kullanıcı adı
+*/
+function deleteArkadaslik($id) {
+	global $dbase, $my;
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$dbase->setQuery("DELETE FROM #__istekler WHERE (gid=".$dbase->Quote($id)." AND aid=".$dbase->Quote($my->id).") OR (gid=".$dbase->Quote($my->id)." AND aid=".$dbase->Quote($id).") AND durum=1");
+	$dbase->query();
+	
+	Redirect('index.php?option=site&bolum=arkadas');
 }

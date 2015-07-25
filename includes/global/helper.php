@@ -4,6 +4,18 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunGlobalHelper {	
 	
+	static function AkisTracker($text) {
+		global $dbase, $my;
+		
+		mimport('tables.akis');
+		
+		$row = new mezunAkis($dbase);
+		$row->userid = $my->id;
+		$row->tarih = date('Y-m-d H:i:s');
+		$row->text = $text;
+		$row->store();
+	}
+	
 	static function calculateAge($bday) {
 		
 		if ($bday) {
@@ -13,7 +25,7 @@ class mezunGlobalHelper {
 		
 			$diff = $now-$birth;
 		
-		return ceil($diff/(60*60*24*365));
+		return round($diff/(60*60*24*365));
 		
 		} else {
 			return false;
@@ -36,183 +48,6 @@ class mezunGlobalHelper {
 	
 		return $html;
 	}
-	
-	static function getSiteAkis() {
-		global $dbase;
-		
-		$dbase->setQuery("SELECT * FROM #__akis ORDER BY tarih DESC LIMIT 10");
-		$rows = $dbase->loadObjectList();
-		?>
-		<div class="col-sm-12">
-		<div class="panel panel-danger">
-		<div class="panel-heading">Sitede Neler Oluyor?</div>
-		<div class="panel-body">
-		<?php
-		  foreach ($rows as $row) {
-			  ?>
-			  <div class="row">
-			  <div class="col-sm-3">
-			  <?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
-			  </div>
-			  <div class="col-sm-9">
-			  <?php echo $row->text;?>
-			  </div>
-			  </div>
-			  <?php
-		  }  
-		?>
-		</div>
-		</div>
-		</div>
-		<?php
-	}
-	
-	static function loadDuyuru() {
-	global $dbase, $my;
-	
-	$query = "SELECT * FROM #__duyurular"
-	. "\n ORDER BY tarih ASC";
-	
-	$dbase->setQuery($query);
-	$rows = $dbase->loadObjectList();
-	
-?>
-<div class="col-sm-12">
-<div class="panel panel-danger">
-  <div class="panel-heading">Duyuru Paneli</div>
-  <div class="panel-body">
-<?php
-
-if (!$rows) {
-	echo 'Herhangi bir duyuru bulunamadı!';
-}
-	foreach ($rows as $row) {
-		?>
-		<span>
-		<strong>Duyuru Tarihi:</strong> <?php echo FormatDate($row->tarih, '%d-%m-%Y %H:%M:%S');?>
-		</span>
-		<br />
-		<span>
-		<?php echo $row->text;?>
-		</span>
-		<br /><br />
-		<?php
-	}
-?>
-</div>
-</div>
-</div>
-<?php
-	
-}
-
-	static function loadUserStats() {
-		global $my, $dbase;
-	
-	$link = array();
-	
-	//aktive edilmiş toplam üye sayısı
-	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1";
-	$dbase->setQuery($query);
-	$tactivated = $dbase->loadResult();
-	
-	//aynı ildeki üye sayısı
-	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND sehir=".$dbase->Quote($my->sehirid);
-	$dbase->setQuery($query);
-	$aynisehir = $dbase->loadResult();
-	
-	$link['aynisehir'] = $aynisehir-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&sehir='.$my->sehirid).'">'.($aynisehir-1).'</a>' : '0';
-	
-	//sizinle aynı şehirde doğan hemşeriniz üyeler
-	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND dogumyeri=".$dbase->Quote($my->dogumyeriid);
-	$dbase->setQuery($query);
-	$aynidogum = $dbase->loadResult();
-	
-	$link['aynidogum'] = $aynidogum-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&dogumyeri='.$my->dogumyeriid).'">'.($aynidogum-1).'</a>' : '0';
-	
-	//aynı branştaki üye sayısı
-	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND brans=".$dbase->Quote($my->brans);
-	$dbase->setQuery($query);
-	$aynibrans = $dbase->loadResult();
-	
-	$link['aynibrans'] = $aynibrans-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&brans='.$my->brans).'">'.($aynibrans-1).'</a>' : '0';
-	
-	//aynı yıl okula başlayanlar
-	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND byili=".$dbase->Quote($my->byili);
-	$dbase->setQuery($query);
-	$ayniyilbaslama = $dbase->loadResult();
-	
-	$link['ayniyilbaslama'] = $ayniyilbaslama-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&byili='.$my->byili).'">'.($ayniyilbaslama-1).'</a>' : '0';
-	
-	//aynı yıl okulu bitirenler
-	$query = "SELECT COUNT(*) FROM #__users WHERE activated=1 AND myili=".$dbase->Quote($my->myili);
-	$dbase->setQuery($query);
-	$ayniyilbitirme = $dbase->loadResult();
-	
-	$link['ayniyilbitirme'] = $ayniyilbitirme-1 ? '<a href="'.sefLink('index.php?option=site&bolum=arama&task=search&myili='.$my->myili).'">'.($ayniyilbitirme-1).'</a>' : '0';
-	?>
-	<div class="col-sm-12">
-	
-	<div class="panel panel-warning">
-  <div class="panel-heading">Site İstatistikleri</div>
-  <div class="panel-body">
-	<table width="100%" class="table-hover">
-	<tr>
-	<td>
-	Toplam Üye Sayısı:
-	</td>
-	<td>
-	<?php echo $tactivated;?> Kişi
-	</td>
-	</tr>
-	<tr>
-	<th colspan="2" align="left">Sizinle</th></tr>
-	<tr>
-	<td>
-	Aynı Şehirde Yaşayan Üye Sayısı:
-	</td>
-	<td>
-	<?php echo $link['aynisehir'];?> Kişi
-	</td>
-	</tr>
-	<tr>
-	<td>
-	Aynı Şehirde Doğan Üye Sayısı:
-	</td>
-	<td>
-	<?php echo $link['aynidogum'];?> Kişi
-	</td>
-	</tr>
-	<tr>
-	<td>
-	Aynı Branştaki Üye Sayısı:
-	</td>
-	<td>
-	<?php echo $link['aynibrans'];?> Kişi
-	</td>
-	</tr>
-	<tr>
-	<td>
-	Aynı Yıl Okula Başlayanlar:
-	</td>
-	<td>
-	<?php echo $link['ayniyilbaslama'];?> Kişi
-	</td>
-	</tr>
-	<tr>
-	<td>
-	Aynı Yıl Okulu Bitirenler:
-	</td>
-	<td>
-	<?php echo $link['ayniyilbitirme'];?> Kişi
-	</td>
-	</tr>
-	</table>
-	</div>
-	</div>
-	</div>
-	<?php
-}
 
 	static function shortText($text, $len) {
 
@@ -224,124 +59,79 @@ if (!$rows) {
 		return substr($text, 0, $len) . '...';
 	}
 	
-	static function siteMenu() {
-		global $my, $dbase;
+	static function createMenu($id, $list, &$children, $maxlevel=9999, $level=0) {
 	
-		mimport('helpers.modules.mesaj.helper');
-		mimport('helpers.modules.istek.helper');
-		mimport('helpers.modules.online.helper');
-	?>
-<div id="cssmenu">
-
-<ul>
-
-<li><a href="<?php echo SITEURL;?>"><span>Anasayfa</span></a></li>
-<?php
-// üyelere özel menü
-if (!$my->id) {
-?>
-<li><a href="<?php echo sefLink('index.php?option=register');?>"><span>Kayıt Ol</span></a></li>  
-<?php        
-} else {
-?>
-<li class="has-sub"><a href="#"><span>Menüm</span></a>
-<ul>
-
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=profil&task=my');?>"><span>Profilim</span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=arkadas');?>"><span>Arkadaşlarım</span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=online');?>"><span>Online Üyeler <span class="badge"><?php mezunOnlineHelper::totalOnline();?></span></span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=bildirim');?>"><span>Geri Bildirim</span></a>
-</li>
-
-</ul>
-
-</li>
-
-<li class="has-sub"><a href="#"><span>Mesajlar</span></a>
-
-<ul>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=inbox');?>"><span>Gelen Kutusu <span class="badge"><?php mezunMesajHelper::totalUnread();?></span></span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=outbox');?>"><span>Giden Kutusu</span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=new');?>"><span>Yeni Mesaj</span></a>
-</li>
-
-</ul>
-
-</li>
-
-<li class="has-sub"><a href="#"><span>İstekler</span></a>
-
-<ul>
-
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=inbox');?>"><span>Gelen İstekler <span class="badge"><?php mezunIstekHelper::totalWaiting();?></span></span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=istek&task=outbox');?>"><span>Giden İstekler</span></a>
-</li>
-
-</ul>
-
-</li>
-
-<li class="has-sub"><a href="#"><span>Gruplar</span></a>
-
-<ul>
-
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=all');?>"><span>Tüm Gruplar</span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=my');?>"><span>Gruplarım</span></a>
-</li>
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=new');?>"><span>Yeni Grup</span></a>
-</li>
-
-</ul>
-
-</li>
-
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=forum');?>"><span>Forum</span></a>
-</li>
-
-<li>
-<a href="<?php echo sefLink('index.php?option=site&bolum=arama');?>"><span>Üye Arama</span></a>
-</li>
-
-<?php 
-if ($my->id == 1) {
-?>
-<li>
-<a href="index.php?option=admin"><span>Yönetim</span></a>
-</li>
-<?php    
-}
-?>
-<li>
-<a href="<?php echo sefLink('index.php?option=logout');?>"><span>Çıkış Yap</span></a>
-</li>   
- 
-
-<?php
-}
-?>
-</ul>
-</div>
-<?php
+		if (@$children[$id] && $level <= $maxlevel) {
+			
+			foreach ($children[$id] as $v) {
+				
+			$id = $v->id;
+			
+			$pt = $v->parent;
+			$list[$id] = $v;
+			$list[$id]->children = count( @$children[$id] );
+			
+			echo "\n<li";
+			echo $v->children ? " class=has-sub":"";
+			echo ">";
+			
+			echo "\n<a href=\"$v->link\"><span>".$v->name."</span></a>\n";
+				
+				if ($v->children) {
+				echo "\n<ul>";
+			
+				echo mezunGlobalHelper::createMenu( $id, $list, $children, $maxlevel, $level+1);
+				
+				echo "\n</ul>";
+				}
+			
+			echo "\n</li>";
+			}   
+		}	
+	}
+	
+	static function siteMenu() {
+		global $dbase, $my;
+		
+		if (!$my->id) {
+			$where = "WHERE menu_type='site' AND access='0'";
+		} else {
+			if ($my->access_type == 'site') {
+				if ($my->id == 1) {
+					$where = "WHERE menu_type='site' AND (access='1' OR access='2')";
+				} else {
+					$where = "WHERE menu_type='site' AND access='1'";
+				}    
+			} else if ($my->access_type == 'admin') {
+					$where = "WHERE menu_type='admin' AND access='2'";
+			}
+		}
+		
+		$dbase->setQuery("SELECT * FROM #__menu ".$where." AND published=1 ORDER BY parent ASC,  ordering ASC");
+		$rows = $dbase->loadObjectList();
+		
+		// establish the hierarchy of the menu
+		$children = array();
+		// first pass - collect children
+		foreach ($rows as $v ) {
+			$pt = $v->parent;
+			$list = @$children[$pt] ? $children[$pt] : array();
+			array_push( $list, $v );
+			$children[$pt] = $list;
+		}
+		
+		//var_dump($children);
+		
+		$prepend = "<div id=\"cssmenu\">\n<ul>\n";
+		$append  = "</ul>\n</div>\n";
+		
+		echo $prepend;
+		
+		echo "\n<li class=\"active\">\n<a href=\"".SITEURL."/index.php\"><span>Anasayfa</span></a>\n</li>\n";
+		
+		mezunGlobalHelper::createMenu( 0, array(), $children, 9 );
+		
+		echo $append;
 }
 
 	static function time_stamp($timestamp = null) {
@@ -419,26 +209,4 @@ if ($my->id == 1) {
 	// Format any other characters..
 	return strftime($str, $time);
 }
-	
-	static function WelcomePanel() {
-		global $my;
-	
-	$lastvisit = ($my->lastvisit == '0000-00-00 00:00:00') ? 'İlk Defa Giriş Yaptınız' : mezunGlobalHelper::timeformat($my->lastvisit, true, true);
-	
-	$pimage = $my->image ? '<img src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="100" height="100" />':'<img src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="100" height="100" />';
-	
-	$pimage = '<a href="index.php?option=site&bolum=profil&task=my">'.$pimage.'</a>';
-	
-	echo '<div class="col-sm-12">';
-	echo '<div class="panel panel-primary">';
-	echo '<div class="panel-heading">Hoşgeldiniz '.$my->name.'</div>';
-	echo '<div class="panel-body">';
-	echo '<div align="left" style="float:left;padding:5px;" class="img-rounded">'.$pimage.'</div>';
-	echo '<span><strong><u>Yaşadığınız Şehir:</u></strong><br />'. $my->sehir.'</span><br />';
-	echo '<span><strong><u>Siteye Son Gelişiniz:</u></strong><br />'. $lastvisit.'</span><br />';
-	echo '<span><strong><u>Yaşınız:</u></strong><br />'. mezunGlobalHelper::calculateAge($my->dogumtarihi).'</span><br />';
-	echo '</div>';
-	echo '</div>';
-	echo '</div>';
-	}
 }

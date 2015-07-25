@@ -15,21 +15,16 @@ require(dirname(__FILE__).'/importer.php');
 //database sınıfını import edelim
 mimport('helpers.database.database');
 mimport('helpers.database.table');
-
+//version
 mimport('global.version');
-
-
 //mainframe
 mimport('helpers.mainframe');
-
 //genel kullanılan fonksiyonları alalım
 mimport('global.helper');
-
 //mail
 mimport('helpers.phpmailer.phpmailer');
 //filter 
 mimport('helpers.filter.inputfilter');
-
 //stats
 mimport('helpers.stats.helper');
 //html

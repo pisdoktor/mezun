@@ -451,6 +451,8 @@ class GroupHTML {
 		</div>
 		</div>
 		
+		</div>
+		<div class="panel-footer">
 		<div align="center">
 		<div class="row">
 		<?php echo $pageNav->writePagesCounter();?>
@@ -459,7 +461,6 @@ class GroupHTML {
 		<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=group&task=all');?>
 		</div>
 		</div>
-		
 		</div>
 		</div>
 		<?php
@@ -507,6 +508,8 @@ class GroupHTML {
 		</div>
 		</div>
 		
+		</div>
+		<div class="panel-footer">
 		<div align="center">
 		<div class="row">
 		<?php echo $pageNav->writePagesCounter();?>
@@ -515,7 +518,6 @@ class GroupHTML {
 		<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=group&task=all');?>
 		</div>
 		</div>
-		
 		</div>
 		</div>
 		<?php

@@ -28,17 +28,17 @@ $(function(){
 		}
 	});
 	
-	$('select[name=myili]').on('change', function(){
+	$('select[name=byili]').on('change', function(){
+		
+		$('select[name=myili]').children().each(function() {
 			
-	var byili = $('select[name=byili]').val();
-	var myili = $(this).val();
-	
-	$('span.yil').hide();
-	
-		if (byili >= myili) {
-		$('span.yil').show();
-	}
-	});	
+			if ($(this).val() <= $('select[name=byili]').val()) {
+				$(this).prop('hidden',true);
+			} else {
+				$(this).prop('hidden',false);
+			}
+		});
+	});
 });
 </script>
 <div id="container">
@@ -62,14 +62,8 @@ $(function(){
 <div class="panel-body">
 <form action="index.php?option=reguser" method="post" id="adminForm" role="form">
 
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="name">Adınız ve Soyadınız:</label>
-<div class="col-sm-6">
-<input name="name" id="name" type="text" class="form-control" placeholder="Adınızı ve soyadınızı yazın" required />
-</div>
-</div>
-</div>
+<fieldset>
+<legend>Üyelik Bilgileri:</legend>
 
 <div class="form-group">
 <div class="row">
@@ -79,45 +73,6 @@ $(function(){
 </div>
 </div>
 </div>
-
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="sehir">Doğum Yeriniz:</label>
-<div class="col-sm-3">
-<?php echo $reg->selectSehir('dogumyeri');?>
-</div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="dogumtarihi">Doğum Tarihiniz:</label>
-<div class="col-sm-3">
-<input name="dogumtarihi" id="dogumtarihi" type="text" class="form-control bfh-phone" data-format="dd-dd-dddd" required />
-</div>
-</div>
-</div>
-
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="cinsiyet">Cinsiyetiniz:</label>
-<div class="col-sm-6">
-<?php echo $reg->userCinsiyet(1);?>
-</div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="sehir">Yaşadığınız Şehir:</label>
-<div class="col-sm-3">
-<?php echo $reg->selectSehir('sehir', 1);?>
-</div>
-</div>
-</div>
-
 
 <div class="form-group">
 <div class="row">
@@ -149,11 +104,102 @@ $(function(){
 </div>
 </div>
 
+</fieldset>
+
+<fieldset>
+<legend>Kişisel Bilgiler:</legend>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="name">Adınız ve Soyadınız:</label>
+<div class="col-sm-6">
+<input name="name" id="name" type="text" class="form-control" placeholder="Adınızı ve soyadınızı yazın" required />
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="sehir">Doğum Yeriniz:</label>
+<div class="col-sm-3">
+<?php echo $reg->selectSehir('dogumyeri');?>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="dogumtarihi">Doğum Tarihiniz:</label>
+<div class="col-sm-3">
+<input name="dogumtarihi" id="dogumtarihi" type="text" class="form-control bfh-phone" data-format="dd-dd-dddd" placeholder="GG-AA-YYYY şeklinde" required />
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="cinsiyet">Cinsiyetiniz:</label>
+<div class="col-sm-6">
+<?php echo $reg->userCinsiyet(1);?>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="sehir">Yaşadığınız Şehir:</label>
+<div class="col-sm-3">
+<?php echo $reg->selectSehir('sehir', 1);?>
+</div>
+</div>
+</div>
+
 <div class="form-group">
 <div class="row">
 <label class="control-label col-sm-4" for="phone">Telefon Numaranız:</label>
 <div class="col-sm-3">
-<input name="phone" id="phone" type="text" class="form-control bfh-phone" data-format="d (ddd) ddd dd dd" required />
+<input name="phone" id="phone" type="text" class="form-control bfh-phone" data-format="d (ddd) ddd dd dd" placeholder="0 (000) 000 00 00 şeklinde" required />
+</div>
+</div>
+</div>
+
+</fieldset>
+
+<fieldset>
+<legend>Mesleki Bilgiler:</legend>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="brans">Branşınız:</label>
+<div class="col-sm-4">
+<?php echo $reg->selectBrans(1);?>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="unvan">Ünvanınız:</label>
+<div class="col-sm-4">
+<?php echo $reg->selectUnvan(1);?>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="byili">Okula Başlangıç Yılınız:</label>
+<div class="col-sm-3">
+<?php echo $reg->selectYil('byili', 1);?>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="myili">Okulu Bitiriş Yılınız:</label>
+<div class="col-sm-3">
+<?php echo $reg->selectYil('myili', 1);?>
 </div>
 </div>
 </div>
@@ -176,46 +222,12 @@ $(function(){
 </div>
 </div>
 
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="work">Ünvanınız:</label>
-<div class="col-sm-4">
-<?php echo $reg->selectUnvan(1);?>
-</div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="work">Branşınız:</label>
-<div class="col-sm-4">
-<?php echo $reg->selectBrans(1);?>
-</div>
-</div>
-</div>
 
 
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="byili">Okula Başlangıç Yılınız:</label>
-<div class="col-sm-3">
-<?php echo $reg->selectYil('byili', 1);?>
-</div>
-<div class="col-sm-5">
-<span class="yil" style="display: none; background-color: red;">Başlangıç yılı mezuniyet yılına eşit veya büyük olamaz!</span>
-</div>
-</div>
-</div>
 
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="myili">Okulu Bitiriş Yılınız:</label>
-<div class="col-sm-3">
-<?php echo $reg->selectYil('myili', 1);?>
-</div>
-</div>
-</div>
 
+
+</fieldset>
 
 <div class="form-group">
 <div class="row">

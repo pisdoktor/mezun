@@ -71,10 +71,10 @@ class mezunArkadasHelper {
 	* Kullanıcıların fakülteye başlama ve bitiş tarihleri, yaşadıkları ve doğdukları şehir,
 	* branşları gibi özelliklerine bakıp ortak olan üyeleri alıyor. Arkadaşlarını listenin
 	* dışına çıkarıyor ve bir objectlist olarak sana geri veriyor.
-	* Objectlist içerisinde kullanıcının; id, name, username, image, registerDate, lastvisit
+	* Objectlist içerisinde kullanıcının; id, name, username, image, registerDate, lastvisit, sehir
 	* bilgileri var.
 	*/
-	static function belkiTaniyorsun() {
+	static function canRecognize() {
 		global $dbase, $my;
 		
 		//arkadaşları sql sorgusuna uygun hale getirelim
@@ -82,13 +82,16 @@ class mezunArkadasHelper {
 		$myfriends = implode(',', $myrows);
 		
 		//şimdi de  tanıyor olabileceğimiz üyeleri bulalım. ama içerisinde arkadaşlarımız olmasın!
-		$query = "SELECT id, name, username, image, registerDate, lastvisit FROM #__users WHERE ("
-		. " byili=".$dbase->Quote($my->byili)
-		. " OR myili=".$dbase->Quote($my->myili)
-		. " OR sehir=".$dbase->Quote($my->sehirid)
-		. " OR dogumyeri=".$dbase->Quote($my->dogumyeriid)
-		. " OR brans=".$dbase->Quote($my->brans)
-		. ") AND id NOT IN (".$myfriends.") AND id NOT IN (".$my->id.")";
+		$query = "SELECT u.id, u.name, u.username, u.image, u.registerDate, u.lastvisit, s.name AS sehir "
+		. " FROM #__users AS u"
+		. " LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
+		. " WHERE ("
+		. " u.byili=".$dbase->Quote($my->byili)
+		. " OR u.myili=".$dbase->Quote($my->myili)
+		. " OR u.sehir=".$dbase->Quote($my->sehirid)
+		. " OR u.dogumyeri=".$dbase->Quote($my->dogumyeriid)
+		. " OR u.brans=".$dbase->Quote($my->brans)
+		. ") AND u.id NOT IN (".$myfriends.") AND u.id NOT IN (".$my->id.") ORDER BY RAND() LIMIT 5";
 		$dbase->setQuery($query);
 		
 		$rows = $dbase->loadObjectList();

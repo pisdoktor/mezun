@@ -10,9 +10,6 @@ function loadSiteModule() {
 	
 	switch($option) {
 	default:
-	MainPage();
-	break;
-	
 	case 'site':
 	if ($bolum) {
 		if (file_exists(ABSPATH. '/site/modules/'.$bolum.'/index.php')) {
@@ -21,7 +18,9 @@ function loadSiteModule() {
 			Redirect('index.php', 'Module:'.$bolum.' bulunamadı!');
 		}
 	} else {
-		Redirect('index.php');
+		if (file_exists(ABSPATH. '/site/modules/akis/index.php')) {
+			include_once(ABSPATH. '/site/modules/akis/index.php');
+		}
 	}
 	break;
 	
@@ -48,30 +47,71 @@ function convertAdmin() {
 	}    
 }
 
-
-function MainPage() {
-	
-	mimport('helpers.modules.istek.helper');
-	mimport('helpers.modules.online.helper');
-	mimport('helpers.modules.mesaj.helper');
-	?>
-	<div class="col-sm-5">
-	<?php 
-	mezunGlobalHelper::WelcomePanel();
-	mezunIstekHelper::loadIstekPanel();
-	mezunMesajHelper::loadMailPanel();
-	mezunGlobalHelper::loadUserStats();
-	?>
-	</div>
-	<div class="col-sm-7">
-	<?php
-	mezunGlobalHelper::loadDuyuru();
-	mezunGlobalHelper::getSiteAkis();
-	?>
-	</div>
-	<?php
-}
-
 function getFooter() {
 	include(ABSPATH.'/site/templates/'.SITETEMPLATE.'/footer.php');
+}
+
+function initBlocks() {
+	global $dbase, $my;
+		
+		$query = "SELECT id, title, block, position, content, showtitle"
+		. "\n FROM #__blocks AS b"
+		. "\n INNER JOIN #__blocks_menu AS bm ON bm.blockid = b.id"
+		. "\n WHERE b.published = 1"
+		. "\n AND (bm.bolum = ".$dbase->Quote($my->nerede)." OR bm.bolum='')"
+		. "\n ORDER BY b.ordering";
+
+		$dbase->setQuery( $query );
+		$blocks = $dbase->loadObjectList();
+
+		foreach ($blocks as $block) {
+			$mezunblocks[$block->position][] = $block;
+		}
+	if (empty($mezunblocks)) {
+		$mezunblocks = '';
+	}
+	return $mezunblocks;
+}
+
+function LoadBlocks( $position='left' ) {
+
+	mimport('global.block');
+
+	$allBlocks = initBlocks();
+	
+	if (isset( $allBlocks[$position] )) {
+		$blocks = $allBlocks[$position];
+	} else {
+		$blocks = array();
+	}
+
+	$prepend = '<div class="panel panel-default">';
+	$postpend = '</div>';
+
+	foreach ($blocks as $block) {
+		
+		echo $prepend;
+
+		if ((substr("$block->block",0,6))=='block_') {
+		// normal blocks
+			mezunGlobalBlock::normalblock($block);
+		} else {
+		// custom or new blocks
+			mezunGlobalBlock::htmlblock($block);
+		}
+
+		echo $postpend;
+	}
+}
+
+function CountBlocks( $position='left' ) {
+	global $dbase;
+
+	$blocks = initBlocks();
+	
+	if (isset( $blocks[$position] )) {
+		return count( $blocks[$position] );
+	} else {
+		return 0;
+	}
 }

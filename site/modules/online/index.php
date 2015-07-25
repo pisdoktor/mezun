@@ -87,6 +87,7 @@ function showOnlineUsers($rows) {
 		}
 	?>
 	</div>
+	<div class="panel-footer"></div>
 	</div>
 	<?php
 }

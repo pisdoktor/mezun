@@ -28,15 +28,16 @@ $row = $rows[$i];
 
 $image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
 $link = '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->id).'">Profili Göster</a>';
+$delfriend = '<a class="btn btn-warning" href="'.sefLink('index.php?option=site&bolum=arkadas&task=delete&id='.$row->id).'">Arkadaşlıktan Çıkar</a>';
 $cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
 ?>
-
+<div class="row">
 <div class="col-sm-3">
 <div align="center">
 <div class="row">
 <div class="figure"> 
 <img src="<?php echo $image;?>" class="img-thumbnail profil-image" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
-<div class="figcaption"><?php echo $link;?></div>
+<div class="figcaption"><?php echo $link;?><br /><br /> <?php echo $delfriend;?></div>
 </div>
 
 </div>
@@ -47,12 +48,13 @@ $cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
 </div>
 </div>
 </div>
+</div>
 <?php
 }
 ?>    
+</div>
 
-		
-<div align="center">
+<div class="panel-footer" align="center">
 
 <div class="row">
 <div class="col-sm-12">
@@ -69,19 +71,9 @@ echo $pageNav->writePagesLinks($link);
 </div>
 </div>
 
-<div class="row">
-<div class="col-sm-1">
-<?php 
-$link = 'index.php?option=site&bolum=arkadas';
-echo $pageNav->writeLimitBox($link);
-?>
-</div>
 </div>
 
 </div>
-
-	</div>
-	</div>
 <?php        
 }
 }

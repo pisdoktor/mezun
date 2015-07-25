@@ -12,6 +12,8 @@ include(dirname(__FILE__). '/html.php');
 
 mimport('helpers.modules.istek.helper');
 mimport('tables.istekler');
+mimport('helpers.modules.arkadas.helper');
+mimport('helpers.modules.online.helper');
 
 switch($task) {
 	default:
@@ -24,81 +26,57 @@ switch($task) {
 	break;
 	
 	case 'delete':
-	deleteDurum($cid);
+	changeDurum($id, 0);
 	break;
 	
 	case 'onayla':
-	changeDurum($cid, 1);
+	changeDurum($id, 1);
 	break;
 	
 	case 'send':
 	sendIstek($id);
 	break;
 }
-/**
-* Gelen istekleri değerlendirme fonksiyon
-* @param mixed $cid gelen isteklerin id değeri
-* @param mixed $status gelen isteğe ne yapılacağı 1: onayla
-*/
-function changeDurum($cid, $status) {
-	global $dbase, $my, $type;
-	
-	if ($type) {
-		return false;
-	}
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Bu işlem için listeden bir seçim yapın'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "UPDATE #__istekler SET durum=".$dbase->Quote($status)
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
-	
-	Redirect('index.php?option=site&bolum=istek&task=inbox');
-	
-}
 
 /**
-* Gönderilmiş bir isteği silme fonksiyonu
+* Gelen veya giden istek silme fonksiyonu
 * 
-* @param mixed $cid gönderilmiş isteklerin id değeri
+* @param mixed $id : isteğin db deki id değeri
+* @param mixed $status : 1: onaylanacak, 0: silinecek
 */
-function deleteDurum($cid) {
+function changeDurum($id, $status) {
 	global $dbase, $my;
 	
-	$type = getParam($_REQUEST, 'type');
+	$row = new mezunIstekler($dbase);
+	$row->load($id);
 	
-		$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir istek seçin'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__istekler"
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	if (!$row->id) {
+		NotAuth();
+		return;
 	}
 	
-	if ($type) {
-	Redirect('index.php?option=site&bolum=istek&task=outbox');    
+	if ($status) {
+		$row->set('durum', 1);
+		$row->store();
+	
+	$user = new mezunUsers($dbase);
+	if ($my->id == $row->gid) {
+		$user->load($row->aid);
+	}
+	
+	if ($my->id == $row->aid) {
+		$user->load($row->gid);
+	}
+		
+	$akistext = '<a href="index.php?option=site&bolum=profil&task=show&id='.$user->id.'">'.$user->name.'</a> ile arkadaş oldu';
+	mezunGlobalHelper::AkisTracker($akistext);
+		
 	} else {
-	Redirect('index.php?option=site&bolum=istek&task=inbox');
+		$row->delete($row->id);
 	}
+	
+	Redirect('index.php?option=site&bolum=istek&task=inbox');
+	
 }
 
 /**
@@ -163,10 +141,11 @@ function inBox($type) {
 	
 	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
-	$query = "SELECT i.*, u.name AS gonderen, uu.name as giden FROM #__istekler AS i"
+	$query = "SELECT i.*, u.name AS gonderen, uu.name as giden, u.image AS gonderenimage, uu.image AS gidenimage FROM #__istekler AS i"
 	. "\n LEFT JOIN #__users AS u ON u.id=i.gid"
 	. "\n LEFT JOIN #__users AS uu ON uu.id=i.aid "
 	.$where
+	. "\n ORDER BY i.tarih DESC"
 	;
 	$dbase->setQuery($query, $limitstart, $limit);
 	$rows = $dbase->loadObjectList();

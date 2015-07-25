@@ -5,36 +5,11 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Istek {
 	
 	static function inBox($rows, $pageNav, $type) {
-		$head = $type ? 'ARKADAŞLIK İSTEKLERİ: GİDEN' : 'ARKADAŞLIK İSTEKLERİ: GELEN';
+		$head = $type ? 'GİDEN ARKADAŞLIK İSTEKLERİ' : 'GELEN ARKADAŞLIK İSTEKLERİ';
 		?>
 	<div class="panel panel-default">
 		<div class="panel-heading"><h4><?php echo $head;?></h4></div>
 		<div class="panel-body">
-	<form action="index.php" method="post" name="adminForm" role="form">
-	
-	<div class="form-group">
-	<div class="btn-group">
-	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Kabul Et", 'onayla', 1) : '';?>
-	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Red Et", 'delete', 2) : '';?>
-	<?php echo $type == 1 ? mezunGlobalHelper::formButton("İptal Et", 'delete', 2) : '';?>
-	</div>  
-	</div>
-	
-	<div class="row">
-	<div class="col-sm-1">
-	<strong>SIRA</strong>
-	</div>
-	<div class="col-sm-1">
-	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows );?>)"/>
-	</div>
-	<div class="col-sm-5">
-	<strong><?php echo $type ? 'Gönderilen' : 'Gönderen';?></strong>
-	</div>
-	<div class="col-sm-5">
-	<strong>Gönderim Zamanı</strong>
-	</div>
-	</div>
-
 <?php
 	if (!$rows) {
 		?>
@@ -49,32 +24,34 @@ class Istek {
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 $row->giden = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->aid).'">'.$row->giden.'</a>';
+$row->gidenimage = $row->gidenimage ? '<img src="'.SITEURL.'/images/profil/'.$row->gidenimage.'" class="img-thumbnail profil-image" width="200" height="200" />':'<img src="'.SITEURL.'/images/profil/noimage.png" class="img-thumbnail profil-image" width="200" height="200" />';
+$row->gonderenimage = $row->gonderenimage ? '<img src="'.SITEURL.'/images/profil/'.$row->gonderenimage.'" class="img-thumbnail profil-image" width="200" height="200" />':'<img src="'.SITEURL.'/images/profil/noimage.png" class="img-thumbnail profil-image" width="200" height="200" />';
+
 $row->gonderen = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->gid).'">'.$row->gonderen.'</a>';
-$checked = mezunHTML::idBox( $i, $row->id );
+
+$link = $type ? '<a class="btn btn-default" href="index.php?option=site&bolum=istek&task=delete&id='.$row->id.'">İsteği Sil</a>':'<a class="btn btn-default" href="index.php?option=site&bolum=istek&task=delete&id='.$row->id.'">İsteği Sil</a><br /><br /><a class="btn btn-primary" href="index.php?option=site&bolum=istek&task=onayla&id='.$row->id.'">İsteği Onayla</a>';
 ?>
-<div class="row" id="<?php echo $row->id;?>">
-	<div class="col-sm-1">
-	<?php echo $pageNav->rowNumber( $i ); ?>
-	</div>
-	<div class="col-sm-1">
-	<?php echo $checked;?>
-	</div>
-	<div class="col-sm-5">
-	<?php echo $type ? $row->giden : $row->gonderen;?>
-	</div>
-	<div class="col-sm-5">
-	<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
-	</div>
+
+<div class="col-sm-3">
+<div align="center">
+<div class="row">
+<div class="figure"> 
+<?php echo $type ? $row->gidenimage : $row->gonderenimage;?>
+<div class="figcaption"><?php echo $link;?></div>
 </div>
+
+</div>
+<div class="row">
+<?php echo $type ? $row->giden : $row->gonderen;?>
+<div align="center"><?php mezunOnlineHelper::isOnline($row->id);?></div>
+<div align="center"><small><?php mezunArkadasHelper::ortakArkadasCount($row->id, true);?> ortak arkadaş</small></div>
+</div>
+</div>
+</div>
+
 <?php
 }
 ?>
-<input type="hidden" name="option" value="site" />
-<input type="hidden" name="bolum" value="istek" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="type" value="<?php echo $type;?>" />
-<input type="hidden" name="boxchecked" value="0" />
-</form>
 </div>
 </div>
 		<?php

@@ -126,8 +126,9 @@ class Search {
 
 <button type="submit" class="btn btn-primary">ARAMAYI BAŞLAT</button>
 </div>
-</div>
-</form>
+		<div class="panel-footer"></div>
+		</div>
+		</form>
 
 <?php
 	}
@@ -233,15 +234,6 @@ echo $pageNav->writePagesLinks($link);
 </div>
 </div>
 
-<div class="row">
-<div class="col-sm-2">
-<?php 
-$link = 'index.php?option=site&bolum=arama&task=search';
-echo $pageNav->writeLimitBox($link);
-?>
-</div>
-</div>
-
 </div>
 
   
@@ -250,7 +242,9 @@ echo $pageNav->writeLimitBox($link);
 
 ?>
 	</div>
-	</div>  
+		
+		<div class="panel-footer"></div>
+		</div>  
 <?php	
 	}
 }

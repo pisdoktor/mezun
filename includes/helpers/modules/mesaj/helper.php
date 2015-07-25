@@ -4,31 +4,6 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunMesajHelper {
 	/**
-	* Mesaj kutusu panelini gösteren fonksiyon
-	* 
-	*/
-	static function loadMailPanel() {
-		global $dbase, $my;
-		
-		$query = "SELECT COUNT(*) FROM #__mesajlar WHERE aid=".$dbase->Quote($my->id)." AND okunma=0";
-		
-		$dbase->setQuery($query);
-		
-		$total = $dbase->loadResult();
-		
-		$link = $total ? '<a href="'.sefLink('index.php?option=site&bolum=mesaj&task=inbox').'">'.$total.'</a>' : $total;
-	?>
-	<div class="col-sm-12">
-	<div class="panel panel-default">
-	<div class="panel-heading">Mesaj Kutunuz</div>
-	<div class="panel-body">
-	Toplam <span class="badge"><?php echo $link;?></span> yeni mesajınız var!
-	</div>
-	</div>
-	</div>
-	 <?php
-	 }
-	/**
 	* Toplam okunmayan mesaj sayısını gösteren fonksiyon
 	* 
 	*/

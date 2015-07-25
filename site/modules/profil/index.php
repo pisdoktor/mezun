@@ -92,12 +92,8 @@ function CropandSave() {
 	
 	mezunImageHelper::crop($src, 0, 0, $x, $y, $minWidth, $minHeight, $w, $h);
 	
-	//akış içerisine ekleme yapalım
-	mimport('tables.akis');
-	$akis = new mezunAkis($dbase);
-	$akis->tarih = date('Y-m-d H:i:s');
-	$akis->text = $my->name.' isimli kullanıcı profil resmini düzenledi';
-	$akis->store();
+	$akistext = 'Profil resmini düzenledi';
+	mezunGlobalHelper::AkisTracker($akistext);
 	
 	Redirect('index.php?option=site&bolum=profil&task=my');
 }
@@ -152,12 +148,8 @@ function deleteImage() {
 		$dbase->query();
 	}
 	
-	//akış içerisine ekleme yapalım
-	mimport('tables.akis');
-	$akis = new mezunAkis($dbase);
-	$akis->tarih = date('Y-m-d H:i:s');
-	$akis->text = $my->name.' isimli kullanıcı profil resmini sildi';
-	$akis->store();
+	$akistext = 'Profil resmini sildi';
+	mezunGlobalHelper::AkisTracker($akistext);
 	
 	Redirect('index.php?option=site&bolum=profil&task=my');
 }
@@ -260,13 +252,8 @@ function saveImage() {
 		
 	mezunImageHelper::resize($targetfile, 0, 0, 0, 0, $newwidth, $newheight, $imgwidth, $imgheight);
 	
-	//akış içerisine ekleme yapalım
-	mimport('tables.akis');
-	$akis = new mezunAkis($dbase);
-	$akis->tarih = date('Y-m-d H:i:s');
-	$akis->text = $my->name.' isimli kullanıcı profil resmi ekledi';
-	$akis->store();
-	
+	$akistext = 'Profil resmi yükledi';
+	mezunGlobalHelper::AkisTracker($akistext);
 	
 	if ($error) {
 	Redirect('index.php?option=site&bolum=profil&task=my', $error);
@@ -313,13 +300,9 @@ function saveProfile() {
 		exit();
 	}
 	
-	//akış içerisine ekleme yapalım
-	mimport('tables.akis');
-	$akis = new mezunAkis($dbase);
-	$akis->tarih = date('Y-m-d H:i:s');
-	$akis->text = $my->name.' isimli kullanıcı profilini güncelledi';
-	$akis->store();
-	
+	$akistext = 'Profilini düzenledi';
+	mezunGlobalHelper::AkisTracker($akistext);
+
 	Redirect('index.php?option=site&bolum=profil&task=my', 'Değişiklikler başarıyla kaydedildi');
 }
 /**

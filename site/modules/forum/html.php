@@ -41,6 +41,7 @@ class ForumHTML {
 		</form>
 		
 		</div>
+		<div class="panel-footer"></div>
 		</div>
 		<?php
 		
@@ -140,6 +141,7 @@ class ForumHTML {
 		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
 		</form>
 		</div>
+		<div class="panel-footer"></div>
 		</div>
 		<?php
 	}
@@ -220,7 +222,10 @@ class ForumHTML {
 		<?php if (!$topic_info->locked) {?>
 		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default">Yeni Mesaj</a>
 		<?php } ?>
-		</div></div>
+		</div>
+		
+		<div class="panel-footer"></div>
+		</div>
 <?php	
 	}
 	
@@ -399,6 +404,7 @@ class ForumHTML {
 		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-primary">Yeni Başlık</a>
 	
 		</div>
+		<div class="panel-footer"></div>
 		</div>
 		<?php
 		
@@ -477,7 +483,7 @@ class ForumHTML {
 	
 	if ($context['latestmsg']) {
 		?>
-		<br />
+		
 	<div class="tborder" style="width: 100%;">
 	 <div class="catbg" style="padding: 6px; vertical-align: middle; text-align: center;">
 	 Forum - Bilgi Merkezi
@@ -509,10 +515,10 @@ class ForumHTML {
 			</tr>
 		</table>
 		</div>
-		</div>
+		
 		<?php
 	}
 	
-	echo '</div></div>';
+	echo '</div><div class="panel-footer"></div></div>';
 	}
 }
