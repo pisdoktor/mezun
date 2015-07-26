@@ -5,6 +5,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class mezunAkisHelper {
 	
 	static function getRow($row) {
+		
+		mimport('global.likes');
 		?>
 		<div class="row">
 			<div class="col-sm-2">
@@ -23,6 +25,10 @@ class mezunAkisHelper {
 				</div>
 					  
 			</div>
+		 </div>
+		 
+		 <div align="right">
+		 <?php echo mezunGlobalLikes::likeButton($row->id, 'akis');?>
 		 </div>
 		 <hr>
 		<?php

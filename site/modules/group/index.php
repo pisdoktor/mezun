@@ -110,7 +110,9 @@ function changeMod($groupid, $userid, $status) {
 	$dbase->query();
 	
 	$data['success'] = true;
-	$data['message'] = $status ? '<a url="index2.php?option=site&bolum=group&task=getmod&groupid='.$groupid.'&userid='.$userid.'" class="btn btn-default btn-xs modsend moderator-'.$userid.'">Görevi Al</a>':'<a url="index2.php?option=site&bolum=group&task=setmod&groupid='.$groupid.'&userid='.$userid.'" class="btn btn-default btn-xs modsend moderator-'.$userid.'">Moderatör Yap</a>';
+	$data['url'] = $status ? 'index2.php?option=site&bolum=group&task=getmod&groupid='.$groupid.'&userid='.$userid : 'index2.php?option=site&bolum=group&task=setmod&groupid='.$groupid.'&userid='.$userid;
+	
+	$data['message'] = $status ? 'Görevi Al':'Moderatör Yap';
 	
 	$data['userid'] = $userid;
 	

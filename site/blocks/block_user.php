@@ -10,8 +10,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 	$pname = '<a href="index.php?option=site&bolum=profil&task=my">Profilini gör</a>';
 	
 	echo '<div class="row">';
-	echo '<div class="col-sm-3">'.$pimage.'</div>';
-	echo '<div class="col-sm-9">Merhaba, '.$my->name.'<br />'.$pname.'</div>';
+	echo '<div class="col-sm-4">'.$pimage.'</div>';
+	echo '<div class="col-sm-8">Merhaba, '.$my->name.'<br />'.$pname.'</div>';
 	echo '</div>';
 	
 	

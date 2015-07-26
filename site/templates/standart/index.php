@@ -28,20 +28,26 @@ $(document).on('focusin', function(e) {
 
 </head>
 <body>
+<!-- Container Başlangıç -->
 <div id="container">
 
+<!-- Header Başlangıç -->
 <div id="header">
 <div id="logo">
 <img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
 </div>
+<!-- Header Bitiş -->
 
+<!-- HeaderBar Başlangıç -->
 <div id="header-bar" class="clearfix">
 <div class="header">
 <?php mezunGlobalHelper::siteMenu();?> 
 </div>
 </div>
+<!-- HeaderBar Bitiş -->
 
+<!-- Content Başlangıç -->
 <div id="content" class="clearfix">
 <div class="row">
 <?php
@@ -68,11 +74,19 @@ if (CountBlocks('top')) { ?>
 </div>
 
 </div>
-</div><!-- content -->
+</div>
+<!-- Content Bitiş -->
 
+
+<!-- Footer Başlangıç -->
 <?php getFooter();?>
+<!-- Footer Bitiş -->
 
-</div><!-- container -->
+</div>
+<!-- Container Bitiş -->
+
+<!-- ScrollTop -->
 <a href="#" id="scroll-top"></a>
+<!-- ScrollTop -->
 </body>
 </html>

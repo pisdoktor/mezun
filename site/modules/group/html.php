@@ -26,7 +26,7 @@ class GroupHTML {
 		$addnewmember = ($group->isGroupMember() && $group->status && $other) ? '[ <a href="#" id="newmember">Yeni Üye Ekle</a> ]':'';
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading">GRUP : <?php echo $group->name;?> [<?php echo $status;?>]<small><?php echo $group->aciklama;?></small></div>
+		<div class="panel-heading">GRUP : <?php echo $group->name;?> [<?php echo $status;?>] - <small><?php echo $group->aciklama;?></small></div>
 		<div class="panel-body">
 		
 		<div class="row">
@@ -61,8 +61,11 @@ class GroupHTML {
 				.done(function(data) {
 					console.log(data);
 					$('.modsend').removeAttr('disabled');
+					
 					$('.modstyle-'+data['userid']).html(data['style']);
-					$('.moderator-'+data['userid']).replaceWith(data['message']);
+					
+					$('.moderator-'+data['userid']).attr("url", data['url']);
+					$('.moderator-'+data['userid']).html(data['message']);
 					
 				});
 				
@@ -265,7 +268,7 @@ class GroupHTML {
 		$deletelink = $row->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$row->id).'" class="btn btn-default btn-sm">Grubu Sil</a>':'';
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading">GRUP : <?php echo $row->name;?> [<?php echo $status;?>]<small><?php echo $row->aciklama;?></small></div>
+		<div class="panel-heading">GRUP : <?php echo $row->name;?> [<?php echo $status;?>] - <small><?php echo $row->aciklama;?></small></div>
 		<div class="panel-body">
 		
 			<div class="row">
@@ -440,7 +443,7 @@ class GroupHTML {
 		<div class="panel-heading">ÜYE GRUPLARI</div>
 		<div class="panel-body">
 		
-		<div class="form-group">
+		
 		<div class="row">
 		<?php
 		
@@ -452,7 +455,7 @@ class GroupHTML {
 			
 			$row->aciklama = mezunGlobalHelper::shortText($row->aciklama, 30);
 			?>
-			<div class="col-sm-3">
+			<div class="col-sm-4">
 			<div align="center">
 			<div class="row">
 			<a href="<?php echo sefLink('index.php?option=site&bolum=group&task=view&id='.$row->id);?>">
@@ -477,7 +480,7 @@ class GroupHTML {
 			
 		?>
 		</div>
-		</div>
+		
 		
 		</div>
 		<div class="panel-footer">

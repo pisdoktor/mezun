@@ -51,19 +51,28 @@ function sendAkisMsg() {
 		
 		$veri = '';
 		$veri.= '<div class="row">';
+		
 		$veri.= '<div class="col-sm-2">';
 		$veri.= '<a href="index.php?option=site&bolum=profil&task=show&id='.$my->id.'">';
 		$veri.= $image;
 		$veri.= '</a>';
 		$veri.= '</div>';
+		
 		$veri.= '<div class="col-sm-10">';
+		
 		$veri.= '<div class="row">';
 		$veri.= mezunAkisHelper::getAkisTime($row->tarih);
 		$veri.= '</div>';
+		
 		$veri.= '<div class="row">';
 		$veri.= $my->name.': '.$row->text;
 		$veri.= '</div>';
+		
 		$veri.= '</div>';
+		
+		$veri.= '</div>';
+		$veri.= '<div align="right">';
+		$veri.= '0 Beğeni';
 		$veri.= '</div>';
 		$veri.= '<hr>';
  
