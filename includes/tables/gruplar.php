@@ -26,25 +26,7 @@ class mezunGruplar extends mezunTable {
 		$this->_db->setQuery("SELECT name FROM #__users WHERE id=".$this->_db->Quote($this->creator));
 		$name = $this->_db->loadResult();
 		
-		return '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$this->creator).'">'.$name.'</a>';
-	}
-	
-	function totalMembers() {
-		$query = "SELECT COUNT(m.userid) AS totaluser FROM #__groups_members AS m "
-		. "\n LEFT JOIN #__groups AS g ON g.id=m.userid"
-		. "\n WHERE m.groupid=".$this->_db->Quote($this->id);
-		
-		$this->_db->setQuery($query);
-		return $this->_db->loadResult();
-	}
-	
-	function adminMembers() {
-		$query = "SELECT m.userid, u.name as adminUser FROM #__groups_members AS m "
-		. "\n LEFT JOIN #__users AS u ON u.id=m.userid "
-		. "\n WHERE m.groupid=".$this->_db->Quote($this->id)." AND m.isadmin=1 ORDER BY m.joindate DESC";
-		$this->_db->setQuery($query);
-		
-		return $this->_db->loadObjectList();
+	return '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$this->creator).'">'.$name.'</a>';
 	}
 	
 	public function canDeleteGroup() {

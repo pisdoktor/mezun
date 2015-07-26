@@ -41,7 +41,7 @@ class mezunAkisHTML {
 			});
 		});
 		</script>
-		<div class="row">
+
 		<div class="panel panel-danger">
 		<div class="panel-heading"></div>
 		<div class="panel-body">
@@ -53,7 +53,7 @@ class mezunAkisHTML {
 				<textarea rows="2" id="msgfield" maxlength="255" name="text" class="form-control" placeholder="Ne düşünüyorsun?" required></textarea>
 				<div align="right"><small><span id="charNum">255</span></small></div>
 				
-				<button name="submit" class="btn btn-default">Gönder</button>
+				<button name="submit" class="btn btn-default btn-sm">Gönder</button>
 				<input type="hidden" name="userid" value="<?php echo $my->id;?>" />
 				</form>
 				
@@ -65,7 +65,7 @@ class mezunAkisHTML {
 		<div class="scroll">
 		<?php
 		  foreach ($rows as $row) {
-			  $row->image = $row->image ? '<img src="'.SITEURL.'/images/profil/'.$row->image.'" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />':'<img src="'.SITEURL.'/images/profil/noimage.png" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />';
+			  $row->image = $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />';
 			  
 			  mezunAkisHelper::getRow($row);
 		  }
@@ -77,7 +77,7 @@ class mezunAkisHTML {
 		</div>
 		<div class="panel-footer"></div>
 		</div>
-		</div>
+
 		  <?php
 	}
 	

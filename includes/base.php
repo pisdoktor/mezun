@@ -824,7 +824,7 @@ function SortArrayObjects( &$a, $k, $sort_direction=1 ) {
 function NotAuth() {
 	global $my;
 
-	echo 'Yetkiniz yok!';
+	echo 'Uppss!!! Sanırım birşeyler yanlış gitti.';
 	if ($my->id < 1) {
 		echo "<br />" . 'Önce giriş yapın!';
 	}

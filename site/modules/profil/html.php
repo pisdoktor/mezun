@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-class Profile {
+class mezunProfilHTML {
 	static function editImage($photo, $width, $height, $type, $minWidth, $minHeight) {
 		
 		if ($width < $minWidth) {
@@ -60,30 +60,30 @@ class Profile {
 	
 	static function editProfile($row) {
 		?>
+		<script type="text/javascript">
+$(function(){
+	$('select[name=byili]').on('change', function(){
+		
+		$('select[name=myili]').children().each(function() {
+			
+			if ($(this).val() <= $('select[name=byili]').val()) {
+				$(this).prop('hidden',true);
+			} else {
+				$(this).prop('hidden',false);
+			}
+		});
+	});
+});
+</script>
 <form action="<?php echo sefLink('index.php?option=site&bolum=profil&task=save');?>" method="post" id="adminForm" role="form">
 <div class="panel panel-warning">
-		<div class="panel-heading"><h4>PROFİL DÜZENLE</h4></div>
+		<div class="panel-heading">PROFİL DÜZENLE</div>
 		<div class="panel-body">
 		
-		<div class="form-group">
-		<div class="row">
-		<label class="control-label col-sm-4" for="name">Adınız ve Soyadınız:</label>
-		<div class="col-sm-6">
-		<input name="name" id="name" type="text" class="form-control" value="<?php echo $row->name;?>" required />
-		</div>
-		</div>
-		</div>
+		<fieldset>
+		<legend>Mesleki Bilgileriniz:</legend>
 		
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="work">Şuanda Çalıştığınız Kurum:</label>
-<div class="col-sm-6">
-<input name="work" id="work" type="text" class="form-control" value="<?php echo $row->work;?>" required />
-</div>
-</div>
-</div>
-
-<div class="form-group">
+		<div class="form-group">
 <div class="row">
 <label class="control-label col-sm-4" for="work">Branşınız:</label>
 <div class="col-sm-4">
@@ -98,33 +98,6 @@ class Profile {
 <label class="control-label col-sm-4" for="work">Ünvanınız:</label>
 <div class="col-sm-4">
 <?php echo $row->selectUnvan();?>
-</div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="sehir">Yaşadığınız Şehir:</label>
-<div class="col-sm-3">
-<?php echo $row->selectSehir('sehir');?>
-</div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="phone">Telefon Numaranız:</label>
-<div class="col-sm-3">
-<input name="phone" id="phone" type="text" class="form-control bfh-phone" value="<?php echo $row->phone;?>" data-format="d (ddd) ddd dd dd" required />
-</div>
-</div>
-</div>
-
-<div class="form-group">
-<div class="row">
-<label class="control-label col-sm-4" for="okulno">Okul Numaranız:</label>
-<div class="col-sm-4">
-<input name="okulno" id="okulno" type="text" class="form-control" value="<?php echo $row->okulno;?>" />
 </div>
 </div>
 </div>
@@ -149,6 +122,58 @@ class Profile {
 
 <div class="form-group">
 <div class="row">
+<label class="control-label col-sm-4" for="work">Şuanda Çalıştığınız Kurum:</label>
+<div class="col-sm-6">
+<input name="work" id="work" type="text" class="form-control" value="<?php echo $row->work;?>" required />
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="okulno">Okul Numaranız:</label>
+<div class="col-sm-4">
+<input name="okulno" id="okulno" type="text" class="form-control" value="<?php echo $row->okulno;?>" />
+</div>
+</div>
+</div>
+		
+		</fieldset>
+		
+		<fieldset>
+		<legend>Kişisel Bilgileriniz:</legend>
+		
+		<div class="form-group">
+		<div class="row">
+		<label class="control-label col-sm-4" for="name">Adınız ve Soyadınız:</label>
+		<div class="col-sm-6">
+		<input name="name" id="name" type="text" class="form-control" value="<?php echo $row->name;?>" required />
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="sehir">Yaşadığınız Şehir:</label>
+<div class="col-sm-3">
+<?php echo $row->selectSehir('sehir');?>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="phone">Telefon Numaranız:</label>
+<div class="col-sm-3">
+<input name="phone" id="phone" type="text" class="form-control bfh-phone" value="<?php echo $row->phone;?>" data-format="d (ddd) ddd dd dd" placeholder="0 (000) 000 00 00 şeklinde" required />
+</div>
+</div>
+</div>
+		
+		</fieldset>
+		
+<div class="form-group">
+<div class="row">
 <div class="col-sm-12">
 <button type="submit" class="btn btn-primary" />PROFİLİMİ GÜNCELLE!</button>
 </div>
@@ -159,57 +184,70 @@ class Profile {
 </form>
 		<?php
 	}
-	static function getProfile($row, $edit, $msg, $istem, $show) {
+	
+	static function getProfile($row, $canEdit, $canSendMsg, $canSendIstem, $canShow) {
 		
 		$image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
+		
 		$cinsiyet = $row->cinsiyet == 1 ? 'Erkek' : 'Bayan';
-		$editlink = $edit ? '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=edit').'">Profili Düzenle</a>' : '';
-		$passlink = $edit ? '<a class="btn btn-default" href="#" id="changepass">Parola Değiştir</a>' : '';
-		$editimage = $edit ? '<a class="btn btn-default" href="#" id="changeimg">Resim Ekle</a>' : '';
-		$deleteimage = ($edit && $row->image) ? '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=deleteimage').'">Resmi Sil</a>' : ''; 
-		$cropimage = ($edit && $row->image) ? '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=editimage').'">Resmi Düzenle</a>' : ''; 
-		$msglink = $msg ? '<a class="btn btn-default" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
-		$istemlink = !$istem ? '' : '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=istek&task=send&id='.$row->id).'">Arkadaşlık İsteği Gönder</a>';		
+		
+		$editlink = $canEdit ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=edit').'">Profili Düzenle</a>' : '';
+		
+		$passlink = $canEdit ? '<a class="btn btn-default btn-sm" href="#" id="changepass">Parola Değiştir</a>' : '';
+		
+		$editimage = $canEdit ? '<a class="btn btn-default btn-sm" href="#" id="changeimg">Resim Ekle</a>' : '';
+		
+		$deleteimage = ($canEdit && $row->image) ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=deleteimage').'">Resmi Sil</a>' : ''; 
+		
+		$cropimage = ($canEdit && $row->image) ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=editimage').'">Resmi Düzenle</a>' : '';
+		 
+		$msglink = $canSendMsg ? '<a class="btn btn-default btn-sm" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
+		
+		$deletefriend = $canSendMsg ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=arkadas&task=delete&id='.$row->id).'">Arkadaşlıktan Çıkar</a>':'';
+		
+		$istemlink = $canSendIstem ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=istek&task=send&id='.$row->id).'">Arkadaşlık İsteği Gönder</a>' : '';		
 		
 		
-		$head = $edit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
+		$head = $canEdit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
 		<div class="panel panel-warning">
-		<div class="panel-heading"><h4><?php echo $head;?></h4>
-		</div>
+		<div class="panel-heading"><?php echo $head;?></div>
 		<div class="panel-body"> 
 		
 		<div class="row">
 		<div class="col-sm-5">
 		
-
-		
-		<div class="figure">
-		
+		<div align="center">
+		<div class="row">
 		<img src="<?php echo $image;?>" class="img-thumbnail" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
+		</div>
+		<?php if (!$canEdit) {?>
+		<div align="center">
+		<div>
+		<?php mezunOnlineHelper::isOnline($row->id);?>
+		</div>
+		<div>
+		<small><?php echo mezunArkadasHelper::ortakArkadasCount($row->id, true);?> ortak arkadaş</small>
+		</div>
+		</div>
+		<?php }?>    
+		<hr>
 		
-		<div class="figcaption">
-		<div align="center"><?php echo $editimage;?></div>
-		<div align="center"><?php echo $cropimage;?></div>
-		<div align="center"><?php echo $deleteimage;?></div>
-		<div align="center"><?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?></div>
+		<div align="center">
+		<div class="btn btn-group-vertical">
+		<?php echo $editimage;?> <?php echo $cropimage;?> <?php echo $deleteimage;?> <?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?> <?php echo $deletefriend;?>
+		</div>
 		</div>
 		
+		
 		</div>
 		
-		<?php if (!$edit) {?>
-		<div align="center"><?php mezunOnlineHelper::isOnline($row->id);?></div>
-		<?php }?>	
 		</div>
 		
 		<div class="col-sm-7">
 		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-5"><strong>Adı, Soyadı:</strong></div>
-		<div class="col-sm-7"><?php echo $row->name;?></div>
-		</div>
-		</div>
+		<fieldset>
+		<legend>Mesleki Bilgiler:</legend>
 		
 		<div class="form-group">
 		<div class="row">
@@ -227,13 +265,6 @@ class Profile {
 		
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-5"><strong>Kullanıcı Adı:</strong></div>
-		<div class="col-sm-7"><?php echo $row->username;?></div>
-		</div>
-		</div>
-		
-		<div class="form-group">
-		<div class="row">
 		<div class="col-sm-5"><strong>Fakülteye Girişi:</strong></div>
 		<div class="col-sm-7"><?php echo $row->byili;?></div>
 		</div>
@@ -246,21 +277,37 @@ class Profile {
 		</div>
 		</div>
 		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-5"><strong>Siteye Kayıt Tarihi:</strong></div>
-		<div class="col-sm-7"><?php echo mezunGlobalHelper::timeformat($row->registerDate, true, true);?></div>
-		</div>
-		</div>
-		
+		<?php if ($row->okulno) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Okul Numarası:</strong></div>
 		<div class="col-sm-7"><?php echo $row->okulno;?></div>
 		</div>
 		</div>
+		<?php } ?>
 		
-		<?php if ($show) {?>
+		<?php if ($canShow && $row->work) {?>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Çalıştığı Kurum:</strong></div>
+		<div class="col-sm-7"><?php echo $row->work;?></div>
+		</div>
+		</div>
+		<?php } ?>
+		
+		</fieldset>
+		
+		<fieldset>
+		<legend>Kişisel Bilgiler:</legend>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Adı, Soyadı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->name;?></div>
+		</div>
+		</div>
+		
+		<?php if ($canShow) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Cinsiyet:</strong></div>
@@ -269,7 +316,7 @@ class Profile {
 		</div>
 		<?php } ?>
 		
-		<?php if ($show) {?>
+		<?php if ($canShow) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Doğum Tarihi:</strong></div>
@@ -278,7 +325,7 @@ class Profile {
 		</div>
 		<?php } ?>
 		
-		<?php if ($show) {?>
+		<?php if ($canShow) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Doğum Yeri:</strong></div>
@@ -287,7 +334,7 @@ class Profile {
 		</div>
 		<?php } ?>
 		
-		<?php if ($show) {?>
+		<?php if ($canShow) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Yaşadığı Şehir:</strong></div>
@@ -296,7 +343,7 @@ class Profile {
 		</div>
 		<?php } ?>
 		
-		<?php if ($show) {?>
+		<?php if ($canShow && $row->phone) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Telefon Numarası:</strong></div>
@@ -305,7 +352,27 @@ class Profile {
 		</div>
 		<?php } ?>
 		
-		<?php if ($show) {?>
+		
+		</fieldset>
+		
+		<fieldset>
+		<legend>Kullanıcı Bilgileri:</legend>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Kullanıcı Adı:</strong></div>
+		<div class="col-sm-7"><?php echo $row->username;?></div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5"><strong>Siteye Kayıt Tarihi:</strong></div>
+		<div class="col-sm-7"><?php echo mezunGlobalHelper::timeformat($row->registerDate, true, true);?></div>
+		</div>
+		</div>
+		
+		<?php if ($canShow) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Siteye Son Gelişi:</strong></div>
@@ -314,15 +381,8 @@ class Profile {
 		</div>
 		<?php } ?>
 		
-		<?php if ($show) {?>
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-5"><strong>Çalıştığı Kurum:</strong></div>
-		<div class="col-sm-7"><?php echo $row->work;?></div>
-		</div>
-		</div>
-		<?php } ?>
-			
+		</fieldset>
+		
 		</div>
 		
 		</div>

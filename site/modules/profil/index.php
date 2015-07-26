@@ -2,11 +2,11 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$id = intval(getParam($_REQUEST, 'id')); 
-
 include(dirname(__FILE__). '/html.php');
 
 mimport('helpers.modules.profil.helper');
+
+$id = intval(getParam($_REQUEST, 'id')); 
 
 switch($task) {
 	default:
@@ -19,6 +19,7 @@ switch($task) {
 	break;
 	
 	case 'show':
+	case 'view':
 	getProfile($id);
 	break;
 	
@@ -58,7 +59,9 @@ switch($task) {
 	CropandSave();
 	break;
 }
-
+/**
+* Profil resmi kırpma fonksiyonu
+*/
 function CropandSave() {
 	global $dbase, $my;
 	
@@ -126,7 +129,7 @@ function editImage() {
 	$minWidth = 200;
 	$minHeight = 200;
 	
-	Profile::editImage($photo, $width, $height, $type, $minWidth, $minHeight);	
+	mezunProfilHTML::editImage($photo, $width, $height, $type, $minWidth, $minHeight);	
 }
 /**
 * Profil resmi silme fonksiyonu
@@ -276,7 +279,7 @@ function editProfile() {
 	
 	$user = new mezunProfilHelper($row);
 	
-	Profile::editProfile($row);
+	mezunProfilHTML::editProfile($row);
 	
 }
 /**
@@ -308,55 +311,58 @@ function saveProfile() {
 /**
 * Profil gösterimi
 * @param mixed $id gösterim yapılacak kullanıcının id si
-* Mesaj ve arkadaşlık isteği gönderimi konusunda daha iyi bir kodlama yapılmalı!
 */
 function getProfile($id) {
 	global $dbase, $my;
 	
-	mimport('tables.istekler');
 	mimport('helpers.modules.online.helper');
 	mimport('helpers.modules.arkadas.helper');
-	mimport('.helpers.modules.istek.helper');
+	mimport('helpers.modules.istek.helper');
 	
-	$edit = false;
+	$canEdit = false;
+	$canShow = false;
 	$user = new mezunUsers($dbase);
+	
 	if ($id) {
 		
 	if ($id == $my->id) {
-		$edit = true;
+		$canEdit = true;
+		$canShow = true;
+		
 		$user->load($my->id);
 	} else {
 		$user->load($id);
 		
-		if (!$user->activated) {
+	if (!$user->activated) {
 		NotAuth();
-		exit();
+		return;
 	}
 	}
 	
 	if (($my->id == $user->id)) {
-		$msg = false;
-		$istem = false;
+		$canSendMsg = false;
+		$canSendIstem = false;
 	} else {
 		
+	//Kullanıcı ile arkadaş ise
 	if (mezunArkadasHelper::checkArkadaslik($user->id)) {
-		$istem = false;
-		$msg = true;
+		$canSendIstem = false;
+		$canSendMsg   = true;
+		$canShow      = true;
+	//Kullanıcı arada bir istek var ise
 	} else if (mezunIstekHelper::checkIstek($user->id)) {
-		$istem = false;
-		$msg = false;
+		$canSendIstem = false;
+		$canSendMsg   = false;
+		$canShow      = false;
+	//Ne bir istek var ne de bir arkadaşlık
 	} else if ((!mezunArkadasHelper::checkArkadaslik($user->id)) && (!mezunIstekHelper::checkIstek($user->id))) {
-		$istem = true;
-		$msg = false;
+		$canSendIstem = true;
+		$canSendMsg   = false;
+		$canShow      = false;
 	}
 	}
 	
-	if ($my->id == $user->id || mezunArkadasHelper::checkArkadaslik($user->id)) {
-		$show = true;
-	} else {
-		$show = false;
-	}
-	
+	//Kullanıcı ile ilgili tüm bilgileri alalım
 	$query = "SELECT u.*, s.name as sehiradi, ss.name as dogumyeri, b.name AS brans FROM #__users AS u"
 	. "\n LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
 	. "\n LEFT JOIN #__sehirler AS ss ON ss.id=u.dogumyeri"
@@ -366,15 +372,15 @@ function getProfile($id) {
 	
 	$dbase->loadObject($row);
 	
-	} else {
-		NotAuth();
-		exit();	
-	}
-	
 	if (!$row) {
 		NotAuth();
-		exit();
+		return;
 	}
-		
-	Profile::getProfile($row, $edit, $msg, $istem, $show);
+	
+	} else {
+		NotAuth();
+		return;	
+	}
+	
+	mezunProfilHTML::getProfile($row, $canEdit, $canSendMsg, $canSendIstem, $canShow);
 }

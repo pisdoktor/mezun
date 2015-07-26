@@ -23,12 +23,38 @@ mimport('helpers.modules.istek.helper');
 				'id' => $row->id,
 				'name' => $row->name,
 				'profil_href' => 'index.php?option=site&bolum=profil&task=show&id='.$row->id,
-				'istek_href' => 'index.php?option=site&bolum=istek&task=send&id='.$row->id,
-				'image' => $row->image ? '<img src="'.SITEURL.'/images/profil/'.$row->image.'" width="50" height="50" alt="'.$row->name.'" title="'.$row->name.'" />':'<img src="'.SITEURL.'/images/profil/noimage.png" width="50" height="50" alt="'.$row->name.'" title="'.$row->name.'" />'
+				'istek_href' => 'index2.php?option=site&bolum=istek&task=sendx&id='.$row->id,
+				'image' => $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" width="50" height="50" alt="'.$row->name.'" title="'.$row->name.'" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" width="50" height="50" alt="'.$row->name.'" title="'.$row->name.'" />'
 				);
 			}
 		}
 	}	
+		?>
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$('.isteksend').click(function (event){
+				
+				$('.isteksend').attr('disabled', true);
+				
+				$.ajax({
+					type    : 'POST',
+					url     : $(this).attr('url'),
+					dataType: 'json',
+					encode  : true
+				})
+						
+				.done(function(data) {
+					console.log(data);
+					$('.isteksend').removeAttr('disabled');
+					$('.userlink-'+data).empty();
+					$('.user-'+data).html('<small>İstek gönderildi</small>');
+				});
+				
+				event.preventDefault();
+			});
+		});
+		</script>
+		<?php
 		$i = 0;		
 		foreach ($users as $user) {
 		?>
@@ -53,15 +79,13 @@ mimport('helpers.modules.istek.helper');
 					
 				</div>
 				
-				<div class="col-sm-5">
-					<a href="<?php echo $user['istek_href'];?>" class="btn btn-default btn-xs">
+				<div class="col-sm-5 user-<?php echo $user['id'];?>">
+					<div url="<?php echo $user['istek_href'];?>" href="#" class="btn btn-default btn-xs isteksend userlink-<?php echo $user['id'];?>">
 					Arkadaşı ekle
-					</a>
-				
+					</div>
 				</div>
 				
-			 </div>
-			 
+			 </div> 
 		<?php
 		if ($i<count($users)-1) {
 			echo '<hr>';

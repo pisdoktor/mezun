@@ -55,8 +55,19 @@ function saveBlock() {
 	$row->store();
 	$row->updateOrder('position='.$row->position);
 	
-	Redirect('index.php?option=admin&bolum=blocks');
+	//block_menu
+	$block_menus = getParam($_REQUEST, 'block_menus');
 	
+	$dbase->setQuery("DELETE FROM #__blocks_menu WHERE blockid=".$row->id);
+	$dbase->query();
+	
+	
+	foreach($block_menus as $block_menu) {
+		$dbase->setQuery("INSERT INTO #__blocks_menu (`blockid`, `bolum`) VALUES ('".$row->id."', '".$block_menu."')");
+		$dbase->query();
+	}
+	
+	Redirect('index.php?option=admin&bolum=blocks');
 }
 
 function editBlock($cid) {
@@ -64,6 +75,10 @@ function editBlock($cid) {
 	
 	$row = new mezunBlocks($dbase);
 	$row->load($cid);
+	
+	//block_menu
+	$dbase->setQuery("SELECT bolum AS value FROM #__blocks_menu WHERE blockid=".$row->id);
+	$row->block_menus = $dbase->loadObjectList();
 	
 	BlocksHTML::editBlock($row);
 }

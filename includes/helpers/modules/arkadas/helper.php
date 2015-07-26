@@ -81,7 +81,9 @@ class mezunArkadasHelper {
 		$myrows = mezunArkadasHelper::getMyFriends();
 		$myfriends = implode(',', $myrows);
 		
-		//şimdi de  tanıyor olabileceğimiz üyeleri bulalım. ama içerisinde arkadaşlarımız olmasın!
+		$where = count($myrows) ? ' AND u.id NOT IN ('.$myfriends.')':'';
+		
+		//şimdi de  tanıyor olabileceğimiz üyeleri bulalım. ama içerisinde arkadaşlarımız olmasın (eğer arkadaş varsa!)
 		$query = "SELECT u.id, u.name, u.username, u.image, u.registerDate, u.lastvisit, s.name AS sehir "
 		. " FROM #__users AS u"
 		. " LEFT JOIN #__sehirler AS s ON s.id=u.sehir"
@@ -91,7 +93,11 @@ class mezunArkadasHelper {
 		. " OR u.sehir=".$dbase->Quote($my->sehirid)
 		. " OR u.dogumyeri=".$dbase->Quote($my->dogumyeriid)
 		. " OR u.brans=".$dbase->Quote($my->brans)
-		. ") AND u.id NOT IN (".$myfriends.") AND u.id NOT IN (".$my->id.") ORDER BY RAND() LIMIT 5";
+		. ")" 
+		. $where
+		. " AND u.id NOT IN (".$my->id.") ORDER BY RAND() LIMIT 10"
+		;
+		
 		$dbase->setQuery($query);
 		
 		$rows = $dbase->loadObjectList();

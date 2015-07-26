@@ -7,7 +7,7 @@ class ForumHTML {
 	static function newMessage($topic, $my, $topic_info, $board_info) {
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4><small><?php echo $topic_info->subject;?> - Yeni Mesaj</small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?><small><?php echo $topic_info->subject;?> - Yeni Mesaj</small></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=forum&task=savemessage" method="post" role="form">
@@ -70,7 +70,7 @@ class ForumHTML {
 			}
 		</script>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4><small>Yeni Başlık</small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?><small>Yeni Başlık</small></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" name="form" role="form">
@@ -152,7 +152,7 @@ class ForumHTML {
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4> <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
 		<?php if (!$topic_info->locked) {?>
@@ -235,7 +235,7 @@ class ForumHTML {
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo mezunForumHelper::forumBreadCrumb($board_info);?></h4><small><?php echo $board_info->aciklama;?></small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?><small><?php echo $board_info->aciklama;?></small></div>
 		<div class="panel-body">
 		
 		<?php
@@ -413,7 +413,7 @@ class ForumHTML {
 	static function BoardIndex($context) {
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4>FORUM</h4></div>
+		<div class="panel-heading">FORUM</div>
 		<div class="panel-body">
 		<table border="0" width="100%" class="bordercolor">
 			

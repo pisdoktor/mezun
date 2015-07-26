@@ -49,6 +49,15 @@ class BlocksHTML {
 </div>
 </div>
 
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="ordering">Gösterim Yeri:</label>
+<div class="col-sm-3">
+<?php echo mezunAdminMenuHTML::BlockMenu($row);?>
+</div>
+</div>
+</div>
+
 
 
 <input type="hidden" name="option" value="admin" />

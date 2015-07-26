@@ -8,7 +8,7 @@ class Istek {
 		$head = $type ? 'GİDEN ARKADAŞLIK İSTEKLERİ' : 'GELEN ARKADAŞLIK İSTEKLERİ';
 		?>
 	<div class="panel panel-default">
-		<div class="panel-heading"><h4><?php echo $head;?></h4></div>
+		<div class="panel-heading"><?php echo $head;?></div>
 		<div class="panel-body">
 <?php
 	if (!$rows) {

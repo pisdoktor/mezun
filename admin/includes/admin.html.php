@@ -175,4 +175,18 @@ class mezunAdminMenuHTML {
 		}
 		return $ordering;
 	}
+	
+	static function BlockMenu($row) {
+		global $dbase;
+		
+		//bölümleri alalım
+		$dbase->setQuery("SELECT name FROM #__modules");
+		$modules = $dbase->loadObjectList();
+		
+		foreach($modules as $module) {
+			$m[] = mezunHTML::makeOption($module->name, $module->name);
+		}
+		
+		return $list['modules'] = mezunHTML::selectList($m, 'block_menus[]', 'multiple size="10"', 'value', 'text', $row->block_menus);
+	}
 }

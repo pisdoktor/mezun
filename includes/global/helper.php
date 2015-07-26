@@ -127,7 +127,7 @@ class mezunGlobalHelper {
 		
 		echo $prepend;
 		
-		echo "\n<li class=\"active\">\n<a href=\"".SITEURL."/index.php\"><span>Anasayfa</span></a>\n</li>\n";
+		echo "\n<li>\n<a href=\"".SITEURL."/index.php\"><span>Anasayfa</span></a>\n</li>\n";
 		
 		mezunGlobalHelper::createMenu( 0, array(), $children, 9 );
 		

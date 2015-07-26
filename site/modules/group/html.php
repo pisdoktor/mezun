@@ -7,31 +7,32 @@ class GroupHTML {
 	static function showGroupMembers($group, $rows, $pageNav, $list, $other) {
 		$status = $group->status ? 'KAPALI GRUP':'AÇIK GRUP';
 		
-		$groupimage = $group->image ? '<img src="'.SITEURL.'/images/group/'.$group->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
+		$groupimage = $group->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/group/'.$group->image.'" width="55" height="55" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
 		
 		if ($group->isGroupMember()) {
-			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=leave&id='.$group->id).'" class="btn btn-primary">Gruptan Ayrıl</a>';
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=leave&id='.$group->id).'" class="btn btn-default btn-sm">Gruptan Ayrıl</a>';
 		} else {
 			if ($group->canJoinGroup()) {
-			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=join&id='.$group->id).'" class="btn btn-primary">Gruba Katıl</a>';    
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=join&id='.$group->id).'" class="btn btn-default btn-sm">Gruba Katıl</a>';    
 			} else {
 				$joinlink = 'Grup kapalı ve siz katılamazsınız';
 			}
 		}
 		
-		$editlink = $group->canEditGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=edit&id='.$group->id).'" class="btn btn-info">Grubu Düzenle</a>':'';
-		$deletelink = $group->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$group->id).'" class="btn btn-warning">Grubu Sil</a>':'';
+		$editlink = $group->canEditGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=edit&id='.$group->id).'" class="btn btn-default btn-sm">Grubu Düzenle</a>':'';
+		
+		$deletelink = $group->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$group->id).'" class="btn btn-default btn-sm">Grubu Sil</a>':'';
 		
 		$addnewmember = ($group->isGroupMember() && $group->status && $other) ? '[ <a href="#" id="newmember">Yeni Üye Ekle</a> ]':'';
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading"><h4>GRUP : <?php echo $group->name;?> [<?php echo $status;?>]</h4><small><?php echo $group->aciklama;?></small></div>
+		<div class="panel-heading">GRUP : <?php echo $group->name;?> [<?php echo $status;?>]<small><?php echo $group->aciklama;?></small></div>
 		<div class="panel-body">
 		
 		<div class="row">
 			<div class="col-sm-7">
 			<div class="panel panel-warning">
-		<div class="panel-heading"><h4>Grup Üyeleri <?php echo $addnewmember;?></h4></div>
+		<div class="panel-heading">Grup Üyeleri <?php echo $addnewmember;?></div>
 		<div class="panel-body">
 		
 		<div class="form-group">
@@ -44,18 +45,50 @@ class GroupHTML {
 		</div>
 		</div>
 		</div>
-		
+		<script type="text/javascript">
+		$(document).ready(function() {
+			$('.modsend').click(function (event){
+				
+				$('.modsend').attr('disabled', true);
+				
+				$.ajax({
+					type    : 'POST',
+					url     : $(this).attr('url'),
+					dataType: 'json',
+					encode  : true
+				})
+						
+				.done(function(data) {
+					console.log(data);
+					$('.modsend').removeAttr('disabled');
+					$('.modstyle-'+data['userid']).html(data['style']);
+					$('.moderator-'+data['userid']).replaceWith(data['message']);
+					
+				});
+				
+				event.preventDefault();
+			});
+		});
+		</script>
 		<?php
 		  for($i=0;$i<count($rows);$i++) {
 			  $row = $rows[$i];
-			  $creator = $row->userid == $row->creatorid ? '<small style="color:red">(Kurucu Üye)</small>':'';
-			  $admin = $row->isadmin ? '<small style="color:blue;">Grup Yöneticisi</small>': '';
+			  $creator = $row->userid == $row->creatorid ? '<small style="color:red">(Kurucu)</small>':'';
+			  
+			  $admin = $row->isadmin ? '<small style="color:blue;" class="modstyle-'.$row->userid.'">Grup Moderatörü</small>': '<small style="color:blue;" class="modstyle-'.$row->userid.'"></small>';
+			  
 			  $row->name = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=view&id='.$row->userid).'">'.$row->name.'</a>';	
+			  if ($group->canEditGroup() && $row->userid !== $row->creatorid) {
+				$moderatorlink = $row->isadmin ? '<a url="index2.php?option=site&bolum=group&task=getmod&groupid='.$group->id.'&userid='.$row->userid.'" class="btn btn-default btn-xs modsend moderator-'.$row->userid.'">Görevi Al</a>':'<a url="index2.php?option=site&bolum=group&task=setmod&groupid='.$group->id.'&userid='.$row->userid.'" class="btn btn-default btn-xs modsend moderator-'.$row->userid.'">Moderatör Yap</a>';    
+			  } else {
+				$moderatorlink = '';
+			  }
+			  
 			  ?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-7">
-		<?php echo $row->name;?> <?php echo $creator;?> <?php echo $admin;?>
+		<?php echo $moderatorlink;?> <?php echo $row->name;?> <?php echo $creator;?> <?php echo $admin;?>
 		</div>
 		<div class="col-sm-5">
 		<?php echo mezunGlobalHelper::timeformat($row->joindate, true, true);?>
@@ -64,12 +97,12 @@ class GroupHTML {
 		</div>
 		<?php  
 		  }
-		  ?>
-		  <div align="center">
-		  <?php  echo $pageNav->writePagesLinks('index.php?option=site&bolum=group&task=showmembers&id='.$group->id);  
-		?>
+		  ?>		
 		</div>
-		
+		<div class="panel-footer">
+		<div align="center">
+		  <?php  echo $pageNav->writePagesLinks('index.php?option=site&bolum=group&task=showmembers&id='.$group->id);?>
+		  </div>
 		</div>
 		</div>
 		
@@ -77,7 +110,7 @@ class GroupHTML {
 		
 		<div class="col-sm-5">
 			<div class="panel panel-default">
-		<div class="panel-heading"><h4>Grup Bilgisi</h4></div>
+		<div class="panel-heading">Grup Bilgisi</div>
 		<div class="panel-body">
 		
 		<div class="form-group">
@@ -117,20 +150,15 @@ class GroupHTML {
 		</div>        
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-5">Grup Moderatörleri:</div>
+		<div class="col-sm-5">Moderatörler:</div>
 		<div class="col-sm-7"><?php echo $group->admins;?></div>
 		</div>
 		</div>
+
 		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-12" align="center"><?php echo $joinlink;?></div>
-		</div>
-		</div>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-12" align="center"><?php echo $editlink;?> <?php echo $deletelink;?></div>
+		<div class="form-group" align="center">
+		<div class="btn-group-vertical">
+		<?php echo $joinlink;?><?php echo $editlink;?> <?php echo $deletelink;?>
 		</div>
 		</div>
 		
@@ -160,7 +188,7 @@ class GroupHTML {
 		$groupimage = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'';
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading"><h4>GRUP : <?php echo $row->name;?> <?php echo $row->id ? 'DÜZENLE':'YENİ';?></h4></div>
+		<div class="panel-heading">GRUP : <?php echo $row->name;?> <?php echo $row->id ? 'DÜZENLE':'YENİ';?></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=group&task=save" role="form" method="post" enctype="multipart/form-data">
@@ -220,29 +248,30 @@ class GroupHTML {
 	static function viewGroup($row, $msgs) {
 		$status = $row->status ? 'KAPALI GRUP':'AÇIK GRUP';
 		
-		$groupimage = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
+		$groupimage = $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
 		
 		if ($row->isGroupMember()) {
-			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=leave&id='.$row->id).'" class="btn btn-primary">Gruptan Ayrıl</a>';
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=leave&id='.$row->id).'" class="btn btn-default btn-sm">Gruptan Ayrıl</a>';
 		} else {
 			if ($row->canJoinGroup()) {
-			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=join&id='.$row->id).'" class="btn btn-primary">Gruba Katıl</a>';    
+			$joinlink = '<a href="'.sefLink('index.php?option=site&bolum=group&task=join&id='.$row->id).'" class="btn btn-default btn-sm">Gruba Katıl</a>';    
 			} else {
 				$joinlink = 'Grup kapalı ve siz katılamazsınız';
 			}
 		}
 		
-		$editlink = $row->canEditGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=edit&id='.$row->id).'" class="btn btn-info">Grubu Düzenle</a>':'';
-		$deletelink = $row->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$row->id).'" class="btn btn-warning">Grubu Sil</a>':'';
+		$editlink = $row->canEditGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=edit&id='.$row->id).'" class="btn btn-default btn-sm">Grubu Düzenle</a>':'';
+		
+		$deletelink = $row->canDeleteGroup() ? '<a href="'.sefLink('index.php?option=site&bolum=group&task=delete&id='.$row->id).'" class="btn btn-default btn-sm">Grubu Sil</a>':'';
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading"><h4>GRUP : <?php echo $row->name;?> [<?php echo $status;?>]</h4><small><?php echo $row->aciklama;?></small></div>
+		<div class="panel-heading">GRUP : <?php echo $row->name;?> [<?php echo $status;?>]<small><?php echo $row->aciklama;?></small></div>
 		<div class="panel-body">
 		
 			<div class="row">
 			<div class="col-sm-7">
 			<div class="panel panel-warning">
-		<div class="panel-heading"><h4>Grup Mesajları</h4></div>
+		<div class="panel-heading">Grup Mesajları</div>
 		<div class="panel-body">
 		<?php
 			if (!$row->canViewGroup() && !$row->canJoinGroup()) {
@@ -265,6 +294,8 @@ class GroupHTML {
 							'groupid' : $('input[name=groupid]').val()
 						};
 						
+						$('button[name=submit]').attr("disabled", "disabled");
+						
 						$.ajax({
 							type : 'POST',
 							url  : 'index2.php?option=site&bolum=group&task=send',
@@ -278,7 +309,7 @@ class GroupHTML {
 							$('#msgfield').val('');
 							$('#charNum').html('255');
 							$('#group-messages').html(data);
-							
+							$('button[name=submit]').removeAttr("disabled");
 						});
 						
 						event.preventDefault();
@@ -290,7 +321,7 @@ class GroupHTML {
 				<textarea rows="2" id="msgfield" maxlength="255" name="text" class="form-control" placeholder="Mesajınızı yazın" required></textarea>
 				<div align="right"><small><span id="charNum">255</span></small></div>
 				
-				<button name="submit" class="btn btn-default">Gönder</button>
+				<button name="submit" class="btn btn-default btn-sm">Gönder</button>
 				<input type="hidden" name="groupid" value="<?php echo $row->id;?>" />
 				</form>
 				
@@ -342,7 +373,7 @@ class GroupHTML {
 			</div>
 			<div class="col-sm-5">
 			<div class="panel panel-default">
-		<div class="panel-heading"><h4>Grup Bilgisi</h4></div>
+		<div class="panel-heading">Grup Bilgisi</div>
 		<div class="panel-body">
 		
 		<div class="form-group">
@@ -382,20 +413,14 @@ class GroupHTML {
 		</div>		
 		<div class="form-group">
 		<div class="row">
-		<div class="col-sm-5">Grup Moderatörleri:</div>
+		<div class="col-sm-5">Moderatörler:</div>
 		<div class="col-sm-7"><?php echo $row->admins;?></div>
 		</div>
 		</div>
 		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-12" align="center"><?php echo $joinlink;?></div>
-		</div>
-		</div>
-		
-		<div class="form-group">
-		<div class="row">
-		<div class="col-sm-12" align="center"><?php echo $editlink;?> <?php echo $deletelink;?></div>
+		<div class="form-group" align="center">
+		<div class="btn-group-vertical">
+		<?php echo $joinlink;?> <?php echo $editlink;?> <?php echo $deletelink;?>
 		</div>
 		</div>
 		
@@ -412,7 +437,7 @@ class GroupHTML {
 	static function listGroups($rows, $pageNav) {
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading"><h4>ÜYE GRUPLARI</h4></div>
+		<div class="panel-heading">ÜYE GRUPLARI</div>
 		<div class="panel-body">
 		
 		<div class="form-group">
@@ -420,8 +445,11 @@ class GroupHTML {
 		<?php
 		
 		foreach ($rows as $row) {
-			$row->image = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
+			
+			$row->image = $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
+			
 			$row->name = mezunGlobalHelper::shortText($row->name, 20);
+			
 			$row->aciklama = mezunGlobalHelper::shortText($row->aciklama, 30);
 			?>
 			<div class="col-sm-3">
@@ -469,7 +497,7 @@ class GroupHTML {
 	static function getMyGroups($rows, $pageNav) {
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading"><h4>GRUPLARIM</h4></div>
+		<div class="panel-heading">GRUPLARIM</div>
 		<div class="panel-body">
 		
 		<div class="form-group">
@@ -477,9 +505,14 @@ class GroupHTML {
 		<?php
 		
 		foreach ($rows as $row) {
-			$row->image = $row->image ? '<img src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
+			$row->totaluser = mezunGroupHelper::getGroupUsers($row->id, true);
+			
+			$row->image = $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/group/'.$row->image.'" width="55" height="55" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/group/group.jpg" width="55" height="55" />';
+			
 			$row->name = mezunGlobalHelper::shortText($row->name, 20);
+			
 			$row->aciklama = mezunGlobalHelper::shortText($row->aciklama, 30);
+			
 			?>
 			<div class="col-sm-3">
 			<div align="center">

@@ -5,8 +5,9 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Arkadas {
 	static function getList($rows, $pageNav) {
 		?>
+
 		<div class="panel panel-default">
-		<div class="panel-heading"><h4>ARKADAŞLARIM</h4></div>
+		<div class="panel-heading">ARKADAŞLARIM</div>
 		<div class="panel-body">
 		<?php
 		if (!$rows) {
@@ -27,29 +28,47 @@ for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
 $image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
-$link = '<a class="btn btn-default" href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$row->id).'">Profili Göster</a>';
-$delfriend = '<a class="btn btn-warning" href="'.sefLink('index.php?option=site&bolum=arkadas&task=delete&id='.$row->id).'">Arkadaşlıktan Çıkar</a>';
+
+$delfriend = '<a class="btn btn-default btn-xs" href="'.sefLink('index.php?option=site&bolum=arkadas&task=delete&id='.$row->id).'">Arkadaşlıktan Çıkar</a>';
+
 $cinsiyet = $row->cinsiyet == 1 ? 'Erkek':'Bayan';
+
 ?>
 <div class="row">
 <div class="col-sm-3">
 <div align="center">
-<div class="row">
-<div class="figure"> 
-<img src="<?php echo $image;?>" class="img-thumbnail profil-image" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
-<div class="figcaption"><?php echo $link;?><br /><br /> <?php echo $delfriend;?></div>
+<a href="index.php?option=site&bolum=profil&task=show&id=<?php echo $row->id;?>">
+<img src="<?php echo $image;?>" class="img-thumbnail profil-image" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="100" height="100" />
+</a>
+</div>
+<div align="center">
+<?php mezunOnlineHelper::isOnline($row->id);?>
+</div>
+</div>
+<div class="col-sm-6">
+<div>
+<a href="index.php?option=site&bolum=profil&task=show&id=<?php echo $row->id;?>">
+<?php echo $row->unvan;?>. <?php echo $row->name;?>
+</a>
+</div>
+<div>
+<small><?php mezunArkadasHelper::ortakArkadasCount($row->id, true);?> ortak arkadaş</small>
+</div>
+<div>
+
 </div>
 
 </div>
-<div class="row">
-<?php echo $row->unvan;?>. <?php echo $row->name;?>
-<div align="center"><?php mezunOnlineHelper::isOnline($row->id);?></div>
-<div align="center"><small><?php mezunArkadasHelper::ortakArkadasCount($row->id, true);?> ortak arkadaş</small></div>
+
+<div class="col-sm-3">
+<?php echo $delfriend;?>
 </div>
-</div>
-</div>
+
 </div>
 <?php
+if ($i < count($rows)-1) {
+	echo '<hr>';
+}
 }
 ?>    
 </div>
@@ -74,6 +93,7 @@ echo $pageNav->writePagesLinks($link);
 </div>
 
 </div>
+
 <?php        
 }
 }

@@ -4,6 +4,11 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 include(dirname(__FILE__). '/html.php');
 
+$id = intval(getParam($_REQUEST, 'id')); 
+$groupid = intval(getParam($_REQUEST, 'groupid')); 
+$userid = intval(getParam($_REQUEST, 'userid')); 
+
+
 mimport('helpers.modules.group.helper');
 mimport('tables.gruplar');
 
@@ -56,8 +61,70 @@ switch($task) {
 	case 'addmember':
 	addNewMember();
 	break;
+	
+	case 'setmod':
+	changeMod($groupid, $userid, 1);
+	break;
+	
+	case 'getmod':
+	changeMod($groupid, $userid, 0);
+	break;
 }
+/**
+* AJAX ile grup moderatörü ekleme / çıkarma
+* 
+* @param mixed $groupid : Düzenlenecek grup id
+* @param mixed $userid : İşlem yapılacak kullanıcı id
+* @param mixed $status : ne yapılacak?
+*/
+function changeMod($groupid, $userid, $status) {
+	global $dbase;
+	
+	$errors         = '';      // array to hold validation errors
+	$data           = array();      // array to pass back data
+	
+	if (!$groupid) {
+		$errors = 'Group ID değeri yok';
+	}
+	
+	if (!$userid) {
+		$errors = 'User ID değeri yok';
+	}
+	
+	$row = new mezunGruplar($dbase);
+	$row->load($groupid);
+	
+	if ($row->creator == $userid) {
+		$errors = 'Kendini çıkaramazsın';
+	}
+	
+	if ( ! empty($errors)) {
 
+		// if there are items in our errors array, return those errors
+		$data['success'] = false;
+		$data['message']  = $errors;
+	} else {
+	
+	
+	$dbase->setQuery("UPDATE #__groups_members SET isadmin=".$dbase->Quote($status)." WHERE groupid=".$dbase->Quote($groupid)." AND userid=".$dbase->Quote($userid));
+	$dbase->query();
+	
+	$data['success'] = true;
+	$data['message'] = $status ? '<a url="index2.php?option=site&bolum=group&task=getmod&groupid='.$groupid.'&userid='.$userid.'" class="btn btn-default btn-xs modsend moderator-'.$userid.'">Görevi Al</a>':'<a url="index2.php?option=site&bolum=group&task=setmod&groupid='.$groupid.'&userid='.$userid.'" class="btn btn-default btn-xs modsend moderator-'.$userid.'">Moderatör Yap</a>';
+	
+	$data['userid'] = $userid;
+	
+	$data['style'] = $status ? 'Grup Moderatörü':'';
+	
+	}
+	
+			// return all our data to an AJAX call
+	echo json_encode($data);
+}
+/**
+* Gruba yeni bir üye ekleme fonksiyonu
+* 
+*/
 function addNewMember() {
 	global $dbase;
 	
@@ -71,7 +138,11 @@ function addNewMember() {
 	
 	Redirect('index.php?option=site&bolum=group&task=showmembers&id='.$groupid);
 }
-
+/**
+* Belirtilen grubu silme fonksiyonu
+* 
+* @param mixed $id : silinecek grubun id değeri
+*/
 function deleteGroup($id) {
 	global $dbase;
 	
@@ -108,6 +179,11 @@ function deleteGroup($id) {
 	Redirect('index.php?option=site&bolum=group', 'Grup ve tüm içeriği silindi');
 }
 
+/**
+* Belirtilen grubun üyelerini gösteren fonksiyon
+* 
+* @param mixed $id
+*/
 function showGroupMembers($id) {
 	global $dbase, $my;
 	
@@ -124,25 +200,25 @@ function showGroupMembers($id) {
 		return;
 	}
 	
-	//toplam üye sayısını alalım
-	$group->totalmember = $group->totalMembers();
-	
+	//grubun üyelerini alalım
+	$memberlist = mezunGroupHelper::getGroupUsers($group->id);
 	
 	//grubun adminlerini alalım
-	$adminU = $group->adminMembers();
+	$adminU = mezunGroupHelper::getGroupAdmins($group->id);
 	foreach ($adminU as $admin) {
 		$list[] = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$admin->userid).'">'.$admin->adminUser.'</a>';
 	}
 	$group->admins = implode('<br />', $list);
 	
+	//toplam üye sayısı
+	$group->totalmember = count($memberlist);
+	
+	//sayfalandırma yapalım
 	$limit = intval(getParam($_REQUEST, 'limit', 10));
 	$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
+	$pageNav = new mezunPagenation($group->totalmember, $limitstart, $limit);
 	
-	$dbase->setQuery("SELECT COUNT(userid) FROM #__groups_members WHERE groupid=".$dbase->Quote($id));
-	$total = $dbase->loadResult();
-	
-	$pageNav = new mezunPagenation($total, $limitstart, $limit);
-	
+	//grubun üyelerini alalım
 	$query = "SELECT m.userid, m.isadmin, m.joindate, u.name, g.creator AS creatorid FROM #__groups_members AS m "
 	. "\n LEFT JOIN #__users AS u ON u.id=m.userid "
 	. "\n LEFT JOIN #__groups AS g ON g.id=m.groupid "
@@ -150,21 +226,17 @@ function showGroupMembers($id) {
 	. "\n ORDER BY m.joindate ASC, m.isadmin DESC, u.name DESC";
 	
 	$dbase->setQuery($query, $limitstart, $limit);
-	
 	$rows = $dbase->loadObjectList();
 	
 	//gruba eklemek için arkadaş listesini alalım
 	mimport('helpers.modules.arkadas.helper');
 	$friendlist = mezunArkadasHelper::getMyFriends();
-	//gruba ekli üyeleri alalım
-	$dbase->setQuery("SELECT userid FROM #__groups_members WHERE groupid=".$dbase->Quote($group->id)." AND userid NOT IN (".$my->id.")");
-	$memberlist = $dbase->loadResultArray();
 	
 	//gruba ekli olmayan arkadaşaları ayıralım
 	$others = array_diff($friendlist, $memberlist);
 	
 	//arkadaşların bilgilerini listeyelim
-	$other = implode(', ', $others);
+	$other = implode(',', $others);
 	
 	if ($other) {
 		$dbase->setQuery("SELECT id, name FROM #__users WHERE id IN (".$other.")");
@@ -182,6 +254,9 @@ function showGroupMembers($id) {
 	GroupHTML::showGroupMembers($group, $rows, $pageNav, $list, $other);	
 }
 
+/**
+* Yeni grubun veya varolan grubun bilgilerini kaydeden fonksiyon
+*/
 function saveGroup() {
 	global $dbase, $my;
 	
@@ -277,7 +352,11 @@ function saveGroup() {
 	
 	Redirect('index.php?option=site&bolum=group&task=view&id='.$row->id);
 }
-
+/**
+* Belirtilen gruptan kullanıcının çıkmasını sağlayan fonksiyon
+* 
+* @param mixed $id
+*/
 function leaveGroup($id) {
 	global $dbase, $my;
 	
@@ -311,7 +390,11 @@ function leaveGroup($id) {
 		
 	}
 }
-
+/**
+* Belirtilen gruba üyenin katılmasını sağlayan fonksiyon
+* 
+* @param mixed $id
+*/
 function joinGroup($id) {
 	global $dbase, $my;
 	
@@ -349,7 +432,11 @@ function joinGroup($id) {
 		}
 	}
 }
-
+/**
+* Grup ekleme ve düzenleme fonksiyonu
+* 
+* @param mixed $id : Düzenlenecek grubun id değeri
+*/
 function editMyGroup($id) {
 	global $dbase;
 	
@@ -370,7 +457,10 @@ function editMyGroup($id) {
 		
 	GroupHTML::editMyGroup($row, $list); 
 }
-
+/**
+* Gruba mesaj gönderme fonksiyonu
+* 
+*/
 function sendGMessage() {
 	global $dbase, $my;
 	
@@ -428,7 +518,11 @@ function sendGMessage() {
 	// return all our data to an AJAX call
 	echo json_encode($veri);
 }
-
+/**
+* İstenilen grubu gösteren fonksiyon
+* 
+* @param mixed $id
+*/
 function viewGroup($id) {
 	global $dbase;
 	
@@ -442,76 +536,58 @@ function viewGroup($id) {
 	}
 	
 	//toplam üye sayısını alalım
-	$row->totalmember = $row->totalMembers();
-	
+	$row->totalmember = mezunGroupHelper::getGroupUsers($row->id, true);
 	
 	//grubun adminlerini alalım
-	$adminU = $row->adminMembers();
+	$adminU = mezunGroupHelper::getGroupAdmins($row->id);
+	
 	foreach ($adminU as $admin) {
 		$list[] = '<a href="'.sefLink('index.php?option=site&bolum=profil&task=show&id='.$admin->userid).'">'.$admin->adminUser.'</a>';
 	}
 	$row->admins = implode('<br />', $list);
 
-	
 	//gruba ait son 10 mesajı alalım
-	$query = "SELECT m.*, u.name as gonderen FROM #__groups_messages AS m "
-	. "\n LEFT JOIN #__users AS u ON u.id=m.userid"
-	. "\n WHERE m.groupid=".$dbase->Quote($row->id)." ORDER BY m.tarih DESC LIMIT 10";
-	$dbase->setQuery($query);
+	$msgs = mezunGroupHelper::getGroupMessages($row->id, 10);
 	
-	$msgs = $dbase->loadObjectList();	
 	
 	GroupHTML::viewGroup($row, $msgs);
 }
-
+/**
+* Tüm grupları getiren fonksiyon
+*/
 function listGroups() {
 	global $dbase, $my;
 	
 	$limit = intval(getParam($_REQUEST, 'limit', 20));
 	$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 	
-	//tüm grupları alalım
-	$query = "SELECT COUNT(*) FROM #__groups";
-	$dbase->setQuery($query);
-	$total = $dbase->loadResult();
+	$rows = mezunGroupHelper::getAllGroups();
 	
-	$query = "SELECT g.*, COUNT(m.userid) as totaluser FROM #__groups AS g"
-	. "\n LEFT JOIN #__groups_members AS m ON m.groupid=g.id GROUP BY g.id";
-	$dbase->setQuery($query, $limitstart, $limit);
-	$rows = $dbase->loadObjectList();
+	$total = count($rows);
 	
 	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
+	$list = array_slice($rows, $limitstart, $limit);
+	
 	//html ye gönderelim
-	GroupHTML::listGroups($rows, $pageNav);	
+	GroupHTML::listGroups($list, $pageNav);	
 }
 
+/**
+* Kullanıcının gruplarını getiren fonksiyon
+*/
 function getMyGroups() {
 	global $dbase, $my;
 	
 	$limit = intval(getParam($_REQUEST, 'limit', 20));
 	$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 	
-	//üye olduğu grupları alalım
-	$query = "SELECT COUNT(g.id) FROM #__groups AS g "
-	. "\n LEFT JOIN #__groups_members AS m ON m.groupid=g.id "
-	. "\n WHERE m.userid=".$dbase->Quote($my->id);
-	$dbase->setQuery($query);
-	$total = $dbase->loadResult();
+	$rows = mezunGroupHelper::getMyGroups();
+	$total = count($rows);
 	
 	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
-	$query = "SELECT g.* FROM #__groups AS g "
-	. "\n LEFT JOIN #__groups_members AS m ON m.groupid=g.id "
-	. "\n WHERE m.userid=".$dbase->Quote($my->id);
-	$dbase->setQuery($query);
-	$rows = $dbase->loadObjectList();
+	$list = array_slice($rows, $limitstart, $limit);
 	
-	foreach ($rows as $row) {
-		$dbase->setQuery("SELECT COUNT(userid) FROM #__groups_members WHERE groupid=".$row->id);
-		
-		$row->totaluser = $dbase->loadResult();
-	}
-	
-	GroupHTML::getMyGroups($rows, $pageNav);
+	GroupHTML::getMyGroups($list, $pageNav);
 }

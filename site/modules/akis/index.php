@@ -21,6 +21,9 @@ switch($task) {
 	break;
 }
 
+/**
+* Akışa yeni mesaj ekleme fonksiyonu
+*/
 function sendAkisMsg() {
 	global $dbase, $my;
 	
@@ -44,7 +47,7 @@ function sendAkisMsg() {
 		
 		$row->store();
 		
-		$image = $my->image ? '<img src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />':'<img src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />';
+		$image = $my->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />';
 		
 		$veri = '';
 		$veri.= '<div class="row">';
@@ -73,7 +76,9 @@ function sendAkisMsg() {
 	echo json_encode($veri);
 	
 }
-
+/**
+* Site akışını gösteren fonksiyon
+*/
 function siteAkis() {
 	global $dbase, $my;
 		
@@ -85,7 +90,12 @@ function siteAkis() {
 
 mezunAkisHTML::siteAkis($rows, $my, $limit);
 }
-
+/**
+* Sonraki akışı getiren fonksiyon
+* 
+* @param The $limitstart : başlangıç değeri
+* @param mixed $limit : gösterilecek mesaj değeri
+*/
 function nextAkis($limitstart, $limit) {
 	global $dbase;
 	
@@ -102,7 +112,7 @@ function nextAkis($limitstart, $limit) {
 	$rows = $dbase->loadObjectList();
 		
 	foreach ($rows as $row) {
-		$row->image = $row->image ? '<img src="'.SITEURL.'/images/profil/'.$row->image.'" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />':'<img src="'.SITEURL.'/images/profil/noimage.png" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />';
+		$row->image = $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />';
 			  
 			  mezunAkisHelper::getRow($row);
 		  }

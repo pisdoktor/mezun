@@ -43,6 +43,7 @@ $(document).on('focusin', function(e) {
 </div>
 
 <div id="content" class="clearfix">
+<div class="row">
 <?php
 	if ($mosmsg) {
 	echo '<div id="message" title="Mesaj">'.$mosmsg.'</div>';
@@ -58,14 +59,15 @@ $(document).on('focusin', function(e) {
 <div class="col-sm-<?php echo CountBlocks('left') ? '8':'12';?>">
 <?php 
 if (CountBlocks('top')) { ?>
-<div class="row">
+
 <?php  LoadBlocks('top');?>
-</div>  
+ 
 <?php } ?>
 
 <?php loadSiteModule();?>
 </div>
 
+</div>
 </div><!-- content -->
 
 <?php getFooter();?>

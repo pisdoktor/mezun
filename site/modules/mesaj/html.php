@@ -116,7 +116,7 @@ class Message {
 		$head = $type ? 'MESAJ KUTUSU: GİDEN' : 'MESAJ KUTUSU: GELEN';
 		?>
 	<div class="panel panel-warning">
-		<div class="panel-heading"><h4><?php echo $head;?></h4></div>
+		<div class="panel-heading"><?php echo $head;?></div>
 		<div class="panel-body">
 	<form action="index.php" method="post" name="adminForm" role="form">
 	

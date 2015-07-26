@@ -11,17 +11,7 @@ function loadSiteModule() {
 	switch($option) {
 	default:
 	case 'site':
-	if ($bolum) {
-		if (file_exists(ABSPATH. '/site/modules/'.$bolum.'/index.php')) {
-			include_once(ABSPATH. '/site/modules/'.$bolum.'/index.php');
-		} else {
-			Redirect('index.php', 'Module:'.$bolum.' bulunamadı!');
-		}
-	} else {
-		if (file_exists(ABSPATH. '/site/modules/akis/index.php')) {
-			include_once(ABSPATH. '/site/modules/akis/index.php');
-		}
-	}
+	initModule($bolum);
 	break;
 	
 	case 'admin':
@@ -29,6 +19,19 @@ function loadSiteModule() {
 	break;
 	}
 	
+}
+
+function initModule($bolum) {
+	global $task;
+	global $id, $cid;
+	global $limit, $limitstart;
+	global $mainframe, $my, $mosmsg;
+	
+	if ($bolum) {
+		include_once(ABSPATH.'/site/modules/'.$bolum.'/index.php');
+	} else {
+		include_once(ABSPATH.'/site/modules/akis/index.php');
+	}
 } 
 
 function convertAdmin() {

@@ -36,8 +36,65 @@ switch($task) {
 	case 'send':
 	sendIstek($id);
 	break;
+	
+	case 'sendx':
+	sendIstekX($id);
+	break;
 }
+/**
+* AJAX ile blok üzerinden istek gönderimi fonksiyon
+* 
+* @param mixed $id : istek gönderilen kullanıcı id
+*/
+function sendIstekX($id) {
+	global $dbase, $my;
+	
+	$errors         = '';      // array to hold validation errors
+	$data           = array();      // array to pass back data
+	
+	if (!$id) {
+		$errors = 'ID değeri yok';
+	}
+	
+	mimport('helpers.modules.arkadas.helper');
+	
+	$arkadasmisin = mezunArkadasHelper::checkArkadaslik($id);
+	$istekvarmi = mezunIstekHelper::checkIstek($id);
+	
+	if ($istekvarmi) {
+		$errors = 'Daha önceden istek gönderilmiş';
+	}
+		
+	if ($arkadasmisin) {
+		$errors = 'Bu kişiyle zaten bir arkadaşlığınız var';
+	}
+	
+	if ($my->id == $id) {
+		$errors = 'Kendinize istek gönderemezsiniz';
+	}
+	
+	if ( ! empty($errors)) {
 
+		// if there are items in our errors array, return those errors
+		$data['success'] = false;
+		$data['message']  = $errors;
+	} else {
+		
+		$istek = new mezunIstekler($dbase);
+		$istek->gid = $my->id;
+		$istek->aid = $id;
+		$istek->tarih = date('Y-m-d H:i:s');
+		$istek->durum = 0;
+		$istek->store();
+		
+		$data['success'] = true;
+		$data['message'] = $id;
+	}
+	
+		// return all our data to an AJAX call
+	echo json_encode($data['message']);
+	
+}
 /**
 * Gelen veya giden istek silme fonksiyonu
 * 
@@ -45,7 +102,7 @@ switch($task) {
 * @param mixed $status : 1: onaylanacak, 0: silinecek
 */
 function changeDurum($id, $status) {
-	global $dbase, $my;
+	global $dbase, $my, $type;
 	
 	$row = new mezunIstekler($dbase);
 	$row->load($id);
@@ -75,7 +132,9 @@ function changeDurum($id, $status) {
 		$row->delete($row->id);
 	}
 	
-	Redirect('index.php?option=site&bolum=istek&task=inbox');
+	$task = $type ? 'outbox':'inbox';
+
+	Redirect('index.php?option=site&bolum=istek&task='.$task);
 	
 }
 

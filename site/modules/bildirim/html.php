@@ -7,7 +7,7 @@ class systemMessage {
 	static function Form($my, $list) {
 		?>
 		<div class="panel panel-info">
-		<div class="panel-heading"><h4>GERİ BİLDİRİM</h4></div>
+		<div class="panel-heading">GERİ BİLDİRİM</div>
 		<div class="panel-body">
 		<form action="index.php" method="post" name="adminForm" role="form">
 		
