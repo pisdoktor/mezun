@@ -28,11 +28,11 @@ class mezunImageHelper {
 		return strtolower($ext_type["extension"]);
 	}
 	
-	public function changeName($src) {
+	static function changeName($src, $len=10) {
 		
 		$ext = mezunImageHelper::getExt($src);
 					
-		return MakePassword(10).'.'.$ext;
+		return MakePassword($len).'.'.$ext;
 		
 	}
 	

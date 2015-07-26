@@ -24,7 +24,7 @@ class mezunPath {
 	 * @return	boolean	True if path can have mode changed
 	 * @since	1.5
 	 */
-	public function canChmod($path) {
+	static function canChmod($path) {
 		$perms = fileperms($path);
 		if ($perms !== false)
 		{
@@ -46,7 +46,7 @@ class mezunPath {
 	 * @return	boolean	True if successful [one fail means the whole operation failed]
 	 * @since	1.5
 	 */
-	public function setPermissions($path, $filemode = '0644', $foldermode = '0755') {
+	static function setPermissions($path, $filemode = '0644', $foldermode = '0755') {
 
 		// Initialize return value
 		$ret = true;
@@ -94,7 +94,7 @@ class mezunPath {
 	 * @return	string	Filesystem permissions
 	 * @since	1.5
 	 */
-	public function getPermissions($path) {
+	static function getPermissions($path) {
 		$path = mezunPath::clean($path);
 		$mode = @ decoct(@ fileperms($path) & 0777);
 
@@ -121,7 +121,7 @@ class mezunPath {
 	 * @return	string	A cleaned version of the path
 	 * @since	1.5
 	 */
-	public function check($path) {
+	static function check($path) {
 		if (strpos($path, '..') !== false) {
 			ErrorAlert('mezunPath::check Use of relative paths not permitted'); // don't translate
 			jexit();
@@ -142,7 +142,7 @@ class mezunPath {
 	 * @return	string	The cleaned path
 	 * @since	1.5
 	 */
-	public function clean($path, $ds=DS) {
+	static function clean($path, $ds=DS) {
 		$path = trim($path);
 
 		if (empty($path)) {
@@ -163,7 +163,7 @@ class mezunPath {
 	 * @return	boolean	True if the php script owns the path passed
 	 * @since	1.5
 	 */
-	public function isOwner($path) {
+	static function isOwner($path) {
 		mimport('helpers.file.file');
 
 		$tmp = md5(MakePassword(16));
@@ -203,7 +203,7 @@ class mezunPath {
 	 * @return	mixed	The full path and file name for the target file, or boolean false if the file is not found in any of the paths.
 	 * @since	1.5
 	 */
-	public function find($paths, $file) {
+	static function find($paths, $file) {
 		settype($paths, 'array'); //force to array
 
 		// start looping through the path set

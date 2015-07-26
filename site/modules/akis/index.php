@@ -19,6 +19,76 @@ switch($task) {
 	case 'send':
 	sendAkisMsg();
 	break;
+	
+	case 'sendimage':
+	sendAkisImage();
+	break;
+}
+
+function sendAkisImage() {
+	global $dbase, $my;
+	
+	mimport('helpers.file.file');
+	mimport('helpers.image.helper');
+	
+	$errors = '';
+	$data   = array();
+	
+	$image = getParam($_FILES, 'file-0');
+	
+	$text = getParam($_POST, 'text');
+	
+	if (empty($image['name'])) {
+		$errors = 'Resim yok!';
+	}
+	
+	if (empty($text)) {
+		$errors = 'Mesaj yok!';
+	}
+	
+	if ( ! empty($errors)) {
+
+		// if there are items in our errors array, return those errors
+		$data['success'] = false;
+		$data['message']  = $errors;
+	} else {
+		
+		$row = new mezunAkis($dbase);
+		$row->tarih = date('Y-m-d H:i:s');
+		$row->userid = $my->id;
+		
+		$dest = ABSPATH.'/images/akis/';
+		
+		$newname = mezunImageHelper::changeName($image['name'], 50);
+		
+		$target = $dest.$newname;
+		
+		if ($text) {
+			$row->text = '<div>'.$text.'</div>';
+		} else {
+			$row->text = '';
+		}
+		
+		
+		if (mezunFile::upload($image['tmp_name'], $target)) {
+			
+			$row->text.= '<div>';
+			$row->text.= '<img src="'.SITEURL.'/images/akis/'.$newname.'" width="400" height="300" />';
+			$row->text.= '</div>';	
+		}
+		
+		$row->store();		
+		
+		$row->image = $my->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />';
+		
+		$row->name = $my->name;
+		
+		// show a message of success and provide a true success variable
+		$data['success'] = true;
+		$data['message'] = mezunAkisHelper::getRow($row);
+	}
+		// return all our data to an AJAX call
+	echo $data['message'];
 }
 
 /**
@@ -47,42 +117,17 @@ function sendAkisMsg() {
 		
 		$row->store();
 		
-		$image = $my->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />';
+		$row->image = $my->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$my->image.'" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$my->name.'" title="'.$my->name.'" width="50" height="50" />';
 		
-		$veri = '';
-		$veri.= '<div class="row">';
+		$row->name = $my->name;
 		
-		$veri.= '<div class="col-sm-2">';
-		$veri.= '<a href="index.php?option=site&bolum=profil&task=show&id='.$my->id.'">';
-		$veri.= $image;
-		$veri.= '</a>';
-		$veri.= '</div>';
-		
-		$veri.= '<div class="col-sm-10">';
-		
-		$veri.= '<div class="row">';
-		$veri.= mezunAkisHelper::getAkisTime($row->tarih);
-		$veri.= '</div>';
-		
-		$veri.= '<div class="row">';
-		$veri.= $my->name.': '.$row->text;
-		$veri.= '</div>';
-		
-		$veri.= '</div>';
-		
-		$veri.= '</div>';
-		$veri.= '<div align="right">';
-		$veri.= '0 Beğeni';
-		$veri.= '</div>';
-		$veri.= '<hr>';
- 
 		// show a message of success and provide a true success variable
 		$data['success'] = true;
-		$data['message'] = $veri;
+		$data['message'] = mezunAkisHelper::getRow($row);
 	}
 
 	// return all our data to an AJAX call
-	echo json_encode($veri);
+	echo $data['message'];
 	
 }
 /**

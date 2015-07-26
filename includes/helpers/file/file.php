@@ -17,7 +17,7 @@ class mezunFile {
 	 * @return string The file extension
 	 * @since 1.5
 	 */
-	public function getExt($file) {
+	static function getExt($file) {
 		$dot = strrpos($file, '.') + 1;
 		return substr($file, $dot);
 	}
@@ -29,7 +29,7 @@ class mezunFile {
 	 * @return string The file name without the extension
 	 * @since 1.5
 	 */
-	public function stripExt($file) {
+	static function stripExt($file) {
 		return preg_replace('#\.[^.]*$#', '', $file);
 	}
 
@@ -40,7 +40,7 @@ class mezunFile {
 	 * @return string The sanitised string
 	 * @since 1.5
 	 */
-	public function makeSafe($file) {
+	static function makeSafe($file) {
 		$regex = array('#(\.){2,}#', '#[^A-Za-z0-9\.\_\- ]#', '#^\.#');
 		return preg_replace($regex, '', $file);
 	}
@@ -54,7 +54,7 @@ class mezunFile {
 	 * @return boolean True on success
 	 * @since 1.5
 	 */
-	public function copy($src, $dest, $path = null) {
+	static function copy($src, $dest, $path = null) {
 
 		// Prepend a base path if it exists
 		if ($path) {
@@ -83,7 +83,7 @@ class mezunFile {
 	 * @return boolean  True on success
 	 * @since 1.5
 	 */
-	public function delete($file) {
+	static function delete($file) {
 
 		if (is_array($file)) {
 			$files = $file;
@@ -121,7 +121,7 @@ class mezunFile {
 	 * @return boolean True on success
 	 * @since 1.5
 	 */
-	public function move($src, $dest, $path = '') {
+	static function move($src, $dest, $path = '') {
 
 		if ($path) {
 			$src = mezunPath::clean($path.DS.$src);
@@ -152,7 +152,7 @@ class mezunFile {
 	 * @return mixed Returns file contents or boolean False if failed
 	 * @since 1.5
 	 */
-	public function read($filename, $incpath = false, $amount = 0, $chunksize = 8192, $offset = 0) {
+	static function read($filename, $incpath = false, $amount = 0, $chunksize = 8192, $offset = 0) {
 		// Initialize variables
 		$data = null;
 		if($amount && $chunksize > $amount) { $chunksize = $amount; }
@@ -192,7 +192,7 @@ class mezunFile {
 	 * @return boolean True on success
 	 * @since 1.5
 	 */
-	public function write($file, $buffer) {
+	static function write($file, $buffer) {
 		// If the destination directory doesn't exist we need to create it
 		if (!file_exists(dirname($file))) {
 			mimport('helpers.file.folder');
@@ -212,7 +212,7 @@ class mezunFile {
 	 * @return boolean True on success
 	 * @since 1.5
 	 */
-	public function upload($src, $dest) {
+	static function upload($src, $dest) {
 		$ret		= false;
 
 		// Ensure that the path is valid and clean
@@ -244,7 +244,7 @@ class mezunFile {
 	 * @return boolean True if path is a file
 	 * @since 1.5
 	 */
-	public function exists($file){
+	static function exists($file){
 		return is_file(mezunPath::clean($file));
 	}
 
@@ -255,7 +255,7 @@ class mezunFile {
 	 * @return string filename
 	 * @since 1.5
 	 */
-	public function getName($file) {
+	static function getName($file) {
 		$slash = strrpos($file, DS);
 		if ($slash !== false) {
 			return substr($file, $slash + 1);

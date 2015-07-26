@@ -2003,6 +2003,20 @@ $('#msgfield').keyup(function () {
 });
 });
 
+$(document).ready(function(){
+$('#imgfield').keyup(function () {
+  var max = 255;
+  var len = $(this).val().length;
+  if (len >= max) {
+	$('#imgcharNum').text('Limite ulaştınız');
+	$('#imgefield')
+  } else {
+	var char = max - len;
+	$('#imgcharNum').text(char);
+  }
+});
+});
+
 
 //gruba yeni üye ekleme penceresi
 $(document).ready(function() {

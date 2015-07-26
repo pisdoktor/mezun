@@ -19,7 +19,7 @@ class mezunFolder
 	 * @return	mixed	JError object on failure or boolean True on success.
 	 * @since	1.5
 	 */
-	public function copy($src, $dest, $path = '', $force = false) {
+	static function copy($src, $dest, $path = '', $force = false) {
 		
 		if ($path) {
 			$src = mezunPath::clean($path . DS . $src);
@@ -77,7 +77,7 @@ class mezunFolder
 	 * @return boolean True if successful.
 	 * @since 1.5
 	 */
-	public function create($path = '', $mode = 0755) {
+	static function create($path = '', $mode = 0755) {
 		
 		static $nested = 0;
 
@@ -163,7 +163,7 @@ class mezunFolder
 	 * @return boolean True on success.
 	 * @since 1.5
 	 */
-	public function delete($path) {
+	static function delete($path) {
 		// Sanity check
 		if (!$path) {
 			// Bad programmer! Bad Bad programmer!
@@ -226,7 +226,7 @@ class mezunFolder
 	 * @return mixed Error message on false or boolean true on success.
 	 * @since 1.5
 	 */
-	public function move($src, $dest, $path = '') {
+	static function move($src, $dest, $path = '') {
 
 		if ($path) {
 			$src = mezunPath::clean($path . DS . $src);
@@ -254,7 +254,7 @@ class mezunFolder
 	 * @return boolean True if path is a folder
 	 * @since 1.5
 	 */
-	public function exists($path) {
+	static function exists($path) {
 		return is_dir(mezunPath::clean($path));
 	}
 
@@ -271,7 +271,7 @@ class mezunFolder
 	 * @return	array	Files in the given folder.
 	 * @since 1.5
 	 */
-	public function files($path, $filter = '.', $recurse = false, $fullpath = false, $exclude = array('.svn', 'CVS'))
+	static function files($path, $filter = '.', $recurse = false, $fullpath = false, $exclude = array('.svn', 'CVS'))
 	{
 		// Initialize variables
 		$arr = array();
@@ -332,7 +332,7 @@ class mezunFolder
 	 * @return	array	Folders in the given folder.
 	 * @since 1.5
 	 */
-	public function folders($path, $filter = '.', $recurse = false, $fullpath = false, $exclude = array('.svn', 'CVS')) {
+	static function folders($path, $filter = '.', $recurse = false, $fullpath = false, $exclude = array('.svn', 'CVS')) {
 		// Initialize variables
 		$arr = array();
 
@@ -392,7 +392,7 @@ class mezunFolder
 	 * @return	array	Folders in the given folder.
 	 * @since	1.5
 	 */
-	public function listFolderTree($path, $filter, $maxLevel = 3, $level = 0, $parent = 0) {
+	static function listFolderTree($path, $filter, $maxLevel = 3, $level = 0, $parent = 0) {
 		$dirs = array ();
 		if ($level == 0) {
 			$GLOBALS['_mezunFolder_folder_tree_index'] = 0;
@@ -425,7 +425,7 @@ class mezunFolder
 	 * @return	string The sanitised string.
 	 * @since	1.5
 	 */
-	public function makeSafe($path) {
+	static function makeSafe($path) {
 		$ds = (DS == '\\') ? '\\' . DS : DS;
 		$regex = array('#[^A-Za-z0-9:\_\-' . $ds . ' ]#');
 		return preg_replace($regex, '', $path);
