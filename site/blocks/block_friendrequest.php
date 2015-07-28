@@ -2,13 +2,30 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-	global $dbase, $my;
-
-	$query = "SELECT COUNT(*) FROM #__istekler WHERE durum=0 AND aid=".$my->id;
-	$dbase->setQuery($query);
+	mimport('helpers.modules.istek.helper');
 	
-	$total = $dbase->loadResult();
+	$total = mezunIstekHelper::totalWaiting();
 	
-	$link = $total ? '<a href="'.sefLink('index.php?option=site&bolum=istek&task=inbox').'">'.$total.'</a>' : $total;
+	$total = $total ? '<a href="'.sefLink('index.php?option=site&bolum=istek&task=inbox').'">'.$total.'</a>' : $total;
 	?>
-	Toplam <span class="badge"><?php echo $link;?></span> yeni arkadaşlık isteğiniz var
+	<script type="text/javascript">
+	$(document).ready(function(){
+		
+		setInterval(checkIstek, 60000); // 60 seconds
+		
+		function checkIstek() {
+			
+			$.ajax({
+				type: "GET",
+				url: 'index2.php?option=site&bolum=istek&task=checkistek',
+				dataType: "html",
+				success: function(data) {
+					$('#istek').html(data);
+				}
+			});
+			
+		}
+	});
+	</script>
+	
+	Toplam <span id="istek" class="badge"><?php echo $total;?></span> yeni arkadaşlık isteğiniz var

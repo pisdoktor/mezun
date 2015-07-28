@@ -50,6 +50,22 @@ switch($task) {
 	case 'read':
 	changeMessage($cid, 1);
 	break;
+	
+	case 'checkmail':
+	checkMail();
+	break;
+}
+
+function checkMail() {
+	
+	$total = mezunMesajHelper::totalUnread();
+	
+
+	if ($total) {
+		echo '<a href="index.php?option=site&bolum=mesaj&task=inbox">'.$total.'</a>';
+	} else {
+		echo 0;
+	}
 }
 /**
 * Mesaj silme

@@ -230,7 +230,11 @@ $(function(){
 		<small><?php echo mezunArkadasHelper::ortakArkadasCount($row->id, true);?> ortak arkadaş</small>
 		</div>
 		</div>
-		<?php }?>    
+		<?php }?>
+		<br /> 
+		<div class="row">
+		<?php echo mezunGlobalLikes::likeButton($row->id, 'profil');?>
+		</div>   
 		<hr>
 		
 		<div align="center">

@@ -228,10 +228,10 @@ class mezunFile {
 				if (mezunPath::setPermissions($dest)) {
 					$ret = true;
 				} else {
-					ErrorAlert('WARNFS_ERR01');
+					ErrorAlert('Dizin izinleri değiştirilemedi');
 				}
 			} else {
-				ErrorAlert('WARNFS_ERR02');
+				ErrorAlert('Dosya yükleme işlemi başarısız oldu');
 			}
 		
 		return $ret;

@@ -63,18 +63,42 @@ function sendAkisImage() {
 		
 		$target = $dest.$newname;
 		
-		if ($text) {
-			$row->text = '<div>'.$text.'</div>';
-		} else {
-			$row->text = '';
-		}
+		$maxWidth = 500;
+		$maxHeight = 300;
 		
+		$row->text = '';
 		
 		if (mezunFile::upload($image['tmp_name'], $target)) {
 			
+			list($imgwidth, $imgheight) = getimagesize($target);
+			
+		if ($imgwidth > $maxWidth) {
+			$oran = round($maxWidth / $imgwidth, 2);
+		
+			$newwidth = $maxWidth;
+			$newheight = round($oran * $imgheight);
+		
+		} else if ($imgheight > $maxHeight) {
+			$oran = round($maxHeight / $imgheight, 2);
+		
+			$newheight = $maxHeight;
+			$newwidth = round($oran * $imgwidth);
+		
+		} else {
+			$newheight = $imgheight;
+			$newwidth = $imgwidth;
+		}
+		
+		
+		mezunImageHelper::resize($target, $newwidth, $newheight, $imgwidth, $imgheight);
+			
 			$row->text.= '<div>';
-			$row->text.= '<img src="'.SITEURL.'/images/akis/'.$newname.'" width="400" height="300" />';
-			$row->text.= '</div>';	
+			$row->text.= '<img class="img-thumbnail" src="'.SITEURL.'/images/akis/'.$newname.'" width="'.$newwidth.'" height="'.$newheight.'" />';
+			$row->text.= '</div>';
+		}
+		
+		if ($text) {
+			$row->text .= '<p>'.$text.'</p>';
 		}
 		
 		$row->store();		

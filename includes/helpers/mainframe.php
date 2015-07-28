@@ -548,6 +548,179 @@ class mezunMainFrame {
 	}
 
 	/**
+	* Ajax login : soner ekledi
+	*/
+	function login2( $username=null, $passwd=null, $remember=0, $userid=NULL ) {
+		global $bolum;
+
+		$bypost = 0;
+		$valid_remember = false;
+		
+		$data['error'] = '';
+		$data['success'] = false;
+
+		// Fonksiyona username ve passwd girişi yoksa dışardan bir istek var demek!
+		if (!$username || !$passwd) {
+			$username   = stripslashes( strval( getParam( $_REQUEST, 'username' ) ) );
+			$passwd     = stripslashes( strval( getParam( $_REQUEST, 'passwd' ) ) );
+
+			$bypost     = 1;
+
+			// extra check to ensure that sessioncookie exists
+			if (!$this->_session->session) {
+				$data['error'] = 'Çerezler açık olmalı!';
+				$data['success'] = false;
+				echo json_encode($data);
+				return;
+			}
+
+			spoofCheck(NULL,1);
+		}
+
+		$row = null;
+		
+		if (!$username || !$passwd) {
+			
+			$data['error'] = 'Lütfen kullanıcı adı ve parola alanlarını doldurunuz!';
+			$data['success'] = false;
+			echo json_encode($data);
+			return;
+			
+		} else {
+			
+			//Beni hatırla işaretli ise cookie den alalım
+			if ( $remember && strlen($username) == 32 && $userid ) {
+			// query used for remember me cookie
+				$harden = mosHash( @$_SERVER['HTTP_USER_AGENT'] );
+
+				$query = "SELECT id, name, username, password"
+				. "\n FROM #__users"
+				. "\n WHERE id = " . (int) $userid
+				;
+				$this->_db->setQuery( $query );
+				$this->_db->loadObject($user);
+
+				list($hash, $salt) = explode(':', $user->password);
+
+				$check_username = md5( $user->username . $harden );
+				$check_password = md5( $hash . $harden );
+
+				if ( $check_username == $username && $check_password == $passwd ) {
+					$row = $user;
+					$valid_remember = true;
+				}
+			//Beni hatırla işaretli değilse gelen bilgileri veritabanıyla karşılaştıralım
+			} else {
+			// kullanıcı adı var mı bakalım
+				$query = "SELECT u.id, u.name, u.username, u.password, u.activated"
+				. "\n FROM #__users AS u"
+				. "\n WHERE u.username = ". $this->_db->Quote( $username )
+				;
+
+				$this->_db->setQuery( $query );
+				$this->_db->loadObject( $row );
+			}
+			
+			//Kullanıcı adına göre bilgileri aldık şimdi parola kontrolü yapalım
+			if (is_object($row)) {
+				//Beni hatırladan gelen değer yoksa 
+				if (!$valid_remember) {
+
+					list($hash, $salt) = explode(':', $row->password);
+					$cryptpass = md5($passwd.$salt);
+					if ($hash != $cryptpass) {
+						if ( $bypost ) {
+							$data['error'] = 'Hatalı parola girdiniz!';
+							$data['success'] = false;
+							echo json_encode($data);
+							return;
+						} else {
+							$data['error'] = 'Hatalı parola girdiniz!';
+							$data['success'] = false;
+							echo json_encode($data);
+							return;
+						}
+					}
+					//aktive edilmemiş hesap : soner ekledi
+					if ($row->activated == 0) {
+						$data['error'] = 'Hesabınız henüz aktive edilmemiş!';
+						$data['success'] = false;
+						echo json_encode($data);
+						return;
+					}
+				}
+				
+				// initialize session data
+				$session             =& $this->_session;
+				$session->username   = $row->username;
+				$session->userid     = intval( $row->id );
+				$session->nerede     = $bolum;
+				$session->access_type = 'site';
+				$session->update();
+
+					// delete any old front sessions to stop duplicate sessions
+					$query = "DELETE FROM #__sessions"
+					. "\n WHERE session != ". $this->_db->Quote( $session->session )
+					. "\n AND username = ". $this->_db->Quote( $row->username )
+					. "\n AND userid = " . (int) $row->id
+					;
+					$this->_db->setQuery( $query );
+					$this->_db->query();
+
+				// update user visit data
+				$currentDate = date("Y-m-d\TH:i:s");
+				
+				$query = "SELECT nowvisit FROM #__users"
+				. "\n WHERE id = " . (int) $session->userid
+				;
+				$this->_db->setQuery($query);
+				if (!$this->_db->query()) {
+					die($this->_db->stderr(true));
+				}
+				
+				$lastvisit = $this->_db->loadResult();
+
+				$query = "UPDATE #__users"
+				. "\n SET lastvisit = ". $this->_db->Quote( $lastvisit ) .", nowvisit = ". $this->_db->Quote( $currentDate )
+				. "\n WHERE id = " . (int) $session->userid
+				;
+				$this->_db->setQuery($query);
+				if (!$this->_db->query()) {
+					die($this->_db->stderr(true));
+				}
+				
+				// set remember me cookie if selected
+				$remember = strval( getParam( $_POST, 'remember', '' ) );
+				
+				if ( $remember == 'yes' ) {
+					// cookie lifetime of 365 days
+					$lifetime         = time() + 365*24*60*60;
+					$remCookieName     = $this->remCookieName_User();
+					$remCookieValue = $this->remCookieValue_User( $row->username ) . $this->remCookieValue_Pass( $hash ) . $row->id;
+					setcookie( $remCookieName, $remCookieValue, $lifetime, '/' );
+				}
+				
+				$data['error'] = '';
+				$data['success'] = true;
+				echo json_encode($data);
+				return;
+				   
+			} else {
+				if ( $bypost ) {
+					$data['error'] = 'Hatalı kullanıcı adı veya parola. Lütfen tekrar deneyiniz!';
+					$data['success'] = false;
+					echo json_encode($data);
+					return;
+				} else {
+					$data['error'] = 'Hatalı kullanıcı adı veya parola. Lütfen tekrar deneyiniz!';
+					$data['success'] = false;
+					echo json_encode($data);
+					return;
+				}
+			}
+		}
+	}
+	/**
 	* User logout
 	*
 	* Reverts the current session record back to 'anonymous' parameters
@@ -666,7 +839,14 @@ class mezunMainFrame {
 		$mainframe->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');    
 		
 		//tinymce text editor
-		$mainframe->addScript(0, SITEURL.'/includes/tinymce/tinymce.min.js');
+		//$mainframe->addScript(0, SITEURL.'/includes/tinymce/tinymce.min.js');
+		
+		//summernote text editor
+		$mainframe->addScript(0, SITEURL.'/includes/summernote/summernote.min.js');
+		$mainframe->addScript(0, SITEURL.'/includes/summernote/summernote-tr-TR.js');
+		$mainframe->addStyleSheet(SITEURL.'/includes/summernote/summernote.css');
+		$mainframe->addStyleSheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
+		
 		
 		
 		echo $mainframe->getHead();

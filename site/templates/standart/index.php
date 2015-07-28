@@ -9,6 +9,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?php showHead();?>
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
+<!--
 <script type="text/javascript">
 		tinymce.init({
 			selector: "#textarea",
@@ -25,7 +26,7 @@ $(document).on('focusin', function(e) {
 	}
 });
 </script>
-
+-->
 </head>
 <body>
 <!-- Container Başlangıç -->

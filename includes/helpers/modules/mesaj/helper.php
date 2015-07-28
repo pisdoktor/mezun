@@ -9,11 +9,14 @@ class mezunMesajHelper {
 	*/
 	static function totalUnread() {
 		global $dbase, $my;
+		
 		$query = "SELECT COUNT(*) FROM #__mesajlar WHERE aid=".$dbase->Quote($my->id)." AND okunma=0 AND asilinme=0";
 		$dbase->setQuery($query);
 		
 		if ($dbase->loadResult()) {
-			echo $dbase->loadResult();
+			return $dbase->loadResult();
+		} else {
+			return 0;
 		} 
 	}
 	/**

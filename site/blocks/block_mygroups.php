@@ -6,7 +6,9 @@ global $my;
 
 mimport('helpers.modules.group.helper');
 
-$rows = mezunGroupHelper::getMyGroups();
+$rows = mezunGroupHelper::getMyGroups(true);
+
+$rows = array_slice($rows, 0, 5);
 
 $i=0;
 foreach ($rows as $row) {

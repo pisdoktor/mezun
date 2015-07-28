@@ -29,11 +29,6 @@ $validate = spoofValue(1);
 </div>
 
 <div id="content" class="clearfix">
-<?php
-	if ($mosmsg) {
-	echo '<div id="message" title="Uyarı">'.$mosmsg.'</div>';
-	}
-?>
 
 <div class="col-sm-8 left">
 <div class="panel panel-default">
@@ -63,6 +58,46 @@ Bu siteye kayıt olarak;
 <div class="panel panel-default">
 <div class="panel-heading">ÜYE GİRİŞİ</div>
 <div class="panel-body">
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#loginForm').submit(function(event) {
+				var formData = {
+					'username' : $('input[name=username]').val(),
+					'passwd' : $('input[name=passwd]').val(),
+					'remember' : $('input[name=remember]').is(':checked') ? "yes" : "no",
+					'<?php echo $validate; ?>' : $('input[name=<?php echo $validate; ?>]').val(),
+				};
+				
+				$('button[name=submit]').attr("disabled", "disabled");
+				$('input[name=username]').attr("disabled", "disabled");
+				$('input[name=passwd]').attr("disabled", "disabled");
+						
+				$.ajax({
+					type    : 'POST',
+					url     : 'index2.php?option=login2',
+					data    : formData,
+					dataType: 'json',
+					encode  : true
+				})
+						
+				.done(function(data) {
+					console.log(data);
+					if (data['success'] == true) {
+						$('#error').html('Yükleniyor...');
+						window.location = $('input[name=return]').val();
+					} else {
+						$('button[name=submit]').removeAttr("disabled");
+						$('input[name=username]').removeAttr("disabled");
+						$('input[name=passwd]').removeAttr("disabled");
+						$('#error').html('<div id="message" title="Uyarı">'+data['error']+'</div>');				
+					}
+				});
+				event.preventDefault();
+	});
+});
+</script>
+<div id="error" align="center"></div>
+
 <form action="index.php" method="post" name="login" id="loginForm" role="form">
 
 <div class="form-group">
@@ -72,7 +107,7 @@ Bu siteye kayıt olarak;
 
 <div class="form-group">
 <label class="sr-only" for="password">Parola:</label>
-<input type="password" id="password" name="passwd" class="form-control" placeholder="Parolanızı yazın" required />
+<input name="passwd" type="password" id="password" class="form-control" placeholder="Parolanızı yazın" required />
 </div>
 
  <div class="form-group">
@@ -83,8 +118,8 @@ Bu siteye kayıt olarak;
   </div>
 
 <div class="form-group">
-<button type="submit" class="btn btn-primary">GİRİŞ YAP</button>
-</div>   
+<button type="submit" name="submit" class="btn btn-primary">GİRİŞ YAP</button>
+</div>  
 
 <div class="form-group">
 <a href="#" id="forgot">ŞİFREMİ UNUTTUM!</a>
@@ -95,14 +130,8 @@ Bu siteye kayıt olarak;
 <a href="#" id="activ">HESAP AKTİVASYONU</a>
 </div>
 <?php } ?>
-
-
-
-
 <input type="hidden" name="option" value="login" />
-<input type="hidden" name="op2" value="login" />
 <input type="hidden" name="return" value="index.php" />
-<input type="hidden" name="force_session" value="1" />
 <input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
 </div>

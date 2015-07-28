@@ -44,7 +44,7 @@ class mezunGlobalHelper {
 			$html.= ' onclick="javascript:submitbutton(\''.$onclick.'\');"';
 		}
 		
-			$html.= ' class="btn btn-default" />';
+			$html.= ' class="btn btn-default btn-sm" />';
 	
 		return $html;
 	}

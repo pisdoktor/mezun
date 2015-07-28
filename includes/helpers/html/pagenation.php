@@ -80,7 +80,7 @@ class mezunPagenation {
 	* @param string The basic link to include in the href
 	*/
 	function writePagesLinks( $link ) {
-		$txt = '<ul class="pagination">';
+		$txt = '<ul class="pagination pagination-sm">';
 
 		$displayed_pages = 10;
 		$total_pages = $this->limit ? ceil( $this->total / $this->limit ) : 0;

@@ -6,8 +6,25 @@ class ForumHTML {
 	
 	static function newMessage($topic, $my, $topic_info, $board_info) {
 		?>
+		<script type="text/javascript">
+		$(document).ready(function() {
+				$('#textarea').summernote({
+					lang : 'tr-TR',
+					height: 150,
+					minHeight: 100,
+					maxHeight: 500,
+					focus: true,
+					toolbar: [
+						['style', ['bold', 'italic', 'underline', 'clear']],
+						['color', ['color']],
+						['height', ['height']],
+						['insert', ['link']]
+					]
+				});
+			});
+		</script>
 		<div class="panel panel-default">
-		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?><small><?php echo $topic_info->subject;?> - Yeni Mesaj</small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=forum&task=savemessage" method="post" role="form">
@@ -68,9 +85,25 @@ class ForumHTML {
 			function showimage() {
 				document.images.icons.src = icon_urls[document.form.icon.options[document.form.icon.selectedIndex].value];
 			}
+			
+			$(document).ready(function() {
+				$('#textarea').summernote({
+					lang : 'tr-TR',
+					height: 150,
+					minHeight: 100,
+					maxHeight: 500,
+					focus: true,
+					toolbar: [
+						['style', ['bold', 'italic', 'underline', 'clear']],
+						['color', ['color']],
+						['height', ['height']],
+						['insert', ['link']]
+					] 
+				});
+			});
 		</script>
 		<div class="panel panel-default">
-		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?><small>Yeni Başlık</small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small>Yeni Başlık</small></div>
 		<div class="panel-body">
 		
 		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" name="form" role="form">
@@ -152,15 +185,21 @@ class ForumHTML {
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
-		<?php if (!$topic_info->locked) {?>
-		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default">Yeni Mesaj</a>
-		<?php } ?>
 		<div>
+		<div style="float:left;">
+<?php if (!$topic_info->locked) {?>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default btn-sm">Yeni Mesaj</a>
+		<?php } ?>
+</div>
+		<div style="float:right;">
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
+
+		</div>
+		
 		<table width="100%" class="bordercolor">
 		<tr class="titlebg">
 		<th width="15%">
@@ -203,9 +242,7 @@ class ForumHTML {
 			</div>
 			
 			<div class="msg-body">
-			<div class="editable">
 			<?php echo $row['body'];?>
-			</div>
 			</div>
 			
 			</td>
@@ -216,12 +253,19 @@ class ForumHTML {
 		}
 		?>
 
-<div>
+		<div>
+		<div style="float:left;">
+<?php if (!$topic_info->locked) {?>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default btn-sm">Yeni Mesaj</a>
+		<?php } ?>
+</div>
+		<div style="float:right;">
 <?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
 </div>
-		<?php if (!$topic_info->locked) {?>
-		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default">Yeni Mesaj</a>
-		<?php } ?>
+
+		</div>
+
+		
 		</div>
 		
 		<div class="panel-footer"></div>
@@ -235,7 +279,7 @@ class ForumHTML {
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?><small><?php echo $board_info->aciklama;?></small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $board_info->aciklama;?></small></div>
 		<div class="panel-body">
 		
 		<?php
@@ -319,7 +363,7 @@ class ForumHTML {
 		}
 		?>
 		<br />
-		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-primary">Yeni Başlık</a>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-default btn-sm">Yeni Başlık</a>
 		<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
 					<tr>
@@ -401,7 +445,7 @@ class ForumHTML {
 				?>
 				<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
 				
-		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-primary">Yeni Başlık</a>
+		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-default btn-sm">Yeni Başlık</a>
 	
 		</div>
 		<div class="panel-footer"></div>

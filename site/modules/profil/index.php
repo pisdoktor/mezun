@@ -237,23 +237,23 @@ function saveImage() {
 	list($imgwidth, $imgheight) = getimagesize($targetfile);
 	
 	if ($imgwidth > $maxWidth) {
-		$oran = floor($maxWidth / $imgwidth);
+		$oran = round($maxWidth / $imgwidth, 2);
 		
 		$newwidth = $maxWidth;
-		$newheight = $oran * $imgheight;
+		$newheight = round($oran * $imgheight);
 		
 	} else if ($imgheight > $maxHeight) {
-		$oran = floor($maxHeight / $imgheight);
+		$oran = floor($maxHeight / $imgheight, 2);
 		
 		$newheight = $maxHeight;
-		$newwidth = $oran * $imgwidth;
+		$newwidth = round($oran * $imgwidth);
 		
 	} else {
 		$newheight = $imgheight;
 		$newwidth = $imgwidth;
 	}
 		
-	mezunImageHelper::resize($targetfile, 0, 0, 0, 0, $newwidth, $newheight, $imgwidth, $imgheight);
+	mezunImageHelper::resize($targetfile, $newwidth, $newheight, $imgwidth, $imgheight);
 	
 	$akistext = 'Profil resmi yükledi';
 	mezunGlobalHelper::AkisTracker($akistext);
@@ -318,6 +318,7 @@ function getProfile($id) {
 	mimport('helpers.modules.online.helper');
 	mimport('helpers.modules.arkadas.helper');
 	mimport('helpers.modules.istek.helper');
+	mimport('global.likes');
 	
 	$canEdit = false;
 	$canShow = false;

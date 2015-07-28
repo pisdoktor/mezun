@@ -38,7 +38,9 @@ class mezunIstekHelper {
 		$dbase->setQuery($query);
 		
 		if ($dbase->loadResult()) {
-			echo $dbase->loadResult();
+			return $dbase->loadResult();
+		} else {
+			return 0;
 		}
 	}
 	

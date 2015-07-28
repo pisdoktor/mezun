@@ -40,6 +40,21 @@ switch($task) {
 	case 'sendx':
 	sendIstekX($id);
 	break;
+	
+	case 'checkistek':
+	checkIstek();
+	break;
+}
+
+function checkIstek() {
+	
+	$total = mezunIstekHelper::totalWaiting();
+	
+	if ($total) {
+		echo '<a href="index.php?option=site&bolum=istek&task=inbox">'.$total.'</a>';
+	} else {
+		echo 0;
+	}
 }
 /**
 * AJAX ile blok üzerinden istek gönderimi fonksiyon

@@ -7,12 +7,14 @@ class mezunGroupHelper {
 	* Kullanıcının gruplarını getirir
 	* 
 	*/
-	static function getMyGroups() {
+	static function getMyGroups($rand=false) {
 		global $dbase, $my;
 		
 		$query = "SELECT g.* FROM #__groups AS g "
 		. "\n LEFT JOIN #__groups_members AS m ON m.groupid=g.id "
-		. "\n WHERE m.userid=".$dbase->Quote($my->id);
+		. "\n WHERE m.userid=".$dbase->Quote($my->id)
+		. ($rand ? "\n ORDER BY RAND()":"")
+		;
 		$dbase->setQuery($query);
 		$rows = $dbase->loadObjectList();
 		

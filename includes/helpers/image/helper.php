@@ -78,7 +78,7 @@ class mezunImageHelper {
 		
 	}
 	
-	static function resize($src, $dest_x, $dest_y, $src_x, $src_y, $dest_w, $dest_h, $src_w, $src_h) {
+	static function resize($src, $dest_w, $dest_h, $src_w, $src_h) {
 		
 		$ext = mezunImageHelper::getExt($src);
 		

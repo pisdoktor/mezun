@@ -2,6 +2,8 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
+mimport('tables.stats');
+
 class mezunStatsHelper {
 	
 	var $requestUrl = null;
@@ -74,7 +76,7 @@ class mezunStatsHelper {
 				return;
 			}
 
-				$row = new Analytics_Stats($dbase);
+				$row = new mezunStats($dbase);
 				
 				$time = time() + (OFFSET*3600);
 				$date_time = date('Y-m-d H:i:s', $time);
