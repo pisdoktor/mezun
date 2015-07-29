@@ -4,11 +4,6 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 mimport('helpers.file.path');
 
-/**
- * A File handling class
- *
-*/
-
 class mezunFile {
 	/**
 	 * Gets the extension of a file name

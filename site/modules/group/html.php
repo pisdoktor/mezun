@@ -558,6 +558,5 @@ class GroupHTML {
 		</div>
 		<?php
 	}
-	
-	
+		
 }

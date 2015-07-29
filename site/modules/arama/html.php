@@ -3,6 +3,7 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Search {
+	
 	static function Form($list, $reg) {
 		?>
 		<form action="index.php?option=site&bolum=arama&task=search" method="post" id="adminForm" role="form">
@@ -271,4 +272,5 @@ echo $pageNav->writePagesLinks($link);
 		</div>  
 <?php	
 	}
+	
 }

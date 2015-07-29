@@ -7,7 +7,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<?php showHead();?>
+<?php $mainframe->showHead();?>
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
@@ -60,10 +60,10 @@ $(function(){
 <div class="panel panel-primary">
 <div class="panel-heading">ÜYE KAYIT FORMU</div>
 <div class="panel-body">
-<form action="index.php?option=reguser" method="post" id="adminForm" role="form">
+<form action="index.php?option=reguser" method="post" id="SignupForm" role="form">
 
 <fieldset>
-<legend>Üyelik Bilgileri:</legend>
+<legend>Üyelik Bilgileri</legend>
 
 <div class="form-group">
 <div class="row">
@@ -107,7 +107,7 @@ $(function(){
 </fieldset>
 
 <fieldset>
-<legend>Kişisel Bilgiler:</legend>
+<legend>Kişisel Bilgiler</legend>
 
 <div class="form-group">
 <div class="row">
@@ -166,7 +166,7 @@ $(function(){
 </fieldset>
 
 <fieldset>
-<legend>Mesleki Bilgiler:</legend>
+<legend>Mesleki Bilgiler</legend>
 
 <div class="form-group">
 <div class="row">
@@ -221,21 +221,16 @@ $(function(){
 </div>
 </div>
 </div>
-
-
-
-
-
-
 </fieldset>
-
+<br />
 <div class="form-group">
 <div class="row">
 <div class="col-sm-12">
-<button type="submit" class="btn btn-primary" />SİTEYE KAYIT OL!</button>
+<button type="submit" id="submit" class="btn btn-primary btn-sm" />SİTEYE KAYIT OL!</button>
 </div>
 </div>
 </div>
+
 <input type="hidden" name="<?php echo $validate; ?>" value="1" />
 </form>
 </div>

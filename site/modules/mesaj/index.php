@@ -52,11 +52,11 @@ switch($task) {
 	break;
 	
 	case 'checkmail':
-	checkMail();
+	checkMailX();
 	break;
 }
 
-function checkMail() {
+function checkMailX() {
 	
 	$total = mezunMesajHelper::totalUnread();
 	

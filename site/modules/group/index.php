@@ -63,11 +63,11 @@ switch($task) {
 	break;
 	
 	case 'setmod':
-	changeMod($groupid, $userid, 1);
+	changeModX($groupid, $userid, 1);
 	break;
 	
 	case 'getmod':
-	changeMod($groupid, $userid, 0);
+	changeModX($groupid, $userid, 0);
 	break;
 }
 /**
@@ -77,7 +77,7 @@ switch($task) {
 * @param mixed $userid : İşlem yapılacak kullanıcı id
 * @param mixed $status : ne yapılacak?
 */
-function changeMod($groupid, $userid, $status) {
+function changeModX($groupid, $userid, $status) {
 	global $dbase;
 	
 	$errors         = '';      // array to hold validation errors

@@ -77,7 +77,6 @@ class mezunDatabase {
 			}
 		}
 		$this->_table_prefix = $table_prefix;
-		//@mysql_query("SET NAMES 'utf8'", $this->_resource);
 		$this->_ticker = 0;
 		$this->_log = array();
 	}
@@ -300,6 +299,7 @@ class mezunDatabase {
 		return mysqli_affected_rows( $this->_resource );
 	}
 
+	
 	public function query_batch( $abort_on_error=true, $p_transaction_safe = false) {
 		$this->_errorNum = 0;
 		$this->_errorMsg = '';

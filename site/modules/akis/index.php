@@ -162,9 +162,7 @@ function siteAkis() {
 		
 		$limit = 5;
 		
-		$dbase->setQuery("SELECT a.*, u.name, u.image, u.id as userid FROM #__akis AS a"
-		. "\n LEFT JOIN #__users AS u ON u.id=a.userid ORDER BY a.tarih DESC LIMIT ".$limit);
-		$rows = $dbase->loadObjectList();
+		$rows = mezunAkisHelper::getSiteAkis(0, 5, true);
 
 mezunAkisHTML::siteAkis($rows, $my, $limit);
 }
@@ -177,17 +175,14 @@ mezunAkisHTML::siteAkis($rows, $my, $limit);
 function nextAkis($limitstart, $limit) {
 	global $dbase;
 	
-	$dbase->setQuery("SELECT COUNT(*) FROM #__akis");
-	$total = $dbase->loadResult();
+	$total = 50;
 	
-	if ($limitstart>=$total){
+	if ($limitstart>$total){
 		$limitstart = $total;
 	}
 	
-	$query = "SELECT a.*, u.name, u.image FROM #__akis AS a"
-		. "\n LEFT JOIN #__users AS u ON u.id=a.userid ORDER BY a.tarih DESC";
-	$dbase->setQuery($query, $limitstart, $limit);
-	$rows = $dbase->loadObjectList();
+	$rows = mezunAkisHelper::getSiteAkis($limitstart, $limit, true); 
+	
 		
 	foreach ($rows as $row) {
 		$row->image = $row->image ? '<img class="img-thumbnail" src="'.SITEURL.'/images/profil/'.$row->image.'" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />':'<img class="img-thumbnail" src="'.SITEURL.'/images/profil/noimage.png" alt="'.$row->name.'" title="'.$row->name.'" width="50" height="50" />';

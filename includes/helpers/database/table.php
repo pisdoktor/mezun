@@ -288,10 +288,12 @@ class mezunTable {
 			return false;
 		}
 	}
-
-	/**
-	 * Increments the hit counter for an object
-	 * @param int Object id
+	 
+	 /**
+	 * Bir tablodaki istenilen değeri 1 arttırır
+	 * 
+	 * @param mixed $oid anahtarın değeri
+	 * @param mixed $what : arttırılacak alan adı
 	 */
 	public function hit( $oid, $what ) {
 

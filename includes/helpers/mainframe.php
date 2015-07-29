@@ -17,7 +17,7 @@ class mezunMainFrame {
 	* @param string The url option
 	* @param string The path of the mos directory
 	*/
-	function mezunMainFrame( &$db ) {
+	public function __construct( &$db ) {
 		$this->_db =& $db;
 
 		if (isset( $_SESSION['session_userstate'] )) {
@@ -26,7 +26,7 @@ class mezunMainFrame {
 			$this->_userstate = null;
 		}
 		$this->_head = array();
-		$this->_head['title']     = SITEHEAD;
+		$this->_head['title']     = $this->setPageTitle();
 		$this->_head['meta']     = array();
 		$this->_head['custom']     = array();
 		//Soner Ekledi
@@ -36,14 +36,13 @@ class mezunMainFrame {
 		$now = date( 'Y-m-d H:i:s', time() );
 		$this->set( 'now', $now );
 	}
-
 	/**
 	* @param string
 	*/
-	function setPageTitle( $title=null ) {
+	public function setPageTitle( $title=null ) {
 			$title = trim( htmlspecialchars( $title ) );
 			$title = stripslashes($title);
-			$this->_head['title'] = $title ? SITEHEAD . ' - '. $title : SITEHEAD;
+			return $title ? SITEHEAD . ' - '. $title : SITEHEAD;
 	}
 	/**
 	* @param string The value of the name attibute
@@ -51,16 +50,15 @@ class mezunMainFrame {
 	* @param string Text to display before the tag
 	* @param string Text to display after the tag
 	*/
-	function addMetaTag( $name, $content, $prepend='', $append='' ) {
+	public function addMetaTag( $name, $content, $prepend='', $append='' ) {
 		$name = trim( htmlspecialchars( $name ) );
 		$content = trim( htmlspecialchars( $content ) );
 		$prepend = trim( $prepend );
 		$append = trim( $append );
 		$this->_head['meta'][] = array( $name, $content, $prepend, $append );
 	}
-	
 	//Soner Ekledi
-	function addStyleSheet($href, $media=NULL, $id=NULL, $rel="stylesheet", $type="text/css") {
+	public function addStyleSheet($href, $media=NULL, $id=NULL, $rel="stylesheet", $type="text/css") {
 		$html = '<link rel="'.$rel.'" type="'.$type.'" href="'.$href.'"';
 		if ($media) {
 		$html.= ' media="'.$media.'"';
@@ -72,7 +70,7 @@ class mezunMainFrame {
 		$this->_head['style'][] = $html;
 	}
 	//Soner Ekledi
-	function addScript($mode=0, $href=NULL, $content=NULL, $type='text/javascript') {
+	public function addScript($mode=0, $href=NULL, $content=NULL, $type='text/javascript') {
 		if (!$mode) {
 		$html = '<script src="'.$href.'"';
 		$html.= ' type="'.$type.'"></script>';
@@ -89,7 +87,8 @@ class mezunMainFrame {
 	* @param string The value of the content attibute to append to the existing
 	* Tags ordered in with Site Keywords and Description first
 	*/
-	function appendMetaTag( $name, $content ) {
+	public function appendMetaTag( $name, $content ) {
+		
 		$name = trim( htmlspecialchars( $name ) );
 		$n = count( $this->_head['meta'] );
 		for ($i = 0; $i < $n; $i++) {
@@ -107,12 +106,11 @@ class mezunMainFrame {
 		}
 		$this->addMetaTag( $name , $content );
 	}
-
 	/**
 	* @param string The value of the name attibute
 	* @param string The value of the content attibute to append to the existing
 	*/
-	function prependMetaTag( $name, $content ) {
+	public function prependMetaTag( $name, $content ) {
 		$name = trim( htmlspecialchars( $name ) );
 		$n = count( $this->_head['meta'] );
 		for ($i = 0; $i < $n; $i++) {
@@ -128,15 +126,13 @@ class mezunMainFrame {
 	 * Adds a custom html string to the head block
 	 * @param string The html to add to the head
 	 */
-	function addCustomHeadTag( $html ) {
+	public function addCustomHeadTag( $html ) {
 		$this->_head['custom'][] = trim( $html );
 	}
-	
-
 	/**
 	* @return string
 	*/
-	function getHead() {
+	public function getHead() {
 		$head = array();
 		$head[] = '<title>' . $this->_head['title'] . '</title>';
 		foreach ($this->_head['meta'] as $meta) {
@@ -162,14 +158,14 @@ class mezunMainFrame {
 	/**
 	* @return string
 	*/
-	function getPageTitle() {
+	public function getPageTitle() {
 		return $this->_head['title'];
 	}
   /**
 	* Gets the value of a user state variable
 	* @param string The name of the variable
 	*/
-	function getUserState( $var_name ) {
+	public function getUserState( $var_name ) {
 		if (is_array( $this->_userstate )) {
 			return getParam( $this->_userstate, $var_name, null );
 		} else {
@@ -182,7 +178,7 @@ class mezunMainFrame {
 	* @param string The name of the variable passed in a request
 	* @param string The default value for the variable if not found
 	*/
-	function getUserStateFromRequest( $var_name, $req_name, $var_default=null ) {
+	public function getUserStateFromRequest( $var_name, $req_name, $var_default=null ) {
 		if (is_array( $this->_userstate )) {
 			if (isset( $_REQUEST[$req_name] )) {
 				$this->setUserState( $var_name, $_REQUEST[$req_name] );
@@ -204,7 +200,7 @@ class mezunMainFrame {
 	* @param string The name of the variable
 	* @param string The value of the variable
 	*/
-	function setUserState( $var_name, $var_value ) {
+	public function setUserState( $var_name, $var_value ) {
 		if (is_array( $this->_userstate )) {
 			$this->_userstate[$var_name] = $var_value;
 		}
@@ -217,7 +213,7 @@ class mezunMainFrame {
 	* If a new session, a session id is generated and a record is created in
 	* the #__sessions table.
 	*/
-	function initSession() {
+	public function initSession() {
 		global $bolum;
 		mimport('tables.session');
 		// initailize session variables
@@ -291,11 +287,10 @@ class mezunMainFrame {
 			}
 		}
 	}
-
 	/*
 	* Static Function used to generate the Session Cookie Name
 	*/
-	function sessionCookieName() {
+	public function sessionCookieName() {
 		if( substr( SITEURL, 0, 7 ) == 'http://' ) {
 			$hash = md5( 'site' . substr( SITEURL, 7 ) );
 		} elseif( substr( SITEURL, 0, 8 ) == 'https://' ) {
@@ -306,11 +301,10 @@ class mezunMainFrame {
 
 		return $hash;
 	}
-
 	/*
 	* Static Function used to generate the Session Cookie Value
 	*/
-	static function sessionCookieValue( $id=null ) {
+	public function sessionCookieValue( $id=null ) {
 
 		$type        = SESSION_TYPE;
 		$browser     = @$_SERVER['HTTP_USER_AGENT'];
@@ -325,55 +319,50 @@ class mezunMainFrame {
 			// slightly reduced security - 3rd level IP authentication for those behind IP Proxy
 				$remote_addr     = explode('.',$_SERVER['REMOTE_ADDR']);
 				$ip                = $remote_addr[0] .'.'. $remote_addr[1] .'.'. $remote_addr[2];
-				$value             = mosHash( $id . $ip . $browser );
+				$value             = mezunHash( $id . $ip . $browser );
 				break;
 
 			default:
 			// Highest security level
 				$ip                = $_SERVER['REMOTE_ADDR'];
-				$value             = mosHash( $id . $ip . $browser );
+				$value             = mezunHash( $id . $ip . $browser );
 				break;
 		}
 
 		return $value;
 	}
-
 	/*
 	* Static Function used to generate the Rememeber Me Cookie Name for Username information
 	*/
-	function remCookieName_User() {
-		$value = mosHash( 'remembermecookieusername'. $this->sessionCookieName() );
+	public function remCookieName_User() {
+		$value = mezunHash( 'remembermecookieusername'. $this->sessionCookieName() );
 
 		return $value;
 	}
-
 	/*
 	* Static Function used to generate the Rememeber Me Cookie Name for Password information
 	*/
-	function remCookieName_Pass() {
-		$value = mosHash( 'remembermecookiepassword'. $this->sessionCookieName() );
+	public function remCookieName_Pass() {
+		$value = mezunHash( 'remembermecookiepassword'. $this->sessionCookieName() );
 
 		return $value;
 	}
-
 	/*
 	* Static Function used to generate the Remember Me Cookie Value for Username information
 	*/
-	function remCookieValue_User( $username ) {
-		$value = md5( $username . mosHash( @$_SERVER['HTTP_USER_AGENT'] ) );
+	public function remCookieValue_User( $username ) {
+		$value = md5( $username . mezunHash( @$_SERVER['HTTP_USER_AGENT'] ) );
 
 		return $value;
 	}
-
 	/*
 	* Static Function used to generate the Remember Me Cookie Value for Password information
 	*/
-	function remCookieValue_Pass( $passwd ) {
-		$value     = md5( $passwd . mosHash( @$_SERVER['HTTP_USER_AGENT'] ) );
+	public function remCookieValue_Pass( $passwd ) {
+		$value     = md5( $passwd . mezunHash( @$_SERVER['HTTP_USER_AGENT'] ) );
 
 		return $value;
 	}
-
 	/**
 	* Login validation function
 	*
@@ -381,7 +370,7 @@ class mezunMainFrame {
 	* table. A successful validation updates the current session record with
 	* the users details.
 	*/
-	function login( $username=null, $passwd=null, $remember=0, $userid=NULL ) {
+	public function login( $username=null, $passwd=null, $remember=0, $userid=NULL ) {
 		global $bolum;
 
 		$bypost = 0;
@@ -411,7 +400,7 @@ class mezunMainFrame {
 		} else {
 			if ( $remember && strlen($username) == 32 && $userid ) {
 			// query used for remember me cookie
-				$harden = mosHash( @$_SERVER['HTTP_USER_AGENT'] );
+				$harden = mezunHash( @$_SERVER['HTTP_USER_AGENT'] );
 
 				$query = "SELECT id, name, username, password"
 				. "\n FROM #__users"
@@ -483,14 +472,6 @@ class mezunMainFrame {
 				$session->username   = $row->username;
 				$session->userid     = intval( $row->id );
 				$session->nerede     = $bolum;
-				
-				/*   
-				if ($row->id == 1) {
-				$this->set('_isAdmin', true);
-				} else {
-				$this->set('_isAdmin', false);	
-				}
-				*/
 				$session->access_type = 'site';
 				$session->update();
 
@@ -546,11 +527,10 @@ class mezunMainFrame {
 			}
 		}
 	}
-
 	/**
 	* Ajax login : soner ekledi
 	*/
-	function login2( $username=null, $passwd=null, $remember=0, $userid=NULL ) {
+	public function loginx( $username=null, $passwd=null, $remember=0, $userid=NULL ) {
 		global $bolum;
 
 		$bypost = 0;
@@ -591,7 +571,7 @@ class mezunMainFrame {
 			//Beni hatırla işaretli ise cookie den alalım
 			if ( $remember && strlen($username) == 32 && $userid ) {
 			// query used for remember me cookie
-				$harden = mosHash( @$_SERVER['HTTP_USER_AGENT'] );
+				$harden = mezunHash( @$_SERVER['HTTP_USER_AGENT'] );
 
 				$query = "SELECT id, name, username, password"
 				. "\n FROM #__users"
@@ -725,7 +705,7 @@ class mezunMainFrame {
 	*
 	* Reverts the current session record back to 'anonymous' parameters
 	*/
-	function logout() {
+	public function logout() {
 		$session             =& $this->_session;
 		$session->username   = '';
 		$session->userid     = '';
@@ -740,9 +720,8 @@ class mezunMainFrame {
 
 		@session_destroy();
 	}
-
 	
-	function getUser() {
+	public function getUser() {
 		
 		mimport('tables.users');
 		
@@ -787,67 +766,61 @@ class mezunMainFrame {
 	* @param string The name of the property
 	* @param mixed The value of the property to set
 	*/
-	function set( $property, $value=null ) {
+	public function set( $property, $value=null ) {
 		$this->$property = $value;
 	}
-
 	/**
 	* @param string The name of the property
 	* @param mixed  The default value
 	* @return mixed The value of the property
 	*/
-	function get($property, $default=null) {
+	public function get($property, $default=null) {
 		if(isset($this->$property)) {
 			return $this->$property;
 		} else {
 			return $default;
 		}
 	}	
-}
-
 	/**
 	* Assembles head tags
 	*/
-	function showHead() {
-		global $mainframe, $my, $option, $bolum;
-
-		//site genel bilgileri
-		$mainframe->appendMetaTag( 'description', META_DESC );
-		$mainframe->appendMetaTag( 'keywords', META_KEYS );
-		$mainframe->addMetaTag( 'Generator', 'Soner Ekici');
-		$mainframe->addMetaTag( 'robots', 'index, follow' );
+	public function showHead() {
+	//site genel bilgileri
+		$this->appendMetaTag( 'description', META_DESC );
+		$this->appendMetaTag( 'keywords', META_KEYS );
+		$this->addMetaTag( 'Generator', 'Soner Ekici');
+		$this->addMetaTag( 'robots', 'index, follow' );
 		
 		//font family ve jquery eklemeleri
-		$mainframe->addStyleSheet('http://fonts.googleapis.com/css?family=Droid+Sans');
-		$mainframe->addStyleSheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,300,400,600&subset=latin,latin-ext&ver=4.1.1', 'all', 'open-sans-css');
-		$mainframe->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
+		$this->addStyleSheet('http://fonts.googleapis.com/css?family=Droid+Sans');
+		$this->addStyleSheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,300,400,600&subset=latin,latin-ext&ver=4.1.1', 'all', 'open-sans-css');
+		$this->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
 		
-		$mainframe->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-		$mainframe->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
+		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
 		
 		//bootstrap eklemesi
-		$mainframe->addStyleSheet('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css');
-		$mainframe->addScript(0, 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js');
-		$mainframe->addScript(0, SITEURL.'/includes/global/js/bootstrap-helper.js');
+		$this->addStyleSheet('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css');
+		$this->addScript(0, 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js');
+		$this->addScript(0, SITEURL.'/includes/global/js/bootstrap-helper.js');
 		
 		//site genel eklemeleri
-		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/global.css');
-		$mainframe->addScript(0, SITEURL.'/includes/global/js/global.js');
+		$this->addStyleSheet(SITEURL.'/includes/global/css/global.css');
+		$this->addScript(0, SITEURL.'/includes/global/js/global.js');
 		
 		//site menü css eklemesi
-		$mainframe->addStyleSheet(SITEURL.'/includes/global/css/cssmenu.css');    
-		$mainframe->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');    
+		$this->addStyleSheet(SITEURL.'/includes/global/css/cssmenu.css');    
+		$this->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');    
 		
 		//tinymce text editor
 		//$mainframe->addScript(0, SITEURL.'/includes/tinymce/tinymce.min.js');
 		
 		//summernote text editor
-		$mainframe->addScript(0, SITEURL.'/includes/summernote/summernote.min.js');
-		$mainframe->addScript(0, SITEURL.'/includes/summernote/summernote-tr-TR.js');
-		$mainframe->addStyleSheet(SITEURL.'/includes/summernote/summernote.css');
-		$mainframe->addStyleSheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
-		
-		
-		
-		echo $mainframe->getHead();
+		$this->addScript(0, SITEURL.'/includes/summernote/summernote.min.js');
+		$this->addScript(0, SITEURL.'/includes/summernote/summernote-tr-TR.js');
+		$this->addStyleSheet(SITEURL.'/includes/summernote/summernote.css');
+		$this->addStyleSheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
+				
+		echo $this->getHead();
 	}
+}

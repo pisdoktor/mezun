@@ -168,10 +168,8 @@ function changePass() {
 	if ($password == $password2) {
 		
 		$row = new mezunUsers($dbase);
-		$salt = MakePassword(16);
-		$crypt = md5($password.$salt);
 		
-		$password = $crypt.':'.$salt;
+		$password = mezunHashPassword($password);		
 		
 		$query = "UPDATE #__users SET password=".$dbase->Quote($password)." WHERE id=".$dbase->Quote($my->id);
 		$dbase->setQuery($query);
@@ -261,11 +259,7 @@ function saveImage() {
 	if ($error) {
 	Redirect('index.php?option=site&bolum=profil&task=my', $error);
 	} else {
-		if ($newwidth > $minWidth || $newheight > $minHeight) {
-			Redirect('index.php?option=site&bolum=profil&task=editimage');
-		} else {
 			Redirect('index.php?option=site&bolum=profil&task=my');        
-		}
 	}
 }
 /**
@@ -320,15 +314,16 @@ function getProfile($id) {
 	mimport('helpers.modules.istek.helper');
 	mimport('global.likes');
 	
-	$canEdit = false;
-	$canShow = false;
+	$can = array();
+	$can['Edit'] = false;
+	$can['Show'] = false;
 	$user = new mezunUsers($dbase);
 	
 	if ($id) {
 		
 	if ($id == $my->id) {
-		$canEdit = true;
-		$canShow = true;
+		$can['Edit'] = true;
+		$can['Show'] = true;
 		
 		$user->load($my->id);
 	} else {
@@ -341,25 +336,25 @@ function getProfile($id) {
 	}
 	
 	if (($my->id == $user->id)) {
-		$canSendMsg = false;
-		$canSendIstem = false;
+		$can['SendMsg'] = false;
+		$can['SendIstem'] = false;
 	} else {
 		
 	//Kullanıcı ile arkadaş ise
 	if (mezunArkadasHelper::checkArkadaslik($user->id)) {
-		$canSendIstem = false;
-		$canSendMsg   = true;
-		$canShow      = true;
-	//Kullanıcı arada bir istek var ise
+		$can['SendIstem'] = false;
+		$can['SendMsg']  = true;
+		$can['Show']      = true;
+	//Kullanıcı ile arada bir istek var ise
 	} else if (mezunIstekHelper::checkIstek($user->id)) {
-		$canSendIstem = false;
-		$canSendMsg   = false;
-		$canShow      = false;
+		$can['SendIstem'] = false;
+		$can['SendMsg']   = false;
+		$can['Show']   = false;
 	//Ne bir istek var ne de bir arkadaşlık
 	} else if ((!mezunArkadasHelper::checkArkadaslik($user->id)) && (!mezunIstekHelper::checkIstek($user->id))) {
-		$canSendIstem = true;
-		$canSendMsg   = false;
-		$canShow      = false;
+		$can['SendIstem'] = true;
+		$can['SendMsg']  = false;
+		$can['Show']    = false;
 	}
 	}
 	
@@ -383,5 +378,14 @@ function getProfile($id) {
 		return;	
 	}
 	
-	mezunProfilHTML::getProfile($row, $canEdit, $canSendMsg, $canSendIstem, $canShow);
+	$can['Crop'] = false;
+	if ($row->image) {
+		list($w, $h) = getimagesize(ABSPATH.'/images/profil/'.$row->image);
+		
+		if ($w > 200 || $h > 200) {
+			$can['Crop'] = true;
+		}
+	}
+	
+	mezunProfilHTML::getProfile($row, $can);
 }

@@ -56,11 +56,11 @@ class mezunGlobalLikes {
 		<?php
 		if (mezunGlobalLikes::haveLike($itemid, $nerede)) {
 		 ?>
-		 <a id="likebutton<?php echo $itemid;?>" href="#" url="index2.php?option=site&bolum=like&task=unlike&id=<?php echo $itemid;?>&nerede=<?php echo $nerede;?>" class="btn btn-default btn-xs likebutton likeb-<?php echo $itemid;?>">Beğeni Kaldır</a> | <span class="item-<?php echo $itemid;?>-count"><?php echo mezunGlobalLikes::totalLikes($itemid, $nerede);?></span> Beğeni
+		 <a id="likebutton<?php echo $itemid;?>" href="#" url="index2.php?option=site&bolum=like&task=unlike&id=<?php echo $itemid;?>&nerede=<?php echo $nerede;?>" class="btn btn-default btn-xs likebutton likeb-<?php echo $itemid;?>">Beğeni Kaldır</a> | <small><span class="item-<?php echo $itemid;?>-count"><?php echo mezunGlobalLikes::totalLikes($itemid, $nerede);?></span> Beğenme</small>
 		 <?php   
 		} else {
 		 ?>
-		 <a id="likebutton<?php echo $itemid;?>" href="#" url="index2.php?option=site&bolum=like&task=like&id=<?php echo $itemid;?>&nerede=<?php echo $nerede;?>" class="btn btn-default btn-xs likebutton likeb-<?php echo $itemid;?>">Beğen</a> | <span class="item-<?php echo $itemid;?>-count"><?php echo mezunGlobalLikes::totalLikes($itemid, $nerede);?></span> Beğeni
+		 <a id="likebutton<?php echo $itemid;?>" href="#" url="index2.php?option=site&bolum=like&task=like&id=<?php echo $itemid;?>&nerede=<?php echo $nerede;?>" class="btn btn-default btn-xs likebutton likeb-<?php echo $itemid;?>">Beğen</a> | <small><span class="item-<?php echo $itemid;?>-count"><?php echo mezunGlobalLikes::totalLikes($itemid, $nerede);?></span> Beğenme</small>
 		 <?php
 		}
 	}

@@ -16,11 +16,6 @@ require( dirname( __FILE__ ) . '/config.php' );
 */
 require_once(dirname( __FILE__ ) . '/includes/base.php' );
 /**
-* Gerekli olan fonksiyonları alalım
-*/
-require_once(dirname( __FILE__ ) . '/includes/functions.php');
-
-/**
 * Sef desteği sağlayalım
 * NOT: Henüz tam olarak aktif değil. Üzerinde çalışılması gerekiyor :( 
 */
@@ -164,7 +159,7 @@ function resendPassword() {
 	   $body.= "Site: ".SITEURL."\n";
 	   $body.= "Lütfen siteye giriş yaparak parolanızı tekrar değiştiriniz.\n";
 	   
-	   mosMail(MAILFROM, MAILFROMNAME, $mail, 'Yeni Parola', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
+	   mezunGlobalMail::mezunMail(MAILFROM, MAILFROMNAME, $mail, 'Yeni Parola', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
 	   Redirect('index.php', 'Yeni parola verdiğiniz e-posta adresine gönderildi!');
 	} else {
 		Redirect('index.php', 'Verilen e-postaya ait bir kullanıcı yok!');
@@ -217,7 +212,7 @@ function registerUser() {
 	$body.= "Site: ".SITEURL."\n";
 	$body.= "Siteye giriş yapmak için yukarıdaki aktivasyon linkine tıklayınız.\n";
 	   
-	mosMail(MAILFROM, MAILFROMNAME, $row->email, 'Yeni Üyelik', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
+	mezunGlobalMail::mezunMail(MAILFROM, MAILFROMNAME, $row->email, 'Yeni Üyelik', $body, 1, '', '', '', MAILFROM, MAILFROMNAME);
 	
 	$msg = 'Kayıt talebiniz kaydedildi. E-posta adresinize aktivasyon linki gönderildi. Lütfen önce aktivasyonu gerçekleştiriniz!';
 	
@@ -289,10 +284,6 @@ function CookieCheck() {
 /**
 * Sayfa açılışı...
 */
-ob_start();
-
-ob_end_clean();
-
 header( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' );
 header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
 header( 'Cache-Control: no-store, no-cache, must-revalidate' );
@@ -323,7 +314,7 @@ if (!$my->id) {
 else {
 	//Kullanıcı ($id=1 olan) eğer yönetici ise...
 	if ($my->access_type == 'admin') {    
-		require_once(ABSPATH.'/admin/includes/functions.php');    
+		include_once(ABSPATH.'/admin/includes/functions.php');    
 			
 		include_once(ABSPATH.'/admin/templates/'.ADMINTEMPLATE.'/index.php');
 	//Kullanıcı normal bir üye ise...		

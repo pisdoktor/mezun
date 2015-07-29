@@ -185,30 +185,30 @@ $(function(){
 		<?php
 	}
 	
-	static function getProfile($row, $canEdit, $canSendMsg, $canSendIstem, $canShow) {
+	static function getProfile($row, $can) {
 		
 		$image = $row->image ? SITEURL.'/images/profil/'.$row->image : SITEURL.'/images/profil/noimage.png';
 		
 		$cinsiyet = $row->cinsiyet == 1 ? 'Erkek' : 'Bayan';
 		
-		$editlink = $canEdit ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=edit').'">Profili Düzenle</a>' : '';
+		$editlink = $can['Edit'] ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=edit').'">Profili Düzenle</a>' : '';
 		
-		$passlink = $canEdit ? '<a class="btn btn-default btn-sm" href="#" id="changepass">Parola Değiştir</a>' : '';
+		$passlink = $can['Edit'] ? '<a class="btn btn-default btn-sm" href="#" id="changepass">Parola Değiştir</a>' : '';
 		
-		$editimage = $canEdit ? '<a class="btn btn-default btn-sm" href="#" id="changeimg">Resim Ekle</a>' : '';
+		$editimage = $can['Edit'] ? '<a class="btn btn-default btn-sm" href="#" id="changeimg">Resim Ekle</a>' : '';
 		
-		$deleteimage = ($canEdit && $row->image) ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=deleteimage').'">Resmi Sil</a>' : ''; 
+		$deleteimage = ($can['Edit'] && $row->image) ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=deleteimage').'">Resmi Sil</a>' : ''; 
 		
-		$cropimage = ($canEdit && $row->image) ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=editimage').'">Resmi Düzenle</a>' : '';
+		$cropimage = ($can['Edit'] && $can['Crop']) ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=editimage').'">Resmi Düzenle</a>' : '';
 		 
-		$msglink = $canSendMsg ? '<a class="btn btn-default btn-sm" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
+		$msglink = $can['SendMsg'] ? '<a class="btn btn-default btn-sm" href="#" id="sendamsg">Mesaj Gönder</a>' : '';
 		
-		$deletefriend = $canSendMsg ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=arkadas&task=delete&id='.$row->id).'">Arkadaşlıktan Çıkar</a>':'';
+		$deletefriend = $can['SendMsg'] ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=arkadas&task=delete&id='.$row->id).'">Arkadaşlıktan Çıkar</a>':'';
 		
-		$istemlink = $canSendIstem ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=istek&task=send&id='.$row->id).'">Arkadaşlık İsteği Gönder</a>' : '';		
+		$istemlink = $can['SendIstem'] ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=istek&task=send&id='.$row->id).'">Arkadaşlık İsteği Gönder</a>' : '';		
 		
 		
-		$head = $canEdit ? 'PROFİLİM' : 'PROFİL: '.$row->name;
+		$head = $can['Edit'] ? 'PROFİLİM' : 'PROFİL: '.$row->name;
 		?>
 		<div class="panel panel-warning">
 		<div class="panel-heading"><?php echo $head;?></div>
@@ -221,7 +221,7 @@ $(function(){
 		<div class="row">
 		<img src="<?php echo $image;?>" class="img-thumbnail" title="<?php echo $row->name;?>" alt="<?php echo $row->name;?>" width="200" height="200" />
 		</div>
-		<?php if (!$canEdit) {?>
+		<?php if (!$can['Edit']) {?>
 		<div align="center">
 		<div>
 		<?php mezunOnlineHelper::isOnline($row->id);?>
@@ -290,7 +290,7 @@ $(function(){
 		</div>
 		<?php } ?>
 		
-		<?php if ($canShow && $row->work) {?>
+		<?php if ($can['Show'] && $row->work) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Çalıştığı Kurum:</strong></div>
@@ -311,7 +311,7 @@ $(function(){
 		</div>
 		</div>
 		
-		<?php if ($canShow) {?>
+		<?php if ($can['Show']) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Cinsiyet:</strong></div>
@@ -320,7 +320,7 @@ $(function(){
 		</div>
 		<?php } ?>
 		
-		<?php if ($canShow) {?>
+		<?php if ($can['Show']) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Doğum Tarihi:</strong></div>
@@ -329,7 +329,7 @@ $(function(){
 		</div>
 		<?php } ?>
 		
-		<?php if ($canShow) {?>
+		<?php if ($can['Show']) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Doğum Yeri:</strong></div>
@@ -338,7 +338,7 @@ $(function(){
 		</div>
 		<?php } ?>
 		
-		<?php if ($canShow) {?>
+		<?php if ($can['Show']) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Yaşadığı Şehir:</strong></div>
@@ -347,7 +347,7 @@ $(function(){
 		</div>
 		<?php } ?>
 		
-		<?php if ($canShow && $row->phone) {?>
+		<?php if ($can['Show'] && $row->phone) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Telefon Numarası:</strong></div>
@@ -376,7 +376,7 @@ $(function(){
 		</div>
 		</div>
 		
-		<?php if ($canShow) {?>
+		<?php if ($can['Show']) {?>
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5"><strong>Siteye Son Gelişi:</strong></div>

@@ -10,7 +10,7 @@ class mezunVersion {
 	
 	var $DEV_STATUS  = 'Beta';
 	
-	var $DEV_LEVEL   = '0';
+	var $DEV_LEVEL   = '1';
 	
 	var $CODENAME    = 'Türkiye';
 	

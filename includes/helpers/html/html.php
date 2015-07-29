@@ -14,7 +14,7 @@ class mezunHTML {
 		return $obj;
 	}
 
-  static function writableCell( $folder, $relative=1, $text='', $visible=1 ) {
+	static function writableCell( $folder, $relative=1, $text='', $visible=1 ) {
 	$writeable         = '<b><font color="green">Writeable</font></b>';
 	$unwriteable     = '<b><font color="red">Unwriteable</font></b>';
 

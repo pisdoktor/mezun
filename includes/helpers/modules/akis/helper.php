@@ -4,6 +4,30 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunAkisHelper {
 	
+	static function getSiteAkis($limitstart=0, $limit=5, $all=true) {
+		global $dbase, $my;
+		
+		//tüm üyelerin mi yoksa sadece arkadaşlarımın mı paylaşımlarını göreyim? 
+		if (!$all) {
+		mimport('helpers.modules.arkadas.helper');
+		//arkadaşları alalım
+		$friends = mezunArkadasHelper::getMyFriends();
+		//sorguya uygun hale getirelim
+		$users = implode(', ', $friends);
+		}
+		
+		$query = "SELECT a.*, u.name, u.image, u.id as userid FROM #__akis AS a"
+		. "\n LEFT JOIN #__users AS u ON u.id=a.userid "
+		. ($all ? "":"\n WHERE a.userid IN (".$users.") OR a.userid=".$dbase->Quote($my->id))
+		. "\n ORDER BY a.tarih DESC LIMIT ".$limitstart.", ".$limit
+		;
+		$dbase->setQuery($query);
+		
+		$rows = $dbase->loadObjectList();
+		
+		return $rows;
+	}
+	
 	static function getRow($row) {
 		
 		mimport('global.likes');

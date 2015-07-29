@@ -173,7 +173,7 @@ function getKullaniciList($search) {
 	 
 	 $where = array();
 	 if ($search) {
-		 $search = mosStripslashes($search);
+		 $search = mezunStripslashes($search);
 		 $where[] = "k.username LIKE '%" . $dbase->getEscaped( trim( strtolower( $search ) ) ) . "%'";
 	 }
 	 

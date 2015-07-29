@@ -3,6 +3,7 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class Arkadas {
+	
 	static function getList($rows, $pageNav) {
 		?>
 
@@ -96,4 +97,5 @@ echo $pageNav->writePagesLinks($link);
 
 <?php        
 }
+
 }

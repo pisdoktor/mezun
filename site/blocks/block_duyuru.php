@@ -16,7 +16,7 @@ if (!$rows) {
 	foreach ($rows as $row) {
 		?>
 		<div class="row">
-			<div class="col-sm-3"><?php echo FormatDate($row->tarih, '%d-%m-%Y %H:%M:%S');?></div>
+			<div class="col-sm-3"><?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?></div>
 			<div class="col-sm-9"><?php echo $row->text;?></div>		
 		</div>
 		<?php

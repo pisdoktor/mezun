@@ -103,7 +103,7 @@ function saveBackup($cid) {
 	$filename.= date('Y-m-d-h-i-s');
 	$filename.= '.sql';
 	
-	$file = PathName(ABSPATH).'backups/'.$filename;
+	$file = ABSPATH.'/backups/'.$filename;
 	
 	$file = fopen($file, 'x');
 	

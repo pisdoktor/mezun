@@ -12,10 +12,6 @@ if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
 }
 
-/**
- * A Path handling class
- *
- */
 class mezunPath {
 	/**
 	 * Checks if a path's permissions can be changed

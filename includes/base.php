@@ -17,6 +17,8 @@ mimport('helpers.database.database');
 mimport('helpers.database.table');
 //version
 mimport('global.version');
+//mail
+mimport('global.mail');
 //mainframe
 mimport('helpers.mainframe');
 //genel kullanılan fonksiyonları alalım
@@ -41,7 +43,9 @@ if ($dbase->getErrorNum()) {
 	include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
 	exit();
 }
+
 $dbase->debug( DEBUGMODE );
+
 // platform neurtral url handling
 if ( isset( $_SERVER['REQUEST_URI'] ) ) {
 	$request_uri = $_SERVER['REQUEST_URI'];
@@ -55,7 +59,7 @@ if ( isset( $_SERVER['REQUEST_URI'] ) ) {
 $_SERVER['REQUEST_URI'] = $request_uri;
 
 // current server time
-$now = date( 'Y-m-d H:i', time() );
+$now = date( 'Y-m-d H:i:s', time() );
 
 DEFINE( '_CURRENT_SERVER_TIME', $now );
 DEFINE( '_CURRENT_SERVER_TIME_FORMAT', '%Y-%m-%d %H:%M:%S' );
@@ -128,13 +132,12 @@ function getParam( &$arr, $name, $def=null, $mask=0 ) {
 		return $def;
 	}
 }
-
 /**
  * Strip slashes from strings or arrays of strings
  * @param mixed The input string or array
  * @return mixed String or array stripped of slashes
  */
-function mosStripslashes( &$value ) {
+function mezunStripslashes( &$value ) {
 	$ret = '';
 	if (is_string( $value )) {
 		$ret = stripslashes( $value );
@@ -150,7 +153,6 @@ function mosStripslashes( &$value ) {
 	}
 	return $ret;
 }
-
 /**
 * Copy the named array content into the object as properties
 * only existing properties of object are filled. when undefined in hash, properties wont be deleted
@@ -182,43 +184,6 @@ function BindArrayToObject( $array, &$obj, $ignore='', $prefix=NULL, $checkSlash
 
 	return true;
 }
-
-/**
-* Utility function to read the files in a directory
-* @param string The file system path
-* @param string A filter for the names
-* @param boolean Recurse search into sub-directories
-* @param boolean True if to prepend the full path to the file name
-*/
-function readDirectory( $path, $filter='.', $recurse=false, $fullpath=false  ) {
-	$arr = array();
-	if (!@is_dir( $path )) {
-		return $arr;
-	}
-	$handle = opendir( $path );
-
-	while ($file = readdir($handle)) {
-		$dir = PathName( $path.'/'.$file, false );
-		$isDir = is_dir( $dir );
-		if (($file != ".") && ($file != "..")) {
-			if (preg_match( "/$filter/", $file )) {
-				if ($fullpath) {
-					$arr[] = trim( PathName( $path.'/'.$file, false ) );
-				} else {
-					$arr[] = trim( $file );
-				}
-			}
-			if ($recurse && $isDir) {
-				$arr2 = readDirectory( $dir, $filter, $recurse, $fullpath );
-				$arr = array_merge( $arr, $arr2 );
-			}
-		}
-	}
-	closedir($handle);
-	asort($arr);
-	return $arr;
-}
-
 /**
 * Utility function redirect the browser location to another url
 *
@@ -295,57 +260,6 @@ function treeRecurse( $id, $indent, $list, &$children, $maxlevel=9999, $level=0,
 	return $list;
 }
 
-/**
-* Function to strip additional / or \ in a path name
-* @param string The path
-* @param boolean Add trailing slash
-*/
-function PathName($p_path,$p_addtrailingslash = true) {
-	$retval = "";
-
-	$isWin = (substr(PHP_OS, 0, 3) == 'WIN');
-
-	if ($isWin)	{
-		$retval = str_replace( '/', '\\', $p_path );
-		if ($p_addtrailingslash) {
-			if (substr( $retval, -1 ) != '\\') {
-				$retval .= '\\';
-			}
-		}
-
-		// Check if UNC path
-		$unc = substr($retval,0,2) == '\\\\' ? 1 : 0;
-
-		// Remove double \\
-		$retval = str_replace( '\\\\', '\\', $retval );
-
-		// If UNC path, we have to add one \ in front or everything breaks!
-		if ( $unc == 1 ) {
-			$retval = '\\'.$retval;
-		}
-	} else {
-		$retval = str_replace( '\\', '/', $p_path );
-		if ($p_addtrailingslash) {
-			if (substr( $retval, -1 ) != '/') {
-				$retval .= '/';
-			}
-		}
-
-		// Check if UNC path
-		$unc = substr($retval,0,2) == '//' ? 1 : 0;
-
-		// Remove double //
-		$retval = str_replace('//','/',$retval);
-
-		// If UNC path, we have to add one / in front or everything breaks!
-		if ( $unc == 1 ) {
-			$retval = '/'.$retval;
-		}
-	}
-
-	return $retval;
-}
-
 function ObjectToArray($p_obj) {
 	$retarray = null;
 	if(is_object($p_obj))
@@ -361,7 +275,13 @@ function ObjectToArray($p_obj) {
 	}
 	return $retarray;
 }
-
+/**
+* Üstünde çalışmak gerekiyor...!!!!
+* 
+* @param mixed $text
+* @param mixed $action
+* @param mixed $mode
+*/
 function ErrorAlert( $text, $action='window.history.go(-1);', $mode=1 ) {
 	$text = nl2br( $text );
 	$text = addslashes( $text );
@@ -432,233 +352,6 @@ function FormatDate( $date, $format="", $offset=NULL ){
 	}
 	return $date;
 }
-
-/**
-* Returns current date according to current local and time offset
-* @param string format optional format for strftime
-* @returns current date
-*/
-function CurrentDate( $format="" ) {
-	if ($format=="") {
-		$format = '%d-%m-%Y %H:%M:%S';
-	}
-	$date = strftime( $format, time() + (OFFSET*3600) );
-	return $date;
-}
-
-function CreateGUID(){
-	srand((double)microtime()*1000000);
-	$r = rand();
-	$u = uniqid(getmypid() . $r . (double)microtime()*1000000,1);
-	$m = md5 ($u);
-	return($m);
-}
-
-function mosCompressID( $ID ){
-	return(Base64_encode(pack("H*",$ID)));
-}
-
-function mosExpandID( $ID ) {
-	return ( implode(unpack("H*",Base64_decode($ID)), '') );
-}
-
-/**
-* Function to create a mail object for futher use (uses phpMailer)
-* @param string From e-mail address
-* @param string From name
-* @param string E-mail subject
-* @param string Message body
-* @return object Mail object
-*/
-function CreateMail( $from='', $fromname='', $subject, $body ) {
-	
-	$mail = new PHPMailer();
-
-	$mail->PluginDir = ABSPATH .'/includes/phpmailer/';
-	$mail->SetLanguage( 'tr', ABSPATH . '/includes/phpmailer/language/' );
-	$mail->CharSet 	= substr_replace(_ISO, '', 0, 8);
-	$mail->isSendmail();
-	$mail->From 	= $from ? $from : MAILFROM;
-	$mail->FromName = $fromname ? $fromname : MAILFROMNAME;
-
-	// Add smtp values if needed
-	if ( MAILER == 'smtp' ) {
-		$mail->SMTPAuth = smtpauth;
-		$mail->Username = smtpuser;
-		$mail->Password = smtppass;
-		$mail->Host 	= smtphost;
-	} else
-
-	// Set sendmail path
-	if ( MAILER == 'sendmail' ) {
-		if (SENDMAIL)
-			$mail->Sendmail = SENDMAIL;
-	} // if
-
-	$mail->Subject 	= $subject;
-	$mail->Body 	= $body;
-
-	return $mail;
-}
-
-/**
-* Mail function (uses phpMailer)
-* @param string From e-mail address
-* @param string From name
-* @param string/array Recipient e-mail address(es)
-* @param string E-mail subject
-* @param string Message body
-* @param boolean false = plain text, true = HTML
-* @param string/array CC e-mail address(es)
-* @param string/array BCC e-mail address(es)
-* @param string/array Attachment file name(s)
-* @param string/array ReplyTo e-mail address(es)
-* @param string/array ReplyTo name(s)
-* @return boolean
-*/
-function mosMail( $from, $fromname, $recipient, $subject, $body, $mode=0, $cc=NULL, $bcc=NULL, $attachment=NULL, $replyto=NULL, $replytoname=NULL ) {
-	global $debug;
-
-	// Allow empty $from and $fromname settings (backwards compatibility)
-	if ($from == '') {
-		$from = MAILFROM;
-	}
-	if ($fromname == '') {
-		$fromname = MAILFROMNAME;
-	}
-
-	// Filter from, fromname and subject
-	if (!IsValidEmail( $from ) || !IsValidName( $fromname ) || !IsValidName( $subject )) {
-		return false;
-	}
-
-	$mail = CreateMail( $from, $fromname, $subject, $body );
-
-	// activate HTML formatted emails
-	if ( $mode ) {
-		$mail->IsHTML(true);
-	}
-
-	if (is_array( $recipient )) {
-		foreach ($recipient as $to) {
-			if (!IsValidEmail( $to )) {
-				return false;
-			}
-			$mail->AddAddress( $to );
-		}
-	} else {
-		if (!IsValidEmail( $recipient )) {
-			return false;
-		}
-		$mail->AddAddress( $recipient );
-	}
-	if (isset( $cc )) {
-		if (is_array( $cc )) {
-			foreach ($cc as $to) {
-				if (!IsValidEmail( $to )) {
-					return false;
-				}
-				$mail->AddCC($to);
-			}
-		} else {
-			if (!IsValidEmail( $cc )) {
-				return false;
-			}
-			$mail->AddCC($cc);
-		}
-	}
-	if (isset( $bcc )) {
-		if (is_array( $bcc )) {
-			foreach ($bcc as $to) {
-				if (!IsValidEmail( $to )) {
-					return false;
-				}
-				$mail->AddBCC( $to );
-			}
-		} else {
-			if (!IsValidEmail( $bcc )) {
-				return false;
-			}
-			$mail->AddBCC( $bcc );
-		}
-	}
-	if ($attachment) {
-		if (is_array( $attachment )) {
-			foreach ($attachment as $fname) {
-				$mail->AddAttachment( $fname );
-			}
-		} else {
-			$mail->AddAttachment($attachment);
-		}
-	}
-	//Important for being able to use mosMail without spoofing...
-	if ($replyto) {
-		if (is_array( $replyto )) {
-			reset( $replytoname );
-			foreach ($replyto as $to) {
-				$toname = ((list( $key, $value ) = each( $replytoname )) ? $value : '');
-				if (!IsValidEmail( $to ) || !IsValidName( $toname )) {
-					return false;
-				}
-				$mail->AddReplyTo( $to, $toname );
-			}
-		} else {
-			if (!IsValidEmail( $replyto ) || !IsValidName( $replytoname )) {
-				return false;
-			}
-			$mail->AddReplyTo($replyto, $replytoname);
-		}
-	}
-
-	$mailssend = $mail->Send();
-
-	if( DEBUGMODE ) {
-		//$mosDebug->message( "Mails send: $mailssend");
-	}
-	if( $mail->error_count > 0 ) {
-		//$mosDebug->message( "The mail message $fromname <$from> about $subject to $recipient <b>failed</b><br /><pre>$body</pre>", false );
-		//$mosDebug->message( "Mailer Error: " . $mail->ErrorInfo . "" );
-	}
-	return $mailssend;
-} // mosMail
-
-/**
- * Checks if a given string is a valid email address
- *
- * @param	string	$email	String to check for a valid email address
- * @return	boolean
- */
-function IsValidEmail( $email ) {
-	$valid = preg_match( '/^[\w\.\-]+@\w+[\w\.\-]*?\.\w{1,4}$/', $email );
-
-	return $valid;
-}
-
-/**
- * Checks if a given string is a valid (from-)name or subject for an email
- *
- * @since		1.0.11
- * @deprecated	1.5
- * @param		string		$string		String to check for validity
- * @return		boolean
- */
-function IsValidName( $string ) {
-	/*
-	 * The following regular expression blocks all strings containing any low control characters:
-	 * 0x00-0x1F, 0x7F
-	 * These should be control characters in almost all used charsets.
-	 * The high control chars in ISO-8859-n (0x80-0x9F) are unused (e.g. http://en.wikipedia.org/wiki/ISO_8859-1)
-	 * Since they are valid UTF-8 bytes (e.g. used as the second byte of a two byte char),
-	 * they must not be filtered.
-	 */
-	$invalid = preg_match( '/[\x00-\x1F\x7F]/', $string );
-	if ($invalid) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
 /**
  * Initialise GZIP
  */
@@ -781,41 +474,6 @@ if (!function_exists('html_entity_decode')) {
 		return strtr ($string, $trans_tbl);
 	}
 }
-
-/**
-* Sorts an Array of objects
-*/
-function SortArrayObjects_cmp( &$a, &$b ) {
-	global $csort_cmp;
-
-	if ( $a->$csort_cmp['key'] > $b->$csort_cmp['key'] ) {
-		return $csort_cmp['direction'];
-	}
-
-	if ( $a->$csort_cmp['key'] < $b->$csort_cmp['key'] ) {
-		return -1 * $csort_cmp['direction'];
-	}
-
-	return 0;
-}
-
-/**
-* Sorts an Array of objects
-* sort_direction [1 = Ascending] [-1 = Descending]
-*/
-function SortArrayObjects( &$a, $k, $sort_direction=1 ) {
-	global $csort_cmp;
-
-	$csort_cmp = array(
-		'key'		  => $k,
-		'direction'	=> $sort_direction
-	);
-
-	usort( $a, 'SortArrayObjects_cmp' );
-
-	unset( $csort_cmp );
-}
-
 /**
 * Displays a not authorised message
 *
@@ -845,60 +503,6 @@ function ampReplace( $text ) {
 
 	return $text;
 }
-/**
-* Chmods files and directories recursively to given permissions. Available from 1.0.0 up.
-* @param path The starting file or directory (no trailing slash)
-* @param filemode Integer value to chmod files. NULL = dont chmod files.
-* @param dirmode Integer value to chmod directories. NULL = dont chmod directories.
-* @return TRUE=all succeeded FALSE=one or more chmods failed
-*/
-function ChmodRecursive($path, $filemode=NULL, $dirmode=NULL) {
-	$ret = TRUE;
-	if (is_dir($path)) {
-		$dh = opendir($path);
-		while ($file = readdir($dh)) {
-			if ($file != '.' && $file != '..') {
-				$fullpath = $path.'/'.$file;
-				if (is_dir($fullpath)) {
-					if (!ChmodRecursive($fullpath, $filemode, $dirmode))
-						$ret = FALSE;
-				} else {
-					if (isset($filemode))
-						if (!@chmod($fullpath, $filemode))
-							$ret = FALSE;
-				} // if
-			} // if
-		} // while
-		closedir($dh);
-		if (isset($dirmode))
-			if (!@chmod($path, $dirmode))
-				$ret = FALSE;
-	} else {
-		if (isset($filemode))
-			$ret = @chmod($path, $filemode);
-	} // if
-	return $ret;
-} // ChmodRecursive
-
-/**
-* Chmods files and directories recursively to mos global permissions. Available from 1.0.0 up.
-* @param path The starting file or directory (no trailing slash)
-* @param filemode Integer value to chmod files. NULL = dont chmod files.
-* @param dirmode Integer value to chmod directories. NULL = dont chmod directories.
-* @return TRUE=all succeeded FALSE=one or more chmods failed
-*/
-function mosChmod($path) {
-	$filemode = NULL;
-	if (FILEPERMS != '')
-		$filemode = octdec(FILEPERMS);
-	$dirmode = NULL;
-	if (DIRPERMS != '')
-		$dirmode = octdec(DIRPERMS);
-	if (isset($filemode) || isset($dirmode))
-		return ChmodRecursive($path, $filemode, $dirmode);
-	return TRUE;
-} // mosChmod
-
 /**
  * Function to convert array to integer values
  * @param array
@@ -968,15 +572,14 @@ function GetArrayInts( $name, $type=NULL ) {
  * @param string Seed string
  * @return string
  */
-function mosHash( $seed ) {
+function mezunHash( $seed ) {
 	return md5( SECRETWORD . md5( $seed ) );
 }
 
 /**
  * Format a backtrace error
- * @since 1.0.5
  */
-function mosBackTrace() {
+function mezunBackTrace() {
 	if (function_exists( 'debug_backtrace' )) {
 		echo '<div align="left">';
 		foreach( debug_backtrace() as $back) {
@@ -1080,23 +683,134 @@ function spoofValue($alt=NULL) {
 	}
 	// the prefix ensures that the hash is non-numeric
 	// otherwise it will be intercepted by globals.php
-	$validate 	= 'j' . mosHash( $db . $random . $my->id );
+	$validate 	= 'j' . mezunHash( $db . $random . $my->id );
 
 	return $validate;
 }
 
-/**
- * A simple helper function to salt and hash a clear-text password.
- *
- * @since	1.0.13
- * @param	string	$password	A plain-text password
- * @return	string	An md5 hashed password with salt
- */
-function josHashPassword($password) {
+function loadSiteModule() {
+	global $option, $bolum, $task;
+	global $id, $cid;
+	global $limit, $limitstart;
+	global $mainframe, $my, $mosmsg;
+	
+	switch($option) {
+	default:
+	case 'site':
+	initModule($bolum);
+	break;
+	
+	case 'admin':
+	convertAdmin();
+	break;
+	}
+	
+}
+
+function initModule($bolum) {
+	global $task;
+	global $id, $cid;
+	global $limit, $limitstart;
+	global $mainframe, $my, $mosmsg;
+	
+	if ($bolum) {
+		include_once(ABSPATH.'/site/modules/'.$bolum.'/index.php');
+	} else {
+		include_once(ABSPATH.'/site/modules/akis/index.php');
+	}
+} 
+
+function convertAdmin() {
+	global $mainframe, $dbase, $my;
+	
+	if ($my->id == 1) {
+	$session = new mezunSession($dbase);
+	$session->load($mainframe->_session->session);
+
+	$session->access_type = 'admin';
+	$session->update();
+	
+	Redirect('index.php');
+	} else {
+		NotAuth();
+	}    
+}
+
+function getFooter() {
+	include(ABSPATH.'/site/templates/'.SITETEMPLATE.'/footer.php');
+}
+
+function initBlocks() {
+	global $dbase, $my;
+		
+		$query = "SELECT id, title, block, position, content, showtitle"
+		. "\n FROM #__blocks AS b"
+		. "\n INNER JOIN #__blocks_menu AS bm ON bm.blockid = b.id"
+		. "\n WHERE b.published = 1"
+		. "\n AND (bm.bolum = ".$dbase->Quote($my->nerede)." OR bm.bolum='')"
+		. "\n ORDER BY b.ordering";
+
+		$dbase->setQuery( $query );
+		$blocks = $dbase->loadObjectList();
+
+		foreach ($blocks as $block) {
+			$mezunblocks[$block->position][] = $block;
+		}
+	if (empty($mezunblocks)) {
+		$mezunblocks = '';
+	}
+	return $mezunblocks;
+}
+
+function LoadBlocks( $position='left' ) {
+
+	mimport('global.block');
+
+	$allBlocks = initBlocks();
+	
+	if (isset( $allBlocks[$position] )) {
+		$blocks = $allBlocks[$position];
+	} else {
+		$blocks = array();
+	}
+
+	$prepend = '<div class="panel panel-default">';
+	$postpend = '</div>';
+
+	foreach ($blocks as $block) {
+		
+		echo $prepend;
+
+		if ((substr("$block->block",0,6))=='block_') {
+		// normal blocks
+			mezunGlobalBlock::normalblock($block);
+		} else {
+		// custom or new blocks
+			mezunGlobalBlock::htmlblock($block);
+		}
+
+		echo $postpend;
+	}
+}
+
+function CountBlocks( $position='left' ) {
+	global $dbase;
+
+	$blocks = initBlocks();
+	
+	if (isset( $blocks[$position] )) {
+		return count( $blocks[$position] );
+	} else {
+		return 0;
+	}
+}
+
+function mezunHashPassword($password) {
 	// Salt and hash the password
-	$salt	= MakePassword(16);
-	$crypt	= md5($password.$salt);
-	$hash	= $crypt.':'.$salt;
+	$salt    = MakePassword(16);
+	$crypt    = md5($password.$salt);
+	$hash    = $crypt.':'.$salt;
 
 	return $hash;
 }
+

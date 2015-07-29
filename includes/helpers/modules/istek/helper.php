@@ -44,4 +44,17 @@ class mezunIstekHelper {
 		}
 	}
 	
+	static function incomingRequest() {
+		global $dbase, $my;
+	
+		
+		$query = "SELECT gid FROM #__istekler"
+		. "\n WHERE aid=".$dbase->Quote($my->id)
+		. "\n AND durum=0 ORDER BY tarih DESC"
+		;
+		$dbase->setQuery($query);
+		
+		return $dbase->loadResultArray();
+	}
+	
 }

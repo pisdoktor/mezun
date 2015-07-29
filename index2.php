@@ -17,10 +17,6 @@ require( dirname( __FILE__ ) . '/config.php' );
 */
 require_once(dirname( __FILE__ ) . '/includes/base.php' );
 /**
-* Gerekli olan fonksiyonları alalım
-*/
-require_once(dirname( __FILE__ ) . '/includes/functions.php');
-/**
 * Genel döngü değerlerini alalım
 */
 $option = strval(strtolower(getParam($_REQUEST, 'option')));
@@ -43,23 +39,16 @@ $my = $mainframe->getUser();
 
 switch($option) {
 
-	case 'login2':
-	Login2();
+	case 'loginx':
+	LoginX();
 	break;
 }
 
-function Login2() {
+function LoginX() {
 	global $mainframe;
 	
-	$mainframe->login2();
+	$mainframe->loginx();
 }
-
-/**
-* Sayfa açılışı...
-*/
-ob_start();
-
-ob_end_clean();
 
 /**
 * Kullanıcı üye ise...

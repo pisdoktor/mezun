@@ -12,7 +12,7 @@ class mezunGruplar extends mezunTable {
 	
 	var $image = null;
 	
-	var $status = null; //0: herkese açık, 1: davet ile giriş
+	var $status = null; //0: herkese açık, 1: herkese kapalı
 	
 	var $creator = null;
 	

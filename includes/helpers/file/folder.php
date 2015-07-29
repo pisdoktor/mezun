@@ -4,11 +4,8 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 mimport('helpers.file.path');
 
-/**
- * A Folder handling class
- */
-class mezunFolder
-{
+
+class mezunFolder {
 	/**
 	 * Copy a folder.
 	 *

@@ -44,6 +44,42 @@ switch($task) {
 	case 'checkistek':
 	checkIstek();
 	break;
+	
+	case 'onaylax':
+	changeX($id, 1);
+	break;
+	
+	case 'deletex':
+	changeX($id, 0);
+	break;
+}
+
+function changeX($id, $status) {
+	global $dbase, $my;
+	
+	$msg = '';
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	//Onayla butonu basılmış
+	if ($status) {
+		$dbase->setQuery("UPDATE #__istekler SET durum=1 WHERE gid=".$dbase->Quote($id)." AND aid=".$dbase->Quote
+		($my->id));
+		$dbase->query();
+		$msg .= 'İstek onaylandı';
+	}
+	// sil butonu basılmış
+	else {
+		$dbase->setQuery("DELETE FROM #__istekler WHERE gid=".$dbase->Quote($id)." AND aid=".$dbase->Quote($my->id));
+		$dbase->query();
+		$msg .= 'İstek silindi';
+	} 
+	
+	
+	echo $msg;
 }
 
 function checkIstek() {

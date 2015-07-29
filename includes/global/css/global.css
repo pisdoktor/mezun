@@ -597,3 +597,23 @@ border-radius:4px;
 a#scroll-top:hover{ 
 background-color:#f56734; 
 }
+
+#steps { 
+	list-style:none; 
+	width:100%; 
+	overflow:hidden; 
+	margin:0px; 
+	padding:0px;
+	background-color: #dadada;
+}
+#steps li {
+	font-size:24px; 
+	float:left; 
+	padding:10px; 
+	color:#b0b1b3;
+}
+#steps li span {font-size:11px; display:block;}
+#steps li.current { 
+	background-color: #fafafa;
+	color:#000;
+}
