@@ -9,6 +9,7 @@ $limit = intval(getParam($_REQUEST, 'limit', 20));
 include(dirname(__FILE__). '/html.php');
 
 mimport('tables.mesajlar');
+mimport('helpers.modules.mesaj.helper');
 
 switch($task) {
 	default:
@@ -29,8 +30,8 @@ function showBildirim($id) {
 	. "\n LEFT JOIN #__users AS u ON u.id=m.gid"
 	. "\n WHERE m.id=".$dbase->Quote($id));
 	$dbase->loadObject($row);
-	$row->baslik = $msg->cryptionText($row->baslik, 'decode');
-	$row->text = $msg->cryptionText($row->text, 'decode');
+	$row->baslik = mezunMesajHelper::cryptionText($row->baslik, 'decode');
+	$row->text = mezunMesajHelper::cryptionText($row->text, 'decode');
 	$row->text = nl2br($row->text);
 	
 	Bildirim::showBildirim($row);

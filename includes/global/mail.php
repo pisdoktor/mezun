@@ -13,30 +13,39 @@ class mezunGlobalMail {
 */
 	static function CreateMail( $from='', $fromname='', $subject, $body ) {
 	
-	$mail = new PHPMailer();
+	$mail = new mezunPHPMailer();
 
-	$mail->PluginDir = ABSPATH .'/includes/phpmailer/';
-	$mail->SetLanguage( 'tr', ABSPATH . '/includes/phpmailer/language/' );
+	//$mail->PluginDir = ABSPATH .'/includes/phpmailer/';
+	$mail->SetLanguage('tr');
 	$mail->CharSet     = substr_replace(_ISO, '', 0, 8);
-	$mail->isSendmail();
 	$mail->From     = $from ? $from : MAILFROM;
 	$mail->FromName = $fromname ? $fromname : MAILFROMNAME;
 
 	// Add smtp values if needed
 	if ( MAILER == 'smtp' ) {
-		$mail->SMTPAuth = smtpauth;
-		$mail->Username = smtpuser;
-		$mail->Password = smtppass;
-		$mail->Host     = smtphost;
+		$mail->isSMTP();   
+		$mail->Host = smtphost; 
+		$mail->SMTPAuth = smtpauth;   
+		$mail->Username = smtpuser;     
+		$mail->Password = smtppass;                         
+		$mail->SMTPSecure = smtpsecure; // Enable TLS encryption, `ssl` also accepted
+		$mail->Port = smtpport;   
 	} else
 
 	// Set sendmail path
 	if ( MAILER == 'sendmail' ) {
-		if (SENDMAIL)
+		if (SENDMAIL) {
 			$mail->Sendmail = SENDMAIL;
-	} // if
+		} else {
+			$mail->isSendmail();    
+		}
+	} else 
+	
+	if (MAILER == 'mail') {
+		$mail->isMail();
+	} 
 
-	$mail->Subject     = $subject;
+	$mail->Subject  = $subject;
 	$mail->Body     = $body;
 
 	return $mail;
@@ -64,12 +73,13 @@ class mezunGlobalMail {
 	if ($from == '') {
 		$from = MAILFROM;
 	}
+	
 	if ($fromname == '') {
 		$fromname = MAILFROMNAME;
 	}
 
 	// Filter from, fromname and subject
-	if (!mezunGlobalMail::IsValidEmail( $from ) || !mezunGlobalMail::IsValidName( $fromname ) || !mazunGlobalMail::IsValidName( $subject )) {
+	if (!mezunGlobalMail::IsValidEmail( $from ) || !mezunGlobalMail::IsValidName( $fromname ) || !mezunGlobalMail::IsValidName( $subject )) {
 		return false;
 	}
 

@@ -1,6 +1,9 @@
 <?php
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
+
+include_once(dirname(__FILE__).'/smtp.php');
+
 /**
  * PHPMailer - PHP email creation and transport class.
  * PHP Version 5

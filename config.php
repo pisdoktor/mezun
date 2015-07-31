@@ -9,7 +9,7 @@ define('DB', 'mezun');
 define('DB_PREFIX', 'deu_');
 
 
-define('_ISO', 'charset=UTF-8');
+define('_ISO', 'charset=utf-8');
 define('ABSPATH', dirname(__FILE__));
 define('SITEURL', 'http://localhost/deutf');
 
@@ -28,14 +28,20 @@ define('ERROR_REPORT', 1);
 define('SESSION_TYPE', 0);
 define('USER_ACTIVATION', 0);
 
-define('MAILER', 'sendmail'); //sendmail or smtp
+define('MAILER', 'smtp'); //sendmail or smtp or mail (php mail function)
+
+define('MAILFROMNAME', 'Mezun Sistemi');
+define('MAILFROM', 'no-reply@deutfmezunlari.com');
+
+//sendmail 
 define('SENDMAIL', '/usr/sbin/sendmail');
-define('MAILFROM', 'Mezun Sistemi');
-define('MAILFROMNAME', 'mezun@mezunsistemi.com');
-define('smtpauth', '');
+//smtp
+define('smtpauth', true);
 define('smtpuser', 'no-reply@deutfmezunlari.com');
 define('smtppass', 'son20er35');
-define('smtphost', 'smtpout.secureserver.net');
+define('smtphost', 'p3plcpnl0577.prod.phx3.secureserver.net');
+define('smtpport', '465');
+define('smtpsecure', 'tls');
 
 define('GZIPCOMP', 0);
 define('STATS', 1);

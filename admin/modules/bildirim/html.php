@@ -64,7 +64,7 @@ $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$row->baslik = $crypt->cryptionText($row->baslik, 'decode');
+$row->baslik = mezunMesajHelper::cryptionText($row->baslik, 'decode');
 ?>
 
 <div class="row" id="detail<?php echo $row->id;?>">

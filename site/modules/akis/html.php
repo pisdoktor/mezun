@@ -25,6 +25,7 @@ class mezunAkisHTML {
 				};
 				
 				$('button[name=submit]').attr("disabled", "disabled");
+				$('#msg-loading').html('Mesaj gönderiliyor...');
 						
 				$.ajax({
 					type    : 'POST',
@@ -35,6 +36,7 @@ class mezunAkisHTML {
 						
 				.done(function(data) {
 					console.log(data);
+					$('#msg-loading').hide();
 					$('#msgfield').val('');
 					$('#charNum').html('255');
 					$('#akis-messages').prepend(data);
@@ -53,6 +55,8 @@ class mezunAkisHTML {
 				});
 				
 				data.append('text', $('#imgfield').val());
+				
+				$('#image-loading').html('Resim yükleniyor...');
 								
 				$('button[name=submit]').attr("disabled", "disabled");
 				
@@ -65,6 +69,7 @@ class mezunAkisHTML {
 					 type: 'POST',
 					 success: function(data){
 						console.log(data);
+						$('#image-loading').hide();
 						$('#imgfield').val('');
 						$('#imgcharNum').html('255');
 						$('#file').val('');
@@ -97,6 +102,7 @@ class mezunAkisHTML {
 				<div align="right"><small><span id="charNum">255</span></small></div>
 				
 				<button name="submit" class="btn btn-default btn-sm">Gönder</button>
+				<div id="msg-loading"></div>
 				<input type="hidden" name="userid" value="<?php echo $my->id;?>" />
 				</form>
 				</div>
@@ -125,6 +131,7 @@ class mezunAkisHTML {
 				<div class="row">
 				<div class="col-sm-4">
 				<button name="submit" class="btn btn-default btn-sm">Gönder</button>
+				<div id="image-loading"></div>
 				</div>
 				</div>
 				</div>

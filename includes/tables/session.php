@@ -95,6 +95,7 @@ class mezunSession extends mezunTable {
 	 * @return string
 	 */
 	function generateId() {
+		global $mainframe;
 		$failsafe     = 20;
 		$randnum     = 0;
 		
@@ -102,7 +103,7 @@ class mezunSession extends mezunTable {
 
 		while ($failsafe--) {
 			$randnum         = md5( uniqid( microtime(), 1 ) );
-			$new_session_id = mezunMainFrame::sessionCookieValue( $randnum );
+			$new_session_id = $mainframe->sessionCookieValue( $randnum );
 
 			if ($randnum != '') {
 				$query = "SELECT $this->_tbl_key"
