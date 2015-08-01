@@ -785,6 +785,7 @@ class mezunMainFrame {
 	* Assembles head tags
 	*/
 	public function showHead() {
+		global $bolum;
 	//site genel bilgileri
 		$this->appendMetaTag( 'description', META_DESC );
 		$this->appendMetaTag( 'keywords', META_KEYS );
@@ -798,6 +799,7 @@ class mezunMainFrame {
 		
 		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
 		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js');
 		
 		//bootstrap eklemesi
 		$this->addStyleSheet('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css');
@@ -820,6 +822,15 @@ class mezunMainFrame {
 		$this->addScript(0, SITEURL.'/includes/summernote/summernote-tr-TR.js');
 		$this->addStyleSheet(SITEURL.'/includes/summernote/summernote.css');
 		$this->addStyleSheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
+		
+		if ($bolum == 'album') {
+			
+			$this->addScript(0, SITEURL.'/includes/global/js/album/jquery.knob.js');
+			$this->addScript(0, SITEURL.'/includes/global/js/album/jquery.iframe-transport.js');
+			$this->addScript(0, SITEURL.'/includes/global/js/album/jquery.fileupload.js');
+			$this->addScript(0, SITEURL.'/includes/global/js/album/album.js');
+
+		}
 				
 		echo $this->getHead();
 	}

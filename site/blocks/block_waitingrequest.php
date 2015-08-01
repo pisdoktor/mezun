@@ -8,14 +8,20 @@ global $dbase;
 
 $requests = mezunIstekHelper::incomingRequest();
 
+$rows = '';
+
+if ($requests) {
 //son 5 isteği alalım
 $requests = array_slice($requests, 0, 5);
 
 //sorguya hazırlayalım
 $users = implode(',', $requests);
 
-$dbase->setQuery("SELECT id, name, image FROM #__users WHERE id IN (".$users.")");
+$query = "SELECT id, name, image FROM #__users WHERE id IN (".$users.")";
+$dbase->setQuery($query);
 $rows = $dbase->loadObjectList();
+
+}
 
 if ($rows) {
 

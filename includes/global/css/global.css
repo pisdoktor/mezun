@@ -598,6 +598,7 @@ a#scroll-top:hover{
 background-color:#f56734; 
 }
 
+/*Jquery ile fieldset aşama yapmak*/
 #steps { 
 	list-style:none; 
 	width:100%; 
@@ -616,4 +617,84 @@ background-color:#f56734;
 #steps li.current { 
 	background-color: #fafafa;
 	color:#000;
+}
+
+/*Albüm resim ekleme*/
+#drop{
+	background-color: #fafafa;
+	padding: 40px 50px;
+	margin-bottom: 30px;
+	border: dotted 2px;
+	border-radius: 5px;
+	text-align: center;
+	text-transform: uppercase;
+	font-size:14px;
+	font-weight:bold;
+	color:#7f858a;
+}
+
+#drop input{
+	display:none;
+}
+
+#upload ul{
+	margin: 0px;
+	list-style:none;
+	width: 100%;
+	border-top:1px solid #cacaca;
+	border-bottom:1px solid #cacaca;
+}
+
+#upload ul li{
+	margin: 0px;
+	width: 100%;
+	height: 50px;
+	position: relative;
+}
+
+#upload ul li input{
+	display: none;
+	left: 5px;
+	top: 20px;
+}
+
+#upload ul li p{
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #000;
+	font-size: 10px;
+	font-weight: bold;
+	position: absolute;
+	top: 15px;
+	left: 45px;
+}
+
+#upload ul li i{
+	font-weight: normal;
+	font-style:normal;
+	color:#336699;
+	display:block;
+}
+
+#upload ul li canvas{
+	top: 10px;
+	left: 5px;
+	position: absolute;
+}
+
+#upload ul li span{
+	height: 30px;
+	position: absolute;
+	top: 15px;
+	right: 40px;
+	cursor:pointer;
+}
+
+#upload ul li.working span{
+	height: 16px;
+}
+
+#upload ul li.error p{
+	color:red;
 }

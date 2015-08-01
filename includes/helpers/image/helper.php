@@ -78,7 +78,11 @@ class mezunImageHelper {
 		
 	}
 	
-	static function resize($src, $dest_w, $dest_h, $src_w, $src_h) {
+	static function resize($src, $dest, $dest_w, $dest_h, $src_w, $src_h) {
+		
+		if (empty($dest)) {
+			$dest = $src;
+		}
 		
 		$ext = mezunImageHelper::getExt($src);
 		
@@ -104,15 +108,15 @@ class mezunImageHelper {
 		switch($ext) {
 		case 'jpg':
 		case 'jpeg':
-		imagejpeg($dest_r, $src, 100);
+		imagejpeg($dest_r, $dest, 100);
 		break;
 		
 		case 'png':
-		imagepng($dest_r, $src, 100);
+		imagepng($dest_r, $dest, 100);
 		break;
 		
 		case 'gif':
-		imagegif($dest_r, $src, 100);
+		imagegif($dest_r, $dest, 100);
 		break;
 		}
 		
