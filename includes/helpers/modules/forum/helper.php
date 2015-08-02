@@ -4,6 +4,122 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunForumHelper {
 	
+	static function canDeleteMessage($id) {
+		global $dbase, $my;
+		
+		mimport('tables.forummessage');
+		
+		$can = false;
+		//admine can feda...
+		if ($my->id == 1) {
+			$can = true;
+		}
+		$row = new mezunForummessage($dbase);
+		$row->load($id);
+		
+		if ($row->ID_MEMBER == $my->id) {
+			$can = true;
+		}
+		
+		return $can;
+	}
+	
+	static function canEditMessage($id) {
+		global $dbase, $my;
+		
+		mimport('tables.forummessage');
+		
+		$can = false;
+		//admine can feda...
+		if ($my->id == 1) {
+			$can = true;
+		}
+		$row = new mezunForummessage($dbase);
+		$row->load($id);
+		
+		if ($row->ID_MEMBER == $my->id) {
+			$can = true;
+		}
+		
+		return $can;		
+	}
+	
+	static function canLockTopic($topicid) {
+		global $dbase, $my;
+		
+		mimport('tables.forumtopic');
+		mimport('tables.forummessage');
+		
+		$can = false;
+		//kullanıcı id:1 ise admindir...yetkisi var
+		if ($my->id == 1) {
+			$can = true;
+		}
+		
+		$row = new mezunForumtopic($dbase);
+		$row->load($topicid);
+		
+		$msg = new mezunForummessage($dbase);
+		$msg->load($row->ID_FIRST_MSG);
+		
+		if ($msg->ID_MEMBER == $my->id) {
+			$can = true;
+		}
+		
+		return $can;
+		
+	}
+	
+	static function canStickyTopic($topicid) {
+		global $dbase, $my;
+		
+		mimport('tables.forumtopic');
+		mimport('tables.forummessage');
+		
+		$can = false;
+		//kullanıcı id:1 ise admindir...yetkisi var
+		if ($my->id == 1) {
+			$can = true;
+		}
+		
+		$row = new mezunForumtopic($dbase);
+		$row->load($topicid);
+		
+		$msg = new mezunForummessage($dbase);
+		$msg->load($row->ID_FIRST_MSG);
+		
+		if ($msg->ID_MEMBER == $my->id) {
+			$can = true;
+		}
+		
+		return $can;
+	}
+	
+	static function canDeleteTopic($topicid) {
+		global $dbase, $my;
+		
+		mimport('tables.forumtopic');
+		mimport('tables.forummessage');
+		
+		$can = false;
+		//kullanıcı id:1 ise admindir...yetkisi var
+		if ($my->id == 1) {
+			$can = true;
+		}
+		
+		$row = new mezunForumtopic($dbase);
+		$row->load($topicid);
+		
+		$msg = new mezunForummessage($dbase);
+		$msg->load($row->ID_FIRST_MSG);
+		
+		if ($msg->ID_MEMBER == $my->id) {
+			$can = true;
+		}
+		
+		return $can;
+	}
+	
 	static function makesafeHTML($text) {
 		
 		$text = htmlentities($text);
@@ -17,7 +133,6 @@ class mezunForumHelper {
 		
 		return $text;
 	}
-	
 	/**
 	* Forumda bulunan kullanıcıları getiren fonksiyon
 	* 

@@ -5,26 +5,35 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 class Message {
 	
 	static function showMsg($row, $type) {
+		
+		$marklink = '<a href="index.php?option=site&bolum=mesaj&task=unread&id='.$row->id.'">Okunmadı Yap</a>';
+		$deletelink = '<a href="index.php?option=site&bolum=mesaj&task=delete&id='.$row->id.'">Sil</a>';
+		$sendmsg = '<a href="#" id="sendamsg">Cevap Yaz</a>';
 		?>
 		<div class="panel panel-warning">
 		<div class="panel-heading"><h4>MESAJ KUTUSU: <?php echo $row->baslik;?></h4></div>
 		<div class="panel-body">
 		
 		<div class="row">
-		<div class="col-sm-3">
-		<strong>Gönderen:</strong>
+		<div class="col-sm-7">
+		<strong>Gönderen: </strong><?php echo $row->gonderen;?>
 		</div>
-		<div class="col-sm-9">
-		<?php echo $row->gonderen;?>
+		<div class="col-sm-4">
+		<strong>Gönderim Tarihi: </strong><?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 		</div>
+		<div class="col-sm-1">
+		
+		<div class="dropdown">
+		<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+		<span class="glyphicon glyphicon-cog"></span> 
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li><?php echo $type ? '': $sendmsg;?></li>
+			<li><?php echo $type ? '': $marklink;?></li>
+			<li><?php echo $deletelink;?></li>
+		</ul>
 		</div>
 		
-		<div class="row">
-		<div class="col-sm-3">
-		<strong>Gönderim Tarihi:</strong>
-		</div>
-		<div class="col-sm-9">
-		<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
 		</div>
 		</div>
 		
@@ -38,7 +47,13 @@ class Message {
 		</div>
 		
 		<?php if (!$type) {?>
-		<a class="btn btn-default" href="#" id="sendamsg">Cevap Yaz</a>
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-12">
+		
+		</div>
+		</div>
+		</div>
 		<?php }?>
 		
 		<!-- Mesaj Gönderme-->
@@ -118,82 +133,77 @@ class Message {
 	<div class="panel panel-warning">
 		<div class="panel-heading"><?php echo $head;?></div>
 		<div class="panel-body">
-	<form action="index.php" method="post" name="adminForm" role="form">
-	
-	<div class="form-group">
-	<div class="btn-group">
-	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Yeni", 'new', 0) : '';?>
-	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Okunmadı Olarak İşaretle", 'unread', 1) : '';?>
-	<?php echo $type == 0 ? mezunGlobalHelper::formButton("Okundu Olarak İşaretle", 'read', 1) : '';?>
-	<?php echo mezunGlobalHelper::formButton('Mesajı Sil', 'delete', 2);?>
-	</div>
-	</div>
-	
-	
-	<div class="row">
-	<div class="col-sm-1">
-	<strong>SIRA</strong>
-	</div>
-	<div class="col-sm-1">
-	<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows );?>)"/>
-	</div>
-	<div class="col-sm-3">
-	<strong><?php echo $type ? 'Gönderilen' : 'Gönderen';?></strong>
-	</div>
-	<div class="col-sm-4">
-	<strong>BAŞLIK</strong>
-	</div>
-	<div class="col-sm-3">
-	<strong>GÖNDERİM ZAMANI</strong>
-	</div>
-	</div>
-<?php
-	if (!$rows) {
-		?>
-		<div align="center">Henüz mesajınız yok!</div>
+		<div class="row">
+<div class="col-sm-8">
+<a href="index.php?option=site&bolum=mesaj&task=new" class="btn btn-default btn-sm">Yeni Mesaj</a>
+</div>
+</div>
+		<table class="table table-striped">
+		<thead>
+		<tr>
+		<th>SIRA</th>
+		<th>İŞLEM</th>
+		<th><?php echo $type ? 'GÖNDERİLEN' : 'GÖNDEREN';?></th>
+		<th>BAŞLIK</th>
+		<th>GÖNDERİM ZAMANI</th>
+		</tr>
+		</thead>
+		<tbody>
 		<?php
-	}
-?>
-<?php
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
 $row->baslik = mezunMesajHelper::cryptionText($row->baslik, 'decode');
+
 $row->baslik = $row->okunma ? '<i>'.$row->baslik.'</i>' : '<strong>'.$row->baslik.'</strong>';
+
 $row->gonderen = $row->okunma ? '<i>'.$row->gonderen.'</i>' : '<strong>'.$row->gonderen.'</strong>';
+
 $row->giden = $row->okunma ? '<i>'.$row->giden.'</i>' : '<strong>'.$row->giden.'</strong>';
-$checked = mezunHTML::idBox( $i, $row->id );
+
+$showlink = '<a href="index.php?option=site&bolum=mesaj&task=view&id='.$row->id.'">Göster</a>';
+$marklink = $row->okunma ? '<a href="index.php?option=site&bolum=mesaj&task=unread&id='.$row->id.'">Okunmadı Yap</a>':'<a href="index.php?option=site&bolum=mesaj&task=read&id='.$row->id.'">Okundu Yap</a>';
+$deletelink = '<a href="index.php?option=site&bolum=mesaj&task=delete&id='.$row->id.'">Sil</a>';
 ?>
-<div class="row" id="<?php echo $row->id;?>">
-	<div class="col-sm-1">
-	<?php echo $pageNav->rowNumber( $i ); ?>
-	</div>
-	<div class="col-sm-1">
-	<?php echo $checked;?>
-	</div>
-	<div class="col-sm-3">
-	<?php echo $type ? $row->giden : $row->gonderen;?>
-	</div>
-	<div class="col-sm-4">
-	<a href="<?php echo sefLink('index.php?option=site&bolum=mesaj&task=show&id='.$row->id);?>">
+<tr>
+<td>
+<?php echo $pageNav->rowNumber( $i ); ?>
+</td>
+<td>
+<div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  <span class="glyphicon glyphicon-cog"></span> 
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<li><?php echo $showlink;?></li>
+	<li><?php echo $type ? '': $marklink;?></li>
+	<li><?php echo $deletelink;?></li>
+  </ul>
+</div>
+</td>
+<td>
+<?php echo $type ? $row->giden : $row->gonderen;?>
+</td>
+<td>
+<a href="index.php?option=site&bolum=mesaj&task=view&id=<?php echo $row->id;?>">
 <?php echo $row->baslik;?>
 </a>
-	</div>
-	<div class="col-sm-3">
-	<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
-	</div>
-</div>
+</td>
+<td>
+<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
+</td>
+</tr>
 <?php
 }
 ?>
-<input type="hidden" name="option" value="site" />
-<input type="hidden" name="bolum" value="mesaj" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="type" value="<?php echo $type;?>" />
-<input type="hidden" name="boxchecked" value="0" />
-</form>
+</tbody>
+</table>
+</div>
+<div class="panel-footer">
+
 </div>
 </div>
-		<?php
+<?php
 	}
+	
 }

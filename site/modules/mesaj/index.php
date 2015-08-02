@@ -3,7 +3,6 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 $id = getParam($_REQUEST, 'id');
-$cid = getParam($_REQUEST, 'cid'); 
 $limit = intval(getParam($_REQUEST, 'limit', 10));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 $type = intval(getParam($_REQUEST, 'type'));
@@ -23,7 +22,7 @@ switch($task) {
 	inBox(1);
 	break;
 	
-	case 'show':
+	case 'view':
 	showMessage($id);
 	break;
 	
@@ -40,15 +39,15 @@ switch($task) {
 	break;
 	
 	case 'delete':
-	deleteMessage($cid, $type);
+	deleteMessage($id);
 	break;
 	
 	case 'unread':
-	changeMessage($cid, 0);
+	changeMessage($id, 0);
 	break;
 	
 	case 'read':
-	changeMessage($cid, 1);
+	changeMessage($id, 1);
 	break;
 	
 	case 'checkmail':
@@ -70,29 +69,43 @@ function checkMailX() {
 /**
 * Mesaj silme
 */
-function deleteMessage($cid, $type) {
+function deleteMessage($id) {
 	global $dbase, $my;
 	
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Listeden bir seçim yapın'); window.history.go(-1);</script>\n";
-		exit;
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$row = new mezunMesajlar($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	if ($row->aid == $my->id) {
+		$type = 0;
+	} else
+	
+	if ($row->gid == $my->id) {
+		$type = 1;
+	} else {
+		return;
 	}
 	
 	if ($type) {
-		$where = "gsilinme=1";
+		$where = " gsilinme=1";
 	} else {
-		$where = "asilinme=1";
+		$where = " asilinme=1";
 	}
 	
-	ArrayToStrings( $cid );
-	foreach ($cid as $id) {
 		$dbase->setQuery("UPDATE #__mesajlar SET "
 		. $where
-		. "\n WHERE id=".$dbase->Quote($id));
+		. "\n WHERE id=".$dbase->Quote($row->id));
 		$dbase->query();
-	}
-	
+			
 	if ($type) {
 		Redirect('index.php?option=site&bolum=mesaj&task=outbox');
 	} else {
@@ -102,27 +115,26 @@ function deleteMessage($cid, $type) {
 /**
 * Mesaj durumu değiştirme
 */
-function changeMessage($cid, $status) {
+function changeMessage($id, $status) {
 	global $dbase, $my;
 	
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Listeden bir seçim yapın'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToStrings( $cid );
-	foreach ($cid as $id) {
-		$dbase->setQuery("UPDATE #__mesajlar SET okunma=".$dbase->Quote($status)." WHERE id=".$dbase->Quote($id));
-		$dbase->query();
+	if (!$id) {
+		NotAuth();
+		return;
 	}
 	
-	if ($status) {
-		$msg = 'Seçili mesajlar okundu olarak işaretlendi!';
-	} else {
-		$msg = 'Seçili mesajlar okunmadı olarak işaretlendi!';
+	$row = new mezunMesajlar($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
 	}
-	Redirect( 'index.php?option=site&bolum=mesaj', $msg);
+	
+	$dbase->setQuery("UPDATE #__mesajlar SET okunma=".$dbase->Quote($status)." WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	Redirect( 'index.php?option=site&bolum=mesaj');
 }
 /**
 * Mesaj gösterim fonksiyonu
@@ -144,13 +156,14 @@ function showMessage($id) {
 	$msg->text = mezunMesajHelper::cryptionText($row->text, 'decode');
 	$msg->text = nl2br($msg->text);
 	
-	if ($row->aid == $my->id) {
+	if (($row->aid == $my->id) && !$row->okunma) {
 	$dbase->setQuery("UPDATE #__mesajlar SET okunma=1 WHERE id=".$dbase->Quote($msg->id));
 	$dbase->query();
 	}
+	
 	} else {
 		NotAuth();
-		exit;
+		return;
 	}
 	
 	if ($row->aid == $my->id) {

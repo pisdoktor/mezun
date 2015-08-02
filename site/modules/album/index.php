@@ -111,6 +111,11 @@ function viewAlbum($id) {
 	$album = new mezunAlbums($dbase);
 	$album->load($id);
 	
+	if (!$album->id) {
+		NotAuth();
+		return;
+	}
+	
 	$can['View'] = false;
 	
 	if ($album->userid == $my->id) {

@@ -189,50 +189,87 @@ class ForumHTML {
 		<?php
 	}
 	
-	static function TopicSeen($context, $pageNav, $topic_info, $board_info) {
+	static function TopicSeen($context, $pageNav, $topic_info, $board_info, $topiclink) {
 		
 		$topic_icon =  '<img src="'.SITEURL.'/images/forum/'.$topic_info->icon.'.gif" alt="" title="" />'; 
 		
 		?>
 		<div class="panel panel-default">
-		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $topic_icon;?> <?php echo $topic_info->subject;?></small></div>
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
-		<div>
-		<div style="float:left;">
-<?php if (!$topic_info->locked) {?>
+		<div class="row">
+		<div class="col-sm-10">
+		<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
+		</div>
+		<div class="col-sm-2">
+		<?php if (!$topic_info->locked) {?>
 		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default btn-sm">Yeni Mesaj</a>
 		<?php } ?>
-</div>
-		<div style="float:right;">
-<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
-</div>
-
+		</div>
 		</div>
 		
-		<table width="100%" class="bordercolor">
+		<table class="table table-striped">
+		<thead>
 		<tr class="titlebg">
 		<th width="15%">
 		Gönderen
 		</th>
 		<th width="85%" align="left">
-		Başlık: <?php echo $topic_info->subject;?>
+		Başlık: <?php echo $topic_icon;?> <?php echo $topic_info->subject;?>
+		</th>
+		<th>
+		<?php if (mezunForumHelper::canDeleteTopic($topic_info->ID_TOPIC)) {?>
+		<div class="dropdown">
+			<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+			<span class="glyphicon glyphicon-cog"></span> 
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><?php echo $topiclink['sticky'];?></li>
+				<li><?php echo $topiclink['lock'];?></li>
+				<li><?php echo $topiclink['delete'];?></li>
+			</ul>
+			</div>
+			<?php }?>
 		</th>
 		</tr>
-		</table>
+		</thead>
+		<tbody>
 		<?php
 		$t = 0;		
 		foreach ($context['topic']['messages'] as $row) {
+			//message links
+			$msglink = array();
+			if (mezunForumHelper::canEditMessage($row['id'])) {
+				$msglink['edit'] = '<a href="index.php?option=site&bolum=forum&task=editmessage&id='.$row['id'].'">Düzenle</a>';
+			} else {
+				$msglink['edit'] = '';
+			}
+			
+			if (mezunForumHelper::canDeleteMessage($row['id'])) {
+				if ($row['id'] == $topic_info->ID_FIRST_MSG) {
+					$msglink['delete'] = '';
+				} else {
+					$msglink['delete'] = '<a href="index.php?option=site&bolum=forum&task=deletemessage&id='.$row['id'].'">Mesajı Sil</a>';
+				}
+			} else {
+				$msglink['delete'] = '';
+			}
+			
 			if ($row['id'] == $context['topic']['lastMsg']) {
-				echo '<a id="new"></a>';
+				$new = 'id="new"';
+			} else {
+				$new = '';
 			}
 			?>
-			<table width="100%">
-			<tr class="windowbg<?php echo $t;?>">
+			
+			<tr class="windowbg<?php echo $t;?>" <?php echo $new;?>>
 			<td width="15%" valign="top" height="100%">
 			
 			<div align="center" class="msg-profil">
+			<a href="<?php echo $row['member']['href'];?>">
 			<?php echo $row['member']['imagelink'];?>
+			</a>
 			<br />
 			<?php echo $row['member']['link'];?>
 			<br />
@@ -249,6 +286,7 @@ class ForumHTML {
 			<div class="msg-info">
 			<small><?php echo $row['subject'];?></small><br />
 			<small>Gönderim Tarihi: <?php echo $row['time'];?></small>
+			<small>#<?php echo $row['id'];?></small>
 			</div>
 			
 			<div class="msg-body">
@@ -256,23 +294,37 @@ class ForumHTML {
 			</div>
 			
 			</td>
+			<td>
+			<?php if (mezunForumHelper::canEditMessage($row['id'])) {?>
+			<div class="dropdown">
+			<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+			<span class="glyphicon glyphicon-cog"></span> 
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><?php echo $msglink['edit'];?></li>
+				<li><?php echo $msglink['delete'];?></li>
+			</ul>
+			</div>
+			<?php } ?>
+			</td>
 			</tr>
-			</table>
+			
 			<?php
 			$t = 1- $t;
 		}
 		?>
-
-		<div>
-		<div style="float:left;">
-<?php if (!$topic_info->locked) {?>
+		</tbody>
+		</table>
+		
+		<div class="row">
+		<div class="col-sm-10">
+		<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
+		</div>
+		<div class="col-sm-2">
+		<?php if (!$topic_info->locked) {?>
 		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newmessage&topic='.$topic_info->ID_TOPIC);?>" class="btn btn-default btn-sm">Yeni Mesaj</a>
 		<?php } ?>
-</div>
-		<div style="float:right;">
-<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=topic&id='.$topic_info->ID_TOPIC);?>
-</div>
-
+		</div>
 		</div>
 
 		
@@ -285,8 +337,6 @@ class ForumHTML {
 	
 	static function BoardSeen($context, $pageNav, $board_info) {
 		global $my;
-		
-		
 		?>
 		<div class="panel panel-default">
 		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $board_info->aciklama;?></small></div>
@@ -295,10 +345,13 @@ class ForumHTML {
 		<?php
 		if (isset($context['boards'])) {
 		?>
-		<table border="0" width="100%" cellspacing="1" cellpadding="5" class="bordercolor">
+		<table class="table table-striped">
+		<thead>
 			<tr>
-				<td colspan="4" class="catbg">Alt Kategoriler</td>
+				<th colspan="4" class="catbg">Alt Kategoriler</th>
 			</tr>
+		</thead>
+		<tbody>
 		<?php
 		foreach ($context['boards'] as $board) {
 		?>	
@@ -368,33 +421,44 @@ class ForumHTML {
 			}
 		}
 	?>
+		</tbody>
 		</table>
 		<?php
 		}
 		?>
-		<br />
+		
+		<div class="row">
+		<div class="col-sm-10">
+		<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?>
+		</div>
+		<div class="col-sm-2">
 		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-default btn-sm">Yeni Başlık</a>
-		<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
-		<table border="0" width="100%" cellspacing="1" cellpadding="4" class="bordercolor">
-					<tr>
+		</div>
+		</div>
+
+		<table class="table table-striped">
+		<thead>
+		<tr>
 		<?php
 		if (!empty($context['topics'])) {
 			?>
-			<td width="4%" class="catbg3"></td>
-			<td width="5%" class="catbg3"></td>
-			<td class="catbg3">Başlık</td>
-			<td class="catbg3" width="11%">Başlatan</td>
-			<td class="catbg3" width="4%" align="center">Mesaj</td>
-			<td class="catbg3" width="4%" align="center">Okunma</td>
-			<td class="catbg3" width="22%">Son Mesaj</td>
+			<th width="4%" class="catbg3"></th>
+			<th width="5%" class="catbg3"></th>
+			<th class="catbg3">Başlık</th>
+			<th class="catbg3" width="11%">Başlatan</th>
+			<th class="catbg3" width="4%" align="center">Mesaj</th>
+			<th class="catbg3" width="4%" align="center">Okunma</th>
+			<th class="catbg3" width="22%">Son Mesaj</th>
 			<?php
 		} else {
 			?>
-			<td class="catbg2" width="100%" colspan="7"><b>Henüz bir başlık açılmamış</b></td>
+			<th class="catbg2" width="100%" colspan="7"><b>Henüz bir başlık açılmamış</b></th>
 			<?php
 		}
 			?>
-			</tr>
+		</tr>
+		</thead>
+		<tbody>
 			<?php
 		if (!empty($context['topics'])) {			
 		foreach ($context['topics'] as $topic) {
@@ -451,11 +515,17 @@ class ForumHTML {
 			<?php
 		}
 	}
-		echo '</table>';
-				?>
-				<div><?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?></div>
-				
+	?>
+		</tbody>
+		</table>
+		<div class="row">
+		<div class="col-sm-10">
+		<?php echo $pageNav->writePagesLinks('index.php?option=site&bolum=forum&task=board&id='.$board_info->ID_BOARD);?>
+		</div>
+		<div class="col-sm-2">
 		<a href="<?php echo sefLink('index.php?option=site&bolum=forum&task=newtopic&board='.$board_info->ID_BOARD);?>" class="btn btn-default btn-sm">Yeni Başlık</a>
+		</div>
+		</div>
 	
 		</div>
 		<div class="panel-footer"></div>
@@ -469,24 +539,27 @@ class ForumHTML {
 		<div class="panel panel-default">
 		<div class="panel-heading">FORUM</div>
 		<div class="panel-body">
-		<table border="0" width="100%" class="bordercolor">
-			
+		
+		<table class="table table-striped">
+		<thead>	
 			<tr class="titlebg">
-				<td colspan="2">Forum Adı</td>
-				<td width="6%" align="center">Başlıklar</td>
-				<td width="6%" align="center">Mesajlar</td>
-				<td width="22%" align="center">Son Mesaj</td>
+				<th colspan="2">Forum Adı</th>
+				<th width="6%" align="center">Başlıklar</th>
+				<th width="6%" align="center">Mesajlar</th>
+				<th width="22%" align="center">Son Mesaj</th>
 			</tr>
+		</thead>
+		<tbody>
 		<?php 
 		
 		foreach ($context['categories'] as $category) {
-			?>
+		?>
 		<tr>
 		<td colspan="5" class="catbg">
 		<?php echo $category['link'];?>
 		</td>
-	</tr>
-	<?php
+		</tr>
+		<?php
 		foreach ($category['boards'] as $board) {
 			$image = $board['new'] ? 'on.png' : 'off.png';
 			$text = $board['new'] ? 'Yeni Mesaj Var' : 'Yeni Mesaj Yok';
@@ -507,11 +580,9 @@ class ForumHTML {
 					$children = array();
 					/* Each child in each board's children has:
 						id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
-					foreach ($board['children'] as $child)
+				foreach ($board['children'] as $child)
 						$children[] = $child['new'] ? '<b>' . $child['link'] . '</b>' : $child['link'];
-					echo '
-			<i class="smalltext"><br />
-			Alt Forumlar: ', implode(', ', $children), '</i>';
+					echo '<i class="smalltext"><br />Alt Forumlar: ', implode(', ', $children), '</i>';
 				}
 				?>
 				
@@ -532,47 +603,63 @@ class ForumHTML {
 	</tr>
 	<?php
 	}
-	}
-	echo '</table>';
-	
-	if ($context['latestmsg']) {
+		}
+		?>
+		</tbody>
+		</table>
+		<?php
+		
+		if ($context['latestmsg']) {
 		?>
 		
 	<div class="tborder" style="width: 100%;">
 	 <div class="catbg" style="padding: 6px; vertical-align: middle; text-align: center;">
 	 Forum - Bilgi Merkezi
 	 </div>
-		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<table class="table table-striped">
+		<thead>
 		<tr>
-		<td class="titlebg" colspan="2">Son Gönderilen <?php echo latestPostCount;?> Mesaj</td>
+		<th class="titlebg" colspan="4">Son Gönderilen <?php echo latestPostCount;?> Mesaj</th>
 		</tr>
+		</thead>
+		<tbody>
 		<?php
 			foreach ($context['latestmsg'] as $post) {
 				?>
 			<tr>
-			<td class="middletext" valign="top"><b><?php echo $post['link'];?></b> Gönderen <?php echo $post['poster']['link'] ." (". $post['board']['link'].")";?>
-			</td>
-			<td class="middletext" align="right" valign="top" nowrap="nowrap"><?php echo $post['time'];?></td>
+			<td class="middletext" valign="top"><b><?php echo $post['link'];?></b></td>
+			<td><?php echo $post['poster']['link'];?></td>
+			<td><?php echo $post['board']['link'];?></td>
+			<td class="middletext" align="right" valign="top"><?php echo $post['time'];?></td>
 			</tr>
-			<?php } ?>
+		<?php 
+			} 
+		?>
 		
+		</tbody>
 		</table>
 		
-		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<table class="table table-striped">
+		<thead>
 		<tr>
-		<td class="titlebg">Şuanda Forumda Olan Üyeler</td>
+		<th class="titlebg">Şuanda Forumda Olan Üyeler</th>
 		</tr>
+		</thead>
+		<tbody>
 			<tr>
 			<td class="middletext" nowrap="nowrap">
 			<?php echo implode(', ', mezunForumHelper::getForumUsers());?>
 			</td>
 			</tr>
+		</tbody>
 		</table>
-		</div>
-		
+	</div>
 		<?php
 	}
-	
-	echo '</div><div class="panel-footer"></div></div>';
+		?>
+		</div>
+		<div class="panel-footer"></div>
+		</div>
+		<?php
 	}
 }

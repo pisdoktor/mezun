@@ -45,6 +45,222 @@ switch($task) {
 	case 'savemessage':
 	createNewMessage();
 	break;
+	//yeniler aşagıda
+	case 'sticky':
+	stickyTopic($id, 1);
+	break;
+	
+	case 'unsticky':
+	stickyTopic($id, 0);
+	break;
+	
+	case 'lock':
+	lockTopic($id, 1);
+	break;
+	
+	case 'unlock':
+	lockTopic($id, 0);
+	break;
+	
+	case 'editmessage':
+	editMessage($id);
+	break;
+	
+	case 'savemessage2':
+	saveMessage2();
+	break;
+	
+	case 'edittopic':
+	editTopic($id);
+	break;
+	
+	case 'savetopic2':
+	saveTopic2();
+	break;
+	
+	case 'deletemessage':
+	deleteMessage($id);
+	break;
+	
+	case 'deletetopic':
+	deleteTopic($id);
+	break;
+}
+
+function saveTopic2() {
+	
+}
+
+function saveMessage2() {
+	
+}
+
+function editTopic($id) {
+	
+}
+
+function editMessage($id) {
+	
+}
+
+function deleteTopic($id) {
+	global $dbase, $my;
+	
+	mimport('tables.forumtopic');
+	mimport('tables.forummessage');
+	mimport('tables.forumboard');
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$topic = new mezunForumtopic($dbase);
+	$topic->load($id);
+	
+	if (!$topic->ID_TOPIC) {
+		NotAuth();
+		return;
+	}
+	
+	$board = new mezunForumboard($dbase);
+	$board->load($topic->ID_BOARD);
+	
+	//topic içerisindeki mesajların bilgilerini alalım
+	//toplam mesaj sayısı
+	$dbase->setQuery("SELECT COUNT(ID_MSG) FROM #__forum_messages WHERE ID_TOPIC=".$dbase->Quote($topic->ID_TOPIC));
+	
+	$totalmsg = $dbase->loadResult();
+	
+	//topic delete!!
+	$dbase->setQuery("DELETE FROM #__forum_topics WHERE ID_TOPIC=".$dbase->Quote($topic->ID_TOPIC));
+	$dbase->query();
+	
+	//topic içerisindeki tüm mesajları silelim
+	$dbase->setQuery("DELETE FROM #__forum_messages WHERE ID_TOPIC=".$dbase->Quote($topic->ID_TOPIC));
+	$dbase->query();	
+	
+	//board güncellemesi yapalım
+	$board->numPosts = $board->numPosts-$totalmsg;
+	$board->numTopics = $board->numTopics-1;
+	$board->store();
+	
+	//board geri dönüşü
+	Redirect('index.php?option=site&bolum=forum&task=board&id='.$board->ID_BOARD);	
+}
+
+function deleteMessage($id) {
+	global $dbase, $my;
+	
+	mimport('tables.forumtopic');
+	mimport('tables.forummessage');
+	mimport('tables.forumboard');
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$msg = new mezunForummessage($dbase);
+	$msg->load($id);
+	
+	if (!$msg->ID_MSG) {
+		NotAuth();
+		return;
+	}
+	
+	if ($msg->ID_MEMBER != $my->id) {
+		NotAuth();
+		return;
+	}
+	
+	$topic = new mezunForumtopic($dbase);
+	$topic->load($msg->ID_TOPIC);
+	
+	$board = new mezunForumboard($dbase);
+	$board->load($msg->ID_BOARD);
+	
+	//önce mesajı silelim
+	$dbase->setQuery("DELETE FROM #__forum_messages WHERE ID_MSG=".$dbase->Quote($msg->ID_MSG));
+	$dbase->query();
+	
+	//topic içerisindeki son mesajı bulalım
+	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages WHERE ID_TOPIC=".$dbase->Quote($topic->ID_TOPIC));
+	$maxmsgid = $dbase->loadResult();
+		
+	//numReplies -1
+	$topic->numReplies = $topic->numReplies-1;
+	//ID_LAST_MSG değiştirelim
+	$topic->ID_LAST_MSG = $maxmsgid;
+	
+	$topic->store();
+	
+	//numPost -1
+	$board->numPosts = $board->numPosts-1;
+	$board->store();
+	
+	//topic geri dönüş...
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$topic->ID_TOPIC);	
+}
+
+function stickyTopic($id, $status) {
+	global $dbase, $my;
+	
+	mimport('tables.forumtopic');
+	mimport('tables.forummessage');
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$row = new mezunForumtopic($dbase);
+	$row->load($id);
+	
+	if (!$row->ID_TOPIC) {
+		NotAuth();
+		return;
+	}
+	
+	$msg = new mezunForummessage($dbase);
+	$msg->load($row->ID_FIRST_MSG);
+	
+	if ($msg->ID_MEMBER == $my->id) {
+		$row->isSticky = $status;
+		$row->store();
+	}
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC);	
+}
+
+function lockTopic($id, $status) {
+	global $dbase, $my;
+	
+	mimport('tables.forumtopic');
+	mimport('tables.forummessage');
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$row = new mezunForumtopic($dbase);
+	$row->load($id);
+	
+	if (!$row->ID_TOPIC) {
+		NotAuth();
+		return;
+	}
+	
+	$msg = new mezunForummessage($dbase);
+	$msg->load($row->ID_FIRST_MSG);
+	
+	if ($msg->ID_MEMBER == $my->id) {
+		$row->locked = $status;
+		$row->store();
+	}
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC); 
 }
 
 function newMessage() {
@@ -323,7 +539,37 @@ function Topic($id) {
 		setcookie('last_read_topic', $id);
 	}
 	
-	ForumHTML::TopicSeen($context, $pageNav, $topic_info, $board_info);
+	
+	$topiclink = array();
+	
+	if (mezunForumHelper::canStickyTopic($topic_info->ID_TOPIC)) {
+		if ($topic_info->isSticky) {
+			$topiclink['sticky'] = '<a href="index.php?option=site&bolum=forum&task=unsticky&id='.$topic_info->ID_TOPIC.'">Yapışkanı Kaldır</a>';
+		} else {
+			$topiclink['sticky'] = '<a href="index.php?option=site&bolum=forum&task=sticky&id='.$topic_info->ID_TOPIC.'">Yapışkan Yap</a>';
+		}
+	} else {
+		$topiclink['sticky'] = '';
+	}
+	
+	if (mezunForumHelper::canLockTopic($topic_info->ID_TOPIC)) {
+		if ($topic_info->locked) {
+			$topiclink['lock'] = '<a href="index.php?option=site&bolum=forum&task=unlock&id='.$topic_info->ID_TOPIC.'">Kilidi Kaldır</a>';
+		} else {
+			$topiclink['lock'] = '<a href="index.php?option=site&bolum=forum&task=lock&id='.$topic_info->ID_TOPIC.'">Kilitle</a>';
+		}
+	} else {
+		$topiclink['lock'] = '';
+	}
+	
+	if (mezunForumHelper::canDeleteTopic($topic_info->ID_TOPIC)) {
+		$topiclink['delete'] = '<a href="index.php?option=site&bolum=forum&task=deletetopic&id='.$topic_info->ID_TOPIC.'">Başlığı Sil</a>';
+
+	} else {
+		$topiclink['delete'] = '';
+	}
+	
+	ForumHTML::TopicSeen($context, $pageNav, $topic_info, $board_info, $topiclink);
 	
 }
 
