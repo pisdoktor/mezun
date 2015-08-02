@@ -449,31 +449,6 @@ function MakePassword($length=8) {
 	return $makepass;
 }
 
-if (!function_exists('html_entity_decode')) {
-	/**
-	* html_entity_decode function for backward compatability in PHP
-	* @param string
-	* @param string
-	*/
-	function html_entity_decode ($string, $opt = ENT_COMPAT) {
-
-		$trans_tbl = get_html_translation_table (HTML_ENTITIES);
-		$trans_tbl = array_flip ($trans_tbl);
-
-		if ($opt & 1) { // Translating single quotes
-			// Add single quote to translation table;
-			// doesn't appear to be there by default
-			$trans_tbl["&apos;"] = "'";
-		}
-
-		if (!($opt & 2)) { // Not translating double quotes
-			// Remove double quote from translation table
-			unset($trans_tbl["&quot;"]);
-		}
-
-		return strtr ($string, $trans_tbl);
-	}
-}
 /**
 * Displays a not authorised message
 *

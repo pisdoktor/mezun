@@ -4,6 +4,20 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunForumHelper {
 	
+	static function makesafeHTML($text) {
+		
+		$text = htmlentities($text);
+		
+		return $text;
+	}
+	
+	static function makeHTML($text) {
+		
+		$text = html_entity_decode($text);
+		
+		return $text;
+	}
+	
 	/**
 	* Forumda bulunan kullanıcıları getiren fonksiyon
 	* 

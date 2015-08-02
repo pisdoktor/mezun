@@ -110,6 +110,7 @@ function createNewMessage() {
 	$ID_BOARD = intval(getParam($_REQUEST, 'ID_BOARD'));
 	$subject = trim(getParam($_REQUEST, 'subject'));
 	$body = nl2br(getParam($_REQUEST, 'body', '', _ALLOWRAW));
+	$body = mezunForumHelper::makesafeHTML($body);
 	
 	mimport('tables.forummessage');
 	$msg = new mezunForummessage($dbase);
@@ -179,6 +180,8 @@ function createNewTopic() {
 	$icon = getParam($_REQUEST, 'icon');
 	
 	$body = nl2br(getParam($_REQUEST, 'body', '', _ALLOWRAW));
+	
+	$body = mezunForumHelper::makesafeHTML($body);
 	
 	$boardid = intval(getParam($_REQUEST, 'ID_BOARD'));
 	

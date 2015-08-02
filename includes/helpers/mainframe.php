@@ -798,7 +798,7 @@ class mezunMainFrame {
 		$this->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
 		
 		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js');
+		//$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js');
 		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
 		
 		

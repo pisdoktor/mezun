@@ -15,11 +15,16 @@ class ForumHTML {
 					maxHeight: 500,
 					focus: true,
 					toolbar: [
-						['style', ['bold', 'italic', 'underline', 'clear']],
-						['color', ['color']],
-						['height', ['height']],
-						['insert', ['link']]
-					]
+	//[groupname, [button list]]
+	 
+	['style', ['bold', 'italic', 'underline', 'clear']],
+	['font', ['strikethrough', 'superscript', 'subscript']],
+	['fontsize', ['fontsize']],
+	['color', ['color']],
+	['para', ['ul', 'ol', 'paragraph']],
+	['height', ['height']],
+	['insert', ['link']]
+  ]
 				});
 			});
 		</script>
@@ -94,11 +99,16 @@ class ForumHTML {
 					maxHeight: 500,
 					focus: true,
 					toolbar: [
-						['style', ['bold', 'italic', 'underline', 'clear']],
-						['color', ['color']],
-						['height', ['height']],
-						['insert', ['link']]
-					] 
+	//[groupname, [button list]]
+	 
+	['style', ['bold', 'italic', 'underline', 'clear']],
+	['font', ['strikethrough', 'superscript', 'subscript']],
+	['fontsize', ['fontsize']],
+	['color', ['color']],
+	['para', ['ul', 'ol', 'paragraph']],
+	['height', ['height']],
+	['insert', ['link']]
+  ]
 				});
 			});
 		</script>
@@ -242,7 +252,7 @@ class ForumHTML {
 			</div>
 			
 			<div class="msg-body">
-			<?php echo $row['body'];?>
+			<?php echo mezunForumHelper::makeHTML($row['body']);?>
 			</div>
 			
 			</td>
