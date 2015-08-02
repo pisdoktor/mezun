@@ -2,7 +2,6 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-$cid = getParam($_REQUEST, 'cid');
 $id = intval(getParam($_REQUEST, 'id'));
 $limit = intval(getParam($_REQUEST, 'limit', 5));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
@@ -16,15 +15,11 @@ switch($task) {
 	getDuyuruList();
 	break;
 	
-	case 'add':
+	case 'new':
 	editDuyuru(0);
 	break;
 	
 	case 'edit':
-	editDuyuru(intval(($cid[0])));
-	break;
-	
-	case 'editx':
 	editDuyuru($id);
 	break;
 	
@@ -37,31 +32,30 @@ switch($task) {
 	break;
 	
 	case 'delete':
-	delDuyuru($cid);
+	delDuyuru($id);
 	break;
 }
 
-function delDuyuru(&$cid) {
+function delDuyuru($id) {
 	global $dbase;
 
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir duyuru seçin'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__duyurular"
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	if (!$id) {
+		NotAuth();
+		return;
 	}
 	
-	Redirect( 'index.php?option=admin&bolum=duyuru', 'Seçili duyuru(lar) silindi' );
+	$row = new mezunDuyurular($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	$dbase->setQuery("DELETE FROM #__duyurular WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	Redirect( 'index.php?option=admin&bolum=duyuru' );
 }
 
 function saveDuyuru() {
@@ -99,23 +93,23 @@ function cancelDuyuru() {
 function getDuyuruList() {
 	 global $dbase, $limit, $limitstart;
 	 
-	 $dbase->setQuery("SELECT COUNT(*) FROM #__duyurular");
-	 $total = $dbase->loadResult();
+	 $dbase->setQuery("SELECT * FROM #__duyurular");
+	 $rows = $dbase->loadObjectList();
+	 
+	 $total = count($rows);
 	 
 	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
-	 $query = "SELECT * FROM #__duyurular";
 	
-	$dbase->setQuery($query, $limitstart, $limit);
-	$rows = $dbase->loadObjectList();
+	$list = array_slice($rows, $limitstart, $limit);
 	
-	DuyuruHTML::getDuyuruList($rows, $pageNav);
+	DuyuruHTML::getDuyuruList($list, $pageNav);
 }
 
-function editDuyuru($cid) {
+function editDuyuru($id) {
 	global $dbase;
 	
 	$row = new mezunDuyurular($dbase);
-	$row->load($cid);
+	$row->load($id);
 	
 	DuyuruHTML::editDuyuru($row);
 }

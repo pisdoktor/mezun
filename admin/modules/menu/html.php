@@ -95,101 +95,88 @@ class menusHTML {
 	static function getMenus($rows, $pageNav) {
 		?>
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Menüler</h4></div>
+	<div class="panel-heading"><h4>Yönetim Paneli - Menü Yönetimi</h4></div>
 	<div class="panel-body">
-	<form action="index.php" method="post" name="adminForm" role="form">
-	<div class="form-group">
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Menü Ekle" onclick="javascript:submitbutton('new');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu menüleri silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+	<div class="row">
+<div class="col-sm-8">
+<a href="index.php?option=admin&bolum=menu&task=new" class="btn btn-default btn-sm">Yeni Menü Ekle</a>
 </div>
 </div>
-
-
-<div class="row">
-<div class="col-sm-1">
-<strong>SIRA</strong>
-</div>
-<div class="col-sm-1">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</div>
-<div class="col-sm-2">
-<strong>MENÜ ADI</strong>
-</div>
-<div class="col-sm-4">
-<strong>MENÜ LİNKİ</strong> 
-</div>
-<div class="col-sm-1">
-<strong>YAYIN</strong> 
-</div>
-<div class="col-sm-1">
-<strong>ERİŞİM</strong> 
-</div>
-<div class="col-sm-1">
-<strong>ÇEŞİDİ</strong> 
-</div>
-<div class="col-sm-1">
-<strong>SIRALA</strong> 
-</div>
-
-</div>
+	<table class="table table-striped">
+	<thead>
+	<tr>
+	<th>SIRA</th>
+	<th>İŞLEM</th>
+	<th>MENÜ ADI</th>
+	<th>MENÜ LİNKİ</th>
+	<th>YAYINLANMA</th>
+	<th>ERİŞİM</th>
+	<th>ÇEŞİT</th>
+	</tr>
+	</thead>
+	<tbody>
 <?php
 for($i=0;$i<count($rows);$i++) {
 $row = $rows[$i];
-$checked = mezunHTML::idBox( $i, $row->id );
+
 $published = itemState($row->published);
+
 $access = itemAccess($row->access);
 
-?>
-<div class="row">
-<div class="col-sm-1">
-<?php echo $pageNav->rowNumber( $i ); ?>
-</div>
-<div class="col-sm-1">
-<?php echo $checked;?>
-</div>
-<div class="col-sm-2">
-<a href="index.php?option=admin&bolum=menu&task=editx&id=<?php echo $row->id;?>">
-<?php echo $row->treename;?>
-</a>
-</div>
-<div class="col-sm-4">
-<?php echo $row->link;?>
-</div>
-<div class="col-sm-1">
-<?php echo $published;?> 
-</div>
-<div class="col-sm-1">
-<?php echo $access;?> 
-</div>
-<div class="col-sm-1">
-<?php echo $row->menu_type;?> 
-</div>
-<div class="col-sm-1">
-<input type="text" name="ordering" value="<?php echo $row->ordering;?>" size="1" /> 
-</div>
+$editlink = '<a href="index.php?option=admin&bolum=menu&task=edit&id='.$row->id.'">Düzenle</a>';
 
+$deletelink = '<a href="index.php?option=admin&bolum=menu&task=delete&id='.$row->id.'">Sil</a>';
+
+?>
+<tr>
+<td>
+<?php echo $pageNav->rowNumber( $i ); ?>
+</td>
+<td>
+<div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  <span class="glyphicon glyphicon-cog"></span> 
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<li><?php echo $editlink;?></li>
+	<li><?php echo $deletelink;?></li>
+  </ul>
 </div>
+</td>
+<td>
+<?php echo $row->treename;?>
+</td>
+<td>
+<?php echo $row->link;?>
+</td>
+<td>
+<?php echo $published;?>
+</td>
+<td>
+<?php echo $access;?>
+</td>
+<td>
+<?php echo $row->menu_type;?> 
+</td>
+</tr>
 <?php   
 }
 ?>
-
-
+</tbody>
+</table>
+	</div>
 	
-<div class="form-group">
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Menü Ekle" onclick="javascript:submitbutton('new');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu menüleri silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+	<div class="panel-footer">
+	<div align="center">
+<div class="pagenav_counter">
+<?php echo $pageNav->writePagesCounter();?>
 </div>
-</div>	
-
-<input type="hidden" name="option" value="admin" />
-<input type="hidden" name="bolum" value="menu" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-	</form>
+<div class="pagenav_links">
+<?php 
+$link = 'index.php?option=admin&bolum=menu';
+echo $pageNav->writePagesLinks($link);?>
+</div>
+</div>
 	</div>
 	</div>
 		<?php

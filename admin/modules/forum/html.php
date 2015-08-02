@@ -95,85 +95,63 @@ class ForumHTML {
 	static function Boards($list, $pageNav) {
 		
 		?>
-<form action="index.php" method="post" name="adminForm">
-
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Forum Ekle" onclick="javascript:submitbutton('addboard');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editboard');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu forumları silmek istediğinize emin misiniz?')){ submitbutton('deleteboard');}" class="btn btn-warning" /> 
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Forum Board Yönetimi</h4></div>
+	<div class="panel-body">
+	<div class="row">
+<div class="col-sm-8">
+<a href="index.php?option=admin&bolum=forum&task=newboard" class="btn btn-default btn-sm">Yeni Board Ekle</a>
 </div>
-
-<table width="100%" border="0" class="veritable">
-<tr>
-<th width="5%">
-SIRA
-</th>
-<th width="1%">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $list ); ?>);" />
-</th>
-<th width="20%">
-Kategori Adı
-</th>
-<th width="50%">
-Forum Adı
-</th>
-<th>
-Sıralaması
-</th>
-</tr>
-</table>
-
+</div>
+	<table class="table table-striped">
+	<thead>
+	<tr>
+	<th>SIRA</th>
+	<th>İŞLEM</th>
+	<th>BOARD ADI</th>
+	<th>KATEGORİ ADI</th>
+	</tr>
+	</thead>
+	<tbody>
 <?php
 $t = 0;
 $i = 0;
 foreach ($list as $row) {
-
-$checked = mezunHTML::idBox( $i, $row->ID_BOARD );
+	$editlink = '<a href="index.php?option=admin&bolum=forum&task=editboard&id='.$row->ID_BOARD.'">Düzenle</a>';
+	$deletelink = '<a href="dex.php?option=admin&bolum=forum&task=deleteboard&id='.$row->ID_BOARD.'">Sil</a>';
 ?>
-
-<div id="detail<?php echo $row->ID_BOARD;?>">
-<table width="100%" border="0" class="veriitem<?php echo $t;?>">
 <tr>
-<td width="5%">
-<center>
+<td>
 <?php echo $pageNav->rowNumber( $i ); ?>
-</center>
-</td>
-<td width="1%">
-<center>
-<?php echo $checked;?>
-</center>
-</td>
-<td width="20%">
-<?php echo $row->catname;?>
-</td>
-<td width="50%">
-<a href="index.php?option=admin&bolum=forum&task=editboard&id=<?php echo $row->id;?>"><?php echo $row->treename;?></a>
 </td>
 <td>
-<?php echo $row->boardOrder;?>
+ <div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  <span class="glyphicon glyphicon-cog"></span> 
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<li><?php echo $editlink;?></li>
+	<li><?php echo $deletelink;?></li>
+  </ul>
+</div>
+</td>
+<td>
+<?php echo $row->treename;?>
+</td>
+<td>
+<?php echo $row->catname;?>
 </td>
 </tr>
-</table>
-</div>
-
 <?php
 $t = 1 - $t;
 $i++;
 }
 ?>
-<input type="hidden" name="option" value="admin" />
-<input type="hidden" name="bolum" value="forum" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-<br />
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Forum Ekle" onclick="javascript:submitbutton('addboard');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editboard');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu forumları silmek istediğinize emin misiniz?')){ submitbutton('deleteboard');}" class="btn btn-warning" /> 
+</tbody>
+</table>
 </div>
-</form>
 
+<div class="panel-footer">
 <div align="center">
 <div class="pagenav_counter">
 <?php echo $pageNav->writePagesCounter();?>
@@ -184,10 +162,9 @@ $link = 'index.php?option=admin&bolum=forum&task=boards';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
-
-<?php
-		
-		
+</div>
+</div>
+<?php		
 	}
 	
 	static function editCategory($row) {
@@ -245,81 +222,62 @@ echo $pageNav->writePagesLinks($link);?>
 	
 	static function Categories($rows, $pageNav) {
 		?>
-<form action="index.php" method="post" name="adminForm">
-
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Kategori Ekle" onclick="javascript:submitbutton('addcat');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editcat');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deletecat');}" class="btn btn-warning" /> 
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Forum Kategori Yönetimi</h4></div>
+	<div class="panel-body">
+	<div class="row">
+<div class="col-sm-8">
+<a href="index.php?option=admin&bolum=forum&task=newcat" class="btn btn-default btn-sm">Yeni Kategori Ekle</a>
+</div>
 </div>
 
-<table width="100%" border="0" class="veritable">
+<table class="table table-striped">
+<thead>
 <tr>
-<th width="5%">
-SIRA
-</th>
-<th width="1%">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</th>
-<th width="10%">
-Kategori Adı
-</th>
-<th>
-Sıralaması
-</th>
+<th>SIRA</th>
+<th>İŞLEM</th>
+<th>KATEGORİ ADI</th>
 </tr>
-</table>
-
+</thead>
+<tbody>
 <?php
 $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$checked = mezunHTML::idBox( $i, $row->ID_CAT );
-?>
+$editlink = '<a href="index.php?option=admin&bolum=forum&task=editcat&id='.$row->ID_CAT.'">Düzenle</a>';
+$deletelink = '<a href="index.php?option=admin&bolum=forum&task=deletecat&id='.$row->ID_CAT.'">Sil</a>';
 
-<div id="detail<?php echo $row->ID_CAT;?>">
-<table width="100%" border="0" class="veriitem<?php echo $t;?>">
+?>
 <tr>
-<td width="5%">
-<center>
+<td>
 <?php echo $pageNav->rowNumber( $i ); ?>
-</center>
-</td>
-<td width="1%">
-<center>
-<?php echo $checked;?>
-</center>
-</td>
-<td width="10%">
-<center>
-<a href="index.php?option=admin&bolum=forum&task=editcat&id=<?php echo $row->ID_CAT;?>"><?php echo $row->name;?></a>
-</center>
 </td>
 <td>
-<?php echo $row->catOrder;?>
+<div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  <span class="glyphicon glyphicon-cog"></span> 
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<li><?php echo $editlink;?></li>
+	<li><?php echo $deletelink;?></li>
+  </ul>
+</div>
+</td>
+<td>
+<?php echo $row->name;?>
 </td>
 </tr>
-</table>
-</div>
-
 <?php
 $t = 1 - $t;
 }
 ?>
-<input type="hidden" name="option" value="admin" />
-<input type="hidden" name="bolum" value="forum" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-<br />
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Kategori Ekle" onclick="javascript:submitbutton('addcat');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('editcat');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu kategorileri silmek istediğinize emin misiniz?')){ submitbutton('deletecat');}" class="btn btn-warning" /> 
-</div>
-</form>
-
-<div align="center">
+</tbody>
+</table>
+	
+	</div>
+	<div class="panel-footer">
+	<div align="center">
 <div class="pagenav_counter">
 <?php echo $pageNav->writePagesCounter();?>
 </div>
@@ -329,8 +287,8 @@ $link = 'index.php?option=admin&bolum=forum&task=categories';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
-
-<?php
-		
+	</div>
+	</div>
+	<?php
 	}
 }

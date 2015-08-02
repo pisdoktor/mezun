@@ -11,7 +11,7 @@ function adminMenu() {
 <ul>
 <li><a href="index.php?option=admin&bolum=user"><span>Üye Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=menu"><span>Menü Yönetimi</span></a></li>
-<li><a href="index.php?option=admin&bolum=blocks"><span>Block Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=blocks"><span>Blok Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=sehir"><span>Şehir Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=brans"><span>Branş Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=db"><span>Veritabanı Yönetimi</span></a></li>
@@ -21,7 +21,7 @@ function adminMenu() {
 <li class="has-sub"><a href="#"><span>Forum Yönetimi</span></a>
 <ul>
 <li><a href="index.php?option=admin&bolum=forum&task=categories"><span>Kategori Yönetimi</span></a></li>
-<li><a href="index.php?option=admin&bolum=forum&task=boards"><span>Forum Yönetimi</span></a></li>
+<li><a href="index.php?option=admin&bolum=forum&task=boards"><span>Board Yönetimi</span></a></li>
 <li><a href="index.php?option=admin&bolum=forum&task=recount"><span>Tekrar Say</span></a></li>
 </ul>
 </li>

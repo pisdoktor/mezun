@@ -13,58 +13,53 @@ mimport('tables.branslar');
 
 switch($task) {
 	default:
-	getIlList();
+	getBransList();
 	break;
 	
-	case 'add':
-	editIl(0);
+	case 'new':
+	editBrans(0);
 	break;
 	
 	case 'edit':
-	editIl($cid[0]);
-	break;
-	
-	case 'editx':
-	editIl($id);
+	editBrans($id);
 	break;
 	
 	case 'save':
-	saveIl();
+	saveBrans();
 	break;
 	
 	case 'cancel':
-	cancelIl();
+	cancelBrans();
 	break;
 	
 	case 'delete':
-	delIl($cid);
+	delBrans($id);
 	break;
 }
 
-function delIl(&$cid) {
+function delBrans($id) {
 	global $dbase;
 
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir il seçin'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__branslar"
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	if (!$id) {
+		NotAuth();
+		return;
 	}
 	
-	Redirect( 'index.php?option=admin&bolum=brans', 'Seçili branş(lar) silindi' );
+	$row = new mezunBranslar($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	$dbase->setQuery("DELETE FROM #__branslar WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	Redirect( 'index.php?option=admin&bolum=brans' );
 }
 
-function saveIl() {
+function saveBrans() {
 	 global $dbase;
 	
 	$row = new mezunBranslar( $dbase );
@@ -88,7 +83,7 @@ function saveIl() {
 	
 }
 
-function cancelIl() {
+function cancelBrans() {
 	global $dbase;
 	
 	$row = new mezunBranslar( $dbase );
@@ -96,26 +91,26 @@ function cancelIl() {
 	Redirect( 'index.php?option=admin&bolum=brans');
 }
 
-function getIlList() {
+function getBransList() {
 	 global $dbase, $limit, $limitstart;
 	 
-	 $dbase->setQuery("SELECT COUNT(*) FROM #__branslar");
-	 $total = $dbase->loadResult();
+	 $dbase->setQuery("SELECT * FROM #__branslar");
+	 $rows = $dbase->loadObjectList();
+	 
+	 $total = count($rows);
 	 
 	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
-	 $query = "SELECT * FROM #__branslar";
-	
-	$dbase->setQuery($query, $limitstart, $limit);
-	$rows = $dbase->loadObjectList();
-	
-	IlHTML::getIlList($rows, $pageNav);
+	 
+	 $list = array_Slice($rows, $limitstart, $limit);
+	 
+	BransHTML::getBransList($list, $pageNav);
 }
 
-function editIl($cid) {
+function editBrans($id) {
 	global $dbase;
 	
 	$row = new mezunBranslar($dbase);
-	$row->load($cid);
+	$row->load($id);
 	
-	IlHTML::editIl($row);
+	BransHTML::editBrans($row);
 }

@@ -54,10 +54,13 @@ function optimizeTables($cid) {
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('OPTIMIZE TABLE '.$value);
 		if ($dbase->_errorNum) {
-		echo $value.' tablosu uyarlanamadı! Mesaj:'.$dbase->_errorMsg.'<br />';    
+			$text = $value.' tablosu uyarlanamadı';
+			$msg = $dbase->_errorMsg;
 		} else {
-		echo $value.' tablosu uyarlandı! Sonuç:OK!<br />';    
+			$text = $value.' tablosu uyarlandı'; 
+			$msg = 'OK!';  
 		}
+		DBResultreporter($text, $msg); 
 	}
 }
 function checkTables($cid) {
@@ -66,10 +69,13 @@ function checkTables($cid) {
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('CHECK TABLE '.$value);
 		if ($dbase->_errorNum) {
-		echo $value.' tablosu kontrol edilemedi! Mesaj:'.$dbase->_errorMsg.'<br />';    
+			$text = $value.' tablosu kontrol edilemedi';
+			$msg = $dbase->_errorMsg;
 		} else {
-		echo $value.' tablosu kontrol edildi! Sonuç:OK!<br />';    
+			$text = $value.' tablosu kontrol edildi';
+			$msg = 'OK!';    
 		}
+		DBResultreporter($text, $msg); 
 	}
 }
 
@@ -79,10 +85,13 @@ function repairTables($cid) {
 	foreach($cid as $key=>$value) {
 		$dbase->setQuery('REPAIR TABLE '.$value);
 		if ($dbase->_errorNum) {
-		echo $value.' tablosu onarılamadı! Mesaj:'.$dbase->_errorMsg.'<br />';    
+			$text = $value.' tablosu onarılamadı';
+			$msg = $dbase->_errorMsg;
 		} else {
-		echo $value.' tablosu onarıldı! Sonuç:OK!<br />';    
+			$text = $value.' tablosu onarıldı';
+			$msg = 'OK!';
 		}
+		DBResultreporter($text, $msg); 
 	}
 }
 
@@ -170,4 +179,17 @@ function tabloBoyutu($table) {
 	$result = round((($result) / 1024), 2);
 	
 	return $result;
+}
+
+function DBResultreporter($text, $msg) {
+	?>
+	<div class="row">
+	<div class="col-sm-6">
+	<?php echo $text;?>
+	</div>
+	<div class="col-sm-6">
+	<?php echo $msg;?>
+	</div>
+	</div>
+	<?php
 }

@@ -13,58 +13,53 @@ mimport('tables.sehirler');
 
 switch($task) {
 	default:
-	getIlList();
+	getSehirList();
 	break;
 	
-	case 'add':
-	editIl(0);
+	case 'new':
+	editSehir(0);
 	break;
 	
 	case 'edit':
-	editIl($cid[0]);
-	break;
-	
-	case 'editx':
-	editIl($id);
+	editSehir($id);
 	break;
 	
 	case 'save':
-	saveIl();
+	saveSehir();
 	break;
 	
 	case 'cancel':
-	cancelIl();
+	cancelSehir();
 	break;
 	
 	case 'delete':
-	delIl($cid);
+	delSehir($id);
 	break;
 }
 
-function delIl(&$cid) {
+function delSehir($id) {
 	global $dbase;
 
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir il seçin'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__sehirler"
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	if (!$id) {
+		NotAuth();
+		return;
 	}
 	
-	Redirect( 'index.php?option=admin&bolum=sehir', 'Seçili şehir(ler) silindi' );
+	$row = new mezunSehirler($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	$dbase->setQuery("DELETE FROM #__sehirler WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	Redirect( 'index.php?option=admin&bolum=sehir' );
 }
 
-function saveIl() {
+function saveSehir() {
 	 global $dbase;
 	
 	$row = new mezunSehirler( $dbase );
@@ -88,7 +83,7 @@ function saveIl() {
 	
 }
 
-function cancelIl() {
+function cancelSehir() {
 	global $dbase;
 	
 	$row = new mezunSehirler( $dbase );
@@ -96,26 +91,26 @@ function cancelIl() {
 	Redirect( 'index.php?option=admin&bolum=sehir');
 }
 
-function getIlList() {
+function getSehirList() {
 	 global $dbase, $limit, $limitstart;
 	 
-	 $dbase->setQuery("SELECT COUNT(*) FROM #__sehirler");
-	 $total = $dbase->loadResult();
+	 $dbase->setQuery("SELECT * FROM #__sehirler");
+	 $rows = $dbase->loadObjectList();
+	 
+	 $total = count($rows);
 	 
 	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
-	 $query = "SELECT * FROM #__sehirler";
-	
-	$dbase->setQuery($query, $limitstart, $limit);
-	$rows = $dbase->loadObjectList();
-	
-	IlHTML::getIlList($rows, $pageNav);
+	 
+	 $list = array_slice($rows, $limitstart, $limit);
+	 
+	IlHTML::getIlList($list, $pageNav);
 }
 
-function editIl($cid) {
+function editSehir($id) {
 	global $dbase;
 	
 	$row = new mezunSehirler($dbase);
-	$row->load($cid);
+	$row->load($id);
 	
 	IlHTML::editIl($row);
 }

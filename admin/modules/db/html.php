@@ -8,8 +8,10 @@ class BackupHTML {
 		global $dbase;
 		?>
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Veritabanı Tabloları</h4></div>
+	<div class="panel-heading"><h4>Yönetim Paneli - Veritabanı Yönetimi</h4></div>
 	<div class="panel-body">
+	
+	
 		<form action="index.php" method="post" name="adminForm" role="form">
 
 		<div class="form-group">
@@ -22,25 +24,17 @@ class BackupHTML {
 </div>
 </div>
 
-<div class="row">
-<div class="col-sm-1">
-<strong>SIRA</strong>
-</div>
-<div class="col-sm-1">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</div>
-<div class="col-sm-4">
-<strong>TABLO ADI</strong>
-</div>
-<div class="col-sm-3">
-<strong>SATIR SAYISI</strong>
-</div>
-<div class="col-sm-3">
-<strong>TOPLAM BOYUT</strong>
-</div>
-</div>
-
-
+<table class="table table-striped">
+<thead>
+<tr>
+<th>SIRA</th>
+<th><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+<th>TABLO ADI</th>
+<th>SATIR SAYISI</th>
+<th>TOPLAM BOYUT</th>
+</tr>
+</thead>
+<tbody>
 <?php
 $t = 0;
 $i = 0;
@@ -51,29 +45,30 @@ foreach ($rows as $key=>$value) {
 
 $checked = mezunHTML::idBox( $i, $value );
 ?>
-
-<div class="row" id="detail<?php echo $key;?>">
-<div class="col-sm-1">
+<tr>
+<td>
 <?php echo $pageNav->rowNumber( $i ); ?>
-</div>
-<div class="col-sm-1">
+</td>
+<td>
 <?php echo $checked;?>
-</div>
-<div class="col-sm-4">
+</td>
+<td>
 <?php echo $value;?>
-</div>
-<div class="col-sm-3">
+</td>
+<td>
 <?php echo $total;?>
-</div>
-<div class="col-sm-3">
+</td>
+<td>
 <?php echo tabloBoyutu($value);?> KByte
-</div>
-</div>
+</td>
+</tr>
 <?php
 $t = 1 - $t;
 $i++;
 }
 ?>
+</tbody>
+</table>
 <input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="db" />
 <input type="hidden" name="task" value="" />

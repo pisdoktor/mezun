@@ -10,6 +10,7 @@ class Bildirim {
 		<div class="panel-heading"><h4>Geri Bildirim: <?php echo $row->baslik;?></h4></div>
 		<div class="panel-body">
 		
+		
 		<div class="row">
 		<div class="col-sm-3">
 		<strong>Gönderen:</strong>
@@ -44,51 +45,57 @@ class Bildirim {
 		<div class="panel panel-default">
 	<div class="panel-heading"><h4>Yönetim Paneli - Geri Bildirimler</h4></div>
 	<div class="panel-body">
+	<table class="table table-striped">
+		 <thead>
+	  <tr>
+		<th>SIRA</th>
+		<th><input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+		<th>BAŞLIK</th>
+		<th>GÖNDEREN</th>
+		<th>TARİH</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  
 	
-	<div class="row">
-<div class="col-sm-1">
-<strong>SIRA</strong>
-</div>
-<div class="col-sm-4">
-<strong>BAŞLIK</strong>
-</div>
-<div class="col-sm-4">
-<strong>GÖNDEREN</strong> 
-</div>
-<div class="col-sm-3">
-<strong>GÖNDERİM TARİHİ</strong> 
-</div>
-</div>
+
 <?php
 $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
+$checked = mezunHTML::idBox( $i, $row->id );
+
 $row->baslik = mezunMesajHelper::cryptionText($row->baslik, 'decode');
 ?>
-
-<div class="row" id="detail<?php echo $row->id;?>">
-
-<div class="col-sm-1">
+<tr class="<?php echo $t;?>">
+<td>
 <?php echo $pageNav->rowNumber( $i ); ?>
-</div>
-<div class="col-sm-4">
+</td>
+<td>
+<?php echo $checked;?>
+</td>
+<td>
 <a href="index.php?option=admin&bolum=bildirim&task=show&id=<?php echo $row->id;?>"><?php echo $row->baslik;?></a>
-</div>
-<div class="col-sm-4">
+</td>
+<td>
 <?php echo $row->gonderen;?>
-</div>
-<div class="col-sm-3">
+</td>
+<td>
 <?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
-</div>
-</div>
+</td>
+
+</tr>
 
 <?php
 $t = 1 - $t;
 }
 ?>	
-	
-	
+</tbody>
+</table>
+
+	</div>
+	<div class="panel-footer">
 	<div align="center">
 <div class="pagenav_counter">
 <?php echo $pageNav->writePagesCounter();?>
@@ -99,7 +106,7 @@ $link = 'index.php?option=admin&bolum=bildirim';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
-	</div>
+</div>
 	</div>
 	<?php
 	}

@@ -2,7 +2,6 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-$cid = getParam($_REQUEST, 'cid');
 $id = intval(getParam($_REQUEST, 'id'));
 $limit = intval(getParam($_REQUEST, 'limit', 20));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
@@ -18,10 +17,6 @@ switch($task) {
 	break;
 	
 	case 'edit':
-	editMenu($cid);
-	break;
-	
-	case 'editx':
 	editMenu($id);
 	break;
 	
@@ -42,34 +37,24 @@ switch($task) {
 	break;
 }
 
-function deleteMenu($cid) {
+function deleteMenu($id) {
 	global $dbase;
 	
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir menü seçin'); window.history.go(-1);</script>\n";
-		exit;
+	if (!$id) {
+		NotAuth();
+		return;
 	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__menu"
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
+	
+	$row = new mezunMenus($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	$dbase->setQuery("DELETE FROM #__menu WHERE id=".$dbase->Quote($row->id));
 	$dbase->query();
-	
-	$childs = 'parent='. implode(' OR parent=', $cid);
-	$query = "DELETE FROM #__menu"
-	. "\n WHERE ( $childs )"
-	;
-	
-	$dbase->setQuery( $query );
-	
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
-	}
 	
 	Redirect('index.php?option=admin&bolum=menu');
 }
@@ -87,14 +72,19 @@ function saveMenu() {
 }
 
 function cancelMenu() {
-	Return('index.php?option=admin&bolum=menu');
+	global $dbase;
+	
+	$row = new mezunMenus( $dbase );
+	$row->bind( $_POST );
+	
+	Redirect('index.php?option=admin&bolum=menu');
 }
 
-function editMenu($cid) {
+function editMenu($id) {
 	global $dbase;
 	
 	$row = new mezunMenus($dbase);
-	$row->load($cid);
+	$row->load($id);
 	
 	menusHTML::editMenu($row);	
 }

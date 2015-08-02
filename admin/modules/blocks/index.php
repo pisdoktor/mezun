@@ -2,7 +2,6 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
-$cid = getParam($_REQUEST, 'cid');
 $id = intval(getParam($_REQUEST, 'id'));
 $limit = intval(getParam($_REQUEST, 'limit', 20));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
@@ -18,13 +17,9 @@ switch($task) {
 	break;
 	
 	case 'edit':
-	editBlock($cid);
-	break;
-	
-	case 'editx':
 	editBlock($id);
 	break;
-	
+
 	case 'new':
 	editBlock(0);
 	break;
@@ -38,7 +33,7 @@ switch($task) {
 	break;
 	
 	case 'delete':
-	deleteBlock($cid);
+	deleteBlock($id);
 	break;
 }
 
@@ -70,11 +65,11 @@ function saveBlock() {
 	Redirect('index.php?option=admin&bolum=blocks');
 }
 
-function editBlock($cid) {
+function editBlock($id) {
 	global $dbase;
 	
 	$row = new mezunBlocks($dbase);
-	$row->load($cid);
+	$row->load($id);
 	
 	//block_menu
 	$dbase->setQuery("SELECT bolum AS value FROM #__blocks_menu WHERE blockid=".$row->id);
@@ -105,6 +100,6 @@ function getBlocks() {
 }
 
 function cancelBlock() {
-	Return('index.php?option=admin&bolum=blocks');
+	Redirect('index.php?option=admin&bolum=blocks');
 }
 

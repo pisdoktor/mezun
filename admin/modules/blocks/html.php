@@ -20,6 +20,19 @@ class BlocksHTML {
 </div>
 </div>
 
+<?php if (!$row->block) { ?>
+<div class="form-group">
+<div class="row">
+<label class="control-label col-sm-4" for="content">Blok İçeriği:</label>
+<div class="col-sm-6">
+<textarea cols="5" class="form-control" name="content" id="content" required>
+<?php echo $row->content;?>
+</textarea>
+</div>
+</div>
+</div>
+<?php }?>
+
 <div class="form-group">
 <div class="row">
 <label class="control-label col-sm-4" for="showtitle">Başlık Gösterimi:</label>
@@ -79,96 +92,87 @@ class BlocksHTML {
 	static function getBlocks($rows, $pageNav) {
 		?>
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Bloklar</h4></div>
+	<div class="panel-heading"><h4>Yönetim Paneli - Blok Yönetimi</h4></div>
 	<div class="panel-body">
-	<form action="index.php" method="post" name="adminForm" role="form">
-	<div class="form-group">
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Blok Ekle" onclick="javascript:submitbutton('new');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu blockları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+	<div class="row">
+<div class="col-sm-8">
+<a href="index.php?option=admin&bolum=blocks&task=new" class="btn btn-default btn-sm">Yeni Blok Ekle</a>
 </div>
 </div>
-
-<div class="row">
-<div class="col-sm-1">
-<strong>SIRA</strong>
-</div>
-<div class="col-sm-1">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</div>
-<div class="col-sm-3">
-<strong>BLOK BAŞLIĞI</strong>
-</div>
-<div class="col-sm-2">
-<strong>BLOK DOSYASI</strong> 
-</div>
-<div class="col-sm-2">
-<strong>BAŞLIK GÖSTERİMİ</strong> 
-</div>
-<div class="col-sm-1">
-<strong>POZİSYON</strong> 
-</div>
-<div class="col-sm-1">
-<strong>YAYIN</strong> 
-</div>
-<div class="col-sm-1">
-<strong>SIRALA</strong> 
-</div>
-
-</div>
+	<table class="table table-striped">
+	<thead>
+	<tr>
+	<th>SIRA</th>
+	<th>İŞLEM</th>
+	<th>BAŞLIK</th>
+	<th>DOSYA</th>
+	<th>BAŞLIK GÖSTERİMİ</th>
+	<th>POZİSYON</th>
+	<th>YAYIN</th>
+	</tr>
+	</thead>
+	<tbody>
 <?php
 for($i=0;$i<count($rows);$i++) {
 $row = $rows[$i];
-$checked = mezunHTML::idBox( $i, $row->id );
+
 $published = itemState($row->published);
+
 $showtitle = $row->showtitle ? 'Evet':'Hayır';
 
-?>
-<div class="row">
-<div class="col-sm-1">
-<?php echo $pageNav->rowNumber( $i ); ?>
-</div>
-<div class="col-sm-1">
-<?php echo $checked;?>
-</div>
-<div class="col-sm-3">
-<a href="index.php?option=admin&bolum=blocks&task=editx&id=<?php echo $row->id;?>">
-<?php echo $row->title;?>
-</a>
-</div>
-<div class="col-sm-2">
-<?php echo $row->block;?>
-</div>
-<div class="col-sm-2">
-<?php echo $showtitle;?> 
-</div>
-<div class="col-sm-1">
-<?php echo $row->position;?>
-</div>
-<div class="col-sm-1">
-<?php echo $published;?>
-</div>
-<div class="col-sm-1">
-<?php echo $row->ordering;?> 
-</div>
+$editlink = '<a href="index.php?option=admin&bolum=blocks&task=edit&id='.$row->id.'">Düzenle</a>';
+$deletelink = $row->iscore ? '':'<a href="index.php?option=admin&bolum=blocks&task=delete&id='.$row->id.'">Sil</a>';
 
+?>
+<tr>
+<td>
+<?php echo $pageNav->rowNumber( $i ); ?>
+</td>
+<td>
+<div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  <span class="glyphicon glyphicon-cog"></span> 
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<li><?php echo $editlink;?></li>
+	<li><?php echo $deletelink;?></li>
+  </ul>
 </div>
+</td>
+<td>
+<?php echo $row->title;?>
+</td>
+<td>
+<?php echo $row->block;?>
+</td>
+<td>
+<?php echo $showtitle;?> 
+</td>
+<td>
+<?php echo $row->position;?>
+</td>
+<td>
+<?php echo $published;?>
+</td>
+</tr>
 <?php   
 }
 ?>
-<div class="form-group">
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Blok Ekle" onclick="javascript:submitbutton('new');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu blockları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+</tbody>
+</table>
+	</div>
+	
+	<div class="panel-footer">
+	<div align="center">
+<div class="pagenav_counter">
+<?php echo $pageNav->writePagesCounter();?>
+</div>
+<div class="pagenav_links">
+<?php 
+$link = 'index.php?option=admin&bolum=blocks';
+echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
-	<input type="hidden" name="option" value="admin" />
-<input type="hidden" name="bolum" value="blocks" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-	</form>
 	</div>
 	</div>
 	<?php

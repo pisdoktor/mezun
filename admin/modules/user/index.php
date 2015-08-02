@@ -2,7 +2,6 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-$cid = getParam($_REQUEST, 'cid');
 $id = intval(getParam($_REQUEST, 'id'));
 $limit = intval(getParam($_REQUEST, 'limit', 10));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
@@ -17,15 +16,11 @@ switch($task) {
 	getKullaniciList($search);
 	break;
 	
-	case 'add':
+	case 'new':
 	editKullanici(0);
 	break;
 	
 	case 'edit':
-	editKullanici(intval(($cid[0])));
-	break;
-	
-	case 'editx':
 	editKullanici($id);
 	break;
 	
@@ -38,66 +33,61 @@ switch($task) {
 	break;
 	
 	case 'delete':
-	delKullanici($cid);
+	delKullanici($id);
 	break;
 	
 	case 'block':
-	blockUser($cid, 0);
+	blockUser($id, 0);
 	break;
 	
 	case 'unblock':
-	blockUser($cid, 1);
+	blockUser($id, 1);
 	break;
 }
 
-function blockUser($cid, $what) {
+function blockUser($id, $what) {
 	global $dbase;
 	
-	$total = count( $cid );
-	$islem = $what ? 'Blok kaldırmak' : 'Bloklamak';
-	$islem2 = $what ? 'aktive edildi' : 'pasif edildi';
-	
-	if ( $total < 1) {
-		echo "<script> alert($islem.' için listeden bir kullanıcı seçin'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "UPDATE #__users"
-	. "\n SET activated=".$dbase->Quote($what)
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	if (!$id) {
+		NotAuth();
+		return;
 	}
 	
-	Redirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) '.$islem2 );
+	$row = new mezunUsers($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		break;
+	}
+	
+	$row->activated = $what;
+	
+	$row->store();
+	
+	Redirect( 'index.php?option=admin&bolum=user' );
 }
 
-function delKullanici(&$cid) {
+function delKullanici($id) {
 	global $dbase;
-
-	$total = count( $cid );
-	if ( $total < 1) {
-		echo "<script> alert('Silmek için listeden bir kullanıcı seçin'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	ArrayToInts( $cid );
-	$cids = 'id=' . implode( ' OR id=', $cid );
-	$query = "DELETE FROM #__users"
-	. "\n WHERE ( $cids )"
-	;
-	$dbase->setQuery( $query );
-	if ( !$dbase->query() ) {
-		echo "<script> alert('".$dbase->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	
+	if (!$id) {
+		NotAuth();
+		return;
 	}
 	
-	Redirect( 'index.php?option=admin&bolum=user', 'Seçili kullanıcı(lar) silindi' );
+	$row = new mezunUsers($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	$dbase->setQuery("DELETE FROM #__users WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	Redirect( 'index.php?option=admin&bolum=user' );
 }
 
 function saveKullanici() {
@@ -131,7 +121,7 @@ function saveKullanici() {
 		}
 		$row->registerDate     = date( 'Y-m-d H:i:s' );
 	} else {
-		$original = new admUsers( $dbase );
+		$original = new mezunUsers( $dbase );
 		$original->load( (int)$row->id );
 
 		// existing user stuff
@@ -175,18 +165,7 @@ function getKullaniciList($search) {
 	 if ($search) {
 		 $search = mezunStripslashes($search);
 		 $where[] = "k.username LIKE '%" . $dbase->getEscaped( trim( strtolower( $search ) ) ) . "%'";
-	 }
-	 
-	 
-	 $query = "SELECT COUNT(k.id) FROM #__users AS k"
-	 . ( count( $where ) ? "\n WHERE " . implode( ' AND ', $where ) : "" )
-	 ;
-	 
-	 
-	 $dbase->setQuery($query);
-	 $total = $dbase->loadResult();
-	 
-	 $pageNav = new mezunPagenation( $total, $limitstart, $limit);
+	 } 
 	 
 	 $query = "SELECT k.*, s.name as sehir, b.name as brans FROM #__users AS k"
 	 . "\n LEFT JOIN #__sehirler AS s ON s.id=k.sehir"
@@ -195,17 +174,22 @@ function getKullaniciList($search) {
 	 . "\n ORDER BY k.id"
 	 ;
 	
-	$dbase->setQuery($query, $limitstart, $limit);
+	$dbase->setQuery($query);
 	$rows = $dbase->loadObjectList();
 	
-	KullaniciHTML::getKullaniciList($rows, $pageNav, $search);
+	$total = count($rows);
+	$pageNav = new mezunPagenation( $total, $limitstart, $limit);
+	
+	$list = array_slice($rows, $limitstart, $limit);
+	
+	KullaniciHTML::getKullaniciList($list, $pageNav, $search);
 }
 
-function editKullanici($cid) {
-	global $dbase, $my;
+function editKullanici($id) {
+	global $dbase;
 	
 	$row = new mezunUsers($dbase);
-	$row->load($cid);
-	
+	$row->load($id);
+
 	KullaniciHTML::editKullanici($row);
 }

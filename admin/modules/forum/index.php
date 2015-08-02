@@ -20,7 +20,11 @@ switch($task) {
 	editCategory($id);
 	break;
 	
-	case 'addcat':
+	case 'deletecat':
+	deleteCategory($id);
+	break;
+	
+	case 'newcat':
 	editCategory(0);
 	break;
 	
@@ -40,7 +44,11 @@ switch($task) {
 	editBoard($id);
 	break;
 	
-	case 'addboard':
+	case 'deleteboard':
+	deleteBoard($id);
+	break;
+	
+	case 'newboard':
 	editBoard(0);
 	break;
 	

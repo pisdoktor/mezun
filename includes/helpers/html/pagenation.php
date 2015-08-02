@@ -41,9 +41,16 @@ class mezunPagenation {
 	
 	//soner ekledi
 	function writeLimitPageLink($link) {
+		echo '<div class="row">';
+		echo '<div class="col-sm-12">';
 		echo $this->writePagesLinks($link);
-		echo '<br />';
+		echo '</div>';
+		echo '</div>';
+		echo '<div class="row">';
+		echo '<div class="col-sm-2">';
 		echo $this->writeLimitBox($link);
+		echo '</div>';
+		echo '</div>';
 	}
 	/**
 	* Writes the html for the pages counter, eg, Results 1-10 of x

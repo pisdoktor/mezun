@@ -3,31 +3,13 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
 class DuyuruHTML {
+	
 	static function editDuyuru($row) {
 		?>
 		<div class="panel panel-default">
 	<div class="panel-heading"><h4>Yönetim Paneli - Duyuru <?php echo $row->id ? 'Düzenle' : 'Ekle';?></h4>
 	</div>
 	<div class="panel-body">
-
-		<script language="javascript" type="text/javascript">
-		<!--
-		function submitbutton(pressbutton) {
-			var form = document.adminForm;
-
-			if (pressbutton == 'cancel') {
-				submitform( pressbutton );
-				return;
-			}
-			// do field validation
-			if (form.metin.value == ""){
-				alert( "Duyuru metnini boş bırakmışsınız" );
-			}  else {
-		submitform( pressbutton );
-			}
-		}
-		//-->
-		</script> 
 <form action="index.php" method="post" name="adminForm" role="form">
 
 <div class="row">
@@ -37,7 +19,7 @@ Duyuru Metni:
 </label>
 </div>
 <div class="col-sm-9">
-<textarea id="metin" name="text" cols="60" rows="10" class="form-control" required><?php echo $row->text;?></textarea>
+<textarea id="metin" name="text" cols="6" class="form-control" required><?php echo $row->text;?></textarea>
 </div>
 </div>
 
@@ -62,75 +44,63 @@ Duyuru Metni:
 	static function getDuyuruList($rows, $pageNav) {
 		?>
 		<div class="panel panel-default">
-	<div class="panel-heading"><h4>Yönetim Paneli - Duyurular</h4></div>
+	<div class="panel-heading"><h4>Yönetim Paneli - Duyuru Yönetimi</h4></div>
 	<div class="panel-body">
 	
-<form action="index.php" method="post" name="adminForm" role="form">
-
-<div class="form-group">
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Duyuru Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu duyuruları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+	<div class="row">
+<div class="col-sm-8">
+<a href="index.php?option=admin&bolum=duyuru&task=new" class="btn btn-default btn-sm">Yeni Duyuru Ekle</a>
 </div>
 </div>
-
-<div class="row">
-<div class="col-sm-1">
-<strong>SIRA</strong>
-</div>
-<div class="col-sm-1">
-<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count( $rows ); ?>);" />
-</div>
-<div class="col-sm-3">
-<strong>DUYURU TARİHİ</strong>
-</div>
-<div class="col-sm-7">
-<strong>DUYURU İÇERİĞİ</strong> 
-</div>
-
-</div>
-
+	
+	<table class="table table-striped">
+	<thead>
+	<tr>
+	<th>SIRA</th>
+	<th>İŞLEM</th>
+	<th>DUYURU TARİHİ</th>
+	<th>DUYURU İÇERİĞİ</th>
+	</tr>
+	</thead>
+<tbody>
 <?php
 $t = 0;
 for($i=0; $i<count($rows);$i++) {
 $row = $rows[$i];
 
-$checked = mezunHTML::idBox( $i, $row->id );
+$editlink = '<a href="index.php?option=admin&bolum=duyuru&task=edit&id='.$row->id.'">Düzenle</a>';
+$deletelink = '<a href="index.php?option=admin&bolum=duyuru&task=delete&id='.$row->id.'">Sil</a>';
 ?>
-
-<div class="row" id="detail<?php echo $row->id;?>">
-
-<div class="col-sm-1">
+<tr>
+<td>
 <?php echo $pageNav->rowNumber( $i ); ?>
+</td>
+<td>
+<div class="dropdown">
+  <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+  <span class="glyphicon glyphicon-cog"></span> 
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<li><?php echo $editlink;?></li>
+	<li><?php echo $deletelink;?></li>
+  </ul>
 </div>
-<div class="col-sm-1">
-<?php echo $checked;?>
-</div>
-<div class="col-sm-3">
-<a href="index.php?option=admin&bolum=duyuru&task=editx&id=<?php echo $row->id;?>"><?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?></a>
-</div>
-<div class="col-sm-7">
-<?php echo $row->text;?>
-</div>
-</div>
-
+</td>
+<td>
+<?php echo mezunGlobalHelper::timeformat($row->tarih, true, true);?>
+</td>
+<td>
+<?php echo mezunGlobalHelper::shortText($row->text, 50);?>
+</td>
+</tr>
 <?php
 $t = 1 - $t;
 }
 ?>
-<input type="hidden" name="option" value="admin" />
-<input type="hidden" name="bolum" value="duyuru" />
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="0" />
-<br />
-<div class="btn-group">
-<input type="button" name="button" value="Yeni Duyuru Ekle" onclick="javascript:submitbutton('add');" class="btn btn-primary" />
-<input type="button" name="button" value="Seçileni Düzenle" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else {submitbutton('edit');}" class="btn btn-default" /> 
-<input type="button" name="button" value="Seçileni Sil" onclick="javascript:if (document.adminForm.boxchecked.value == 0){ alert('Lütfen listeden bir seçim yapın'); } else if (confirm('Bu duyuruları silmek istediğinize emin misiniz?')){ submitbutton('delete');}" class="btn btn-warning" /> 
+</tbody>
+</table>
 </div>
-</form>
-
+<div class="panel-footer">
 <div align="center">
 <div class="pagenav_counter">
 <?php echo $pageNav->writePagesCounter();?>
@@ -141,8 +111,6 @@ $link = 'index.php?option=admin&bolum=duyuru';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>
-
-
 </div>
 </div>
 
