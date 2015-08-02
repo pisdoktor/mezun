@@ -31,6 +31,8 @@ class mezunAlbumImages extends mezunTable {
 	
 	var $image   = null;
 	
+	var $title = null;
+	
 	var $addeddate = null;
 	
 	function mezunAlbumImages( &$db ) {

@@ -124,6 +124,47 @@ class mezunImageHelper {
 		
 	}
 	
+	static function rotate($src, $dest, $angle) {
+		
+		$ext = mezunImageHelper::getExt($src);
+		
+		switch($ext) {
+			case 'jpg':
+			case 'jpeg':
+			$img_r = imagecreatefromjpeg($src);
+			break;
+		
+			case 'png':
+			$img_r = imagecreatefrompng($src);
+			break;
+		
+			case 'gif':
+			$img_r = imagecreatefromgif($src);
+			break;
+		}
+		
+		$dest_r = imagerotate($img_r, $angle, 0);
+		
+		
+		switch($ext) {
+		case 'jpg':
+		case 'jpeg':
+		imagejpeg($dest_r, $dest, 100);
+		break;
+		
+		case 'png':
+		imagepng($dest_r, $dest, 100);
+		break;
+		
+		case 'gif':
+		imagegif($dest_r, $dest, 100);
+		break;
+		}
+		
+		imagedestroy($dest_r);
+		
+	}
+	
 	static function getImageWidth($src) {
 		list($width, $height) = getimagesize($src);
 		

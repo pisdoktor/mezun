@@ -16,9 +16,52 @@ switch($task) {
 	getArkadasList();
 	break;
 	
+	case 'view':
+	viewUserFriends($id);
+	break;
+	
 	case 'delete':
 	deleteArkadaslik($id);
 	break;
+}
+
+/**
+* İstenilen id değerindeki kullanıcının arkadaşlarını gösterir
+* 
+* @param mixed $id
+*/
+function viewUserFriends($id) {
+	global $dbase, $limitstart, $limit;
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$user = new mezunUsers($dbase);
+	$user->load($id);
+	
+	if (!$user->id) {
+		NotAuth();
+		return;
+	}
+	
+	$friends = mezunArkadasHelper::getUserFriends($user->id);
+	$friends = implode(',', $friends);
+	
+	$query = "SELECT id, name, image, cinsiyet, unvan FROM #__users WHERE id IN (".$friends.")";
+	$dbase->setQuery($query);
+	
+	$rows = $dbase->loadObjectList();
+	
+	$total = count($rows);
+	
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
+	
+	$list = array_slice($rows, $limitstart, $limit);
+	
+	ArkadasHTML::viewUserFriends($user, $list, $pageNav);
+	
 }
 
 /**
@@ -41,7 +84,7 @@ function getArkadasList() {
 	
 	$pageNav = new mezunPagenation($total, $limitstart, $limit);
 	
-	Arkadas::getList($list, $pageNav);	
+	ArkadasHTML::getList($list, $pageNav);	
 }
 
 /**

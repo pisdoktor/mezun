@@ -4,6 +4,23 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunArkadasHelper {
 	/**
+	* Arkadaşlarımın arkadaşlarını bir dizide toplayan fonksiyon
+	* 
+	*/
+	static function getFriendFriends() {
+		
+		//arkadaşlarımızı alalım
+		$rows = mezunArkadasHelper::getMyFriends();
+		
+		//arkadaşlarımın arkadaşlarını alalım ve bir diziye ekleyelim
+		$dizi = array();
+		foreach ($rows as $row) {
+			$dizi = array_merge($dizi, mezunArkadasHelper::getUserFriends($row));
+		}
+		
+		return $dizi;
+	}
+	/**
 	* Belirtilen kullanıcının arkadaşlarını getiren fonksiyon
 	* 
 	* @param mixed $userid
@@ -68,7 +85,8 @@ class mezunArkadasHelper {
 	
 	/**
 	* Tanıyor olabileceğin kullanıcıları getiren fonksiyon
-	* Kullanıcıların fakülteye başlama ve bitiş tarihleri, yaşadıkları ve doğdukları şehir,
+	* Arkadaşlarımın arkadaşlarını da listeye ekliyor. Ayrıca
+	* kullanıcıların fakülteye başlama ve bitiş tarihleri, yaşadıkları ve doğdukları şehir,
 	* branşları gibi özelliklerine bakıp ortak olan üyeleri alıyor. Arkadaşlarını listenin
 	* dışına çıkarıyor ve bir objectlist olarak sana geri veriyor.
 	* Objectlist içerisinde kullanıcının; id, name, username, image, registerDate, lastvisit, sehir
@@ -83,6 +101,12 @@ class mezunArkadasHelper {
 		
 		$where = count($myrows) ? ' AND u.id NOT IN ('.$myfriends.')':'';
 		
+		//arkadaşlarımın arkadaşlarını da belki tanıyorumdur... onları da ekleyelim
+		$myff = mezunArkadasHelper::getFriendFriends();
+		$myff = implode(',', $myff);
+		
+		$where2 = count($myff) ? ' AND u.id IN ('.$myff.')':'';
+		
 		//şimdi de  tanıyor olabileceğimiz üyeleri bulalım. ama içerisinde arkadaşlarımız olmasın (eğer arkadaş varsa!)
 		$query = "SELECT u.id, u.name, u.username, u.image, u.registerDate, u.lastvisit, s.name AS sehir "
 		. " FROM #__users AS u"
@@ -95,6 +119,7 @@ class mezunArkadasHelper {
 		. " OR u.brans=".$dbase->Quote($my->brans)
 		. ")" 
 		. $where
+		. $where2
 		. " AND u.id NOT IN (".$my->id.") ORDER BY RAND() LIMIT 10"
 		;
 		
@@ -132,5 +157,36 @@ class mezunArkadasHelper {
 		} else {
 			return $ayni;
 		}
+	}
+	
+	static function ortakArkadasMI($userid, $checkid) {
+		global $dbase, $my;
+		
+		//kontrol edilmek istenen ben isem false döndür
+		if ($checkid == $my->id) {
+			return false;
+		}
+		
+		//benim arkadaşım mı bakalım
+		$myfriends = mezunArkadasHelper::getMyFriends();
+		
+		$arkadasim = false;
+		if (in_array($checkid, $myfriends)) {
+			$arkadasim = true;
+		}
+		
+		//userid nin arkadaslarına bakalım
+		$userfriends = mezunArkadasHelper::getUserFriends($userid);
+		
+		$arkadasi = false;
+		if (in_array($checkid, $userfriends)) {
+			$arkadasi = true;
+		}
+		
+		if ($arkadasim && $arkadasi) {
+			echo 'Ortak Arkadaşınız';
+		} else {
+			echo '';
+		}		
 	}
 }

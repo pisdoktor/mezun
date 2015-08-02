@@ -241,7 +241,7 @@ function saveImage() {
 		$newheight = round($oran * $imgheight);
 		
 	} else if ($imgheight > $maxHeight) {
-		$oran = floor($maxHeight / $imgheight, 2);
+		$oran = round($maxHeight / $imgheight, 2);
 		
 		$newheight = $maxHeight;
 		$newwidth = round($oran * $imgwidth);

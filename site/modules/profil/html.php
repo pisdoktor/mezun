@@ -191,6 +191,10 @@ $(function(){
 		
 		$cinsiyet = $row->cinsiyet == 1 ? 'Erkek' : 'Bayan';
 		
+		$friendlist = $can['Edit'] ? '':'<a class="btn btn-default btn-sm" href="index.php?option=site&bolum=arkadas&task=view&id='.$row->id.'">Arkadaş Listesi</a>';
+		
+		$albumlist = $can['Edit'] ? '':'<a class="btn btn-default btn-sm" href="index.php?option=site&bolum=album&task=user&id='.$row->id.'">Albüm Listesi</a>';
+		
 		$editlink = $can['Edit'] ? '<a class="btn btn-default btn-sm" href="'.sefLink('index.php?option=site&bolum=profil&task=edit').'">Profili Düzenle</a>' : '';
 		
 		$passlink = $can['Edit'] ? '<a class="btn btn-default btn-sm" href="#" id="changepass">Parola Değiştir</a>' : '';
@@ -239,7 +243,7 @@ $(function(){
 		
 		<div align="center">
 		<div class="btn btn-group-vertical">
-		<?php echo $editimage;?> <?php echo $cropimage;?> <?php echo $deleteimage;?> <?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?> <?php echo $deletefriend;?>
+		<?php echo $editimage;?> <?php echo $cropimage;?> <?php echo $deleteimage;?> <?php echo $friendlist;?> <?php echo $albumlist;?> <?php echo $msglink;?> <?php echo $istemlink;?> <?php echo $editlink;?> <?php echo $passlink;?> <?php echo $deletefriend;?>
 		</div>
 		</div>
 		

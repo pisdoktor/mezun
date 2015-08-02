@@ -7,9 +7,16 @@ include(dirname(__FILE__). '/html.php');
 mimport('helpers.modules.album.helper');
 mimport('tables.albums');
 
+$id = intval(getParam($_REQUEST, 'id'));
+
+
 switch($task) {
 	default:
 	getMyAlbums();
+	break;
+	
+	case 'user':
+	getUserAlbums($id);
 	break;
 	
 	case 'view':
@@ -37,12 +44,38 @@ switch($task) {
 	break;
 	
 	case 'deleteimage':
-	deleteImage();
+	deleteImage($id);
 	break;
 	
 	case 'editimage':
-	editImage();
+	editImage($id);
 	break;
+	
+	case 'saveimage':
+	saveImage();
+	break;
+}
+
+function getUserAlbums($id) {
+	global $dbase;
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$limit = intval(getParam($_REQUEST, 'limit', 20));
+	$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
+	
+	$rows = mezunAlbumHelper::getUserAlbums($id);
+	
+	$total = count($rows);
+	
+	$pageNav = new mezunPagenation($total, $limitstart, $limit);
+	
+	$list = array_slice($rows, $limitstart, $limit);
+	
+	AlbumHTML::getMyAlbums($list, $pageNav);
 }
 
 function getMyAlbums() {
@@ -67,6 +100,8 @@ function viewAlbum($id) {
 	$limit = intval(getParam($_REQUEST, 'limit', 20));
 	$limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 	
+	mimport('helpers.modules.arkadas.helper');
+	
 	if (!$id) {
 		NotAuth();
 		return;
@@ -76,13 +111,28 @@ function viewAlbum($id) {
 	$album = new mezunAlbums($dbase);
 	$album->load($id);
 	
+	$can['View'] = false;
+	
 	if ($album->userid == $my->id) {
 		$can['Edit'] = true;
+		$can['View'] = true;
 	} else {
 		$can['Edit'] = false;
+		
+		if ($album->status == 0) {
+			$can['View'] = true;
+		}
+	
+		if (($album->status == 1) && mezunArkadasHelper::checkArkadaslik($album->userid)) {
+			$can['View'] = true;
+		} 
+	
+		if ($album->status == 2) {
+			$can['View'] = false;
+		}
 	}
 	
-	$dbase->setQuery("SELECT * FROM #__album_images WHERE albumid=".$dbase->Quote($album->id));
+	$dbase->setQuery("SELECT * FROM #__album_images WHERE albumid=".$dbase->Quote($album->id)." ORDER BY addeddate DESC, id DESC");
 	$rows = $dbase->loadObjectList();
 	
 	$total = count($rows);
@@ -110,21 +160,41 @@ function editAlbum($id) {
 			return;
 		}
 		
+		if ($row->userid != $my->id) {
+			NotAuth();
+			return;
+		}
+		
 		$new = false;
 	} else {
 		$row = new mezunAlbums($dbase);
 		$new = true;
 	}
 	
-	AlbumHTML::editAlbum($row, $new);
+	$gr = array();
+	$gr[] = mezunHTML::makeOption('0', 'Herkese Açık');
+	$gr[] = mezunHTML::makeOption('1', 'Arkadaşlarım');
+	$gr[] = mezunHTML::makeOption('2', 'Gizli');
+	
+	$list['status'] = mezunHTML::radioList($gr, 'status', '', 'value', 'text', $row->status);
+	
+	AlbumHTML::editAlbum($row, $new, $list);
 }
 
 function saveAlbum() {
 	global $dbase, $my;
 	
+	$new = getParam($_REQUEST, 'new');
+	$id = intval(getParam($_REQUEST, 'id'));
 	
 	$row = new mezunAlbums($dbase);
 	$row->bind($_POST);
+	
+	if ($new) {
+	$row->creationdate = date('Y-m-d H:i:s');
+	$row->userid = $my->id;    
+	}
+	
 	$row->store();
 	
 	Redirect('index.php?option=site&bolum=album&task=view&id='.$row->id);
@@ -132,8 +202,6 @@ function saveAlbum() {
 
 function deleteAlbum($id) {
 	global $dbase, $my;
-	
-	mimport('helpers.file.file');
 	
 	if (!$id) {
 		NotAuth();
@@ -152,13 +220,15 @@ function deleteAlbum($id) {
 	$images = $dbase->loadObjectList();
 	
 	foreach ($images as $image) {
-		mezunFile::delete(ABSPATH.'/album/'.$image);
-		mezunFile::delete(ABSPATH.'/album/thumb/'.$image);
+		@unlink(ABSPATH.'/album/'.$image->image);
+		@unlink(ABSPATH.'/album/thumb/'.$image->image);
 	}
 	
 	//albümü silelim
 	$dbase->setQuery("DELETE FROM #__albums WHERE id=".$row->id);
 	$dbase->query();
+	
+	Redirect('index.php?option=site&bolum=album');
 	
 }
 
@@ -198,9 +268,10 @@ function uploadImage($id) {
 		$album = new mezunAlbums($dbase);
 		$album->load($id);
 	
+		if ($album->status != 2) {
 		$akistext = '<a href="index.php?option=site&bolum=album&task=view&id='.$album->id.'">'.$album->name.'</a> albümüne yeni resim yükledi';
 		mezunGlobalHelper::AkisTracker($akistext);
-		
+		}
 		echo '{"status":"success"}';
 		return;
 	}
@@ -210,11 +281,138 @@ echo '{"status":"error"}';
 return;	
 }
 
-function deleteImage() {
+function deleteImage($id) {
+	global $dbase, $my;
 	
+	mimport('helpers.file.file');
+		
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+		
+	$row = new mezunAlbumImages($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	if ($row->userid != $my->id) {
+		NotAuth();
+		return;
+	}
+	
+	$albumid = $row->albumid;
+			
+	$image = ABSPATH.'/images/album/'.$row->image;
+	$thumb = ABSPATH.'/images/album/thumb/'.$row->image;
+			
+	if (@unlink($image) && @unlink($thumb)) {
+		$dbase->setQuery("DELETE FROM #__album_images WHERE id=".$dbase->Quote($row->id));
+		$dbase->query();
+	}
+
+Redirect('index.php?option=site&bolum=album&task=view&id='.$albumid);
+}
+
+function editImage($id) {
+	global $dbase, $my;
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$row = new mezunAlbumImages($dbase);
+	$row->load($id);
+	
+	if (!$row->id) {
+		NotAuth();
+		return;
+	}
+	
+	if ($row->userid != $my->id) {
+		NotAuth();
+		return;
+	}
+	
+	//resim 800x600 den büyükse önce resize yapalım
+	mimport('helpers.image.helper');
+	
+	$image = ABSPATH.'/images/album/'.$row->image;
+	list($w, $h) = getimagesize($image);
+	
+	if ($w > 800 || $h > 600) {
+		
+		if ($w > 800) {
+		$oran = round(800 / $w, 2);
+		
+		$newwidth = 800;
+		$newheight = round($oran * $h);
+		
+	} else if ($h > 600) {
+		$oran = round(600 / $h, 2);
+		
+		$newheight = $h;
+		$newwidth = round($oran * $w);
+		
+	} else {
+		$newheight = $h;
+		$newwidth = $w;
+	}
+	
+	mezunImageHelper::resize($image, $image, $newwidth, $newheight, $w, $h);
+		
+	}
+	
+	$album = new mezunAlbums($dbase);
+	$album->load($row->albumid);
+	
+	AlbumHTML::editImage($row, $album);
 	
 }
 
-function editImage() {
+function saveImage() {
+	global $dbase;
+	/**
+	$x = getParam($_REQUEST, 'x');
+	$y = getParam($_REQUEST, 'y');
+	$w = getParam($_REQUEST, 'w');
+	$h = getParam($_REQUEST, 'h');
+	$scale = getParam($_REQUEST, 'scale');
+	$angle = getParam($_REQUEST, 'angle');
+	$image = getParam($_REQUEST, 'image');
+	
+	mimport('helpers.image.helper');
+	
+	$src = ABSPATH.'/images/album/'.$image;
+	
+	list($iw, $ih) = getimagesize($src);
+	
+	if ($angle) {
+	mezunImageHelper::rotate($src, $src, $angle);
+	}
+	
+	$neww = floor($iw * $scale);
+	$newh = floor($ih * $scale);
+	
+	mezunImageHelper::resize($src, $src, $neww, $newh, $iw, $ih);
+	
+	mezunImageHelper::crop($src, 0, 0, $x, $y, $w, $h, $iw, $ih);
+	*/
+	$id = intval(getParam($_REQUEST, 'id'));
+	$title = getParam($_REQUEST, 'title');
+	
+	
+	$row = new mezunAlbumImages($dbase);
+	$row->load($id);
+	
+	$row->title = $title;
+	
+	$row->store();
+	
+	Redirect('index.php?option=site&bolum=album&task=view&id='.$row->albumid);
 	
 }

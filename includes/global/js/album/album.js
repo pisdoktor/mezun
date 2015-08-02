@@ -48,6 +48,7 @@ $(function(){
 			var jqXHR = data.submit();
 		},
 
+		//yükleme işlemi...
 		progress: function(e, data){
 
 			// Calculate the completion percentage of the upload
@@ -62,9 +63,24 @@ $(function(){
 			}
 		},
 
+		//yükleme başarısız ise
 		fail:function(e, data){
 			// Something has gone wrong!
 			data.context.addClass('error');
+		},
+		
+		//toplam yükleme işlemleri
+		progressall:function(e, data) {
+			var progress = parseInt(data.loaded / data.total * 100, 10);
+		$('#progress .bar').css(
+			'width',
+			progress + '%'
+		);
+		
+		if (progress == 100) {
+			window.location.reload();
+		}
+			
 		}
 	});
 

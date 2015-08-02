@@ -698,3 +698,7 @@ background-color:#f56734;
 #upload ul li.error p{
 	color:red;
 }
+
+.album-thumb {
+	margin-bottom: 30px;
+}
