@@ -47,35 +47,27 @@ switch($task) {
 	break;
 	//yeniler aşagıda
 	case 'sticky':
-	stickyTopic($id, 1);
+	stickyTopic($id, $limit, $limitstart, 1);
 	break;
 	
 	case 'unsticky':
-	stickyTopic($id, 0);
+	stickyTopic($id, $limit, $limitstart, 0);
 	break;
 	
 	case 'lock':
-	lockTopic($id, 1);
+	lockTopic($id, $limit, $limitstart, 1);
 	break;
 	
 	case 'unlock':
-	lockTopic($id, 0);
+	lockTopic($id, $limit, $limitstart, 0);
 	break;
 	
 	case 'editmessage':
-	editMessage($id);
+	editMessage($id, $limit, $limitstart);
 	break;
 	
 	case 'savemessage2':
 	saveMessage2();
-	break;
-	
-	case 'edittopic':
-	editTopic($id);
-	break;
-	
-	case 'savetopic2':
-	saveTopic2();
 	break;
 	
 	case 'deletemessage':
@@ -85,6 +77,46 @@ switch($task) {
 	case 'deletetopic':
 	deleteTopic($id);
 	break;
+	
+	case 'cancelmessage2':
+	cancelMessage2();
+	break;
+	
+	case 'cancelmessage':
+	cancelMessage();
+	break;
+}
+
+function cancelMessage() {
+	global $dbase;
+	
+	mimport('tables.forumtopic');
+	
+	$row = new mezunForumtopic($dbase);
+	$row->bind($_POST);
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC);
+}
+
+function cancelMessage2() {
+	global $dbase;
+	
+	mimport('tables.forummessage');
+	
+	$row = new mezunForummessage($dbase);
+	$row->bind($_POST);
+	
+	$limit = intval(getParam($_REQUEST, 'limit'));
+	$limitstart = intval(getParam($_REQUEST, 'limitstart'));
+	
+	
+	if ($limit || $limitstart) {
+		$link = '&limit='.$limit.'&limitstart='.$limitstart;
+	} else {
+		$link = '';
+	}
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC.$link);
 }
 
 function saveTopic2() {
@@ -92,15 +124,55 @@ function saveTopic2() {
 }
 
 function saveMessage2() {
+	global $dbase;
 	
+	mimport('tables.forummessage');
+	
+	$limit = intval(getParam($_REQUEST, 'limit'));
+	$limitstart = intval(getParam($_REQUEST, 'limitstart'));
+	
+	$row = new mezunForummessage($dbase);
+	$row->bind($_POST);
+	
+	$row->store();
+	
+	if ($limit || $limitstart) {
+		$link = '&limit='.$limit.'&limitstart='.$limitstart;
+	} else {
+		$link = '';
+	}
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC.$link.'#msg'.$row->ID_MSG);
 }
 
-function editTopic($id) {
-	
-}
 
-function editMessage($id) {
+function editMessage($id, $limit, $limitstart) {
+	global $dbase;
 	
+	mimport('tables.forummessage');
+	
+	if (!$id) {
+		NotAuth();
+		return;
+	}
+	
+	$row = new mezunForummessage($dbase);
+	$row->load($id);
+	
+	if (!$row->ID_MSG) {
+		NotAuth();
+		return;
+	}
+	
+	if (!mezunForumHelper::canEditMessage($row->ID_MSG)) {
+		NotAuth();
+		return;
+	}
+	
+	$topic_info = mezunForum::TopicInfo($row->ID_TOPIC);
+	$board_info = mezunForum::BoardInfo($row->ID_BOARD);
+	
+	ForumHTML::editMessage($row, $topic_info, $board_info, $limit, $limitstart);
 }
 
 function deleteTopic($id) {
@@ -140,10 +212,42 @@ function deleteTopic($id) {
 	$dbase->setQuery("DELETE FROM #__forum_messages WHERE ID_TOPIC=".$dbase->Quote($topic->ID_TOPIC));
 	$dbase->query();	
 	
+	//board içerisindeki max ID_MSG değerini bulalım
+	$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages WHERE ID_BOARD=".$dbase->Quote($board->ID_BOARD));
+	$maxmsgid = $dbase->loadResult();
+	
+	//maxmsgid sıfır ise o zaman alt forumlardaki en son mesajı bulalım
+	if (!$maxmsgid) {
+		//child forumları bulalım, dizi şeklinde id lerini alalım
+		$dbase->setQuery("SELECT ID_BOARD FROM #__forum_boards WHERE ID_PARENT=".$board->ID_BOARD);
+		$childs = $dbase->loadResultArray();
+
+		foreach ($childs as $child) {
+			$dbase->setQuery("SELECT MAX(ID_MSG) FROM #__forum_messages WHERE ID_BOARD=".$dbase->Quote($child));
+			$maxmsg = $dbase->loadResult();
+			$maxmsgid = max($maxmsgid, $maxmsg);
+		}		
+	}
+	
 	//board güncellemesi yapalım
 	$board->numPosts = $board->numPosts-$totalmsg;
 	$board->numTopics = $board->numTopics-1;
+	$board->ID_LAST_MSG = $maxmsgid;
+	$board->ID_MSG_UPDATED = $maxmsgid;
 	$board->store();
+	
+	//board un parent boardlarında da güncelleme yapalım
+	//parent boardların da ID_LAST_MSG ve ID_MSG_MODIFIED değerlerini değiştirelim
+	$parents = mezunForumHelper::getBoardParents($board->ID_BOARD);
+	foreach ($parents as $parent) {
+		if ($parent>0) {
+		$p = new mezunForumboard($dbase);
+		$p->load($parent);
+		$p->ID_LAST_MSG = $maxmsgid;
+		$p->ID_MSG_UPDATED = $maxmsgid;
+		$p->store();
+		}
+	}	
 	
 	//board geri dönüşü
 	Redirect('index.php?option=site&bolum=forum&task=board&id='.$board->ID_BOARD);	
@@ -197,13 +301,28 @@ function deleteMessage($id) {
 	
 	//numPost -1
 	$board->numPosts = $board->numPosts-1;
+	$board->ID_LAST_MSG = $maxmsgid;
+	$board->ID_MSG_UPDATED = $maxmsgid;
 	$board->store();
+	
+	//parent boardların da ID_LAST_MSG ve ID_MSG_MODIFIED değerlerini değiştirelim
+	$parents = mezunForumHelper::getBoardParents($board->ID_BOARD);
+	foreach ($parents as $parent) {
+		if ($parent>0) {
+		$p = new mezunForumboard($dbase);
+		$p->load($parent);
+		$p->ID_LAST_MSG = $maxmsgid;
+		$p->ID_MSG_UPDATED = $maxmsgid;
+		$p->store();
+		}
+	}
+	
 	
 	//topic geri dönüş...
 	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$topic->ID_TOPIC);	
 }
 
-function stickyTopic($id, $status) {
+function stickyTopic($id, $limit, $limitstart, $status) {
 	global $dbase, $my;
 	
 	mimport('tables.forumtopic');
@@ -230,10 +349,16 @@ function stickyTopic($id, $status) {
 		$row->store();
 	}
 	
-	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC);	
+	if ($limit || $limitstart) {
+		$link = '&limit='.$limit.'&limitstart='.$limitstart;
+	} else {
+		$link = '';
+	}
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC.$link);	
 }
 
-function lockTopic($id, $status) {
+function lockTopic($id, $limit, $limitstart, $status) {
 	global $dbase, $my;
 	
 	mimport('tables.forumtopic');
@@ -260,7 +385,13 @@ function lockTopic($id, $status) {
 		$row->store();
 	}
 	
-	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC); 
+	if ($limit || $limitstart) {
+		$link = '&limit='.$limit.'&limitstart='.$limitstart;
+	} else {
+		$link = '';
+	}
+	
+	Redirect('index.php?option=site&bolum=forum&task=topic&id='.$row->ID_TOPIC.$link); 
 }
 
 function newMessage() {
@@ -369,6 +500,18 @@ function createNewMessage() {
 		$bupdate->ID_MSG_UPDATED = $ID_MSG;
 		$bupdate->numPosts = $board->numPosts+1;
 		$bupdate->store();
+		
+		//üst boardların ID_LAST_MSG ile ID_MSG_UPDATED değerlerini güncelleyelim
+		$parents = mezunForumHelper::getBoardParents($bupdate->ID_BOARD);
+		foreach ($parents as $parent) {
+			if ($parent>0) {
+				$p = new mezunForumboard($dbase);
+				$p->load($parent);
+				$p->ID_LAST_MSG = $ID_MSG;
+				$p->ID_MSG_UPDATED = $ID_MSG;
+				$p->store();
+			}
+		}
 	}
 	
 	//logları güncelle
@@ -454,12 +597,24 @@ function createNewTopic() {
 	//board sayaçlarını güncelleyelim
 	mimport('tables.forumboard');
 	$board = new mezunForumboard($dbase);
-	$board->ID_BOARD = $boardid;
+	$board->load($boardid);
 	$board->numPosts = $board->numPosts+1;
 	$board->numTopics = $board->numTopics+1;
 	$board->ID_LAST_MSG = $ID_MSG;
 	$board->ID_MSG_UPDATED = $ID_MSG;
 	$board->store();
+	
+	//üst boardların ID_LAST_MSG ile ID_MSG_UPDATED değerlerini güncelleyelim
+	$parents = mezunForumHelper::getBoardParents($board->ID_BOARD);
+	foreach ($parents as $parent) {
+		if ($parent>0) {
+		$p = new mezunForumboard($dbase);
+		$p->load($parent);
+		$p->ID_LAST_MSG = $ID_MSG;
+		$p->ID_MSG_UPDATED = $ID_MSG;
+		$p->store();
+		}
+	}
 	
 	//log alalım
 	$dbase->setQuery("REPLACE INTO #__forum_log_topics 
@@ -544,9 +699,9 @@ function Topic($id) {
 	
 	if (mezunForumHelper::canStickyTopic($topic_info->ID_TOPIC)) {
 		if ($topic_info->isSticky) {
-			$topiclink['sticky'] = '<a href="index.php?option=site&bolum=forum&task=unsticky&id='.$topic_info->ID_TOPIC.'">Yapışkanı Kaldır</a>';
+			$topiclink['sticky'] = '<a href="index.php?option=site&bolum=forum&task=unsticky&id='.$topic_info->ID_TOPIC.($topic_info->numReplies > $topiclimit ? '&limit='.$topiclimit.'&limitstart='.$topicstart : '').'">Yapışkanı Kaldır</a>';
 		} else {
-			$topiclink['sticky'] = '<a href="index.php?option=site&bolum=forum&task=sticky&id='.$topic_info->ID_TOPIC.'">Yapışkan Yap</a>';
+			$topiclink['sticky'] = '<a href="index.php?option=site&bolum=forum&task=sticky&id='.$topic_info->ID_TOPIC.($topic_info->numReplies > $topiclimit ? '&limit='.$topiclimit.'&limitstart='.$topicstart : '').'">Yapışkan Yap</a>';
 		}
 	} else {
 		$topiclink['sticky'] = '';
@@ -554,9 +709,9 @@ function Topic($id) {
 	
 	if (mezunForumHelper::canLockTopic($topic_info->ID_TOPIC)) {
 		if ($topic_info->locked) {
-			$topiclink['lock'] = '<a href="index.php?option=site&bolum=forum&task=unlock&id='.$topic_info->ID_TOPIC.'">Kilidi Kaldır</a>';
+			$topiclink['lock'] = '<a href="index.php?option=site&bolum=forum&task=unlock&id='.$topic_info->ID_TOPIC.($topic_info->numReplies > $topiclimit ? '&limit='.$topiclimit.'&limitstart='.$topicstart : '').'">Kilidi Kaldır</a>';
 		} else {
-			$topiclink['lock'] = '<a href="index.php?option=site&bolum=forum&task=lock&id='.$topic_info->ID_TOPIC.'">Kilitle</a>';
+			$topiclink['lock'] = '<a href="index.php?option=site&bolum=forum&task=lock&id='.$topic_info->ID_TOPIC.($topic_info->numReplies > $topiclimit ? '&limit='.$topiclimit.'&limitstart='.$topicstart : '').'">Kilitle</a>';
 		}
 	} else {
 		$topiclink['lock'] = '';
@@ -564,12 +719,11 @@ function Topic($id) {
 	
 	if (mezunForumHelper::canDeleteTopic($topic_info->ID_TOPIC)) {
 		$topiclink['delete'] = '<a href="index.php?option=site&bolum=forum&task=deletetopic&id='.$topic_info->ID_TOPIC.'">Başlığı Sil</a>';
-
 	} else {
 		$topiclink['delete'] = '';
 	}
 	
-	ForumHTML::TopicSeen($context, $pageNav, $topic_info, $board_info, $topiclink);
+	ForumHTML::TopicSeen($context, $pageNav, $topic_info, $board_info, $topiclink, $topiclimit, $topicstart);
 	
 }
 

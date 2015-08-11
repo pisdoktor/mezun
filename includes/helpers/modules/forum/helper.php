@@ -56,6 +56,7 @@ class mezunForumHelper {
 			$can = true;
 		}
 		
+		/*
 		$row = new mezunForumtopic($dbase);
 		$row->load($topicid);
 		
@@ -65,7 +66,7 @@ class mezunForumHelper {
 		if ($msg->ID_MEMBER == $my->id) {
 			$can = true;
 		}
-		
+		*/
 		return $can;
 		
 	}
@@ -81,7 +82,7 @@ class mezunForumHelper {
 		if ($my->id == 1) {
 			$can = true;
 		}
-		
+		/*
 		$row = new mezunForumtopic($dbase);
 		$row->load($topicid);
 		
@@ -91,7 +92,7 @@ class mezunForumHelper {
 		if ($msg->ID_MEMBER == $my->id) {
 			$can = true;
 		}
-		
+		*/
 		return $can;
 	}
 	
@@ -106,7 +107,7 @@ class mezunForumHelper {
 		if ($my->id == 1) {
 			$can = true;
 		}
-		
+		/*
 		$row = new mezunForumtopic($dbase);
 		$row->load($topicid);
 		
@@ -116,7 +117,7 @@ class mezunForumHelper {
 		if ($msg->ID_MEMBER == $my->id) {
 			$can = true;
 		}
-		
+		*/
 		return $can;
 	}
 	
@@ -273,4 +274,5 @@ class mezunForumHelper {
 
 	return $pageindex;
 	}	
+	
 }

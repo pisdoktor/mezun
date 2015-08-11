@@ -8,6 +8,9 @@ $catid = intval(getParam($_REQUEST, 'catid'));
 $limit = intval(getParam($_REQUEST, 'limit', 30));
 $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
+$step = intval(getParam($_REQUEST, 'step', 0));
+
+include_once(ABSPATH.'/admin/includes/admin.html.php');
 include(dirname(__FILE__). '/html.php');
 
 switch($task) {
@@ -69,12 +72,140 @@ switch($task) {
 	break;
 	
 	case 'recount':
-	reCountBoards();
+	reCountBoards($step);
 	break;
 	
 	case 'getboards':
 	getBoards($catid, $id);
 	break;
+}
+
+function reCountBoards($step) {
+	global $dbase;
+	
+	$msg = '';
+	
+	if ($step == 0) {
+	//önce hatalı numReplies olan tüm topicleri düzeltelim
+	$query = "SELECT /*!40001 SQL_NO_CACHE */ t.ID_TOPIC, t.numReplies, COUNT(*) - 1 AS realNumReplies
+		FROM (#__forum_topics AS t, #__forum_messages AS m)
+		WHERE m.ID_TOPIC = t.ID_TOPIC
+		GROUP BY t.ID_TOPIC
+		HAVING realNumReplies != numReplies";
+		$dbase->setQuery($query);
+		$rows = $dbase->loadAssocList();
+		
+		foreach ($rows as $row) {
+			$dbase->setQuery("UPDATE #__forum__topics
+					SET numReplies = ".$row['realNumReplies']."
+					WHERE ID_TOPIC = ".$row['ID_TOPIC']."
+					LIMIT 1");
+			$dbase->query();
+		}
+		
+		$msg .= 'Hatalı numReplies olan tüm başlıklar düzeltiliyor...';
+		 
+		Redirect('index.php?option=admin&bolum=forum&task=recount&step=1');
+		
+	}
+	
+	if ($step == 1) {
+	// Her board için post ve topic sayılarını güncelleyelim
+	//sıfırla
+	$dbase->setQuery("UPDATE #__forum_boards SET numPosts = 0, numTopics = 0");
+	$dbase->query();
+	
+	$query = "SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, COUNT(*) AS realNumPosts, COUNT(DISTINCT t.ID_TOPIC) AS realNumTopics
+		FROM (#__forum_topics AS t, #__forum_messages AS m)
+		WHERE m.ID_TOPIC = t.ID_TOPIC
+		GROUP BY t.ID_BOARD";
+		$dbase->setQuery($query);
+		$rows = $dbase->loadAssocList();
+		
+		foreach ($rows as $row) {
+			$dbase->setQuery("UPDATE #__forum_boards
+					SET numPosts = numPosts + ".$row['realNumPosts'].",
+						numTopics = numTopics + ".$row['realNumTopics']."
+					WHERE ID_BOARD = ".$row['ID_BOARD']."
+					LIMIT 1");
+			$dbase->query();
+		}
+		$msg .= 'Tüm boardlardaki hatalı numPost ve numTopic değerleri düzeltiliyor...';
+		
+	Redirect('index.php?option=admin&bolum=forum&task=recount&step=2');	
+	}
+	
+	if ($step == 2) {
+	//yanlış board içerisinde olan herhangi bir mesaj varsa onu düzeltelim
+	$query = "SELECT /*!40001 SQL_NO_CACHE */ t.ID_BOARD, m.ID_MSG
+		FROM (#__forum_messages AS m, #__forum_topics AS t)
+		WHERE t.ID_TOPIC = m.ID_TOPIC
+		AND m.ID_BOARD != t.ID_BOARD";
+		$dbase->setQuery($query);
+		$rows = $dbase->loadAssocList();
+		
+		$boards = array();
+		
+		foreach ($rows as $row) {
+			$boards[$row['ID_BOARD']][] = $row['ID_MSG'];
+		}
+		
+		foreach ($boards as $board_id => $messages) {
+			$dbase->setQuery("UPDATE #__forum_messages
+					SET ID_BOARD = ".$board_id."
+					WHERE ID_MSG IN (" . implode(', ', $messages) . ")
+					LIMIT " . count($messages));
+			$dbase->query();
+		}
+		
+		$msg .= 'Yanlış board içerisinde olan mesajlar düzeltiliyor...';
+	
+	Redirect('index.php?option=admin&bolum=forum&task=recount&step=3');	
+	}
+	
+	if ($step == 3) {
+		
+		$dbase->setQuery("UPDATE #__forum_boards SET ID_LAST_MSG = 0, ID_MSG_UPDATED = 0");
+		$dbase->query();
+		
+		$query = 'SELECT /*!40001 SQL_NO_CACHE */ b.ID_PARENT, t.ID_BOARD, MAX(ID_MSG) AS maxMsgID
+			FROM (#__forum_topics AS t, #__forum_messages AS m, #__forum_boards AS b)
+			WHERE m.ID_TOPIC = t.ID_TOPIC
+			AND b.ID_BOARD = t.ID_BOARD
+			GROUP BY t.ID_BOARD';
+			$dbase->setQuery($query);
+		$rows = $dbase->loadAssocList();
+		
+		foreach ($rows as $row) {
+			$dbase->setQuery("UPDATE #__forum_boards
+					SET ID_LAST_MSG = ID_LAST_MSG + ".$row['maxMsgID'].",
+						ID_MSG_UPDATED = ID_MSG_UPDATED + ".$row['maxMsgID']."
+					WHERE ID_BOARD = ".$row['ID_BOARD']."
+					LIMIT 1");
+			$dbase->query();
+			
+			//eğer boardun parent boardu varsa onu da değiştirelim
+			if ($row['ID_PARENT']) {
+			$dbase->setQuery("UPDATE #__forum_boards
+					SET ID_LAST_MSG = ID_LAST_MSG + ".$row['maxMsgID'].",
+						ID_MSG_UPDATED = ID_MSG_UPDATED + ".$row['maxMsgID']."
+					WHERE ID_BOARD = ".$row['ID_PARENT']."
+					LIMIT 1");
+			$dbase->query();
+			}
+		}
+		
+		$msg .= 'Boardların ID_LAST_MSG, ID_MSG_UPDATED değerleri düzeltiliyor...';
+		 
+		Redirect('index.php?option=admin&bolum=forum&task=recount&step=4'); 
+	}
+	
+	if ($step == 4) {
+		$msg .= 'Tüm aşamalar tamamlandı...';
+	}
+	
+	echo $msg;
+				
 }
 
 function getBoards($catid, $id) {
@@ -110,6 +241,7 @@ function saveBoard() {
 	$row = new mezunForumboard($dbase);
 	$row->bind($_POST);
 	$row->store();
+	$row->updateOrder('ID_CAT='.$row->ID_CAT);
 	
 	Redirect('index.php?option=admin&bolum=forum&task=boards');
 }
@@ -172,6 +304,7 @@ function saveCategory() {
 	$row = new mezunForumcategory($dbase);
 	$row->bind($_POST);
 	$row->store();
+	$row->updateOrder();
 	
 	Redirect('index.php?option=admin&bolum=forum&task=categories');
 }

@@ -33,9 +33,40 @@ class mezunAdminMenuHTML {
 
 	return $order;
 }
-	/**
-	* build the select list for Menu Ordering
-	*/
+
+	static function forumCategoryOrdering($row, $id) {
+		global $dbase;
+		
+		if ($id) {
+			$query = "SELECT catOrder AS value, name AS text"
+			."\n FROM #__forum_categories"
+			."\n ORDER BY catOrder";
+			$order = mezunAdminMenuHTML::getOrderingList( $query );
+			$ordering = mezunHTML::selectList( $order, 'catOrder', 'size="1"', 'value', 'text', intval( $row->catOrder ) );
+		} else {
+			$ordering = '<input type="hidden" name="catOrder" value="'. $row->catOrder .'" /> En Başta';
+		}
+		return $ordering;
+	}
+	
+	static function forumBoardOrdering($row, $id) {
+		global $dbase;
+
+		if ( $id ) {
+			$query = "SELECT boardOrder AS value, name AS text"
+			. "\n FROM #__forum_boards"
+			. "\n WHERE ID_CAT = " . (int) $row->ID_CAT
+			. "\n AND ID_PARENT = ". (int) $row->ID_PARENT
+			. "\n ORDER BY boardOrder"
+			;
+			$order = mezunAdminMenuHTML::getOrderingList( $query );
+			$ordering = mezunHTML::selectList( $order, 'boardOrder', 'size="1"', 'value', 'text', intval( $row->boardOrder ) );
+		} else {
+			$ordering = '<input type="hidden" name="boardOrder" value="'. $row->boardOrder .'" /> En Başta';
+		}
+		return $ordering;
+	}
+	
 	static function Ordering( &$row, $id ) {
 		global $dbase;
 

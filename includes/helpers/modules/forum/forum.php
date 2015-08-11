@@ -3,12 +3,11 @@
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class mezunForum {
-	
 	/**
 	* Forum ana sayfası
 	*/
 	static function ForumIndex() {
-		global $my, $dbase;
+		global $my, $dbase, $limit;
 		
 		$most_recent_topic = array(
 		'timestamp' => 0,
@@ -16,7 +15,7 @@ class mezunForum {
 		);
 		
 		$query = "SELECT c.name AS catName, c.ID_CAT, b.ID_BOARD, b.name AS boardName, "
-		. "\n b.aciklama, b.numPosts, b.numTopics, b.ID_PARENT, "
+		. "\n b.aciklama, b.numPosts, b.numTopics, t.numReplies, b.ID_PARENT, "
 		. "\n IFNULL(m.posterTime, 0) AS posterTime, mem.username AS posterName, "
 		. "\n m.subject, m.ID_TOPIC, mem.name AS realName, "
 		. "\n (IFNULL(lb.ID_MSG, 0) >= b.ID_MSG_UPDATED) AS isRead, "
@@ -24,18 +23,18 @@ class mezunForum {
 		. "\n FROM #__forum_boards AS b "
 		. "\n LEFT JOIN #__forum_categories AS c ON c.ID_CAT = b.ID_CAT "
 		. "\n LEFT JOIN #__forum_messages AS m ON m.ID_MSG = b.ID_LAST_MSG "
+		. "\n LEFT JOIN #__forum_topics AS t ON t.ID_LAST_MSG=b.ID_LAST_MSG"
 		. "\n LEFT JOIN #__users AS mem ON mem.id = m.ID_MEMBER "
 		. "\n LEFT JOIN #__forum_log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = ".$my->id.")"
 		. "\n ORDER BY c.catOrder ASC"
 		;
 	
 		$dbase->setQuery($query);
-		$result_boards = $dbase->query();
+		$rows = $dbase->loadAssocList();
+		// Run through the categories and boards....
+		$context['categories'] = array();
 		
-			
-	// Run through the categories and boards....
-	$context['categories'] = array();
-	while ($row_board = mysqli_fetch_assoc($result_boards)) {
+		foreach ($rows as $row_board) {
 		// Haven't set this category yet.
 if (empty($context['categories'][$row_board['ID_CAT']])) {
 	$context['categories'][$row_board['ID_CAT']] = array(
@@ -152,7 +151,7 @@ $this_last_post = array(
 
 		// Provide the href and link.
 if ($row_board['subject'] != '') {
-$this_last_post['href'] = sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC']);
+$this_last_post['href'] = sefLink('index.php?option=site&bolum=forum&task=topic&id=' . $row_board['ID_TOPIC']. ($row_board['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row_board['numReplies']/ $limit)) * $limit) : '') . '#new');
 $this_last_post['link'] = '<a href="' . $this_last_post['href'] . '" title="' . $row_board['subject'] . '">' . $row_board['short_subject'] . '</a>';
 } else {
 $this_last_post['href'] = '';
@@ -180,11 +179,9 @@ $most_recent_topic = array(
 'ref' => &$this_category[$isChild ? $row_board['ID_PARENT'] : $row_board['ID_BOARD']]['last_post'],
 );
 }
-mysqli_free_result($result_boards);
-	
-return $context['categories'];
-			
-}
+
+	return $context['categories'];
+	}
 	/**
 	* Bir board içerisindeki alt boardları alalım
 	* 
@@ -209,11 +206,13 @@ return $context['categories'];
 		. "\n WHERE b.ID_PARENT = ".$id;
 		
 		$dbase->setQuery($query);
-		$result = $dbase->query();
+		$rows = $dbase->loadAssocList();
 	
-		if (mysqli_num_rows($result) != 0) {
+		if (count($rows) != 0) {
+			
 		$theboards = array();
-		while ($row_board = mysqli_fetch_assoc($result)) {
+		
+		foreach ($rows as $row_board) {
 			
 			if (!isset($context['boards'][$row_board['ID_BOARD']])) {
 				$theboards[] = $row_board['ID_BOARD'];
@@ -254,7 +253,6 @@ return $context['categories'];
 				);
 			}
 		}
-		mysqli_free_result($result);
 
 		// Load up the child boards.
 		$query = "SELECT b.ID_BOARD, b.ID_PARENT, b.name, b.aciklama, b.numTopics, b.numPosts, "
@@ -268,10 +266,11 @@ return $context['categories'];
 		. "\n LEFT JOIN #__forum_log_boards AS lb ON (lb.ID_BOARD = b.ID_BOARD AND lb.ID_MEMBER = ".$my->id.")"
 		;
 		$dbase->setQuery($query);
-		$result = $dbase->query();
+		$rows = $dbase->loadAssocList();
 		
 		$parent_map = array();
-		while ($row = mysqli_fetch_assoc($result)) {
+		
+		foreach ($rows as $row) {
 			// We've got a child of a child, then... possibly.
 			if (!in_array($row['ID_PARENT'], $theboards)) {
 				if (!isset($parent_map[$row['ID_PARENT']]))
@@ -328,10 +327,9 @@ return $context['categories'];
 				$parent_map[$row['ID_BOARD']] = array(&$context['boards'][$row['ID_PARENT']], &$context['boards'][$row['ID_PARENT']]['children'][$row['ID_BOARD']]);
 			}
 		}
+		
 		return $context['boards'];
-	}
-	mysqli_free_result($result);
-	
+		}
 	}
 	/**
 	* Bir board içerisindeki topicleri alalım
@@ -363,9 +361,9 @@ return $context['categories'];
 		. "\n ORDER BY t.isSticky DESC, ml.posterTime DESC";
 		
 		$dbase->setQuery($query, $limitstart, $limit);
-		$result = $dbase->query();
+		$rows = $dbase->loadAssocList();
 		
-		while ($row = mysqli_fetch_assoc($result)) {
+		foreach ($rows as $row) {
 		
 		// Limit them to 128 characters - do this FIRST because it's a lot of wasted censoring otherwise.
 			if (strlen($row['firstBody']) > 128)
@@ -432,13 +430,12 @@ return $context['categories'];
 				'pages' => ($row['numReplies'] > $limit ? 'Sayfalar:'.mezunForumHelper::constructPageIndex('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC'], $row['numReplies'], $topicstart, $topiclimit) : '')
 			);
 		}
+		
 		if (isset($context['topics'])) {
 			return $context['topics']; 
 		} else {
 			return false;
-		} 
-		mysqli_free_result($result);
-		
+		}		
 	}
 	/**
 	* Bir topic içerisindeki mesajları alalım
@@ -562,11 +559,11 @@ return $context['categories'];
 		ORDER BY m.ID_MSG DESC
 		LIMIT ".$showlatestcount;
 		$dbase->setQuery($query);
-		$request = $dbase->query();
+		$rows = $dbase->loadAssocList();
 		
 	$posts = array();
 	
-	while ($row = mysqli_fetch_assoc($request)) {
+	foreach ($rows as $row) {
 		if (strlen($row['body']) > 128)
 			$row['body'] = substr($row['body'], 0, 128) . '...';
 
@@ -595,7 +592,6 @@ return $context['categories'];
 			'link' => '<a href="'.sefLink('index.php?option=site&bolum=forum&task=topic&id='.$row['ID_TOPIC']. ($row['numReplies'] > $limit ? '&limit='.$limit.'&limitstart='.((floor($row['numReplies']/ $limit)) * $limit) : '') . '#new').'">' . $row['subject'] . '</a>'
 		);
 	}
-	mysqli_free_result($request);
 
 	return $posts;
 	}

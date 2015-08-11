@@ -74,6 +74,14 @@ class ForumHTML {
 	<span id="loading" style="display: none;">Yükleniyor...</span>
 	</td>
   </tr>
+  <tr>
+	<td width="30%">
+	<strong>Sıralama:</strong>
+	</td>
+	<td width="70%">
+	<?php echo mezunAdminMenuHTML::forumBoardOrdering($row, $row->ID_BOARD);?>
+	</td>
+  </tr>
 </table>
 <input type="hidden" name="option" value="admin" />
 <input type="hidden" name="bolum" value="forum" />
@@ -172,25 +180,6 @@ echo $pageNav->writePagesLinks($link);?>
 			<div class="panel panel-default">
 	<div class="panel-heading"><h4>Yönetim Paneli - Forum Kategori <?php echo $row->ID_CAT ? 'Düzenle' : 'Ekle';?></h4></div>
 	<div class="panel-body">
-	
-		<script language="javascript" type="text/javascript">
-		<!--
-		function submitbutton(pressbutton) {
-			var form = document.adminForm;
-
-			if (pressbutton == 'cancelcat') {
-				submitform( pressbutton );
-				return;
-			}
-			// do field validation
-			if (form.name.value == ""){
-				alert( "Kategori adını boş bırakmışsınız" );
-			}  else {
-		submitform( pressbutton );
-			}
-		}
-		//-->
-		</script> 
 <form action="index.php" method="post" name="adminForm" role="form">
 
 <table width="100%">
@@ -200,6 +189,14 @@ echo $pageNav->writePagesLinks($link);?>
 	</td>
 	<td width="70%">
 	<input type="text" name="name" class="form-control" value="<?php echo $row->name;?>" />
+	</td>
+  </tr>
+  <tr>
+	<td width="30%">
+	<strong>Sıralama:</strong>
+	</td>
+	<td width="70%">
+	<?php echo mezunAdminMenuHTML::forumCategoryOrdering($row, $row->ID_CAT);?>
 	</td>
   </tr>
 </table>

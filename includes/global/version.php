@@ -10,13 +10,13 @@ class mezunVersion {
 	
 	var $DEV_STATUS  = 'Beta';
 	
-	var $DEV_LEVEL   = '1';
+	var $DEV_LEVEL   = '2';
 	
-	var $CODENAME    = 'Türkiye';
+	var $CODENAME    = 'Şehit';
 	
-	var $RELDATE     = '14 Temmuz 2015';
+	var $RELDATE     = '2 Ağustos 2015';
 	
-	var $RELTIME     = '11:00';
+	var $RELTIME     = '23:00';
 	
 	var $COPYRIGHT   = "Copyright © 2015 Soner Ekici. Tüm hakları saklıdır.";
 	

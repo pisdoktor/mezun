@@ -4,6 +4,77 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class ForumHTML {
 	
+	static function editMessage($row, $topic_info, $board_info, $limit, $limitstart) {
+		?>
+		<script type="text/javascript">
+		$(document).ready(function() {
+				$('#textarea').summernote({
+					lang : 'tr-TR',
+					height: 150,
+					minHeight: 100,
+					maxHeight: 500,
+					focus: true,
+					toolbar: [
+	//[groupname, [button list]]
+	 
+	['style', ['bold', 'italic', 'underline', 'clear']],
+	['font', ['strikethrough', 'superscript', 'subscript']],
+	['fontsize', ['fontsize']],
+	['color', ['color']],
+	['para', ['ul', 'ol', 'paragraph']],
+	['height', ['height']],
+	['insert', ['link']]
+  ]
+				});
+			});
+		</script>
+		<div class="panel panel-default">
+		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $topic_info->subject;?></small></div>
+		<div class="panel-body">
+		
+		<form action="index.php?option=site&bolum=forum" method="post" name="adminForm" role="form">
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-8">
+		<input type="text" name="subject" value="<?php echo $row->subject;?>" placeholder="Mesajınızın başlığı" class="form-control" required>
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-12">
+		<textarea id="textarea" rows="5" name="body" class="form-control"><?php echo mezunForumHelper::makeHTML($row->body);?></textarea>
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-5">
+		<button type="submit" class="btn btn-primary" onclick="javascript:submitbutton('savemessage2');">MESAJI GÖNDER</button>
+		<button type="submit" class="btn btn-warning" onclick="javascript:submitbutton('cancelmessage2');">İPTAL</button>
+		</div>
+		</div>
+		</div>
+		
+		<input type="hidden" name="ID_BOARD" value="<?php echo $topic_info->ID_BOARD;?>">
+		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
+		<input type="hidden" name="ID_MSG" value="<?php echo $row->ID_MSG;?>">
+		<input type="hidden" name="limit" value="<?php echo $limit;?>">
+		<input type="hidden" name="limitstart" value="<?php echo $limitstart;?>">
+		<input type="hidden" name="task" value="">
+		</form>
+		
+		</div>
+		<div class="panel-footer"></div>
+		</div>
+		<?php
+		
+		
+	}
+	
 	static function newMessage($topic, $my, $topic_info, $board_info) {
 		?>
 		<script type="text/javascript">
@@ -32,7 +103,7 @@ class ForumHTML {
 		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small><?php echo $topic_info->subject;?></small></div>
 		<div class="panel-body">
 		
-		<form action="index.php?option=site&bolum=forum&task=savemessage" method="post" role="form">
+		<form action="index.php?option=site&bolum=forum" method="post" name="adminForm" role="form">
 		
 		<div class="form-group">
 		<div class="row">
@@ -53,13 +124,15 @@ class ForumHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">
-		<button type="submit" class="btn btn-primary">MESAJI GÖNDER</button>
+		<button type="submit" class="btn btn-primary" onclick="javascript:submitbutton('savemessage');">MESAJI GÖNDER</button>
+		<button type="submit" class="btn btn-warning" onclick="javascript:submitbutton('cancelmessage');">İPTAL</button>
 		</div>
 		</div>
 		</div>
 		
 		<input type="hidden" name="ID_BOARD" value="<?php echo $topic_info->ID_BOARD;?>">
 		<input type="hidden" name="ID_TOPIC" value="<?php echo $topic_info->ID_TOPIC;?>">
+		<input type="hidden" name="task" value="">
 		</form>
 		
 		</div>
@@ -88,7 +161,7 @@ class ForumHTML {
 				'solved': '<?php echo SITEURL;?>/images/forum/solved.gif'
 			};
 			function showimage() {
-				document.images.icons.src = icon_urls[document.form.icon.options[document.form.icon.selectedIndex].value];
+				document.images.icons.src = icon_urls[document.adminForm.icon.options[document.adminForm.icon.selectedIndex].value];
 			}
 			
 			$(document).ready(function() {
@@ -116,7 +189,7 @@ class ForumHTML {
 		<div class="panel-heading"><?php echo mezunForumHelper::forumBreadCrumb($board_info);?> - <small>Yeni Başlık</small></div>
 		<div class="panel-body">
 		
-		<form action="index.php?option=site&bolum=forum&task=savetopic" method="post" name="form" role="form">
+		<form action="index.php?option=site&bolum=forum" method="post" name="adminForm" role="form">
 		
 		<div class="form-group">
 		<div class="row">
@@ -176,12 +249,13 @@ class ForumHTML {
 		<div class="form-group">
 		<div class="row">
 		<div class="col-sm-5">
-		<button type="submit" class="btn btn-primary">BAŞLIĞI OLUŞTUR</button>
+		<button type="submit" class="btn btn-primary" onclick="javascript:submitbutton('savetopic');">BAŞLIĞI OLUŞTUR</button>
 		</div>
 		</div>
 		</div>
 		
 		<input type="hidden" name="ID_BOARD" value="<?php echo $board_info->ID_BOARD;?>">
+		<input type="hidden" name="task" value="">
 		</form>
 		</div>
 		<div class="panel-footer"></div>
@@ -189,7 +263,7 @@ class ForumHTML {
 		<?php
 	}
 	
-	static function TopicSeen($context, $pageNav, $topic_info, $board_info, $topiclink) {
+	static function TopicSeen($context, $pageNav, $topic_info, $board_info, $topiclink, $limit, $limitstart) {
 		
 		$topic_icon =  '<img src="'.SITEURL.'/images/forum/'.$topic_info->icon.'.gif" alt="" title="" />'; 
 		
@@ -225,9 +299,9 @@ class ForumHTML {
 			<span class="glyphicon glyphicon-cog"></span> 
 			<span class="caret"></span></button>
 			<ul class="dropdown-menu">
+				<li><?php echo $topiclink['delete'];?></li>
 				<li><?php echo $topiclink['sticky'];?></li>
 				<li><?php echo $topiclink['lock'];?></li>
-				<li><?php echo $topiclink['delete'];?></li>
 			</ul>
 			</div>
 			<?php }?>
@@ -241,7 +315,12 @@ class ForumHTML {
 			//message links
 			$msglink = array();
 			if (mezunForumHelper::canEditMessage($row['id'])) {
-				$msglink['edit'] = '<a href="index.php?option=site&bolum=forum&task=editmessage&id='.$row['id'].'">Düzenle</a>';
+				if ($limitstart || $limit) {
+					$link = '&limit='.$limit.'&limitstart='.$limitstart;
+				} else {
+					$link = '';
+				}
+				$msglink['edit'] = '<a href="index.php?option=site&bolum=forum&task=editmessage&id='.$row['id'].$link.'">Düzenle</a>';
 			} else {
 				$msglink['edit'] = '';
 			}
@@ -286,7 +365,7 @@ class ForumHTML {
 			<div class="msg-info">
 			<small><?php echo $row['subject'];?></small><br />
 			<small>Gönderim Tarihi: <?php echo $row['time'];?></small>
-			<small>#<?php echo $row['id'];?></small>
+			<a id="#msg<?php echo $row['id'];?>"></a><small>#msg<?php echo $row['id'];?></small>
 			</div>
 			
 			<div class="msg-body">
