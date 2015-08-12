@@ -21,7 +21,7 @@ class ForumHTML {
 
 				data: "",
 
-				contentType: "application/json; charset=utf-8",
+				//contentType: "application/json; charset=utf-8",
 
 				success: function (data) {
 					$("#loading").hide();

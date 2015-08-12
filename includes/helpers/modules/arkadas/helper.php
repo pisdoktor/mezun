@@ -145,17 +145,24 @@ class mezunArkadasHelper {
 		//şimdide belirtilen üyenin arkadaşlarını alalım 
 		$rows = mezunArkadasHelper::getUserFriends($userid);
 		
-		//karşılaştırma yapalım
-		$ayni = array_intersect($myrows, $rows);
+		//eğer benim ve onun arkadaşları varsa...
+		if ($rows && $myrows) {
+			//karşılaştırma yapalım
+			$ayni = array_intersect($myrows, $rows);
 		
-		$totalortak = count($ayni);
+			//toplam sayıdan kendimizi çıkaralım
+			$totalortak = count($ayni)-1;
 		
-		//eğer sayı isteniyorsa
-		if ($count) {
-			echo $totalortak;
-		//eğer ortak arkadaşların id değerleri isteniyorsa
+			//eğer sayı isteniyorsa
+			if ($count) {
+				echo $totalortak;
+				//eğer ortak arkadaşların id değerleri isteniyorsa
+			} else {
+				return $ayni;
+			}
+		
 		} else {
-			return $ayni;
+			return 0;
 		}
 	}
 	

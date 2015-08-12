@@ -22,9 +22,9 @@
 			
 
 			// 2
-			var name = $(this).find("legend").html();
+		var name = $(this).find("legend").html();
 			
-			$("#steps").append("<li id='stepDesc" + i + "'>Aşama " + (i + 1) + "<span>" + name + "</span></li>");
+		$("#steps").append("<li id='stepDesc" + i + "'>Aşama " + (i + 1) + "<span>" + name + "</span></li>");
 			
 			//ilk aşama
 			if (i == 0) {

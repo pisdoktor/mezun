@@ -221,7 +221,7 @@ function getBoards($catid, $id) {
 		$board[] = mezunHTML::makeOption($row->ID_BOARD, $row->name);
 	}
 	
-	echo mezunHTML::selectList($board, 'ID_PARENT', '', 'value', 'text');	
+	echo mezunHTML::selectList($board, 'ID_PARENT', 'size="5"', 'value', 'text');	
 }
 
 function cancelBoard() {
@@ -245,11 +245,7 @@ function saveBoard() {
 	
 	Redirect('index.php?option=admin&bolum=forum&task=boards');
 }
-/**
-* Kategori seçimine göre board kısıtlaması yapılacak
-* 
-* @param mixed $id
-*/
+
 function editBoard($id) {
 	global $dbase;
 	
@@ -261,12 +257,11 @@ function editBoard($id) {
 	$dbase->setQuery("SELECT * FROM #__forum_categories");
 	$cats = $dbase->loadObjectList();
 	
-	$cat[] = mezunHTML::makeOption('', 'Kategori Seçin');
 	foreach ($cats as $cats) {
 		$cat[] = mezunHTML::makeOption($cats->ID_CAT, $cats->name);
 	}
 	
-	$lists['cat'] = mezunHTML::selectList($cat, 'ID_CAT', 'id="ID_CAT" onchange="getBoards();"', 'value', 'text', $row->ID_CAT);
+	$lists['cat'] = mezunHTML::selectList($cat, 'ID_CAT', 'id="ID_CAT" onchange="getBoards();" size="5" required', 'value', 'text', $row->ID_CAT);
 	
 	//board
 	$dbase->setQuery("SELECT * FROM #__forum_boards"
@@ -292,7 +287,7 @@ function editBoard($id) {
 		}
 	}
 	
-	$lists['parent'] = mezunHTML::selectList($b, 'ID_PARENT', 'id="ID_PARENT"', 'value', 'text', $row->ID_PARENT);
+	$lists['parent'] = mezunHTML::selectList($b, 'ID_PARENT', 'id="ID_PARENT" size="5"', 'value', 'text', $row->ID_PARENT);
 	
 	ForumHTML::editBoard($row, $lists, $nodes);
 }
