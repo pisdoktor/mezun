@@ -1,177 +1,7 @@
-html {
-
-}
-
-body {
-	font-family: Open Sans, Droid Sans;
-	font-size: 13px;
-	margin: 0px;
-	background-color: #FAFAFA;
-}
-
-a {
-color: #FF0000;    
-text-decoration: none;
-}
-
-a:hover {
-color: #FF00FF;    
-text-decoration: underline;
-}
-
-a:visited, a:active {
-color: #FF0000;    
-text-decoration: none;    
-}
-
-.clearfix {
-	
-}
-
-.clearfix:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-#container {
-
-}
-
-#header {
-	width: 980px;
-	margin: 0px auto;
-	background-color: #fff;
-}
-
-#logo {
-	
-}
-
-#header-bar {
-	height: 30px;
-	background-color: #cacaca;
-}
-
-#content {
-	width: 960px;
-	margin: 0px auto;
-	background-color: #fff;
-	padding: 10px;
-}
-
-.footer {
-	clear: both;
-	background-color: #cacaca;
-	padding: 10px;    
-}
-
-.row1 {
-background: #fafafa;
-height: 21px;
-margin-top: 2px;
-text-align: left;
-padding-left: 5px;    
-}
-
-.row0 {
-background: #dadada;
-height: 21px;
-margin-top: 2px;
-text-align: left;
-padding-left: 5px;    
-}
-
-#message {
-	color: #ff0000;    
-}
-
-#messages {
-	float: right;
-	padding-right: 5px;
-	line-height: 30px;
-}
-
-#newmsg {
-	font-size: 14px;
-	font-weight: bold;
-}
-
-.header {
-	width: 980px;
-	margin: 0px auto;
-}
-
-#duyurular {
-	float: right;
-}
-
-#welcome {
-	float: left;
-	width: 300px;
-}
-
-#stats {
-	float: right;
-	width: 350px;
-}
-
-.quickicon {
-	display: inline-table;
-	width: 90px;
-	height: 90px;
-	border: 1px solid #ddd;
-	float: left;
-	text-align: center;
-	margin: 5px;
-	padding: 5px;
-
-}
-
-.quickicon:hover {
-	background: #dadada;
-}
-
-.veritable {
-border: 1px solid #dadada; 
-margin-top: 5px;
-}
-
-.veritable th {
-background: #cacaca;
-height: 21px;
-padding-left: 5px;
-text-align: center;
-}
-
-.veriitem0 {
-background: #fafafa;
-height: 21px;
-margin-top: 2px;
-text-align: left;
-padding-left: 5px;
-}
-
-.veriitem1 {
-background: #dadada;
-height: 21px;
-margin-top: 2px;
-text-align: left;
-padding-left: 5px;
-}
-
-.pagenav_counter {
-margin-top: 5px;
-}
-
-.pagenav_links {
-margin-top: 5px;
-}
-
-/*CSS Menu*/
 #cssmenu {
-  background: #cacaca;
-  float: left;
+  margin: 0px auto;
+  position: relative;
+  width: auto;
 }
 #cssmenu ul {
   list-style: none;
@@ -182,7 +12,6 @@ margin-top: 5px;
 #cssmenu > ul {
   position: relative;
   display: block;
-  background: #cacaca;
   width: 100%;
   z-index: 500;
 }
@@ -221,7 +50,7 @@ margin-top: 5px;
   font-size: 14px;
   font-weight: bold;
   padding: 8px 20px;
-  color: #7a8189;
+  color: #dadada;
   /*text-transform: uppercase;*/
   -webkit-transition: color 0.25s ease-out;
   -moz-transition: color 0.25s ease-out;
@@ -324,12 +153,12 @@ margin-top: 5px;
   padding-right: 5px;
 }
 #cssmenu ul ul li a {
-  width: 130px;
+  width: 170px;
   border-bottom: 1px solid #eeeeee;
-  padding: 10px 20px;
+  padding: 10px 15px;
   font-size: 12px;
-  color: #336699;
-  background: #ffffff;
+  color: #fafafa;
+  background: #336699;
   -webkit-transition: all .35s ease;
   -moz-transition: all .35s ease;
   -ms-transition: all .35s ease;
@@ -477,11 +306,12 @@ margin-top: 5px;
 	cursor: pointer;
   }
   #cssmenu #menu-button > a {
-	padding: 14px 20px;
+	padding: 8px 20px;
   }
   #cssmenu ul.open li,
   #cssmenu > ul.open > li {
 	display: block;
+	background-color: #cacaca;
   }
   #cssmenu > ul.open > li#menu-button > a {
 	color: #fff;
@@ -496,10 +326,10 @@ margin-top: 5px;
 	position: absolute;
 	height: 3px;
 	width: 22px;
-	border-top: 2px solid #7a8189;
-	border-bottom: 2px solid #7a8189;
+	border-top: 2px solid #f5f5f5;
+	border-bottom: 2px solid #f5f5f5;
 	right: 20px;
-	top: 15px;
+	top: 8px;
   }
   #cssmenu #menu-button::before {
 	display: block;
@@ -507,12 +337,13 @@ margin-top: 5px;
 	position: absolute;
 	height: 3px;
 	width: 22px;
-	border-top: 2px solid #7a8189;
+	border-top: 2px solid #f5f5f5;
+	border-bottom: 2px solid #f5f5f5;
 	right: 20px;
-	top: 25px;
+	top: 18px;
   }
   #cssmenu ul.open #menu-button::after,
   #cssmenu ul.open #menu-button::before {
-	border-color: #fff;
+	border-color: #fafafa;
   }
 }

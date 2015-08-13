@@ -1,64 +1,14 @@
 <?php
-// no direct access
+// Bu kısmı değiştirmeyin, silmeyin...
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
+//Veritabanı bilgileri
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB', 'mezun');
 define('DB_PREFIX', 'deu_');
 
-
-define('_ISO', 'charset=utf-8');
-define('ABSPATH', dirname(__FILE__));
+//Site adresi ve mutlak yolu
 define('SITEURL', 'http://localhost/deutf');
-
-define('SITEHEAD', '9 Eylül Üniversitesi Tıp Fakültesi Mezunları Sitesi');
-define('META_DESC', '9 Eylül Üniversitesi Tıp Fakültesi Mezunları Sitesi');
-define('META_KEYS', '');
-
-define('ADMINTEMPLATE', 'standart');
-define('SITETEMPLATE', 'standart');
-
-define('OFFSET', 1);
-define('DEBUGMODE', 0);
-define('SECRETWORD', 'deutf');
-define('ERROR_REPORT', 1);
-
-define('SESSION_TYPE', 0);
-define('USER_ACTIVATION', 0);
-
-define('MAILER', 'smtp'); //sendmail or smtp or mail (php mail function)
-
-define('MAILFROMNAME', 'Mezun Sistemi');
-define('MAILFROM', 'no-reply@deutfmezunlari.com');
-
-//sendmail 
-define('SENDMAIL', '/usr/sbin/sendmail');
-//smtp
-define('smtpauth', true);
-define('smtpuser', 'no-reply@deutfmezunlari.com');
-define('smtppass', 'son20er35');
-define('smtphost', 'p3plcpnl0577.prod.phx3.secureserver.net');
-define('smtpport', '465');
-define('smtpsecure', 'tls');
-
-define('GZIPCOMP', 0);
-define('STATS', 1);
-define('COUNTSTATS', 1);
-define('FILEPERMS', '');
-define('DIRPERMS', '');
-
-/**
-* Forum Seçenekleri
-*/
-define('countChildPosts', 1);
-define('hotTopicPosts', 20);
-define('hotTopicVeryPosts', 50);
-define('todayMod', 2); //1 bugün ; 2 bugün dün 
-define('TIMEFORMAT', '%d %B %Y, %H:%M:%S');
-define('compactTopicPagesEnable', 1); // okla ileri gitme seçeneği
-define('compactTopicPagesContiguous', 5); // ... koymak için gerekli sayfa sayısı
-define('latestPostCount', 3);
-
-define('SEF', 0); //henüz hazır değil
+define('ABSPATH', dirname(__FILE__));

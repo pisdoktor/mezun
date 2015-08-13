@@ -1,3 +1,199 @@
+$(document).ready(function(){
+	//Uyarı mesajı penceresi
+	$("#message").dialog({
+		autoOpen: true,
+		draggable: false,
+		minWidth: 150,
+		minHeight: 30,
+		show: {
+			effect: "bounce",
+			duration: 200
+		},
+		hide: {
+			effect: "fade",
+			duration: 100
+			
+		},
+		open: function(event, ui) {
+			setTimeout(function(){
+				$('#message').dialog('close');                
+			}, 3000);
+		}
+	});
+	
+	//Hakkında penceresi
+	$("#dialog").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#opener" ).click(function() {
+	  $( "#dialog" ).dialog( "open" );
+	});
+	
+	//Parolamı unuttum penceresi
+	$("#forgotpass").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#forgot" ).click(function() {
+	  $( "#forgotpass" ).dialog( "open" );
+	});
+	
+	//Hesap aktivasyonu penceresi
+	$("#activation").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#activ" ).click(function() {
+	  $( "#activation" ).dialog( "open" );
+	});
+	
+	//Profil resmi yükleme penceresi
+	$("#imagechange").dialog({
+	  autoOpen: false,
+	  minWidth: 350,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#changeimg" ).click(function() {
+	  $( "#imagechange" ).dialog( "open" );
+	});
+	
+	//Parola değiştirme penceresi
+	$("#passchange").dialog({
+	  autoOpen: false,
+	  minWidth: 350,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#changepass" ).click(function() {
+	  $( "#passchange" ).dialog( "open" );
+	});
+	
+	//Mesaj gönderme penceresi
+	$("#sendmessage").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#sendamsg" ).click(function() {
+	  $( "#sendmessage" ).dialog( "open" );
+	});
+	
+	//Gruba yeni üye ekleme penceresi
+	$("#addnewmember").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 300,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#newmember" ).click(function() {
+	  $( "#addnewmember" ).dialog( "open" );
+	});
+	
+	//ScrollTop Fonksiyonu
+	$(window).scroll(function () {
+		if ($(this).scrollTop() > 50) {
+			$('a#scroll-top').fadeIn();
+		} else {
+			$('a#scroll-top').fadeOut();
+		}
+	});
+ 
+	$('a#scroll-top').on('click', function(){
+		$('html, body').animate({scrollTop:0}, 'slow' );
+	return false;
+	});
+	
+	//Akış metin ekleme karakter sayacı
+	$('#msgfield').keyup(function () {
+		var max = 255;
+		var len = $(this).val().length;
+		
+		if (len >= max) {
+			$('#charNum').text('Limite ulaştınız');
+		} else {
+			var char = max - len;
+			$('#charNum').text(char);
+		}
+	});
+	
+	//Akış resim ekleme karakter sayacı
+	$('#imgfield').keyup(function () {
+		var max = 255;
+		var len = $(this).val().length;
+		if (len >= max) {
+			$('#imgcharNum').text('Limite ulaştınız');
+		} else {
+			var char = max - len;
+			$('#imgcharNum').text(char);
+		}
+	});
+});
+
 /*Basic Admin Actions*/
 function checkAll( n, fldName ) {
   if (!fldName) {
@@ -42,261 +238,227 @@ function submitform(pressbutton){
 	document.adminForm.submit();
 }
 
-// LTrim(string) : Returns a copy of a string without leading spaces.
-function ltrim(str) {
-   var whitespace = new String(" \t\n\r");
-   var s = new String(str);
-   if (whitespace.indexOf(s.charAt(0)) != -1) {
-	  var j=0, i = s.length;
-	  while (j < i && whitespace.indexOf(s.charAt(j)) != -1)
-		 j++;
-	  s = s.substring(j, i);
-   }
-   return s;
-}
+/*!
+ * jScroll - jQuery Plugin for Infinite Scrolling / Auto-Paging
+ * http://jscroll.com/
+ *
+ * Copyright 2011-2013, Philip Klauzinski
+ * http://klauzinski.com/
+ * Dual licensed under the MIT and GPL Version 2 licenses.
+ * http://jscroll.com/#license
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @author Philip Klauzinski
+ * @version 2.3.4
+ * @requires jQuery v1.4.3+
+ * @preserve
+ */
+(function($) {
 
-//RTrim(string) : Returns a copy of a string without trailing spaces.
-function rtrim(str) {
-   var whitespace = new String(" \t\n\r");
-   var s = new String(str);
-   if (whitespace.indexOf(s.charAt(s.length-1)) != -1) {
-	  var i = s.length - 1;       // Get length of string
-	  while (i >= 0 && whitespace.indexOf(s.charAt(i)) != -1)
-		 i--;
-	  s = s.substring(0, i+1);
-   }
-   return s;
-}
+	'use strict';
 
-// Trim(string) : Returns a copy of a string without leading or trailing spaces
-function trim(str) {
-   return rtrim(ltrim(str));
-}
-
-function saveorder( n ) {
-	checkAll_button( n );
-}
-
-//needed by saveorder function
-function checkAll_button( n ) {
-	for ( var j = 0; j <= n; j++ ) {
-		box = eval( "document.adminForm.cb" + j );
-		if ( box ) {
-			if ( box.checked == false ) {
-				box.checked = true;
-			}
-		} else {
-			alert("You cannot change the order of items, as an item in the list is `Checked Out`");
-			return;
+	// Define the jscroll namespace and default settings
+	$.jscroll = {
+		defaults: {
+			debug: true,
+			autoTrigger: true,
+			autoTriggerUntil: false,
+			loadingHtml: '<img src="./site/templates/standart/images/loading.gif" /><small>Yükleniyor...</small>',
+			padding: 0,
+			nextSelector: 'a.next:last',
+			contentSelector: '',
+			pagingSelector: '',
+			callback: false
 		}
-	}
-	submitform('saveorder');
-}
+	};
 
-/*mosmsg*/
-$(document).ready(function(){
-	$("#message").dialog({
-		autoOpen: true,
-		draggable: false,
-		minWidth: 150,
-		minHeight: 30,
-		show: {
-			effect: "bounce",
-			duration: 200
-		},
-		hide: {
-			effect: "fade",
-			duration: 100
-			
-		},
-		open: function(event, ui) {
-			setTimeout(function(){
-				$('#message').dialog('close');                
-			}, 3000);
-}
-	});
-});
+	// Constructor
+	var jScroll = function($e, options) {
 
-/*Hakkında window*/
-$(document).ready(function() {
-	$("#dialog").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#opener" ).click(function() {
-	  $( "#dialog" ).dialog( "open" );
-	});
-});
+		// Private vars and methods
+		var _data = $e.data('jscroll'),
+			_userOptions = (typeof options === 'function') ? { callback: options } : options,
+			_options = $.extend({}, $.jscroll.defaults, _userOptions, _data || {}),
+			_isWindow = ($e.css('overflow-y') === 'visible'),
+			_$next = $e.find(_options.nextSelector).first(),
+			_$window = $(window),
+			_$body = $('body'),
+			_$scroll = _isWindow ? _$window : $e,
+			_nextHref = $.trim(_$next.attr('href') + ' ' + _options.contentSelector),
 
-//şifremi unuttum penceresi
-$(document).ready(function() {
-	$("#forgotpass").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#forgot" ).click(function() {
-	  $( "#forgotpass" ).dialog( "open" );
-	});
-});
+			// Check if a loading image is defined and preload
+			_preloadImage = function() {
+				var src = $(_options.loadingHtml).filter('img').attr('src');
+				if (src) {
+					var image = new Image();
+					image.src = src;
+				}
+			},
 
-//hesap aktivasyon penceresi
-$(document).ready(function() {
-	$("#activation").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#activ" ).click(function() {
-	  $( "#activation" ).dialog( "open" );
-	});
-});
+			// Wrap inner content, if it isn't already
+			_wrapInnerContent = function() {
+				if (!$e.find('.jscroll-inner').length) {
+					$e.contents().wrapAll('<div class="jscroll-inner" />');
+				}
+			},
 
-//profil resmi yükleme penceresi
-$(document).ready(function() {
-	$("#imagechange").dialog({
-	  autoOpen: false,
-	  minWidth: 350,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#changeimg" ).click(function() {
-	  $( "#imagechange" ).dialog( "open" );
-	});
-});
+			// Find the next link's parent, or add one, and hide it
+			_nextWrap = function($next) {
+				var $parent;
+				if (_options.pagingSelector) {
+					$next.closest(_options.pagingSelector).hide();
+				} else {
+					$parent = $next.parent().not('.jscroll-inner,.jscroll-added').addClass('jscroll-next-parent').hide();
+					if (!$parent.length) {
+						$next.wrap('<div class="jscroll-next-parent" />').parent().hide();
+					}
+				}
+			},
 
-//parola değiştirme penceresi
-$(document).ready(function() {
-	$("#passchange").dialog({
-	  autoOpen: false,
-	  minWidth: 350,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#changepass" ).click(function() {
-	  $( "#passchange" ).dialog( "open" );
-	});
-});
+			// Remove the jscroll behavior and data from an element
+			_destroy = function() {
+				return _$scroll.unbind('.jscroll')
+					.removeData('jscroll')
+					.find('.jscroll-inner').children().unwrap()
+					.filter('.jscroll-added').children().unwrap();
+			},
 
-//mesaj gönderme penceresi
-$(document).ready(function() {
-	$("#sendmessage").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#sendamsg" ).click(function() {
-	  $( "#sendmessage" ).dialog( "open" );
-	});
-});
+			// Observe the scroll event for when to trigger the next load
+			_observe = function() {
+				_wrapInnerContent();
+				var $inner = $e.find('div.jscroll-inner').first(),
+					data = $e.data('jscroll'),
+					borderTopWidth = parseInt($e.css('borderTopWidth'), 10),
+					borderTopWidthInt = isNaN(borderTopWidth) ? 0 : borderTopWidth,
+					iContainerTop = parseInt($e.css('paddingTop'), 10) + borderTopWidthInt,
+					iTopHeight = _isWindow ? _$scroll.scrollTop() : $e.offset().top,
+					innerTop = $inner.length ? $inner.offset().top : 0,
+					iTotalHeight = Math.ceil(iTopHeight - innerTop + _$scroll.height() + iContainerTop);
 
-//forum yeni başlık penceresi
-$(document).ready(function() {
-	$("#newtopicwindow").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( ".newtopic" ).click(function() {
-	  $( "#newtopicwindow" ).dialog( "open" );
-	});
-});
+				if (!data.waiting && iTotalHeight + _options.padding >= $inner.outerHeight()) {
+					//data.nextHref = $.trim(data.nextHref + ' ' + _options.contentSelector);
+					_debug('info', 'jScroll:', $inner.outerHeight() - iTotalHeight, 'from bottom. Loading next request...');
+					return _load();
+				}
+			},
 
-//forum yeni mesaj penceresi
-$(document).ready(function() {
-	$("#newmessagewindow").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 200,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( ".newmsg" ).click(function() {
-	  $( "#newmessagewindow" ).dialog( "open" );
-	});
-});
+			// Check if the href for the next set of content has been set
+			_checkNextHref = function(data) {
+				data = data || $e.data('jscroll');
+				if (!data || !data.nextHref) {
+					_debug('warn', 'jScroll: nextSelector not found - destroying');
+					_destroy();
+					return false;
+				} else {
+					_setBindings();
+					return true;
+				}
+			},
 
-//figcaption
-$(document).ready(function(){
-			$('.figcaption').css('top','100%');
+			_setBindings = function() {
+				var $next = $e.find(_options.nextSelector).first();
+				if (!$next.length) {
+					return;
+				}
+				if (_options.autoTrigger && (_options.autoTriggerUntil === false || _options.autoTriggerUntil > 0)) {
+					_nextWrap($next);
+					if (_$body.height() <= _$window.height()) {
+						_observe();
+					}
+					_$scroll.unbind('.jscroll').bind('scroll.jscroll', function() {
+						return _observe();
+					});
+					if (_options.autoTriggerUntil > 0) {
+						_options.autoTriggerUntil--;
+					}
+				} else {
+					_$scroll.unbind('.jscroll');
+					$next.bind('click.jscroll', function() {
+						_nextWrap($next);
+						_load();
+						return false;
+					});
+				}
+			},
 
-			$('.figure').hover(function(){
-				$(this).find('.figcaption').stop().animate({'top':'0px'}, '200px', function(){});
-			},function(){
-				$(this).find('.figcaption').stop().animate({'top':'200px'}, '200px', function(){});
-			});
+			// Load the next set of content, if available
+			_load = function() {
+				var $inner = $e.find('div.jscroll-inner').first(),
+					data = $e.data('jscroll');
+
+				data.waiting = true;
+				$inner.append('<div class="jscroll-added" />')
+					.children('.jscroll-added').last()
+					.html('<div class="jscroll-loading">' + _options.loadingHtml + '</div>');
+
+				return $e.animate({scrollTop: $inner.outerHeight()}, 0, function() {
+					$inner.find('div.jscroll-added').last().load(data.nextHref, function(r, status) {
+						if (status === 'error') {
+							return _destroy();
+						}
+						var $next = $(this).find(_options.nextSelector).first();
+						data.waiting = false;
+						data.nextHref = $next.attr('href') ? $.trim($next.attr('href') + ' ' + _options.contentSelector) : false;
+						$('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
+						_checkNextHref();
+						if (_options.callback) {
+							_options.callback.call(this);
+						}
+						_debug('dir', data);
+					});
+				});
+			},
+
+			// Safe console debug - http://klauzinski.com/javascript/safe-firebug-console-in-javascript
+			_debug = function(m) {
+				if (_options.debug && typeof console === 'object' && (typeof m === 'object' || typeof console[m] === 'function')) {
+					if (typeof m === 'object') {
+						var args = [];
+						for (var sMethod in m) {
+							if (typeof console[sMethod] === 'function') {
+								args = (m[sMethod].length) ? m[sMethod] : [m[sMethod]];
+								console[sMethod].apply(console, args);
+							} else {
+								console.log.apply(console, args);
+							}
+						}
+					} else {
+						console[m].apply(console, Array.prototype.slice.call(arguments, 1));
+					}
+				}
+			};
+
+		// Initialization
+		$e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref}));
+		_wrapInnerContent();
+		_preloadImage();
+		_setBindings();
+
+		// Expose API methods via the jQuery.jscroll namespace, e.g. $('sel').jscroll.method()
+		$.extend($e.jscroll, {
+			destroy: _destroy
 		});
-		
-		
+		return $e;
+	};
+
+	// Define the jscroll plugin method and loop
+	$.fn.jscroll = function(m) {
+		return this.each(function() {
+			var $this = $(this),
+				data = $this.data('jscroll'), jscroll;
+
+			// Instantiate jScroll on this element if it hasn't been already
+			if (data && data.initialized) {
+				return;
+			}
+			jscroll = new jScroll($this, m);
+		});
+	};
+
+})(jQuery);
+
+
 /**
 * Image Crop
 */
@@ -1963,298 +2125,3 @@ $(document).ready(function(){
 
   // }}}
 }(jQuery));
-
-/**
-* Scroll top
-*/
-jQuery(document).ready(function() {
-$ = jQuery;
- 
-jQuery(function() {
-$(window).scroll(function () {
-if ($(this).scrollTop() > 50) {
-$('a#scroll-top').fadeIn();
-} else {
-$('a#scroll-top').fadeOut();
-}
-});
- 
-$('a#scroll-top').on('click', function(){
-$('html, body').animate({scrollTop:0}, 'slow' );
-return false;
-});
-});
-});
-
-/**
-* Karakter sayacı
-*/
-$(document).ready(function(){
-$('#msgfield').keyup(function () {
-  var max = 255;
-  var len = $(this).val().length;
-  if (len >= max) {
-	$('#charNum').text('Limite ulaştınız');
-	$('#msgfield')
-  } else {
-	var char = max - len;
-	$('#charNum').text(char);
-  }
-});
-});
-
-$(document).ready(function(){
-$('#imgfield').keyup(function () {
-  var max = 255;
-  var len = $(this).val().length;
-  if (len >= max) {
-	$('#imgcharNum').text('Limite ulaştınız');
-	$('#imgefield')
-  } else {
-	var char = max - len;
-	$('#imgcharNum').text(char);
-  }
-});
-});
-
-
-//gruba yeni üye ekleme penceresi
-$(document).ready(function() {
-	$("#addnewmember").dialog({
-	  autoOpen: false,
-	  minWidth: 500,
-	  minHeight: 300,
-	  show: {
-		effect: "blind",
-		duration: 300
-	  },
-	  hide: {
-		effect: "fade",
-		duration: 500
-	  }
-	});
- 
-	$( "#newmember" ).click(function() {
-	  $( "#addnewmember" ).dialog( "open" );
-	});
-});
-
-/*!
- * jScroll - jQuery Plugin for Infinite Scrolling / Auto-Paging
- * http://jscroll.com/
- *
- * Copyright 2011-2013, Philip Klauzinski
- * http://klauzinski.com/
- * Dual licensed under the MIT and GPL Version 2 licenses.
- * http://jscroll.com/#license
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl-2.0.html
- *
- * @author Philip Klauzinski
- * @version 2.3.4
- * @requires jQuery v1.4.3+
- * @preserve
- */
-(function($) {
-
-	'use strict';
-
-	// Define the jscroll namespace and default settings
-	$.jscroll = {
-		defaults: {
-			debug: true,
-			autoTrigger: true,
-			autoTriggerUntil: false,
-			loadingHtml: '<img src="./includes/global/css/images/loading.gif" /><small>Yükleniyor...</small>',
-			padding: 0,
-			nextSelector: 'a.next:last',
-			contentSelector: '',
-			pagingSelector: '',
-			callback: false
-		}
-	};
-
-	// Constructor
-	var jScroll = function($e, options) {
-
-		// Private vars and methods
-		var _data = $e.data('jscroll'),
-			_userOptions = (typeof options === 'function') ? { callback: options } : options,
-			_options = $.extend({}, $.jscroll.defaults, _userOptions, _data || {}),
-			_isWindow = ($e.css('overflow-y') === 'visible'),
-			_$next = $e.find(_options.nextSelector).first(),
-			_$window = $(window),
-			_$body = $('body'),
-			_$scroll = _isWindow ? _$window : $e,
-			_nextHref = $.trim(_$next.attr('href') + ' ' + _options.contentSelector),
-
-			// Check if a loading image is defined and preload
-			_preloadImage = function() {
-				var src = $(_options.loadingHtml).filter('img').attr('src');
-				if (src) {
-					var image = new Image();
-					image.src = src;
-				}
-			},
-
-			// Wrap inner content, if it isn't already
-			_wrapInnerContent = function() {
-				if (!$e.find('.jscroll-inner').length) {
-					$e.contents().wrapAll('<div class="jscroll-inner" />');
-				}
-			},
-
-			// Find the next link's parent, or add one, and hide it
-			_nextWrap = function($next) {
-				var $parent;
-				if (_options.pagingSelector) {
-					$next.closest(_options.pagingSelector).hide();
-				} else {
-					$parent = $next.parent().not('.jscroll-inner,.jscroll-added').addClass('jscroll-next-parent').hide();
-					if (!$parent.length) {
-						$next.wrap('<div class="jscroll-next-parent" />').parent().hide();
-					}
-				}
-			},
-
-			// Remove the jscroll behavior and data from an element
-			_destroy = function() {
-				return _$scroll.unbind('.jscroll')
-					.removeData('jscroll')
-					.find('.jscroll-inner').children().unwrap()
-					.filter('.jscroll-added').children().unwrap();
-			},
-
-			// Observe the scroll event for when to trigger the next load
-			_observe = function() {
-				_wrapInnerContent();
-				var $inner = $e.find('div.jscroll-inner').first(),
-					data = $e.data('jscroll'),
-					borderTopWidth = parseInt($e.css('borderTopWidth'), 10),
-					borderTopWidthInt = isNaN(borderTopWidth) ? 0 : borderTopWidth,
-					iContainerTop = parseInt($e.css('paddingTop'), 10) + borderTopWidthInt,
-					iTopHeight = _isWindow ? _$scroll.scrollTop() : $e.offset().top,
-					innerTop = $inner.length ? $inner.offset().top : 0,
-					iTotalHeight = Math.ceil(iTopHeight - innerTop + _$scroll.height() + iContainerTop);
-
-				if (!data.waiting && iTotalHeight + _options.padding >= $inner.outerHeight()) {
-					//data.nextHref = $.trim(data.nextHref + ' ' + _options.contentSelector);
-					_debug('info', 'jScroll:', $inner.outerHeight() - iTotalHeight, 'from bottom. Loading next request...');
-					return _load();
-				}
-			},
-
-			// Check if the href for the next set of content has been set
-			_checkNextHref = function(data) {
-				data = data || $e.data('jscroll');
-				if (!data || !data.nextHref) {
-					_debug('warn', 'jScroll: nextSelector not found - destroying');
-					_destroy();
-					return false;
-				} else {
-					_setBindings();
-					return true;
-				}
-			},
-
-			_setBindings = function() {
-				var $next = $e.find(_options.nextSelector).first();
-				if (!$next.length) {
-					return;
-				}
-				if (_options.autoTrigger && (_options.autoTriggerUntil === false || _options.autoTriggerUntil > 0)) {
-					_nextWrap($next);
-					if (_$body.height() <= _$window.height()) {
-						_observe();
-					}
-					_$scroll.unbind('.jscroll').bind('scroll.jscroll', function() {
-						return _observe();
-					});
-					if (_options.autoTriggerUntil > 0) {
-						_options.autoTriggerUntil--;
-					}
-				} else {
-					_$scroll.unbind('.jscroll');
-					$next.bind('click.jscroll', function() {
-						_nextWrap($next);
-						_load();
-						return false;
-					});
-				}
-			},
-
-			// Load the next set of content, if available
-			_load = function() {
-				var $inner = $e.find('div.jscroll-inner').first(),
-					data = $e.data('jscroll');
-
-				data.waiting = true;
-				$inner.append('<div class="jscroll-added" />')
-					.children('.jscroll-added').last()
-					.html('<div class="jscroll-loading">' + _options.loadingHtml + '</div>');
-
-				return $e.animate({scrollTop: $inner.outerHeight()}, 0, function() {
-					$inner.find('div.jscroll-added').last().load(data.nextHref, function(r, status) {
-						if (status === 'error') {
-							return _destroy();
-						}
-						var $next = $(this).find(_options.nextSelector).first();
-						data.waiting = false;
-						data.nextHref = $next.attr('href') ? $.trim($next.attr('href') + ' ' + _options.contentSelector) : false;
-						$('.jscroll-next-parent', $e).remove(); // Remove the previous next link now that we have a new one
-						_checkNextHref();
-						if (_options.callback) {
-							_options.callback.call(this);
-						}
-						_debug('dir', data);
-					});
-				});
-			},
-
-			// Safe console debug - http://klauzinski.com/javascript/safe-firebug-console-in-javascript
-			_debug = function(m) {
-				if (_options.debug && typeof console === 'object' && (typeof m === 'object' || typeof console[m] === 'function')) {
-					if (typeof m === 'object') {
-						var args = [];
-						for (var sMethod in m) {
-							if (typeof console[sMethod] === 'function') {
-								args = (m[sMethod].length) ? m[sMethod] : [m[sMethod]];
-								console[sMethod].apply(console, args);
-							} else {
-								console.log.apply(console, args);
-							}
-						}
-					} else {
-						console[m].apply(console, Array.prototype.slice.call(arguments, 1));
-					}
-				}
-			};
-
-		// Initialization
-		$e.data('jscroll', $.extend({}, _data, {initialized: true, waiting: false, nextHref: _nextHref}));
-		_wrapInnerContent();
-		_preloadImage();
-		_setBindings();
-
-		// Expose API methods via the jQuery.jscroll namespace, e.g. $('sel').jscroll.method()
-		$.extend($e.jscroll, {
-			destroy: _destroy
-		});
-		return $e;
-	};
-
-	// Define the jscroll plugin method and loop
-	$.fn.jscroll = function(m) {
-		return this.each(function() {
-			var $this = $(this),
-				data = $this.data('jscroll'), jscroll;
-
-			// Instantiate jScroll on this element if it hasn't been already
-			if (data && data.initialized) {
-				return;
-			}
-			jscroll = new jScroll($this, m);
-		});
-	};
-
-})(jQuery);

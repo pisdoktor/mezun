@@ -7,6 +7,13 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <?php $mainframe->showHead();?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/standart/css/style.css" />
+<script src="<?php echo SITEURL;?>/admin/templates/standart/js/script.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/standart/css/cssmenu.css" />
+<script src="<?php echo SITEURL;?>/admin/templates/standart/js/cssmenu.js" type="text/javascript"></script>
+
 </head>
 <body>
 <?php
@@ -18,7 +25,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 <div id="header">
 <div id="logo">
-<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<img src="<?php echo SITEURL;?>/admin/templates/standart/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
 </div>
 

@@ -1,0 +1,179 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,800,700italic,800italic&subset=latin,latin-ext);
+
+html {
+
+}
+
+body {
+	font-family: 'Open Sans', 'Droid Sans', sans-serif;
+	font-size: 13px;
+	margin: 0px;
+	background-color: #000;
+}
+
+a {
+color: #000000;    
+text-decoration: none;
+}
+
+a:hover {
+color: #ff0000;    
+text-decoration: underline;
+}
+
+a:visited, a:active {
+color: #000000;    
+text-decoration: none;    
+}
+
+.clearfix {
+	
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#container {
+
+}
+
+#header {
+	width: 980px;
+	margin: 0px auto;
+	background-color: #fff;
+}
+
+#logo {
+	
+}
+
+#header-bar {
+	height: 30px;
+	background-color: #336699;
+}
+
+#content {
+	width: 980px;
+	margin: 0px auto;
+	background-color: #fff;
+	padding: 10px;
+}
+
+.footer {
+	clear: both;
+	background-color: #336699;
+	padding: 10px;    
+}
+
+.row1 {
+background: #fafafa;
+height: 21px;
+margin-top: 2px;
+text-align: left;
+padding-left: 5px;    
+}
+
+.row0 {
+background: #dadada;
+height: 21px;
+margin-top: 2px;
+text-align: left;
+padding-left: 5px;    
+}
+
+#message {
+	color: #ff0000;    
+}
+
+#messages {
+	float: right;
+	padding-right: 5px;
+	line-height: 30px;
+}
+
+#newmsg {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.header {
+	width: 980px;
+	margin: 0px auto;
+}
+
+#duyurular {
+	float: right;
+}
+
+#welcome {
+	float: left;
+	width: 300px;
+}
+
+#stats {
+	float: right;
+	width: 350px;
+}
+
+.quickicon {
+	display: inline-table;
+	width: 100px;
+	height: 100px;
+	border: 1px solid #669900;
+	text-align: center;
+	margin: 5px;
+	padding: 5px;
+	background-color: #112233;
+}
+
+.quickicon a {
+	color: #ffffff;
+}
+
+.quickicon:hover {
+	background: #dadada;
+}
+
+.quickicon:hover a {
+	color: #000;
+}
+
+.veritable {
+border: 1px solid #dadada; 
+margin-top: 5px;
+}
+
+.veritable th {
+background: #cacaca;
+height: 21px;
+padding-left: 5px;
+text-align: center;
+}
+
+.veriitem0 {
+background: #fafafa;
+height: 21px;
+margin-top: 2px;
+text-align: left;
+padding-left: 5px;
+}
+
+.veriitem1 {
+background: #dadada;
+height: 21px;
+margin-top: 2px;
+text-align: left;
+padding-left: 5px;
+}
+
+.pagenav_counter {
+margin-top: 5px;
+}
+
+.pagenav_links {
+margin-top: 5px;
+}

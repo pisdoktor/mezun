@@ -2,7 +2,7 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-class mezunVersion {
+class mezunGlobalVersion {
 	
 	var $PRODUCT     = 'Mezun';
 	
@@ -21,7 +21,7 @@ class mezunVersion {
 	var $COPYRIGHT   = "Copyright © 2015 Soner Ekici. Tüm hakları saklıdır.";
 	
 	var $URL         = 'Coded by <a href="http://www.sonerekici.com" target="_blank">Soner Ekici</a>';
-
+	
 	function getLongVersion() {
 		return $this->PRODUCT .' '. $this->RELEASE .'.'. $this->DEV_LEVEL .' '
 			. $this->DEV_STATUS
@@ -30,10 +30,33 @@ class mezunVersion {
 	}
 
 	function getShortVersion() {
-		return $this->PRODUCT .' '. $this->RELEASE .'.'. $this->DEV_LEVEL;
+		return $this->PRODUCT .' '. $this->RELEASE .'.'. $this->DEV_LEVEL.' ['.$this->DEV_STATUS.']';
 	}
 	
 	function getCopy() {
 		return $this->COPYRIGHT;
+	}
+	
+	function Product() {
+		return $this->PRODUCT;
+	}
+	
+	function Release() {
+		return $this->RELEASE;
+	}
+	
+	function DevelopmentLevel() {
+		return $this->DEV_LEVEL;
+	}
+	
+	function DevelopmentStatus() {
+		return $this->DEV_STATUS;
+	}
+	function codeName() {
+		return $this->CODENAME;
+	}
+	
+	function ReleasedDate() {
+		return $this->RELDATE.'-'.$this->RELTIME;
 	}
 }

@@ -17,7 +17,7 @@ class mezunGlobalMail {
 
 	//$mail->PluginDir = ABSPATH .'/includes/phpmailer/';
 	$mail->SetLanguage('tr');
-	$mail->CharSet     = substr_replace(_ISO, '', 0, 8);
+	$mail->CharSet  = _ISO;
 	$mail->From     = $from ? $from : MAILFROM;
 	$mail->FromName = $fromname ? $fromname : MAILFROMNAME;
 

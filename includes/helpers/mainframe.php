@@ -785,46 +785,38 @@ class mezunMainFrame {
 	* Assembles head tags
 	*/
 	public function showHead() {
-		global $bolum;
-	//site genel bilgileri
+		global $option, $bolum;
+	
+		/**
+		* Global Inserts
+		* 
+		* @var mezunMainFrame
+		*/
 		$this->appendMetaTag( 'description', META_DESC );
 		$this->appendMetaTag( 'keywords', META_KEYS );
 		$this->addMetaTag( 'Generator', 'Soner Ekici');
 		$this->addMetaTag( 'robots', 'index, follow' );
 		
-		//font family ve jquery eklemeleri
-		$this->addStyleSheet('http://fonts.googleapis.com/css?family=Droid+Sans');
-		$this->addStyleSheet('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,300,400,600&subset=latin,latin-ext&ver=4.1.1', 'all', 'open-sans-css');
-		$this->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
-		
+		//JQuery library
 		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-		//$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js');
 		$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+		$this->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css');
+		//JQuery Mobile library
+		//$this->addStyleSheet('https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css');
+		//$this->addScript(0, 'https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js');
 		
-		
-		//bootstrap eklemesi
-		$this->addStyleSheet('http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css');
+		//Bootstrap and Helper library
+		$this->addStyleSheet('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css');
 		$this->addScript(0, 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js');
 		$this->addScript(0, SITEURL.'/includes/global/js/bootstrap-helper.js');
 		
-		//site genel eklemeleri
-		$this->addStyleSheet(SITEURL.'/includes/global/css/global.css');
-		$this->addScript(0, SITEURL.'/includes/global/js/global.js');
-		
-		//site menü css eklemesi
-		$this->addStyleSheet(SITEURL.'/includes/global/css/cssmenu.css');    
-		$this->addScript(0, SITEURL.'/includes/global/js/cssmenu.js');    
-		
 		
 		if ($bolum == 'forum') {
-		//tinymce text editor
-		//$mainframe->addScript(0, SITEURL.'/includes/tinymce/tinymce.min.js');
 		
-		//summernote text editor
-		$this->addScript(0, SITEURL.'/includes/summernote/summernote.min.js');
-		$this->addScript(0, SITEURL.'/includes/summernote/summernote-tr-TR.js');
-		$this->addStyleSheet(SITEURL.'/includes/summernote/summernote.css');
-		$this->addStyleSheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
+			$this->addScript(0, SITEURL.'/includes/summernote/summernote.min.js');
+			$this->addScript(0, SITEURL.'/includes/summernote/summernote-tr-TR.js');
+			$this->addStyleSheet(SITEURL.'/includes/summernote/summernote.css');
+			$this->addStyleSheet('//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css');
 		}
 		
 		if ($bolum == 'album') {
@@ -833,11 +825,8 @@ class mezunMainFrame {
 			$this->addScript(0, SITEURL.'/includes/global/js/album/jquery.iframe-transport.js');
 			$this->addScript(0, SITEURL.'/includes/global/js/album/jquery.fileupload.js');
 			$this->addScript(0, SITEURL.'/includes/global/js/album/album.js');
-			$this->addScript(0, SITEURL.'/includes/global/js/fancybox.js');
+			$this->addScript(0, SITEURL.'/includes/global/js/album/fancybox.js');
 			$this->addStyleSheet(SITEURL.'/includes/global/css/fancybox.css');
-			//$this->addScript(0, SITEURL.'/includes/global/js/imagerotate.js');
-			//$this->addStyleSheet(SITEURL.'/includes/global/css/imagerotate.css');
-
 		}
 
 		echo $this->getHead();

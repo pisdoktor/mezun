@@ -1,20 +1,20 @@
 <?php
 // no direct access
-defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
+defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );  
 
-$footer = new mezunVersion();  
+$version = new mezunGlobalVersion();
 ?>
 <div align="center" class="footer">
 
 <div>
 <small>
-<?php echo $footer->getShortVersion();?>
+<?php echo $version->getShortVersion();?>
 </small>
 </div>
 
 <div>
 <small>
-<?php echo $footer->getCopy();?>
+<?php echo $version->getCopy();?>
 </small>
 </div>
 
@@ -28,27 +28,27 @@ $footer = new mezunVersion();
 <table width="100%" class="table-striped">
   <tr>
 	<td width="50%"><strong>Paket Adı:</strong></td>
-	<td><?php echo $footer->PRODUCT;?></td>
+	<td><?php echo $version->Product();?></td>
   </tr>
   <tr>
 	<td><strong>Paket Sürümü:</strong></td>
-	<td><?php echo $footer->RELEASE;?></td>
+	<td><?php echo $version->Release();?></td>
   </tr>
   <tr>
 	<td><strong>Geliştirme Seviyesi:</strong></td>
-	<td><?php echo $footer->DEV_LEVEL;?></td>
+	<td><?php echo $version->DevelopmentLevel();?></td>
   </tr>
 	<tr>
 	<td><strong>Paket Durumu:</strong></td>
-	<td><?php echo $footer->DEV_STATUS;?></td>
+	<td><?php echo $version->DevelopmentStatus();?></td>
   </tr>
 	<tr>
 	<td><strong>Paket Kod Adı:</strong></td>
-	<td><?php echo $footer->CODENAME;?></td>
+	<td><?php echo $version->codeName();?></td>
   </tr>
 	<tr>
 	<td><strong>Paketleme Tarihi:</strong></td>
-	<td><?php echo $footer->RELDATE;?></td>
+	<td><?php echo $version->ReleasedDate();?></td>
   </tr>
 	<tr>
 	<td><strong>Kodlama:</strong></td>

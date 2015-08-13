@@ -2,14 +2,6 @@
 // no direct access
 defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' ); 
 
-ini_set('magic_quotes_runtime', 0);
-
-if ( ERROR_REPORT === 0 || ERROR_REPORT === '0' ) {
-	error_reporting( 0 );
-} else if (ERROR_REPORT > 0) {
-	error_reporting( E_ALL );
-}
-
 require(dirname(__FILE__).'/importer.php');
 
 //database sınıfını import edelim
@@ -37,10 +29,26 @@ mimport('helpers.html.pagenation');
 
 $dbase = new mezunDatabase( DB_HOST, DB_USER, DB_PASS, DB, DB_PREFIX );
 
+//config bilgilerini alalım
+$dbase->setQuery("SELECT * FROM #__config");
+$configs = $dbase->loadObjectList();
+//define edelim
+foreach ($configs as $config) {
+	define($config->name, $config->var);
+}
+
+ini_set('magic_quotes_runtime', 0);
+
+if ( ERROR_REPORT === 0 || ERROR_REPORT === '0' ) {
+	error_reporting( 0 );
+} else if (ERROR_REPORT > 0) {
+	error_reporting( E_ALL );
+}
+
 if ($dbase->getErrorNum()) {
 	$systemError = $dbase->getErrorNum();
 	$systemErrorMsg = $dbase->getErrorMsg();
-	include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
+	include ABSPATH . '/includes/global/closed.php';
 	exit();
 }
 
@@ -294,7 +302,7 @@ function ErrorAlert( $text, $action='window.history.go(-1);', $mode=1 ) {
 
 		case 1:
 		default:
-			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; "._ISO."\" />";
+			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset="._ISO."\" />";
 			echo "<script>alert('$text'); $action</script> \n";
 			//echo '<noscript>';
 			//mosRedirect( @$_SERVER['HTTP_REFERER'], $text );
@@ -712,7 +720,7 @@ function convertAdmin() {
 }
 
 function getFooter() {
-	include(ABSPATH.'/site/templates/'.SITETEMPLATE.'/footer.php');
+	include(ABSPATH.'/includes/global/footer.php');
 }
 
 function initBlocks() {

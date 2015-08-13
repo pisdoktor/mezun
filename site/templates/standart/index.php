@@ -8,25 +8,14 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?php $mainframe->showHead();?>
-<link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
-<!--
-<script type="text/javascript">
-		tinymce.init({
-			selector: "#textarea",
-			plugins: "autolink emoticons advlist bbcode code wordcount visualchars visualblocks preview paste link",
-			toolbar: "emoticons | visualchars | preview | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
-			language: "tr"
 
-		});
-	
-// Prevent bootstrap dialog from blocking focusin
-$(document).on('focusin', function(e) {
-	if ($(e.target).closest(".mce-window").length) {
-		e.stopImmediatePropagation();
-	}
-});
-</script>
--->
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/site/templates/standart/css/style.css" />
+<script src="<?php echo SITEURL;?>/site/templates/standart/js/script.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/site/templates/standart/css/cssmenu.css" />
+<script src="<?php echo SITEURL;?>/site/templates/standart/js/cssmenu.js" type="text/javascript"></script>
+
+<link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
 <!-- Container Başlangıç -->
@@ -35,7 +24,7 @@ $(document).on('focusin', function(e) {
 <!-- Header Başlangıç -->
 <div id="header">
 <div id="logo">
-<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<img src="<?php echo SITEURL;?>/site/templates/standart/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
 </div>
 <!-- Header Bitiş -->

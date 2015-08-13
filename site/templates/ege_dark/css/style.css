@@ -1,26 +1,27 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,800,700italic,800italic&subset=latin,latin-ext);
+
 html {
 }
 
 body {
-	font-family: Open Sans, Droid Sans;
+	font-family: 'Open Sans', 'Droid Sans', sans-serif;
 	font-size: 13px;
 	margin: 0px;
 	background-color: #FAFAFA;
 }
 
 a {
-color: #ff0000;    
+color: #000000;    
 text-decoration: none;
 }
 
 a:hover {
-color: #FF00FF;    
-text-decoration: underline;
+color: #ff0000;    
 }
 
 a:visited, a:active {
-color: #FF0000;    
-text-decoration: none;    
+color: #000000;        
 }
 
 @media screen and (min-width:1024px) {
@@ -33,7 +34,7 @@ text-decoration: none;
 		background-color: #fff;
 	}
 	#logo {
-		width: 980px;	
+		width: 980px;    
 	}
 	#header-bar {
 		height: 30px;
@@ -93,7 +94,7 @@ text-decoration: none;
 
 @media screen and (min-width:768px) and (max-width:800px) {
 	#container {
-		width: 768px;	
+		width: 768px;    
 	}
 	
 	#header {
@@ -138,7 +139,7 @@ text-decoration: none;
 		background-color: #fff;
 	}
 	#logo {
-		width: 600px;	
+		width: 600px;    
 	}
 	#logo img {
 		width: 600px;
@@ -174,7 +175,7 @@ text-decoration: none;
 		background-color: #fff;
 	}
 	#logo {
-		width: 480px;	
+		width: 480px;    
 	}
 	#logo img {
 		width: 480px;
@@ -371,48 +372,32 @@ text-decoration: none;
 	border-bottom: 1px solid #cacaca;
 }
 .msg-body {
-	padding: 10px;	
+	padding: 10px;    
 }
 
 
-/**
-* Admin Bölümü
-*/
-.quickicon {
-	width: 100px;
-	height: 100px;
-	border: 1px solid #dadada;
-	text-align: center;
-	vertical-align: middle;
-	padding: 5px;
-	margin: 5px;
+a#scroll-top{ 
+display:none;    
+position:fixed;    
+right:20px;    
+bottom:20px; 
+height:42px; 
+width:42px; 
+line-height:42px;    
+background:#377f8f url(../images/scrolltop.png) center center no-repeat;    
+opacity:0.8;    
+-moz-opacity:0.8;    
+-webkit-opacity:0.8;    
+border-radius:4px;    
+-moz-border-radius:4px;    
+-webkit-border-radius:4px;    
+-webkit-transition:all 0.25s ease-in-out; 
+-moz-transition:all 0.25s ease-in-out; 
+-o-transition:all 0.25s ease-in-out; 
 }
-
-.quickicon:hover {
-	background-color: #fafafa;
-}
-
-.figure {
-display: block;
-width: 200px;
-height: 200px;
-position: relative;
-overflow: hidden;
-text-align: center;
-vertical-align: middle;
-}
-
-.figcaption {
-display: block;
-width: 100%;
-height: 100%;
-padding-top: 10px;
-position: absolute;
-text-align: center;
-vertical-align: middle;
-color: #FFFFFF;
-background: #000000;
-background: rgba(0,0,0,.5);
+ 
+a#scroll-top:hover{ 
+background-color:#f56734; 
 }
 
 /**
@@ -574,29 +559,7 @@ img.jcrop-preview {
   max-width: none;
 }
 
-a#scroll-top{ 
-display:none;    
-position:fixed;    
-right:20px;    
-bottom:20px; 
-height:42px; 
-width:42px; 
-line-height:42px;    
-background:#377f8f url(./images/scrolltop.png) center center no-repeat;    
-opacity:0.8;    
--moz-opacity:0.8;    
--webkit-opacity:0.8;    
-border-radius:4px;    
--moz-border-radius:4px;    
--webkit-border-radius:4px;    
--webkit-transition:all 0.25s ease-in-out; 
--moz-transition:all 0.25s ease-in-out; 
--o-transition:all 0.25s ease-in-out; 
-}
- 
-a#scroll-top:hover{ 
-background-color:#f56734; 
-}
+
 
 /*Jquery ile fieldset aşama yapmak*/
 #steps { 

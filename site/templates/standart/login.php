@@ -8,6 +8,13 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <?php $mainframe->showHead();?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/site/templates/standart/css/style.css" />
+<script src="<?php echo SITEURL;?>/site/templates/standart/js/script.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/site/templates/standart/css/cssmenu.css" />
+<script src="<?php echo SITEURL;?>/site/templates/standart/js/cssmenu.js" type="text/javascript"></script>
+
 <link rel="alternate" href="<?php echo SITEURL;?>" hreflang="tr" />
 </head>
 <body>
@@ -18,7 +25,7 @@ $validate = spoofValue(1);
 
 <div id="header">
 <div id="logo">
-<img src="<?php echo SITEURL;?>/site/templates/<?php echo SITETEMPLATE;?>/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<img src="<?php echo SITEURL;?>/site/templates/standart/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
 </div>
 
@@ -49,7 +56,7 @@ Bu siteye kayıt olarak;
 <li>Gruplar kurabilir, gruplara katılarak paylaşımda bulunabilirsiniz.</li>
 </ul>
 
-<h4>Hemen şimdi <a href="<?php echo sefLink('index.php?option=register');?>">Kayıt Ol!</a></h4>
+<h4>Hemen şimdi <a href="index.php?option=register">Kayıt Ol!</a></h4>
 </div>
 </div>
 </div>
@@ -141,7 +148,7 @@ $(document).ready(function(){
 
 </div><!-- content -->
 
-<div id="forgotpass">
+<div id="forgotpass" style="display: none;">
 <form action="index.php" method="post" role="form">
 <span class="help-block">* Şifrenizi sıfırlamak için lütfen kayıtlı e-posta adresinizi yazın.</span>
 
@@ -170,7 +177,7 @@ $(document).ready(function(){
 </div>
 
 <?php if (USER_ACTIVATION) { ?>
-<div id="activation">
+<div id="activation" style="display: none;">
 <form action="index.php" method="post" role="form">
 <span class="help-block">* E-posta adresinize gönderilen aktivasyon kodunu giriniz.</span>
 

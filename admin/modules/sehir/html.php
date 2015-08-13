@@ -100,7 +100,7 @@ $t = 1 - $t;
 </div>
 <div class="pagenav_links">
 <?php 
-$link = 'index.php?option=admin&bolum=user';
+$link = 'index.php?option=admin&bolum=sehir';
 echo $pageNav->writePagesLinks($link);?>
 </div>
 </div>

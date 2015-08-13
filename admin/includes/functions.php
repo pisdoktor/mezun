@@ -10,8 +10,20 @@ function adminMenu() {
 <li class="has-sub"><a href="#">Modül</a>
 		<ul>
 		<li><a href="index.php?option=admin&bolum=akis"><span>Akış Yönetimi</span></a></li>
-		<li><a href="index.php?option=admin&bolum=album"><span>Albüm Yönetimi</span></a></li>
-		<li><a href="index.php?option=admin&bolum=group"><span>Grup Yönetimi</span></a></li>
+		<li class="has-sub"><a href="#"><span>Albüm Yönetimi</span></a>
+			<ul>
+			<li><a href="index.php?option=admin&bolum=album&task=album"><span>Albüm Yönetimi</span></a></li>
+			<li><a href="index.php?option=admin&bolum=album&task=images"><span>Resim Yönetimi</span></a></li>
+			<li><a href="index.php?option=admin&bolum=album&task=recount"><span>Tekrar Say</span></a></li>
+			</ul>
+		</li>
+		<li class="has-sub"><a href="#"><span>Grup Yönetimi</span></a>
+			<ul>
+			<li><a href="index.php?option=admin&bolum=group&task=group"><span>Grup Yönetimi</span></a></li>
+			<li><a href="index.php?option=admin&bolum=group&task=messages"><span>Mesaj Yönetimi</span></a></li>
+			<li><a href="index.php?option=admin&bolum=group&task=recount"><span>Tekrar Say</span></a></li>
+			</ul>
+		</li>
 		<li class="has-sub"><a href="#"><span>Forum Yönetimi</span></a>
 			<ul>
 			<li><a href="index.php?option=admin&bolum=forum&task=categories"><span>Kategori Yönetimi</span></a></li>
@@ -31,8 +43,9 @@ function adminMenu() {
 </li>
 <li class="has-sub"><a href="#">Sistem</a>
 	<ul>
-		<li><a href="index.php?option=admin&bolum=duyuru"><span>Duyuru Yönetimi</span></a></li>
 		<li><a href="index.php?option=admin&bolum=ayarlar"><span>Yapılandırma Dosyası</span></a></li>
+		<li><a href="index.php?option=admin&bolum=config"><span>Site Ayarları</span></a></li>
+		<li><a href="index.php?option=admin&bolum=duyuru"><span>Duyuru Yönetimi</span></a></li>
 		<li><a href="index.php?option=admin&bolum=db"><span>Veritabanı Yönetimi</span></a></li>
 		<li><a href="index.php?option=admin&bolum=bildirim"><span>Geri Bildirimler</span></a></li>
 		<?php if (STATS) {?>
@@ -50,6 +63,12 @@ function adminMenu() {
 <li class="has-sub"><a href="#">Görünüm</a>
 	<ul>
 		<li><a href="index.php?option=admin&bolum=menu"><span>Menü Yönetimi</span></a></li>
+		<li class="has-sub"><a href=""><span>Tema Yönetimi</span></a>
+			<ul>
+			<li><a href="index.php?option=admin&bolum=templates&task=sitetemplates"><span>Site Temaları</span></a></li>
+			<li><a href="index.php?option=admin&bolum=templates&task=admintemplates"><span>Admin Temaları</span></a></li>
+			</ul>
+		</li>
 		<li><a href="index.php?option=admin&bolum=blocks"><span>Blok Yönetimi</span></a></li>
 	</ul>
 </li>
@@ -73,7 +92,12 @@ function loadAdminModule() {
 	
 	case 'admin':
 	if ($bolum) {
+		if (file_exists(ABSPATH. '/admin/modules/'.$bolum.'/index.php')) {
 	include_once(ABSPATH. '/admin/modules/'.$bolum.'/index.php');
+		} else {
+			NotAuth();
+			return;
+		}
 	} else {
 		Redirect('index.php');
 	}
@@ -156,7 +180,7 @@ function AdminStats() {
 	<legend>Üye İstatistikleri:</legend>
 	<div class="row">
 	<div class="col-sm-9">
-	Toplam Kayıtlı Üye:
+	Toplam Kayıtlı Üye Sayısı:
 	</div>
 	<div class="col-sm-3">
 	<?php echo $totaluye;?>
@@ -165,7 +189,7 @@ function AdminStats() {
 	
 	<div class="row">
 	<div class="col-sm-9">
-	Toplam Aktif Üye:
+	Toplam Aktif Üye Sayısı:
 	</div>
 	<div class="col-sm-3">
 	<?php echo $totalaktif;?>
@@ -174,7 +198,7 @@ function AdminStats() {
 	
 	<div class="row">
 	<div class="col-sm-9">
-	Bugün Kayıt Olan Üye:
+	Bugün Kayıt Olan Üye Sayısı:
 	</div>
 	<div class="col-sm-3">
 	<?php echo $bugunuye;?>
@@ -290,15 +314,17 @@ function AdminPanelMenu() {
 	<div class="panel-heading"><h4>Kısayollar</h4></div>
 	<div class="panel-body">
 	<?php
+	echo quickiconButton('index.php?option=admin&bolum=ayarlar', 'ayarlar.png', 'Yapılandırma Dosyası');
+	echo quickiconButton('index.php?option=admin&bolum=config', 'config.png', 'Site Ayarları');
 	echo quickiconButton('index.php?option=admin&bolum=user', 'kullanici.png', 'Kullanıcı Yönetimi');
-	echo quickiconButton('index.php?option=admin&bolum=user', 'menu.png', 'Menü Yönetimi');
-	echo quickiconButton('index.php?option=admin&bolum=user', 'block.png', 'Site Blok Yönetimi');
+	echo quickiconButton('index.php?option=admin&bolum=menu', 'menu.png', 'Menü Yönetimi');
+	echo quickiconButton('index.php?option=admin&bolum=blocks', 'block.png', 'Site Blok Yönetimi');
+	echo quickiconButton('index.php?option=admin&bolum=templates', 'templates.png', 'Site Tema Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=sehir', 'sehir.png', 'Şehir Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=brans', 'brans.png', 'Branş Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=db', 'db.png', 'Veritabanı Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=duyuru', 'duyuru.png', 'Duyuru Yönetimi');    
-	echo quickiconButton('index.php?option=admin&bolum=ayarlar', 'config.png', 'Yapılandırma Dosyası');
-	echo quickiconButton('index.php?option=admin&bolum=forum', 'form.png', 'Geri Bildirimler');
+	echo quickiconButton('index.php?option=admin&bolum=bildirim', 'form.png', 'Geri Bildirimler');
 	echo quickiconButton('index.php?option=admin&bolum=akis', 'akis.png', 'Site Akış Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=album', 'album.png', 'Site Albüm Yönetimi');
 	echo quickiconButton('index.php?option=admin&bolum=group', 'group.png', 'Site Grup Yönetimi');

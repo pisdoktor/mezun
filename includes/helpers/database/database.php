@@ -45,7 +45,7 @@ class mezunDatabase {
 			$systemError = 1;
 			$systemErrorMsg = 'MySQL bağlayıcısı "mysqli" uygun değil!';
 			if ($goOffline) {
-				include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
+				include ABSPATH . '/includes/global/closed.php';
 				exit();
 			}
 		}
@@ -54,7 +54,7 @@ class mezunDatabase {
 				$systemError = 2;
 				$systemErrorMsg = 'PHP Versiyonu 4.2.0 den düşük! Veritabanı bağlantısı sağlanamıyor. Bilgileri kontrol edin!';
 				if ($goOffline) {
-					include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
+					include ABSPATH . '/includes/global/closed.php';
 					exit();
 				}
 			}
@@ -63,7 +63,7 @@ class mezunDatabase {
 				$systemError = 2;
 				$systemErrorMsg = 'Veritabanı bağlantısı sağlanamıyor. Bilgileri kontrol edin!';
 				if ($goOffline) {
-					include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
+					include ABSPATH . '/includes/global/closed.php';
 					exit();
 				}
 			}
@@ -72,7 +72,7 @@ class mezunDatabase {
 			$systemError = 3;
 			$systemErrorMsg = 'Veritabanı yok. Önce veritabanını oluşturun!';
 			if ($goOffline) {
-				include ABSPATH . '/site/templates/'.SITETEMPLATE.'/closed.php';
+				include ABSPATH . '/includes/global/closed.php';
 				exit();
 			}
 		}
