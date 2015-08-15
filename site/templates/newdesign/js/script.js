@@ -59,6 +59,25 @@ $(document).ready(function(){
 	  $( "#forgotpass" ).dialog( "open" );
 	});
 	
+	//Parolamı unuttum penceresi
+	$("#loginform").dialog({
+	  autoOpen: false,
+	  minWidth: 500,
+	  minHeight: 200,
+	  show: {
+		effect: "blind",
+		duration: 300
+	  },
+	  hide: {
+		effect: "fade",
+		duration: 500
+	  }
+	});
+ 
+	$( "#login" ).click(function() {
+	  $( "#loginform" ).dialog( "open" );
+	});
+	
 	//Hesap aktivasyonu penceresi
 	$("#activation").dialog({
 	  autoOpen: false,

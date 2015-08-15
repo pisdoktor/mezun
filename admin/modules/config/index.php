@@ -131,6 +131,26 @@ function getConfigList() {
 	 
 	 $lists['compacttopic'] = mezunHTML::yesnoRadioList('compactTopicPagesEnable', 'id="compactTopicPagesEnable"', $config['compactTopicPagesEnable']);
 	 
+	 //tema seçenekleri: admin
+	 $dbase->setQuery("SELECT * FROM #__templates WHERE temp_type='admin'");
+	 $admintemps = $dbase->loadObjectList();
+	 
+	 foreach ($admintemps as $admintemp) {
+		 $atmp[] = mezunHTML::makeOption($admintemp->name, $admintemp->name); 
+	 }
+	 
+	 $lists['admintemplate'] = mezunHTML::selectList($atmp, 'ADMINTEMPLATE', 'size="1" id="ADMINTEMPLATE"', 'value', 'text', $config['ADMINTEMPLATE']);
+	 
+	 //tema seçenekleri: site
+	 $dbase->setQuery("SELECT * FROM #__templates WHERE temp_type='site'");
+	 $sitetemps = $dbase->loadObjectList();
+	 
+	 foreach ($sitetemps as $sitetemp) {
+		 $stmp[] = mezunHTML::makeOption($sitetemp->name, $sitetemp->name); 
+	 }
+	 
+	 $lists['sitetemplate'] = mezunHTML::selectList($stmp, 'SITETEMPLATE', 'size="1" id="SITETEMPLATE"', 'value', 'text', $config['SITETEMPLATE']);
+	 
 	
 	ConfigHTML::getConfigList($config, $lists);
 }

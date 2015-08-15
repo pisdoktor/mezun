@@ -21,21 +21,30 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <!-- Container Başlangıç -->
 <div id="container">
 
+<div id="top-bar" class="clearfix">
+
+<div class="header-container">
+
+<div class="menu">
+<?php mezunGlobalHelper::siteMenu();?> 
+</div>
+
+<div class="user-panel">
+</div>
+
+</div>
+</div>
+
 <!-- Header Başlangıç -->
+<div class="header-container">
 <div id="header">
 <div id="logo">
-<img src="<?php echo SITEURL;?>/site/templates/newdesign/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<h4><?php echo SITEHEAD;?></h4>
+</div>
 </div>
 </div>
 <!-- Header Bitiş -->
 
-<!-- HeaderBar Başlangıç -->
-<div id="header-bar" class="clearfix">
-<div class="header">
-<?php mezunGlobalHelper::siteMenu();?> 
-</div>
-</div>
-<!-- HeaderBar Bitiş -->
 
 <!-- Content Başlangıç -->
 <div id="content" class="clearfix">

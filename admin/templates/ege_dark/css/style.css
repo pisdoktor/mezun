@@ -44,7 +44,7 @@ text-decoration: none;
 #header {
 	width: 980px;
 	margin: 0px auto;
-	background-color: #fff;
+	background-color: navy;
 }
 
 #logo {
@@ -59,14 +59,19 @@ text-decoration: none;
 #content {
 	width: 980px;
 	margin: 0px auto;
-	background-color: #fff;
+	background-color: navy;
 	padding: 10px;
 }
 
 .footer {
 	clear: both;
 	background-color: #336699;
-	padding: 10px;    
+	padding: 10px;  
+	color: #fff;  
+}
+
+.footer a {
+	color: #ff0000;
 }
 
 .row1 {

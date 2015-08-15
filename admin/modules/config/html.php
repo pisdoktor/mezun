@@ -414,7 +414,7 @@ class ConfigHTML {
 			  </label>
 			  </div>
 			  <div class="col-sm-4">
-			  <input type="text" name="ADMINTEMPLATE" id="ADMINTEMPLATE" value="<?php echo $config['ADMINTEMPLATE'];?>" class="form-control">
+			  <?php echo $lists['admintemplate'];?>
 			  </div>
 		</div>
 		</div>
@@ -427,7 +427,7 @@ class ConfigHTML {
 			  </label>
 			  </div>
 			  <div class="col-sm-4">
-			  <input type="text" name="SITETEMPLATE" id="SITETEMPLATE" value="<?php echo $config['SITETEMPLATE'];?>" class="form-control">
+			  <?php echo $lists['sitetemplate'];?>
 			  </div>
 		</div>
 		</div>

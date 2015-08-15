@@ -50,17 +50,31 @@ $(function(){
 </script>
 <div id="container">
 
-<div id="header">
-<div id="logo">
-<img src="<?php echo SITEURL;?>/site/templates/newdesign/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<div id="top-bar" class="clearfix">
+
+<div class="header-container">
+
+<div class="menu">
+<?php mezunGlobalHelper::siteMenu();?> 
+</div>
+
+<div class="user-panel">
+</div>
+
 </div>
 </div>
 
-<div id="header-bar" class="clearfix">
-<div class="header">
-<?php mezunGlobalHelper::siteMenu();?> 
+<!-- Header Başlangıç -->
+<div class="header-container">
+<div id="header">
+<div id="logo">
+<h4><?php echo SITEHEAD;?></h4>
 </div>
 </div>
+</div>
+<!-- Header Bitiş -->
+
+
 
 <div id="content" class="clearfix">
 

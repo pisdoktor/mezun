@@ -63,12 +63,7 @@ function adminMenu() {
 <li class="has-sub"><a href="#">Görünüm</a>
 	<ul>
 		<li><a href="index.php?option=admin&bolum=menu"><span>Menü Yönetimi</span></a></li>
-		<li class="has-sub"><a href=""><span>Tema Yönetimi</span></a>
-			<ul>
-			<li><a href="index.php?option=admin&bolum=templates&task=sitetemplates"><span>Site Temaları</span></a></li>
-			<li><a href="index.php?option=admin&bolum=templates&task=admintemplates"><span>Admin Temaları</span></a></li>
-			</ul>
-		</li>
+		<li><a href="index.php?option=admin&bolum=templates"><span>Tema Yönetimi</span></a></li>
 		<li><a href="index.php?option=admin&bolum=blocks"><span>Blok Yönetimi</span></a></li>
 	</ul>
 </li>

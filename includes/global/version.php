@@ -6,11 +6,11 @@ class mezunGlobalVersion {
 	
 	var $PRODUCT     = 'Mezun';
 	
-	var $RELEASE     = '2.0';
+	var $RELEASE     = '2.1';
 	
 	var $DEV_STATUS  = 'Beta';
 	
-	var $DEV_LEVEL   = '2';
+	var $DEV_LEVEL   = '0';
 	
 	var $CODENAME    = 'Şehit';
 	

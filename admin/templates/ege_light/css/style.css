@@ -53,11 +53,11 @@ text-decoration: none;
 
 #header-bar {
 	height: 30px;
-	background-color: #cacaca;
+	background-color: #fafafa;
 }
 
 #content {
-	width: 960px;
+	width: 980px;
 	margin: 0px auto;
 	background-color: #fff;
 	padding: 10px;
@@ -65,7 +65,7 @@ text-decoration: none;
 
 .footer {
 	clear: both;
-	background-color: #cacaca;
+	background-color: #fafafa;
 	padding: 10px;    
 }
 
@@ -131,7 +131,7 @@ padding-left: 5px;
 }
 
 .quickicon:hover {
-	background: #dadada;
+	background: #fafafa;
 }
 
 .veritable {
