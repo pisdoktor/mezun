@@ -498,7 +498,7 @@ class ConfigHTML {
 		<div class="row">
 			  <div class="col-sm-4">
 			  <label for="compactTopicPagesEnable">
-			  Compact Başlık Sayfaları Gösterimi:
+			  Kısa Başlık Sayfaları Gösterimi:
 			  </label>
 			  </div>
 			  <div class="col-sm-6">
@@ -511,7 +511,7 @@ class ConfigHTML {
 		<div class="row">
 			  <div class="col-sm-4">
 			  <label for="compactTopicPagesContiguous">
-			  Compact Başlık Sayfaları Sayısı:
+			  Kısa Başlık Sayfaları Sayısı:
 			  </label>
 			  </div>
 			  <div class="col-sm-3">

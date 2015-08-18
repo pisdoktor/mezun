@@ -4,6 +4,57 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class adminAlbumHTML {
 	
+	static function editAlbum($row, $list) {
+		?>
+		<div class="panel panel-info">
+		<div class="panel-heading">Albüm : <?php echo $row->id ? 'Düzenle':'Oluştur';?></div>
+		<div class="panel-body">
+		
+		<form action="index.php?option=admin&bolum=album&task=savealbum" role="form" method="post">
+		
+		<div class="form-group">
+		<div class="row">
+		<label class="control-label col-sm-4" for="name">Albümün Adı:</label>
+		<div class="col-sm-6">
+		<input name="name" id="name" type="text" class="form-control" placeholder="Albümün adını yazın" value="<?php echo $row->name;?>" required />
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<label class="control-label col-sm-4" for="aciklama">Albümün Açıklaması:</label>
+		<div class="col-sm-6">
+		<input name="aciklama" id="aciklama" type="text" class="form-control" placeholder="Albümün açıklamasını yazın" value="<?php echo $row->aciklama;?>" required />
+		</div>
+		</div>
+		</div>
+		
+		<div class="form-group">
+		<div class="row">
+		<label class="control-label col-sm-4" for="status">Albümün Görünürlüğü:</label>
+		<div class="col-sm-6">
+		<?php echo $list['status'];?>
+		</div>
+		</div>
+		</div>
+
+		
+		<div class="form-group">
+		<div class="row">
+		<div class="col-sm-12">
+		<button type="submit" class="btn btn-primary">Albümü Kaydet</button>
+		</div>
+		</div>
+		</div>
+		
+		<input type="hidden" name="id" value="<?php echo $row->id;?>" />
+		</form>
+		</div>
+		</div>
+		<?php
+	}
+	
 	static function getAlbumList($rows, $pageNav) {
 		?>
 		<div class="panel panel-default">
@@ -34,7 +85,7 @@ $deletelink = '<a href="index.php?option=admin&bolum=album&task=deletealbum&id='
 if ($row->status == 0) {
 	$status = 'Herkese Açık';
 } else if ($row->status == 1) {
-	$status = 'Arkadaşlar';
+	$status = 'Arkadaşlarım';
 } else {
 	$status = 'Gizli';
 }

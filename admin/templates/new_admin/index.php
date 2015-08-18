@@ -8,11 +8,11 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <?php $mainframe->showHead();?>
 
-<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/ege_light/css/style.css" />
-<script src="<?php echo SITEURL;?>/admin/templates/ege_light/js/script.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/new_admin/css/style.css" />
+<script src="<?php echo SITEURL;?>/admin/templates/new_admin/js/script.js" type="text/javascript"></script>
 
-<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/ege_light/css/cssmenu.css" />
-<script src="<?php echo SITEURL;?>/admin/templates/ege_light/js/cssmenu.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/new_admin/css/cssmenu.css" />
+<script src="<?php echo SITEURL;?>/admin/templates/new_admin/js/cssmenu.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -25,7 +25,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 <div id="header">
 <div id="logo">
-<img src="<?php echo SITEURL;?>/admin/templates/ege_light/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<img src="<?php echo SITEURL;?>/admin/templates/new_admin/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
 </div>
 

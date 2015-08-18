@@ -8,6 +8,8 @@ $limitstart = intval(getParam($_REQUEST, 'limitstart', 0));
 
 include(dirname(__FILE__). '/html.php');
 
+mimport('tables.albums');
+
 switch($task) {
 	default:
 	case 'album':
@@ -45,6 +47,32 @@ switch($task) {
 	case 'recount':
 	reCountImages();
 	break;
+}
+
+function saveAlbum() {
+	global $dbase;
+	
+	$row = new mezunAlbums($dbase);
+	$row->bind($_POST);
+	$row->store();
+	
+	Redirect('index.php?option=admin&bolum=album&task=album');
+}
+
+function editAlbum($id) {
+	global $dbase;
+	
+	$row = new mezunAlbums($dbase);
+	$row->load($id);
+	
+	$gr = array();
+	$gr[] = mezunHTML::makeOption('0', 'Herkese Açık');
+	$gr[] = mezunHTML::makeOption('1', 'Arkadaşlarım');
+	$gr[] = mezunHTML::makeOption('2', 'Gizli');
+	
+	$list['status'] = mezunHTML::radioList($gr, 'status', '', 'value', 'text', $row->status);
+	
+	adminAlbumHTML::editAlbum($row, $list);
 }
 
 function reCountImages() {

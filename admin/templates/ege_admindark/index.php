@@ -8,11 +8,11 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <?php $mainframe->showHead();?>
 
-<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/ege_dark/css/style.css" />
-<script src="<?php echo SITEURL;?>/admin/templates/ege_dark/js/script.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/ege_admindark/css/style.css" />
+<script src="<?php echo SITEURL;?>/admin/templates/ege_admindark/js/script.js" type="text/javascript"></script>
 
-<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/ege_dark/css/cssmenu.css" />
-<script src="<?php echo SITEURL;?>/admin/templates/ege_dark/js/cssmenu.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL;?>/admin/templates/ege_admindark/css/cssmenu.css" />
+<script src="<?php echo SITEURL;?>/admin/templates/ege_admindark/js/cssmenu.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -25,7 +25,7 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 <div id="header">
 <div id="logo">
-<img src="<?php echo SITEURL;?>/admin/templates/ege_dark/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
+<img src="<?php echo SITEURL;?>/admin/templates/ege_admindark/images/logo.png" border="0" alt="<?php echo SITEHEAD;?>" title="<?php echo SITEHEAD;?>" />
 </div>
 </div>
 

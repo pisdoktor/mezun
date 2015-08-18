@@ -4,6 +4,49 @@ defined( 'ERISIM' ) or die( 'Bu alanı görmeye yetkiniz yok!' );
 
 class adminTemplatesHTML {
 	
+	static function newTemplate($lists) {
+		?>
+		<div class="panel panel-default">
+	<div class="panel-heading"><h4>Yönetim Paneli - Tema Yönetimi - Yeni Tema</h4></div>
+	<div class="panel-body">
+		<form action="index.php?option=admin&bolum=templates&task=save" method="post" enctype="multipart/form-data">
+		
+		<div class="form-group">                    
+		<div class="row">
+			  <div class="col-sm-4">
+			  <label for="temp_type">
+			  Tema Çeşidi:
+			  </label>
+			  </div>
+			  <div class="col-sm-3">
+			  <?php echo $lists['temp_type'];?>
+			  </div>
+		</div>
+		</div>
+		
+		<div class="form-group">                    
+		<div class="row">
+			  <div class="col-sm-4">
+			  <label for="tempfile">
+			  Tema Paketi:
+			  </label>
+			  </div>
+			  <div class="col-sm-3">
+			  <input type="file" name="tempfile" id="tempfile" data-filename-placement="inside">
+			  </div>
+		</div>
+		</div>
+		
+		
+		<div class="form-group">
+		<button type="submit" class="btn btn-primary btn-sm">YÜKLE!</button>
+		</div>
+		</form>
+		</div>
+		</div>
+		<?php
+	}
+	
 	static function Templates($rows, $pageNav) {
 		?>
 		<div class="panel panel-default">

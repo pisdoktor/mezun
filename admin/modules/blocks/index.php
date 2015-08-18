@@ -37,9 +37,28 @@ switch($task) {
 	break;
 }
 
-//tamamlanacak!!!!
-function deleteBlock($cid) {
+
+function deleteBlock($id) {
+	global $dbase;
 	
+	$row = new mezunBlocks($dbase);
+	$row->load($id);
+	
+	if ($row->block) {
+		mimport('helpers.file.file');
+		
+		mezunFile::delete(ABSPATH.'/site/blocks/'.$row->block.'.php');
+	}
+	
+	
+	$dbase->setQuery("DELETE FROM #__blocks WHERE id=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	//menüden kaldır
+	$dbase->setQuery("DELETE FROM #__blocks_menu WHERE blockid=".$dbase->Quote($row->id));
+	$dbase->query();
+	
+	Redirect('index.php?option=admin&bolum=blocks');	
 }
 
 function saveBlock() {

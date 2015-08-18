@@ -183,7 +183,7 @@ class mezunAdminMenuHTML {
 		$type[] = mezunHTML::makeOption('site', 'Site');
 		$type[] = mezunHTML::makeOption('admin', 'Yönetim');
 		
-		$mtype = mezunHTML::selectList($type, 'menu_type', '', 'value', 'text', $row->menu_type);
+		$mtype = mezunHTML::selectList($type, 'menu_type', 'size="2"', 'value', 'text', $row->menu_type);
 		return $mtype;
 	}
 	/**
